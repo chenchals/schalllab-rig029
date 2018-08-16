@@ -34,9 +34,6 @@ declare hide constant Error_tone		= 776;  //Strobe for Neuro Explorer
 declare hide constant Reward_tone		= 777;	//Strobe for Neuro Explorer
 declare hide constant Error_sacc		= 887;  //Strobe for Neuro Explorer
 declare hide constant Correct_sacc		= 888;	//Strobe for Neuro Explorer
-//Note that reward SIZE is being sent after this as it's own strobe
-declare hide constant ExtraReward_ 		= 2777;
-//Note that reward SIZE is being sent after this as it's own pulse
 declare hide constant SoundOnReward_ 	= 2778;
 declare hide constant SoundNoReward_ 	= 2779;
 declare hide constant Eot_ 				= 1667;
@@ -53,7 +50,7 @@ declare hide constant Stimulation_ 		= 666;
 declare hide constant EndStim_ 			= 667;
 //Note that this is followed by a 1 or a 2 if MultElectrodeStimFlag is set depending on the stim channel
 declare hide constant ZeroEyePosition_ 	= 2302;
-declare hide constant VSyncSynced_		= 999; //This is a bit weird.  Looks like we are waiting to hear back from videosync that all commands are out of buffer?
+declare hide constant VSyncRefresh_		= 999;
 declare hide constant Saccade_ 			= 2810;
 declare hide constant StimHelp_ 		= 2820;
 //Note followed by another TTL == 2820 + trials[1] (looks like it classifies trial type)
@@ -69,7 +66,9 @@ declare hide constant JuiceEnd_			= 2776;
 declare hide constant ReturnToFix_		= 2775;
 declare hide constant ITIStart_			= 2124;
 declare hide constant ITIEnd_			= 2125;
-declare hide constant PDtrigger_		= 2126;
+declare hide constant PDTrigger_		= 2126;
+declare hide constant ExtraReward_		= 2127;
+declare hide constant StimFailed_ 		= 668;
 
 
 /* MUST CHECK ALL THAT FOLLOWS IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK) */
@@ -82,7 +81,6 @@ declare hide constant TrialInBlock 		= 2928;
 declare hide constant SendPenatrInfo_ 	= 2929;
 declare hide constant TargetPre_ 		= 2650; //?????
 declare hide constant StopOn_ 			= 2654; //?????
-declare hide constant StimFailed_ 		= 667;
 
 declare hide constant StartInfos_		= 2998;
 declare hide constant EndInfos_			= 2999;

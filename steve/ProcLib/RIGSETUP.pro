@@ -145,7 +145,7 @@ process RIGSETUP(int Room)
 		Eye_Y_channel   	= 2;
 		PhotoD_channel  	= 3;
 		MaxVoltage    	= 10; 	//look at das_gain and das_polarity in kped (setup tn)
-		AnalogUnits   	= 65536;// use this for a 64 bit AD board
+		AnalogUnits   	= 65536;// use this for a 16 bit AD board
 		//AnalogUnits   = 4096;// use this for a 12 bit AD board
 
 		// what kind of motion detector hardware are you using?

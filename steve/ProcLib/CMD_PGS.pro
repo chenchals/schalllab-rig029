@@ -98,8 +98,6 @@ process CMD_PGS(int curr_target, 																// set SETC_TRL.pro
 	spawnwait DRW_SQR(fixation_size, 0.0, 0.0, fixation_color, fill, deg2pix_X, deg2pix_Y);   	// draw fixation point
 	spawnwait DRW_RECT(pd_size*3.5,pd_size,pd_angleR,pd_eccentricity,pd1_color,fill,unit2pix_X,unit2pix_Y);			// draw photodiode marker
 	spawnwait DRW_RECT(pd_size*3.5,pd_size,pd_angleL,pd_eccentricity,pd1_color,fill,unit2pix_X,unit2pix_Y);			// draw photodiode marker
- 	dsendf("ps 246\n");
- 	dsendf("pc 247, 0, 0x00FF0000, 0x00000000, 0x00000000\n");
     nexttick;
    
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
