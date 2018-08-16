@@ -8,6 +8,9 @@ declare hide int Trl_Outcome;			// Global output used in END_TRL
 declare hide int Trl_Start_Time;		// Global output used in END_TRL
 declare hide int LastStopOutcome = 1;	// Global output used to staircase SSD
 
+#include C:/TEMPO/ProcLib/DEVELOP/WAIT_VS.PRO 
+
+
 declare CMDTRIAL(allowed_fix_time,		// see ALL_VARS.pro and DEFAULT.pro
 				curr_holdtime, 			// see SETC_TRL.pro
 				trl_type, 				// see SETC_TRL.pro
@@ -82,7 +85,8 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	declare hide int	noncanceled_trl_count;
 	declare hide int	canceled_trl_count;
 	declare hide int	nostop_trl_count;
-	
+	declare hide int	tempPDvalue;
+
 	// This variable makes the while loop work
 	declare hide int 	trl_running;
 	
@@ -127,19 +131,12 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 
 	dsendf("vp %d\n",fixation_pd);											// flip the pg to the fixation stim with pd marker
-	dsendf("vw %d\n",1);												// flip the pg to the fixation stim without pd marker
-
-	while (!pdIsOn)
-	{
-		nexttick;
-	}
-
-	dsendf("vp %d\n",fixation);												// flip the pg to the fixation stim without pd marker
-	oSetAttribute(object_fix, aVISIBLE); 									// turn on the fixation point in animated graph
+	spawnwait WAIT_VS();
 	fix_spot_time = time();  												// record the time
+	dsendf("vp %d\n",fixation);												// flip the pg to the fixation stim without pd marker
 	Event_fifo[Set_event] = FixSpotOn_;										// queue strobe
 	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
-	
+	oSetAttribute(object_fix, aVISIBLE); 									// turn on the fixation point in animated graph
 	
 	while (trl_running)														// trials ending will set trl_running = 0
 		{	
@@ -148,20 +145,13 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 		{
 			while(1)
 			{	
+				spawnwait WAIT_VS();
 				dsendf("vp %d\n",fixation_pd);								// flip the pg to the fixation stim with pd marker
-				while(!pdIsOn)
-				{
-					nexttick;
-				}
-				
-				wait 10;
-				//dsendf("pc 247, 0, 0x00FF0000, 0x00000000, 0x00000000 \n");
-
-				//dsendf("vw %d\n",1);								// flip the pg to the fixation stim with pd marker
-				//nexttick 64;
-				//dsendf("vp %d\n",fixation);	
-				//dsendf("vw %d\n",1);							// flip the pg to the fixation stim with pd marker
-				//nexttick 64;
+				spawnwait WAIT_VS();
+				tempPDvalue = atable(PhotoD_channel);
+				dsendf("vp %d\n",fixation);	
+				printf("tempPDvalue = %d\n",tempPDvalue);
+				nexttick 1;
 			}
 		}
 	//--------------------------------------------------------------------------------------------
@@ -213,12 +203,18 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			else if (In_FixWin && time() > aquire_fix_time + curr_holdtime)	// But if the eyes are still in the window at end of holdtime...
 				{
 				dsendf("vp %d\n",target_pd);								// ...flip the pg to the target with pd marker...	
-				
+				spawnwait WAIT_VS();
+				dsendf("vp %d\n",target);									// ...flip the pg to the target without pd marker.
+				targ_time = time(); 										// ...record the time...							
 
-				while (!pdIsOn && trl_running)
+				Event_fifo[Set_event] = Target_;							// queue strobe
+				Set_event = (Set_event + 1) % Event_fifo_N;					// incriment event queue
+									
+				Event_fifo[Set_event] = FixSpotOff_;						// Queue strobe...
+				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
+					
+				if (!In_FixWin)
 					{
-					if (!In_FixWin)
-						{
 							dsendf("vp %d\n",blank);									// Flip the pg to the blank screen...
 							oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
 							oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
@@ -229,18 +225,9 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 							Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
 							trl_running = 0;											// ...and terminate the trial.
 							
-						}	
-					nexttick;
-					}
-				targ_time = time(); 										// ...record the time...							
-				dsendf("vp %d\n",target);									// ...flip the pg to the target without pd marker.
+					}	
 
-				Event_fifo[Set_event] = Target_;							// queue strobe
-				Set_event = (Set_event + 1) % Event_fifo_N;					// incriment event queue
-									
-				Event_fifo[Set_event] = FixSpotOff_;						// Queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
-				
+
 																			// Now the animated graphs have to catch up (seperate so that stim timing stays tight)
 				if (trl_type == go_trl)										// If the trial is a go trial...
 					{
@@ -257,8 +244,9 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 																			// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 					dsendf("vw %d\n",curr_ssd-1);							// Wait so many vertical retraces (one is waited implicitly b/c photodiode marker above)...
 					dsendf("vp %d\n",signal_pd);							// ...flip the pg to the signal with the pd marker...
+					spawnwait WAIT_VS();
 					
-				while (!pdIsOn && trl_running)
+				while (trl_running)
 						{
 						if (!In_FixWin)
 							{
@@ -374,7 +362,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
 				
 				
-				while (!pdIsOn && trl_running)
+				while (trl_running)
 						{
 						if (!In_TargWin)
 							{

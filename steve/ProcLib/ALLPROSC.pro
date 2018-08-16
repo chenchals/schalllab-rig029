@@ -172,6 +172,10 @@ declare int fix_manual = 1;				//auto fixation task = 1
 
 #include C:/TEMPO/ProcLib/BITSWEEP.pro // Allows to check for integrity of TEMPO -> Data collection system connection
 #include C:/TEMPO/ProcLib/WATCHPD.pro // Controls presentation time by watching for PD presentation
+
+// DEVELOPING CODE
+#include C:/TEMPO/ProcLib/DEVELOP/WAIT_VS.PRO 
+
 //----------------------------------------------------------------------
 process IDLE() enabled					// When the clock is started the task is not yet running.
 	{									// At any time we can press a button to return to this...
@@ -256,7 +260,7 @@ process IDLE() enabled					// When the clock is started the task is not yet runn
 				deg2pix_X,
 				deg2pix_Y);
 	
-	spawn WATCHPD(PhotoD_channel);
+	//spawn WATCHPD(PhotoD_channel);
 	
 	spawn QUE_TTL();					// set up for plexon communication
 	printf("flushing video memory please wait...\n");

@@ -18,6 +18,7 @@ process WATCHPD(int PhotoD_channel)
 	declare int ip;
 	declare int pdCount;
 	declare float pdSum;
+	declare int maxPdVal = -900;
 
 	// next screen refresh approx. in ms
 	// should be floor(1000/refreshRateInHz)
@@ -38,6 +39,14 @@ process WATCHPD(int PhotoD_channel)
 		}
 
 		pdVal = pdSum/pdN;
+
+		if (pdVal > maxPdVal)
+		{
+			maxPdVal = pdVal;
+			//printf("maxPdVal = %d\n",maxPdVal);
+		}
+		
+		
     //set pdTrigger flag
     //printf("%-4d, %-4d, %-4d, pdSum=%-4d, pdN=%d, ip=%d, pdIsOn=%d \n ", pdVect[0], pdVect[1], pdVect[2], pdSum, pdN, ip, pdIsOn);
 
@@ -46,17 +55,16 @@ process WATCHPD(int PhotoD_channel)
 			pdIsOn = 1;
 			lastTriggerOn = time();
 	
-			Event_fifo[Set_event] = PDtrigger_;
+			Event_fifo[Set_event] = PDTrigger_;
 			Set_event = (Set_event + 1) % Event_fifo_N;
+			//printf("pdVal=%d, maxPdVal=%d, pdThresh=%d\n",pdVal, maxPdVal, pdThresh);
 		}
 		// Unset pdTrigger flag
 		else if ((pdIsOn == 1) && (pdVal < pdThresh) && ((time() - lastTriggerOn) > nextRefreshIn))
 		{
 			pdIsOn = 0;
+			maxPdVal = -900;
 		}
-		printf("pdIsOn = %d \n", pdIsOn);
-		printf("lastTriggerOn = %d \n", lastTriggerOn);
-
 		nexttick;
 	}
 }
