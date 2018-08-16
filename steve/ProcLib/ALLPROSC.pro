@@ -260,7 +260,7 @@ process IDLE() enabled					// When the clock is started the task is not yet runn
 				deg2pix_X,
 				deg2pix_Y);
 	
-	//spawn WATCHPD(PhotoD_channel);
+	spawn WATCHPD(PhotoD_channel);
 	
 	spawn QUE_TTL();					// set up for plexon communication
 	printf("flushing video memory please wait...\n");

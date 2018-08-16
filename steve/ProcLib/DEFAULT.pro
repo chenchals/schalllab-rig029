@@ -448,8 +448,8 @@ process DEFAULT(int task,
 			N_targ_pos 				= 2;
 			DR1_flag				= 1;
 
-			Go_weight				= 60;
-			Stop_weight				= 40;
+			Go_weight				= 100;
+			Stop_weight				= 0;
 			Ignore_weight			= 0;
 
 			Stop_sig_color[r_]		= 17;

@@ -93,8 +93,8 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	// Have to be reset on every iteration since 
 	// variable declaration only occurs at load time
 	trl_running 		= 1;
-	//stage 				= need_fix;
-	stage 				= test;
+	stage 				= need_fix;
+	//stage 				= test;
 	
 	// Tell the user what's up
 	printf(" \n");
@@ -104,54 +104,70 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	printf(" correct; GO = %d; C = %d; NC = %d)\n",nostop_trl_count,canceled_trl_count, noncanceled_trl_count);
 		
 	
-	if (trl_type == go_trl)
-		{
-		printf("Trial Type: NO-STOP\n");
-		printf("Holdtime = %d\n",curr_holdtime);
-		}
-	if (trl_type == stop_trl)
-		{
-		printf("Trial Type: STOP\n");
-		printf("Holdtime = %d\n",curr_holdtime);
-		printf("     SSD = %d\n",round(curr_ssd * (1000.0/Refresh_rate)));
-		}
-	if (trl_type == ignore_trl)
-		{
-		printf("Trial Type: IGNORE\n");
-		printf("Holdtime = %d\n",curr_holdtime);
-		printf("     ISD = %d\n",round(curr_ssd * (1000.0/Refresh_rate)));
-		}
+	
+		if (trl_type == go_trl)
+			{
+			printf("Trial Type: NO-STOP\n");
+			printf("Holdtime = %d\n",curr_holdtime);
+			}
+		if (trl_type == stop_trl)
+			{
+			printf("Trial Type: STOP\n");
+			printf("Holdtime = %d\n",curr_holdtime);
+			printf("     SSD = %d\n",round(curr_ssd * (1000.0/Refresh_rate)));
+			}
+		if (trl_type == ignore_trl)
+			{
+			printf("Trial Type: IGNORE\n");
+			printf("Holdtime = %d\n",curr_holdtime);
+			printf("     ISD = %d\n",round(curr_ssd * (1000.0/Refresh_rate)));
+			}
 		
-	
-	
 																			// HERE IS WHERE THE FUN BEGINS
-	Event_fifo[Set_event] = CmanHeader_;									// queue CMand header strobe
-	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
-	Event_fifo[Set_event] = TrialStart_;									// queue TrialStart_ strobe
-	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
+		Event_fifo[Set_event] = CmanHeader_;									// queue CMand header strobe
+		Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
+		Event_fifo[Set_event] = TrialStart_;									// queue TrialStart_ strobe
+		Set_event = (Set_event + 1) % Event_fifo_N;		
+		// incriment event queue
+				dsendf("vp %d\n",fixation_pd);								// flip the pg to the fixation stim with pd marker
+				spawnwait WAIT_VS();
+		//Event_fifo[Set_event] = VSyncRefresh_;
+		//Set_event = (Set_event + 1) % Event_fifo_N;
 
-	dsendf("vp %d\n",fixation_pd);											// flip the pg to the fixation stim with pd marker
-	spawnwait WAIT_VS();
-	fix_spot_time = time();  												// record the time
-	dsendf("vp %d\n",fixation);												// flip the pg to the fixation stim without pd marker
-	Event_fifo[Set_event] = FixSpotOn_;										// queue strobe
-	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
-	oSetAttribute(object_fix, aVISIBLE); 									// turn on the fixation point in animated graph
+				dsendf("vp %d\n",fixation);	
+				fix_spot_time = time();  												// record the time											// flip the pg to the fixation stim without pd marker
+		//nexttick 2;
+		Event_fifo[Set_event] = FixSpotOn_;										// queue strobe
+		Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
+		oSetAttribute(object_fix, aVISIBLE); 									// turn on the fixation point in animated graph
 	
 	while (trl_running)														// trials ending will set trl_running = 0
 		{	
+		
+	//--------------------------------------------------------------------------------------------
+	// STAGE test
 		
 		if (stage == test)
 		{
 			while(1)
 			{	
-				spawnwait WAIT_VS();
-				dsendf("vp %d\n",fixation_pd);								// flip the pg to the fixation stim with pd marker
-				spawnwait WAIT_VS();
-				tempPDvalue = atable(PhotoD_channel);
+				dsendf("vp %d\n",fixation_pd);	
+				while (!pdIsOn) {spawnwait WAIT_VS();}
 				dsendf("vp %d\n",fixation);	
-				printf("tempPDvalue = %d\n",tempPDvalue);
-				nexttick 1;
+				Event_fifo[Set_event] = FixSpotOn_;										// queue strobe
+				Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
+		
+				wait curr_holdtime;
+				
+				dsendf("vp %d\n",target_pd);	
+				while (!pdIsOn) {spawnwait WAIT_VS();}
+				dsendf("vp %d\n",target);	
+				Event_fifo[Set_event] = Target_;							// queue strobe
+				Set_event = (Set_event + 1) % Event_fifo_N;					// incriment event queue
+									
+				nexttick 25;
+				wait 1000;
+				
 			}
 		}
 	//--------------------------------------------------------------------------------------------
@@ -168,6 +184,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				}
 			else if (time() > fix_spot_time + allowed_fix_time)				// But if time runs out...
 				{
+				printf("*******************************\n");
 				dsendf("vp %d\n",blank);									// Flip the pg to the blank screen,...
 				dsendf("vw %d\n",1);												// flip the pg to the fixation stim without pd marker
 				oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
@@ -203,7 +220,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			else if (In_FixWin && time() > aquire_fix_time + curr_holdtime)	// But if the eyes are still in the window at end of holdtime...
 				{
 				dsendf("vp %d\n",target_pd);								// ...flip the pg to the target with pd marker...	
-				spawnwait WAIT_VS();
+				//spawnwait WAIT_VS();
 				dsendf("vp %d\n",target);									// ...flip the pg to the target without pd marker.
 				targ_time = time(); 										// ...record the time...							
 
@@ -244,7 +261,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 																			// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 					dsendf("vw %d\n",curr_ssd-1);							// Wait so many vertical retraces (one is waited implicitly b/c photodiode marker above)...
 					dsendf("vp %d\n",signal_pd);							// ...flip the pg to the signal with the pd marker...
-					spawnwait WAIT_VS();
+					//spawnwait WAIT_VS();
 					
 				while (trl_running)
 						{

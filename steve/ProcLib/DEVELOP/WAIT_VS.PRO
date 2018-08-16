@@ -83,6 +83,4 @@ process WAIT_VS()
 		{
 		nexttick;
 		}
-		Event_fifo[Set_event] = VSyncRefresh_;
-		Set_event = (Set_event + 1) % Event_fifo_N;
     }

@@ -23,7 +23,7 @@ process WATCHPD(int PhotoD_channel)
 	// next screen refresh approx. in ms
 	// should be floor(1000/refreshRateInHz)
   // declare int nextRefreshIn = Int(floor(1000.0/Refresh_rate));
-  declare int nextRefreshIn = 1;
+  declare int nextRefreshIn = 17;
 
 	while (1)
 	{
