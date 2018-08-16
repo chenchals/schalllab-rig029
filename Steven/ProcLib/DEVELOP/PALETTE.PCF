@@ -1,0 +1,93 @@
+; TEMPO PROTOCOL CONFIGURATION FILE
+; Copyright 1997-2017 Reflective Computing.  All Rights Reserved.
+; This file was created by TEMPO and should not be edited directly by the user.
+; The commands in this file are undocumented and subject to change in future releases.
+; Wed Jan 18 14:57:50 2017
+; CLOAD pc.pcf
+
+; tempow 16.9 Set 49.20   'BACH4017' connected to 'TEMPO1'
+; KPED 16.9 Set 49
+; KSRV 16.7 Set 49.20 (Server 'TEMPO1          ' running on computer '')
+; PCL 0.0     TEMPO 0.0
+; ANALOGRESOLUTION=12
+; WARNING=2
+; SPEED=1000.000000  PROSPEED=200.000000  (100/100000 Sec/SampleSet)
+; ASETS=5(5)  CSETS=5(5)  ESETS=5(5)
+; ACHANNELS=16
+; CCHANNELS=5
+; ECHANNELS=5
+;
+;                          Protocol Usage of Kernel Resources  
+;
+; Parameter       Limit          Used    Pct        Bytes/Total        Develop    Stable
+; -------------   -------     -------  -----        -----------        -------    ------
+; PROCESSES       =400              1     0%           44/17600         =1         =1       
+; INSTRUCTIONS    =1820             7     0%          118/32760         =9         =8       
+; InstructionsXMS =20025            7     0%          118/360448        =9         =8       
+; SYMBOLTABLE     =2000            20     1%          160/16000         =24        =21      
+; NametableXMS    =122880       84296    69%        84296/122880                        
+; NAMETABLE       =38878          294     1%          294/38878         =346       =309     
+; DATABASES       =40               0     0%            0/2400          =0         =0       
+; ARRAYTABLE      =512              0     0%            0/512           =0         =0       
+; ARRAYDATA       =655360           0     0%            0/655360        =0         =0       
+; OBJECTS         =0                0     0%            0/0             =0         =0       
+;
+; PROTOCOL PROCESS CONTROL BLOCKS (XMS Instructions Caching ENABLED)
+; INSTRUCTIONS=1820,20024
+; Memory (bytes):  118/32760 Conventional, 118/360448 XMS
+; Server CPU Mhz  Empirical 2992.5    Theoretical 3000.0
+;
+;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec 
+;   1 SUSP main                         0    0    0    0  0.000  0.000  0.000   116    notLoaded         2-117         0     0
+
+
+SPEED 1000
+
+; ANALOG TABLE SETTINGS
+;; ACHANNELS=16
+
+
+ACHANINFO 0
+
+
+; SPIKE TABLE SETTINGS
+;; CCHANNELS=5
+
+
+CCHANINFO 0
+
+
+; EVENT TABLE SETTINGS
+;; ECHANNELS=5
+
+
+ECHANINFO 0
+
+
+PLOAD palette.pro
+
+; DATABASES=40
+
+
+; WINDOW CONFIGURATION
+
+SCREENRES 6400,1200,32,4,0,0
+MAINWND 3,-1,-1,-1,-1,-4,-4,1604,1204,0
+MSGWND 1,728,900,-1,-1,3,581,893,1199,0
+STATUSWND 1,-1,-1,-1,-1,-2,51,798,611,0
+SHOW s 0
+
+CMDWND 1,-1,-1,-1,-1,270,58,563,123,0
+
+; DATABASES PAGES & VIEWS
+
+DBPCOLORS 0xFFFFFF,0x0,0x0,0xFF0000,0xFF
+
+; END GRAPH CONFIGURATION
+
+; DIALOGS
+
+SCREENRES 6400,1200,32,4,0,0
+
+; END OF DIALOGS
+
