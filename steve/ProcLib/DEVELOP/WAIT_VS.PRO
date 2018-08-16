@@ -1,3 +1,5 @@
+// The process code is from PROWIN/PAN process: WaitForVideoSYNC
+
 // PROCESS WaitForVideoSYNC - Wait for all commands to be executed by VideoSYNC.
 //
 //  The protocol uses WaitForVideoSYNC() like this:
@@ -6,7 +8,7 @@
 //      spawnwait WaitForVideoSYNC;     // Wait for all commands to complete
 //      // At this point, all commands were executed by VideoSYNC.
 //      ...
-//      
+//
 // We utilize the new (as of 24Jun03) RDX TTL feature where there are two TTL
 // bits in each direction (VideoSYNC to server and server to VideoSYNC) that
 // are now supported by the TEMPO server as well as VideoSYNC.  The two
@@ -48,15 +50,15 @@ declare WAIT_VS();
 process WAIT_VS()
     {
     int     newBits;                    // =0,1,2,3
-    
+
     // WAIT FOR ALL PREVIOUS COMMAND TO GET SENT
     // This insures that we are in sync up to this point.
-    
+
     while (dsend())
 		{
 			nexttick;
-		}	
-    
+		}
+
     // Now read the current TTL setting and advance by 1.
     // We are using both of RDX's TTL bits from VideoSYNC
     // to us.  But this is not necessary.  We could just
@@ -64,13 +66,13 @@ process WAIT_VS()
     // other uses.
 
     newBits = (rdxGetTTLIN() + 1) % 4;  // Advance one MOD 4
-    
+
     // Tell VideoSYNC to increment the sequence count
     // .. by setting its local OOB bits on the RDX link
     // We assume we are the only process sending the SO command.
     // If SO is sent by any other process, it will mess us up
     // and cause us to wait, possibly indefinitely, for our bits.
-    
+
     dsendf("SO%d\n", newBits);
 
     // WAIT FOR VIDEOSYNC TO ACTUALLY EXECUTE THE SO COMMAND ABOVE.
