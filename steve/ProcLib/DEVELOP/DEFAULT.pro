@@ -5,6 +5,9 @@
 // task change.
 //
 // written by david.c.godlove@vanderbilt.edu 	July, 2011
+// Modifications:
+// 2018-08-16: Chenchal
+//	Commenting and removing commented-out code blocks
 
 	declare hide int tempVar = 0;
 
@@ -17,44 +20,36 @@ process DEFAULT(int task,
 				int room)
 	{
 
-	declare hide int run_cmd_sess 		= 1;	// state 1 is countermanding
-	declare hide int run_fix_sess 		= 2;	// state 2 is fixation
-	declare hide int run_mg_sess 		= 3;	// state 3 is mem guided sacc
-	declare hide int run_gonogo_sess	= 4;	// state 4 is gonogo
-	declare hide int run_flash_sess		= 5;	// state 5 is flash screen protocol
-	declare hide int run_delayed_sess   = 6;
-	declare hide int run_search_sess    = 7;
+ // State corresponds to different Task types
+	declare hide int run_cmd_sess 		= 1;	// countermanding
+	declare hide int run_fix_sess 		= 2;	// fixation
+	declare hide int run_mg_sess 			= 3;	// mem guided sacc
+	declare hide int run_gonogo_sess	= 4;	// gonogo
+	declare hide int run_flash_sess		= 5;	// flash screen
+	declare hide int run_delayed_sess = 6;
+	declare hide int run_search_sess  = 7;
 	declare hide int run_anti_sess 		= 9;
 	declare hide int run_color_pop 		= 10;
 	declare hide int run_pop_prime		= 11;
 
 
-
-	declare hide int xena    	= 1;
-	declare hide int broca		= 3;
+// Active subject indices
+	declare hide int xena    		= 1;
+	declare hide int broca			= 3;
 	declare hide int helmholtz	= 4;
-    declare hide int gauss		= 5;
-	declare hide int joule 		= 6;
+  declare hide int gauss			= 5;
+	declare hide int joule 			= 6;
 
 	declare hide int color_num,r_, g_, b_;
 
-	// End of all declares
-	
-	r_ = 0; g_ = 1; b_ = 2;
+// Initialize variables
+	r_ 									= 0;
+	g_ 									= 1;
+	b_ 									= 2;
+	Trls_per_block 			= 100; // no blocks
 
-
-	Trls_per_block 			= 100; // In other words, there are no blocks
-	
-	//---------------------------------------------------------------------------
-	// Initialize photo diode
-/*	
-	pdVect[0] = -1000;
-	pdVect[1] = -1000;
-	pdVect[2] = -1000;
-*/
-	//----------------------------------------------------------------------------------------------------------------
 	// Trial type distributions (MUST SUM TO 100)
-	Go_weight				= 0.0;
+	Go_weight					= 0.0;
 	Stop_weight				= 100.0;
 	Ignore_weight			= 0.0;
 
@@ -64,49 +59,30 @@ process DEFAULT(int task,
 	//----------------------------------------------------------------------------------------------------------------
 	// Stimulus properties
 	// White iso luminant value is 35,33,27;
-	// Red iso luminant value is is 63,base_reward0,0;
+	// Red iso luminant value is is 63,0,0;
 	// Green iso luminant value is 0,36,0;
 	// Blue iso luminant value is 0,0,59;
 
-	// Set default colors for isoluminance
-	//These values are physically isoluminant, not perceptually
-	/*redVal = 46;
-	greenVal = 29;
-	blueVal = 62;
-	yrOff = 15;
-	ygOff = 9;
-	mrOff = 20;
-	mbOff = 11;
-	cgOff = 1;
-	cbOff = 41;
-	wrOff = 25;
-	wgOff = 7;
-	wbOff = 37;
-	*/
-
-	// These values are perceptually isoluminant, not physically
-
 	//////////// Default Search Variables
 	TargetType				= 1; //1 = L, 2 = T
-	PlacPres				= 1; // 1 = absent, 2 = present
-	SearchType				= 2; //Hetero = 1, Homo = 2
-	SetSize					= 1; //SS1 = 1, SS2 = 2, SS4 = 3, SS8 = 4, SS12 = 5
-	search_fix_time			= 500; //
+	PlacPres					= 1; // 1 = absent, 2 = present
+	SearchType				= 2; // Hetero = 1, Homo = 2
+	SetSize						= 1; // SS1 = 1, SS2 = 2, SS4 = 3, SS8 = 4, SS12 = 5
+	search_fix_time		= 500; //
 	plac_duration	 		= 1000; //consider adding to ALLVARS.pro
-	Consec_trl  			= 0; //min number of consecutive correct trials (minus one) required to get reward
-
+	Consec_trl  			= 0; // min number of consecutive correct trials (minus one) required to get reward
 
 	NonSingleton_color[r_]		= redVal-wrOff;//35;	//Default to gray
 	NonSingleton_color[g_]		= greenVal-wgOff;//33;
 	NonSingleton_color[b_]		= blueVal-wbOff;//27;
 
-	Singleton_color[r_]			= redVal-wrOff;//35;	//Default to gray
-	Singleton_color[g_]			= greenVal-wgOff;//33;
-	Singleton_color[b_]			= blueVal-wbOff;//27;
+	Singleton_color[r_]				= redVal-wrOff;//35;	//Default to gray
+	Singleton_color[g_]				= greenVal-wgOff;//33;
+	Singleton_color[b_]				= blueVal-wbOff;//27;
 	////////////
 
 
-	Classic					= 0;
+	Classic										= 0; // Used in drawing CMD_PGS.pro
 
 	Stop_sig_color[r_]		= 40;
 	Stop_sig_color[g_]		= 40;
@@ -448,8 +424,8 @@ process DEFAULT(int task,
 			N_targ_pos 				= 2;
 			DR1_flag				= 1;
 
-			Go_weight				= 100;
-			Stop_weight				= 0;
+			Go_weight				= 60;
+			Stop_weight				= 40;
 			Ignore_weight			= 0;
 
 			Stop_sig_color[r_]		= 17;
