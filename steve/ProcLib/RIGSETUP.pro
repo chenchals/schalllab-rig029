@@ -114,25 +114,24 @@ process RIGSETUP(int Room)
 	} else if (Room == 29)
 	{
 		// viewing measurements used to compute degrees (units need to be the same)
-		Scr_width   	= 375.0; // in some units
-		Scr_height  	= 275.0; // in some units
+		Scr_width   	= 375.0; //375.0; // in some units (367 mm CS)
+		Scr_height  	= 275.0; //275.0; // in some units (272 mm CS)
 		Subj_dist   	= 570.0; // distance from center of subjects eyeball to screen
-
-		// where does your photodiode marker need to be?
-		PD_left			= 0;	// distance from left of screen (same units as above)
-		PD_bottom		= 7;	// distance from bottom of screen (same units as above)
-		PD_size			= 9;	// minimum size for consistant triggering (same units as above)
-		PD_bottom		= 7;	// distance from bottom of screen (same units as above)
-		PD_size			= 16;	// minimum size for consistant triggering (same units as above)
-		pdRefract		= 5;
-		pdThresh		= 70;
-		
 		
 		// what is your screen resolution?
-		Scr_pixX    	= 640;	// number of pixels across
-		Scr_pixY    	= 400;	// number of pixels in height
+		Scr_pixX    	= 1024;//640;	// number of pixels across
+		Scr_pixY    	= 768;//400;	// number of pixels in height
 		Refresh_rate	= 60;	// in Hz
 
+		// where does your photodiode marker need to be?
+		// Photo cell sensing dims: 7mm x 22 mm
+		// mm/line-height = (Scr_height / Scr_pixY) 
+		// pd-ht-in-screen-ht-units = 7/mm/line-height 
+		PD_left			= 0;	// distance from left of screen (same units as above)
+		PD_bottom		= 0;	// distance from bottom of screen (same units as above)
+		PD_size			= Int(floor(4*Scr_pixY/Scr_height));	
+		pdThresh		= 60;
+		
 		// what are your eye variables?
 		// In 023, calibration target is 12.8cm horizontal, 12.8 cm vertical. Atan(12.8/58) = 9.74 deg, Atan(12.8/58) = 11.23 deg
 		X_Gain = 3.622;//5.1;//9.74; //50; //3.492;						// x scaling factor to convert eye trace voltage to degrees (must be calculated from calibration)

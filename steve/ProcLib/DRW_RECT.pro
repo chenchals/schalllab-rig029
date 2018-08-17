@@ -41,7 +41,7 @@ process DRW_RECT(float horizLn, float vertLn, float angle, float eccentricity, i
 	lrx       = round((stim_ecc_x + half_sizeH)*conversion_X);
 	lry       = round((stim_ecc_y - half_sizeV)*conversion_Y);
 
-	
+	printf("DRW_RECT: ulx = %d,uly = %d, lrx = %d, lry = %d\n",ulx,uly,lrx,lry);
 	// send video sync command to draw desired square
 	dsendf("co %d;\n",color);
 	

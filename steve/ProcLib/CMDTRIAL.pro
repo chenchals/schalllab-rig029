@@ -159,8 +159,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				dsendf("vp %d\n",target);
 				spawn SEND_EVT(Target_);
 
-				nexttick 25;
-				wait 1000;
+				wait curr_holdtime;
 
 			}
 		}
@@ -199,7 +198,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			if (!In_FixWin)													// If the eyes stray out of the fixation window...
 				{
 				dsendf("vp %d\n",blank);									// Flip the pg to the blank screen...
-				dsendf("vw %d\n",0);												// flip the pg to the fixation stim without pd marker
+				dsendf("vw %d\n",1);												// flip the pg to the fixation stim without pd marker
 				oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
 				oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
 				Trl_Outcome = broke_fix;									// TRIAL OUTCOME ERROR (broke fixation)
@@ -211,7 +210,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			else if (In_FixWin && time() > aquire_fix_time + curr_holdtime)	// But if the eyes are still in the window at end of holdtime...
 				{
 				dsendf("vp %d\n",target_pd);								// ...flip the pg to the target with pd marker...
-				//spawnwait WAIT_VS();
+				while (!pdIsOn) {spawnwait WAIT_VS();}
 				dsendf("vp %d\n",target);									// ...flip the pg to the target without pd marker.
 				targ_time = time(); 										// ...record the time...
 
@@ -248,7 +247,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 																			// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 					dsendf("vw %d\n",curr_ssd-1);							// Wait so many vertical retraces (one is waited implicitly b/c photodiode marker above)...
 					dsendf("vp %d\n",signal_pd);							// ...flip the pg to the signal with the pd marker...
-					//spawnwait WAIT_VS();
+				while (!pdIsOn) {spawnwait WAIT_VS();}
 
 				while (trl_running)
 						{
@@ -426,12 +425,6 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					}
 
 				stage = return_fix_check;
-
-				//dsendf("vp %d\n",blank);									// Flip the pg to the blank screen...
-				//oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
-				//oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
-
-				//trl_running = 0;											// ...and terminate the trial.
 				}
 			else if (In_TargWin  											// But if the eyes are still in the target window...
 				&&  time() > aquire_targ_time + targ_hold_time)				// ...and the target hold time is up...
