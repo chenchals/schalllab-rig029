@@ -9,8 +9,11 @@
 //                   refresh to be 60Hz monitor
 //            3. WAIT for nexttick before continuing while(1) loop
 //
-declare WATCHPD(int PhotoD_channel);
 
+#include C:/TEMPO/ProcLib/SEND_EVT.pro
+
+declare WATCHPD(int PhotoD_channel);
+ 
 process WATCHPD(int PhotoD_channel)
 {
 
@@ -19,17 +22,14 @@ process WATCHPD(int PhotoD_channel)
 	declare int pdCount;
 	declare float pdSum;
 	declare int maxPdVal = -900;
-
-	// next screen refresh approx. in ms
-	// should be floor(1000/refreshRateInHz)
-  // declare int nextRefreshIn = Int(floor(1000.0/Refresh_rate));
-  declare int nextRefreshIn = 17;
+    declare int nextRefreshIn;
 
 	while (1)
 	{
+		nextRefreshIn = Int(floor(1000.0/Refresh_rate)) + 1;
 		pdVect[pdCount] = atable(PhotoD_channel);
 		pdCount = (pdCount+1) % pdN;
-
+		
 		pdSum = 0;
 		ip = 0;
 		while (ip < pdN)
@@ -43,13 +43,8 @@ process WATCHPD(int PhotoD_channel)
 		if (pdVal > maxPdVal)
 		{
 			maxPdVal = pdVal;
-			//printf("maxPdVal = %d\n",maxPdVal);
 		}
 		
-		
-    //set pdTrigger flag
-    //printf("%-4d, %-4d, %-4d, pdSum=%-4d, pdN=%d, ip=%d, pdIsOn=%d \n ", pdVect[0], pdVect[1], pdVect[2], pdSum, pdN, ip, pdIsOn);
-
 		if ((pdIsOn == 0) && (pdVal > pdThresh))
 		{
 			pdIsOn = 1;
@@ -57,10 +52,11 @@ process WATCHPD(int PhotoD_channel)
 	
 			Event_fifo[Set_event] = PDTrigger_;
 			Set_event = (Set_event + 1) % Event_fifo_N;
-			//printf("pdVal=%d, maxPdVal=%d, pdThresh=%d\n",pdVal, maxPdVal, pdThresh);
+			
+			printf("maxPdVal = %d, pdVal = %d, pdThresh = %d\n", maxPdVal, pdVal, pdThresh);
 		}
 		// Unset pdTrigger flag
-		else if ((pdIsOn == 1) && (pdVal < pdThresh) && ((time() - lastTriggerOn) > nextRefreshIn))
+		if ((pdIsOn == 1) && (pdVal < pdThresh) && ((time() - lastTriggerOn) > nextRefreshIn))
 		{
 			pdIsOn = 0;
 			maxPdVal = -900;

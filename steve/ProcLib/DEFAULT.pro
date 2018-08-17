@@ -45,17 +45,10 @@ process DEFAULT(int task,
 
 	Trls_per_block 			= 100; // In other words, there are no blocks
 	
-	//---------------------------------------------------------------------------
-	// Initialize photo diode
-/*	
-	pdVect[0] = -1000;
-	pdVect[1] = -1000;
-	pdVect[2] = -1000;
-*/
 	//----------------------------------------------------------------------------------------------------------------
 	// Trial type distributions (MUST SUM TO 100)
-	Go_weight				= 0.0;
-	Stop_weight				= 100.0;
+	Go_weight				= 100.0;
+	Stop_weight				= 0.0;
 	Ignore_weight			= 0.0;
 
 	DR1_flag				= 0;	// We don't normally want to do 1DR version.
