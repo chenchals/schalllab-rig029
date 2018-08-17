@@ -124,8 +124,8 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			printf("     ISD = %d\n",round(curr_ssd * (1000.0/Refresh_rate)));
 			}
 
-		SEND_EVT(CmanHeader_);
-		SEND_EVT(TrialStart_);
+		spawn SEND_EVT(CmanHeader_);
+		spawn SEND_EVT(TrialStart_);
     // Show fixation with white boxes for photocell
 		dsendf("vp %d\n",fixation_pd);
 		while(!pdIsOn)
@@ -134,7 +134,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 		}
 		fix_spot_time = time();
 		dsendf("vp %d\n",fixation);
-		SEND_EVT(FixSpotOn_);
+		spawn SEND_EVT(FixSpotOn_);
 		oSetAttribute(object_fix, aVISIBLE);
 
 	while (trl_running)
@@ -150,15 +150,15 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				dsendf("vp %d\n",fixation_pd);
 				while (!pdIsOn) {spawnwait WAIT_VS();}
 				dsendf("vp %d\n",fixation);
-				SEND_EVT(FixSpotOn_);
+				spawn SEND_EVT(FixSpotOn_);
 
 				wait curr_holdtime;
 
 				dsendf("vp %d\n",target_pd);
 				while (!pdIsOn) {spawnwait WAIT_VS();}
 				dsendf("vp %d\n",target);
-				SEND_EVT(Target_);
-				
+				spawn SEND_EVT(Target_);
+
 				nexttick 25;
 				wait 1000;
 
@@ -172,8 +172,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				{
 				aquire_fix_time = time();									// ...function call to time to note current time and...
 				Trl_Start_Time = aquire_fix_time;							// Global output
-				Event_fifo[Set_event] = Fixate_;							// ...queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
+				spawn SEND_EVT(Fixate_);
 				stage = fixating;											// ...advance to the next stage.
 				}
 			else if (time() > fix_spot_time + allowed_fix_time)				// But if time runs out...
@@ -185,8 +184,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
 				Trl_Outcome = no_fix;    									// TRIAL OUTCOME ERROR (no fixation)
 				LastStopOutcome = no_change;								// Don't change SSD
-				Event_fifo[Set_event] = FixError_;						// ...queue strobe for Neuro Explorer
-				Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
+				spawn SEND_EVT(FixError_);
 				printf("Trial Outcome: Aborted (no fixation)\n");							// ...tell the user whats up...
 				trl_running = 0;											// ...and terminate the trial.
 				}
@@ -207,8 +205,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				Trl_Outcome = broke_fix;									// TRIAL OUTCOME ERROR (broke fixation)
 				LastStopOutcome = no_change;								// Don't change SSD
 				printf("Trial Outcome: Aborted (broke fixation)\n");						// ...tell the user whats up...
-				Event_fifo[Set_event] = FixError_;						// ...queue strobe for Neuro Explorer
-				Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
+				spawn SEND_EVT(FixError_);
 				trl_running = 0;											// ...and terminate the trial.
 				}
 			else if (In_FixWin && time() > aquire_fix_time + curr_holdtime)	// But if the eyes are still in the window at end of holdtime...
@@ -218,11 +215,9 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				dsendf("vp %d\n",target);									// ...flip the pg to the target without pd marker.
 				targ_time = time(); 										// ...record the time...
 
-				Event_fifo[Set_event] = Target_;							// queue strobe
-				Set_event = (Set_event + 1) % Event_fifo_N;					// incriment event queue
+				spawn SEND_EVT(Target_);
 
-				Event_fifo[Set_event] = FixSpotOff_;						// Queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
+				spawn SEND_EVT(FixSpotOff_);
 
 				if (!In_FixWin)
 					{
@@ -232,12 +227,10 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 							Trl_Outcome = broke_fix;									// TRIAL OUTCOME ERROR (broke fixation)
 							LastStopOutcome = no_change;								// Don't change SSD
 							printf("Trial Outcome: Aborted (broke fixation)\n");						// ...tell the user whats up...
-							Event_fifo[Set_event] = FixError_;						// ...queue strobe for Neuro Explorer
-							Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
+							spawn SEND_EVT(FixError_);
 							trl_running = 0;											// ...and terminate the trial.
 
 					}
-
 
 																			// Now the animated graphs have to catch up (seperate so that stim timing stays tight)
 				if (trl_type == go_trl)										// If the trial is a go trial...
@@ -267,8 +260,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 								oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
 								oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
 								printf("Trial Outcome: Aborted (broke fixation)\n");						// ...tell the user whats up...
-								Event_fifo[Set_event] = FixError_;						// ...queue strobe for Neuro Explorer
-								Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
+								spawn SEND_EVT(FixError_);
 								trl_running = 0;											// ...and terminate the trial.
 
 							}
@@ -277,8 +269,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 
 					dsendf("vp %d\n",signal);								// ...and flip the pg to the signal without pd marker.
 
-					Event_fifo[Set_event] = StopSignal_;										// queue strobe
-					Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
+					spawn SEND_EVT(StopSignal_);
 
 					stop_sig_time = targ_time +
 						(round(curr_ssd * (1000.0 / Refresh_rate))); 		// ...record TEMPO time of presentation...
@@ -298,8 +289,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			if (!In_FixWin)													// If the eyes leave the fixation window...
 				{															// ...we have a saccade, so...
 				saccade_time = time();										// ...record the time...
-				Event_fifo[Set_event] = Saccade_;							// ...queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
+				spawn SEND_EVT(Saccade_);
 				printf("     Reaction Time = %d\n",saccade_time - targ_time);	// ...tell the user whats up...
 				stage = in_flight;											// ...and advance to the next stage.
 
@@ -339,8 +329,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				Trl_Outcome = nogo_correct;   								// TRIAL OUTCOME CORRECT (canceled trial)
 				LastStopOutcome = success;									// set the global for staircasing...
 				Correct_trls = Correct_trls + 1;							// ...set a global for 1DR...
-				Event_fifo[Set_event] = Correct_;							// ...queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
+				spawn SEND_EVT(Correct_);
 				printf("Trial Outcome: Correct (canceled)\n");				// ...tell the user whats up...
 
 				canceled_trl_count = canceled_trl_count + 1;
@@ -362,16 +351,13 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			if (In_TargWin)													// If the eyes get into the target window...
 				{
 				aquire_targ_time = time();									// ...record the time...
-				Event_fifo[Set_event] = Decide_;							// ...queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;					// ...incriment event queue...
+				spawn SEND_EVT(Decide_);
 				stage = on_target;											// ...and advance to the next stage of the trial.
 				if (trl_type == stop_trl)									// But if a saccade was the wrong thing to do...
 					{
 					dsendf("vp %d\n",target_pd);								// ...flip the pg to the target with pd marker...
 
-					Event_fifo[Set_event] = Error_sacc;						// ...queue strobe for Neuro Explorer
-					Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
-
+					spawn SEND_EVT(Error_sacc);
 
 				while (trl_running)
 						{
@@ -398,8 +384,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					}
 				else 														// Otherwise...
 					{
-					Event_fifo[Set_event] = Correct_sacc;					// ...queue strobe for Neuro Explorer
-					Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue.
+					spawn SEND_EVT(Correct_);
 					}
 				}
 			else if (time() > saccade_time + max_sacc_duration)				// But, if the eyes are out of the target window and time runs out...
@@ -456,8 +441,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					Trl_Outcome = go_correct;								//TRIAL OUTCOME CORRECT (correct go trial)
 					LastStopOutcome = no_change;							// Don't change SSD
 					Correct_trls = Correct_trls + 1;						// ...set a global for 1DR...
-					Event_fifo[Set_event] = Correct_;						// ...queue strobe...
-					Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue...
+					spawn SEND_EVT(Correct_);
 					printf("Trial Outcome: Correct (saccade)\n");							// ...tell the user whats up...
 					nostop_trl_count = nostop_trl_count + 1;
 
@@ -484,8 +468,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
 				oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
 
-				Event_fifo[Set_event] = ReturnToFix_;
-				Set_event = (Set_event + 1) % Event_fifo_N;
+				spawn SEND_EVT(ReturnToFix_);
 				Trl_Outcome = returnTofix;								//TRIAL OUTCOME ERROR (noncanceled trial)
 				printf("Trial Outcome: Error (Return to Fixation)\n");						// ...tell the user whats up...
 				trl_running = 0;
@@ -498,8 +481,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
 
 				Trl_Outcome = broke_targ;								//TRIAL OUTCOME ERROR (noncanceled trial)
-				Event_fifo[Set_event] = BreakTFix_;						// ...queue strobe...
-				Set_event = (Set_event + 1) % Event_fifo_N;				// ...incriment event queue...
+				spawn SEND_EVT(BreakTFix_);
 				printf("Trial Outcome: Error (broke target fixation)\n");					// ...tell the user whats up...
 				trl_running = 0;
 			}
