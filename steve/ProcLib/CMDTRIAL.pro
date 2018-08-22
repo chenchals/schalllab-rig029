@@ -32,12 +32,12 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				targ_hold_time,    		// see ALL_VARS.pro and DEFAULT.pro
 				object_fix)        		// animated graph object
 	{
-
+	
 	// Number the trial types to make them easier to read below
 	declare hide int 	go_trl 		= 0;
 	declare hide int 	stop_trl 	= 1;
 	declare hide int 	ignore_trl 	= 2;
-
+	
 	// Number the trial stages to make them easier to read below
 	declare hide int 	need_fix  	= 1;
 	declare hide int 	fixating  	= 2;
@@ -61,7 +61,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	declare hide int	success		= 1;
 	declare hide int	failure		= 0;
 	declare hide int	no_change	= 2;
-
+	
 	// Code all possible outcomes
 	declare hide int constant no_fix		= 1;	// never attained fixation
 	declare hide int constant broke_fix		= 2;	// attained and then lost fixation before target presentation
@@ -74,7 +74,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	declare hide int constant body_move		= 12;	// error body movement (for training stillness)
 	declare hide int constant too_fast		= 14;	// low RT while in training to slow down.
 	declare hide int constant returnTofix    = 16; 		// Eventually found the target but not on first saccade
-
+	                                        
 	// Timing variables which will be used to time task
 	declare hide float 	fix_spot_time;
 	declare hide float  targ_time;
@@ -130,7 +130,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 		dsendf("vp %d\n",fixation_pd);
 		while(!pdIsOn)
 		{
-				spawnwait WAIT_VS();
+			spawnwait WAIT_VS();
 		}
 		fix_spot_time = time();
 		dsendf("vp %d\n",fixation);
@@ -176,9 +176,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				}
 			else if (time() > fix_spot_time + allowed_fix_time)				// But if time runs out...
 				{
-				printf("*******************************\n");
 				dsendf("vp %d\n",blank);									// Flip the pg to the blank screen,...
-				dsendf("vw %d\n",1);												// flip the pg to the fixation stim without pd marker
 				oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
 				oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
 				Trl_Outcome = no_fix;    									// TRIAL OUTCOME ERROR (no fixation)
@@ -210,14 +208,8 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			else if (In_FixWin && time() > aquire_fix_time + curr_holdtime)	// But if the eyes are still in the window at end of holdtime...
 				{
 				dsendf("vp %d\n",target_pd);								// ...flip the pg to the target with pd marker...
-				while (!pdIsOn) {spawnwait WAIT_VS();}
-				dsendf("vp %d\n",target);									// ...flip the pg to the target without pd marker.
-				targ_time = time(); 										// ...record the time...
-
-				spawn SEND_EVT(Target_);
-
-				spawn SEND_EVT(FixSpotOff_);
-
+				while (!pdIsOn && trl_running) 
+				{
 				if (!In_FixWin)
 					{
 							dsendf("vp %d\n",blank);									// Flip the pg to the blank screen...
@@ -228,10 +220,16 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 							printf("Trial Outcome: Aborted (broke fixation)\n");						// ...tell the user whats up...
 							spawn SEND_EVT(FixError_);
 							trl_running = 0;											// ...and terminate the trial.
-
+							
+						}	
+					nexttick;
 					}
-
-																			// Now the animated graphs have to catch up (seperate so that stim timing stays tight)
+				targ_time = time();
+														// ...record the time...
+				dsendf("vp %d\n",target);
+				
+				spawn SEND_EVT(Target_);									// ...flip the pg to the target without pd marker.
+				spawn SEND_EVT(FixSpotOff_);									// ...flip the pg to the target without pd marker.
 				if (trl_type == go_trl)										// If the trial is a go trial...
 					{
 					oSetAttribute(object_targ, aVISIBLE); 					// ...show target in animated graph...
@@ -241,15 +239,15 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					{
 					oSetAttribute(object_targ, aVISIBLE); 					// ...just show target in animated graph (fixation point stays on).
 					}														// If it is a stop trial the target just never comes up in the animated graph.
-
-				else if (trl_type == stop_trl)								// This happens here so that no overhead intervenes between commands.
+					
+				else if (trl_type == stop_trl ||									// If it is a stop or ignore trial present the signal.
+					trl_type == ignore_trl)										// This happens here so that no overhead intervenes between commands.
 					{														// That way the # of vertical retraces remains independant of incidental processing time.
 																			// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 					dsendf("vw %d\n",curr_ssd-1);							// Wait so many vertical retraces (one is waited implicitly b/c photodiode marker above)...
 					dsendf("vp %d\n",signal_pd);							// ...flip the pg to the signal with the pd marker...
-				while (!pdIsOn) {spawnwait WAIT_VS();}
-
-				while (trl_running)
+					
+				while (!pdIsOn && trl_running)
 						{
 						if (!In_FixWin)
 							{
@@ -263,16 +261,16 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 								trl_running = 0;											// ...and terminate the trial.
 
 							}
-						nexttick;
+						spawn WAIT_VS();
 						}
 
-					dsendf("vp %d\n",signal);								// ...and flip the pg to the signal without pd marker.
 
 					spawn SEND_EVT(StopSignal_);
 
-					stop_sig_time = targ_time +
+					stop_sig_time = targ_time + 
 						(round(curr_ssd * (1000.0 / Refresh_rate))); 		// ...record TEMPO time of presentation...
-
+						
+					dsendf("vp %d\n",signal);								// ...and flip the pg to the signal without pd marker.
 					}
 
 				stage = targ_on;											// Advance to the next trial stage.
@@ -358,7 +356,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 
 					spawn SEND_EVT(Error_sacc);
 
-				while (trl_running)
+				while (!pdIsOn && trl_running)
 						{
 						if (!In_TargWin)
 							{
@@ -376,7 +374,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 								stage = return_fix_check;
 							}
 
-						nexttick;
+						spawnwait WAIT_VS();
 						}
 
 					dsendf("vp %d\n",target);								// ...flip the pg to the target with pd marker...
@@ -429,7 +427,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			else if (In_TargWin  											// But if the eyes are still in the target window...
 				&&  time() > aquire_targ_time + targ_hold_time)				// ...and the target hold time is up...
 				{
-				if (trl_type == go_trl)										// ...and a saccade was the correct thing to do...
+				if (trl_type == go_trl || trl_type == ignore_trl)			// ...and a saccade was the correct thing to do...
 					{
 					Trl_Outcome = go_correct;								//TRIAL OUTCOME CORRECT (correct go trial)
 					LastStopOutcome = no_change;							// Don't change SSD
@@ -469,14 +467,14 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 
 			else if (time() > max_sacc_duration + brokeTargTime)
 			{
-				dsendf("vp %d\n",blank);									// Flip the pg to the blank screen...
+				Trl_Outcome = broke_targ;								//TRIAL OUTCOME ERROR (noncanceled trial)	
 				oSetAttribute(object_targ, aINVISIBLE); 					// ...remove target from animated graph...
 				oSetAttribute(object_fix, aINVISIBLE); 						// ...remove fixation point from animated graph...
-
-				Trl_Outcome = broke_targ;								//TRIAL OUTCOME ERROR (noncanceled trial)
+				dsendf("vp %d\n",blank);									// Flip the pg to the blank screen...
+				trl_running = 0;
+				
 				spawn SEND_EVT(BreakTFix_);
 				printf("Trial Outcome: Error (broke target fixation)\n");					// ...tell the user whats up...
-				trl_running = 0;
 			}
 		}
 
