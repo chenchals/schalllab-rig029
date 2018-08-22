@@ -53,7 +53,7 @@ process WATCHPD(int PhotoD_channel)
 			Event_fifo[Set_event] = PDTrigger_;
 			Set_event = (Set_event + 1) % Event_fifo_N;
 			
-			printf("maxPdVal = %d, pdVal = %d, pdThresh = %d\n", maxPdVal, pdVal, pdThresh);
+			//printf("maxPdVal = %d, pdVal = %d, pdThresh = %d\n", maxPdVal, pdVal, pdThresh);
 		}
 		// Unset pdTrigger flag
 		if ((pdIsOn == 1) && (pdVal < pdThresh) && ((time() - lastTriggerOn) > nextRefreshIn))
