@@ -130,7 +130,7 @@ process RIGSETUP(int Room)
 		PD_left			= 0;	// distance from left of screen (same units as above)
 		PD_bottom		= 0;	// distance from bottom of screen (same units as above)
 		PD_size			= Int(floor(4*Scr_pixY/Scr_height));
-		pdThresh		= 60;
+		pdThresh		= 10;
 		
 		// what are your eye variables?
 		// In 023, calibration target is 12.8cm horizontal, 12.8 cm vertical. Atan(12.8/58) = 9.74 deg, Atan(12.8/58) = 11.23 deg

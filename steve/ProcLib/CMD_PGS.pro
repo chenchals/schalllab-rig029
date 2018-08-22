@@ -93,9 +93,8 @@ process CMD_PGS(int curr_target, 																// set SETC_TRL.pro
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	// Draw pg 1
-	 print("fixation with photodiode");
 	dsendf("rw %d,%d;\n",fixation_pd,fixation_pd); 												// draw first pg of video memory
-	//dsendf("cl:\n");																			// clear screen
+	dsendf("cl:\n");																			// clear screen
 	spawnwait DRW_SQR(fixation_size, 0.0, 0.0, fixation_color, fill, deg2pix_X, deg2pix_Y);   	// draw fixation point
 	spawnwait DRW_RECT(pd_size*5,pd_size,pd_angleR,pd_eccentricity,pd1_color,fill,unit2pix_X,unit2pix_Y);			// draw photodiode marker
 	spawnwait DRW_RECT(pd_size*5,pd_size,pd_angleL,pd_eccentricity,pd1_color,fill,unit2pix_X,unit2pix_Y);			// draw photodiode marker
@@ -103,17 +102,15 @@ process CMD_PGS(int curr_target, 																// set SETC_TRL.pro
    
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	// Draw pg 2	  
-	 print("fixation");
 	dsendf("rw %d,%d;\n",fixation,fixation);   													// draw second pg of video memory                                       
-	//dsendf("cl:\n");																			// clear screen
+	dsendf("cl:\n");																			// clear screen
 	spawnwait DRW_SQR(fixation_size, 0.0, 0.0, fixation_color, fill, deg2pix_X, deg2pix_Y);   	// draw fixation point
     nexttick;
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	// Draw pg 3	 
-	 print("target with photodiode");
 	dsendf("rw %d,%d;\n",target_pd,target_pd);  												// draw pg 3                                        
-	//dsendf("cl:\n");																			// clear screen
+	dsendf("cl:\n");																			// clear screen
 	spawnwait DRW_SQR(size, angle, eccentricity, color, fill, deg2pix_X, deg2pix_Y);          	// draw target
 	if (!Classic)																				// if we are doing stop-signal 2.0 (not classic)
 		{
@@ -126,9 +123,8 @@ process CMD_PGS(int curr_target, 																// set SETC_TRL.pro
 	
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	// Draw pg 4	  
-	 print("target");
 	dsendf("rw %d,%d;\n",target,target);  														// draw pg 4                                        
-	//dsendf("cl:\n");																			// clear screen
+	dsendf("cl:\n");																			// clear screen
 	spawnwait DRW_SQR(size, angle, eccentricity, color, fill, deg2pix_X, deg2pix_Y);         	// draw target
 	if (!Classic)																				// if we are doing stop-signal 2.0 (not classic)
 		{
@@ -138,26 +134,24 @@ process CMD_PGS(int curr_target, 																// set SETC_TRL.pro
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	// Draw pg 5 
-	 print("signal with photodiode");
 	dsendf("rw %d,%d;\n",signal_pd,signal_pd);    												// draw pg 5                                      
-	//dsendf("cl:\n");																			// clear screen
+	dsendf("cl:\n");																			// clear screen
 	spawnwait DRW_SQR(size, angle, eccentricity, color, fill, deg2pix_X, deg2pix_Y);         	// draw target
-	if (Classic)
-	spawnwait DRW_SQR(fixation_size, 0.0, 0.0, sig_color, fill, deg2pix_X, deg2pix_Y);   		// draw stop signal/ignore stim
+	spawnwait DRW_SQR(fixation_size, 0.0, 0.0, sig_color, fill, deg2pix_X, deg2pix_Y);   	
 	if (!Classic)																				// if we are doing stop-signal 2.0 (not classic)
 		{
 		spawnwait DRW_SQR(fixation_size, 0.0, 0.0, fixation_color, open, deg2pix_X, deg2pix_Y); // draw fixation point
 		}
+		
 	spawnwait DRW_RECT(pd_size*5,pd_size,pd_angleR,pd_eccentricity,pd1_color,fill,unit2pix_X,unit2pix_Y);			// draw photodiode marker
 	spawnwait DRW_RECT(pd_size*5,pd_size,pd_angleL,pd_eccentricity,pd1_color,fill,unit2pix_X,unit2pix_Y);			// draw photodiode marker
-    nexttick;
+	nexttick;
    
 	
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	// Draw pg 6	 
-	 print("signal");
 	dsendf("rw %d,%d;\n",signal,signal);   														// draw pg 6                                       					
-	//dsendf("cl:\n");																			// clear screen
+	dsendf("cl:\n");																			// clear screen
 	spawnwait DRW_SQR(size, angle, eccentricity, color, fill, deg2pix_X, deg2pix_Y);          	// draw target
 	spawnwait DRW_SQR(fixation_size, 0.0, 0.0, sig_color, fill, deg2pix_X, deg2pix_Y);   		// draw stop signal/ignore stim
 	if (!Classic)																				// if we are doing stop-signal 2.0 (not classic)

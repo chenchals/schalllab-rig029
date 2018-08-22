@@ -152,14 +152,14 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				dsendf("vp %d\n",fixation);
 				spawn SEND_EVT(FixSpotOn_);
 
-				wait curr_holdtime;
+				wait 100;
 
-				dsendf("vp %d\n",target_pd);
-				while (!pdIsOn) {spawnwait WAIT_VS();}
-				dsendf("vp %d\n",target);
-				spawn SEND_EVT(Target_);
+				//dsendf("vp %d\n",target_pd);
+				//while (!pdIsOn) {spawnwait WAIT_VS();}
+				//dsendf("vp %d\n",target);
+				//spawn SEND_EVT(Target_);
 
-				wait curr_holdtime;
+				//wait 100;
 
 			}
 		}
