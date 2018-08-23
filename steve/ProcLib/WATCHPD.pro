@@ -13,7 +13,7 @@
 #include C:/TEMPO/ProcLib/SEND_EVT.pro
 
 declare WATCHPD(int PhotoD_channel);
- 
+
 process WATCHPD(int PhotoD_channel)
 {
 
@@ -29,7 +29,7 @@ process WATCHPD(int PhotoD_channel)
 		nextRefreshIn = Int(floor(1000.0/Refresh_rate)) + 1;
 		pdVect[pdCount] = atable(PhotoD_channel);
 		pdCount = (pdCount+1) % pdN;
-		
+
 		pdSum = 0;
 		ip = 0;
 		while (ip < pdN)
@@ -44,15 +44,12 @@ process WATCHPD(int PhotoD_channel)
 		{
 			maxPdVal = pdVal;
 		}
-		
+
 		if ((pdIsOn == 0) && (pdVal > pdThresh))
 		{
 			pdIsOn = 1;
 			lastTriggerOn = time();
-	
-			Event_fifo[Set_event] = PDTrigger_;
-			Set_event = (Set_event + 1) % Event_fifo_N;
-			
+      spawn SEND_EVT(PDTrigger_);
 			//printf("maxPdVal = %d, pdVal = %d, pdThresh = %d\n", maxPdVal, pdVal, pdThresh);
 		}
 		// Unset pdTrigger flag
