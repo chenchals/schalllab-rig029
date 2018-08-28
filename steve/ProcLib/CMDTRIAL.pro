@@ -87,6 +87,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	declare hide int	canceled_trl_count;
 	declare hide int	nostop_trl_count;
 	declare hide int	tempPDvalue;
+	declare hide float	tempTime;
 
 	// This variable makes the while loop work
 	declare hide int 	trl_running;
@@ -94,8 +95,8 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 	// Have to be reset on every iteration since
 	// variable declaration only occurs at load time
 	trl_running 		= 1;
-	stage 				= need_fix;
-	//stage 				= test;
+	//stage 				= need_fix;
+	stage 				= test;
 
 	// Tell the user what's up
 	printf(" \n");
@@ -154,12 +155,12 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 
 				wait 100;
 
-				//dsendf("vp %d\n",target_pd);
-				//while (!pdIsOn) {spawnwait WAIT_VS();}
-				//dsendf("vp %d\n",target);
-				//spawn SEND_EVT(Target_);
+				dsendf("vp %d\n",target_pd);
+				while (!pdIsOn) {spawnwait WAIT_VS();}
+				dsendf("vp %d\n",target);
+				spawn SEND_EVT(Target_);
 
-				//wait 100;
+				wait 100;
 
 			}
 		}
@@ -241,8 +242,12 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				else if (trl_type == stop_trl ||									// If it is a stop or ignore trial present the signal.
 					trl_type == ignore_trl)										// This happens here so that no overhead intervenes between commands.
 					{														// That way the # of vertical retraces remains independant of incidental processing time.
-																			// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
-					dsendf("vw %d\n",curr_ssd-1);							// Wait so many vertical retraces (one is waited implicitly b/c photodiode marker above)...
+
+					printf("Target time = %d\n",targ_time);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
+
+					dsendf("vw %d\n",curr_ssd-1);					// Wait so many vertical retraces (one is waited implicitly b/c photodiode marker above)...
+					tempTime = time();
+					printf("time after target before signal_pd = %d\n",tempTime);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 					dsendf("vp %d\n",signal_pd);							// ...flip the pg to the signal with the pd marker...
 					
 				while (!pdIsOn && trl_running)
@@ -261,12 +266,15 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 							}
 						spawn WAIT_VS();
 						}
-
+					tempTime = time();
+					printf("time after target after signal_pd = %d\n",tempTime);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
+					printf("ssd in # refresh = %d\n",curr_ssd);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 
 					spawn SEND_EVT(StopSignal_);
 
 					stop_sig_time = targ_time + 
 						(round(curr_ssd * (1000.0 / Refresh_rate))); 		// ...record TEMPO time of presentation...
+					printf("stop_sig_time = %d\n",stop_sig_time);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 						
 					dsendf("vp %d\n",signal);								// ...and flip the pg to the signal without pd marker.
 					}

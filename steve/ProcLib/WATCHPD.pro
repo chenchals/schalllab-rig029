@@ -58,6 +58,7 @@ process WATCHPD(int PhotoD_channel)
 			pdIsOn = 0;
 			maxPdVal = -900;
 		}
+		writef("watchpd.log %d,%d,%d\n",pdVect[0],pdVect[1],pdVect[2]);
 		nexttick;
 	}
 }
