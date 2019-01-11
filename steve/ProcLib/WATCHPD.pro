@@ -22,23 +22,13 @@ process WATCHPD(int PhotoD_channel)
 	declare int pdCount;
 	declare float pdSum;
 	declare int maxPdVal = -900;
-    declare int nextRefreshIn;
+  declare int nextRefreshIn;
 
 	while (1)
 	{
+		declare int pd1 = 0
 		nextRefreshIn = Int(floor(1000.0/Refresh_rate)) + 1;
-		pdVect[pdCount] = atable(PhotoD_channel);
-		pdCount = (pdCount+1) % pdN;
-
-		pdSum = 0;
-		ip = 0;
-		while (ip < pdN)
-		{
-			pdSum = pdSum + pdVect[ip];
-			ip = ip + 1;
-		}
-
-		pdVal = pdSum/pdN;
+		pdVal = atable(PhotoD_channel);
 
 		if (pdVal > maxPdVal)
 		{
