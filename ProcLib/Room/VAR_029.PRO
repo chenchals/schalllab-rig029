@@ -1,11 +1,13 @@
 //==========================================================================
-// ROOM29.PRO
-//   Description: Set global variable for room 29
+// VAR_029.PRO
+//   Description: Set global variable for room 29.
+//               Screen settings, isoluminant colors, data acquisition channels
 //   Author: chenchal.subraveti@vanderbilt.edu
 //   Date: 2018-09-06
 //==========================================================================
 //  Revision History:
-//
+//  002: 2019/01/14 chenchal subraveti
+//       Changed file name to VAR_029 as this file contains variables only
 
 // Global variables for Room 29
 //==========================================================================
