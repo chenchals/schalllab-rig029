@@ -47,7 +47,7 @@ process SET_CLR_PALETTE()
   while (stimColorIdx <= N_targ_pos)
   {
     //35, 33, 27
-    dsendf("cm %d %d %d %d;\n", stimColorIdx, Color_list[r_], Color_list[g_], Color_list[b_]);
+    dsendf("cm %d %d %d %d;\n", stimColorIdx, Color_list[stimColorIdx-1,r_], Color_list[stimColorIdx-1,g_], Color_list[stimColorIdx-1,b_]);
     stimColorIdx = stimColorIdx + 1;
     nexttick;
   }

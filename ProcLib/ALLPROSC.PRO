@@ -44,5 +44,5 @@ declare int fix_manual = 1;
 
 process IDLE() enabled
 {
-
+  printf("ALLPROSC.PRO Running IDLE()\n");
 }
