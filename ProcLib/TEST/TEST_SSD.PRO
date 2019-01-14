@@ -32,15 +32,13 @@ declare int TRL_NUM = 0;
 declare int BREAK_FIX_FLAG = 0;
 
 // Room variables
-#include C:/TEMPO/ProcLib/TEST/ROOM_029.PRO
+#include C:/TEMPO/ProcLib/Room/ROOM_029.PRO
 // Screen parameters including isoluminant colors,
-#include C:/TEMPO/ProcLib/TEST/SET_SCRN.PRO
+#include C:/TEMPO/ProcLib/SET_SCRN.PRO
 // Set palatte colors for countermanding
-#include C:/TEMPO/ProcLib/TEST/CMD_CLRS.PRO
+#include C:/TEMPO/ProcLib/TEST/TEST_COL.PRO
 // set pages to load CMD_PGS.PRO?
-#include C:/TEMPO/ProcLib/TEST/CMD_PGS.PRO
-// old code to wait...
-#include C:/TEMPO/ProcLib/WAIT_MU.PRO
+#include C:/TEMPO/ProcLib/TEST/TEST_PGS.PRO
 // GLOBAL variables for color:
 //==========================================================================
 
@@ -66,18 +64,18 @@ process TEST_SSD() enabled
    spawn WTCH_PD_SCHMITT();
    spawn WTCH_EYE();
    TRL_NUM = 0;
-   
+
    //dsendf("vp %d\n", PAGE_TEST_PD);
    //while(1)
    //{
-	 // dsendf("vp %d\n", PAGE_FIX_PD);	 
+	 // dsendf("vp %d\n", PAGE_FIX_PD);
      // nexttick 80;
 	 // dsendf("vp %d\n", PAGE_STOP_SIGNAL_PD);
 	//  nexttick 5;
     //}
       nexttick 1000;
    while (TRL_NUM < maxTrialCount+1  && trlRunning ==1)
-   {     
+   {
  	 TRL_NUM = TRL_NUM + 1;
      dsendf("vp %d\n", PAGE_BLANK);
 	 ticks = 0;
@@ -86,7 +84,7 @@ process TEST_SSD() enabled
 	 ssdTimeExpected = VERT_RFRSH_SSD * REFRESH_RATE;
      currBreakFix = BREAK_FIX_FLAG;
 	 currWatchEyeTicks =  random(25)*40+100;
-	 dsendf("vp %d\n", PAGE_FIX_PD);	 
+	 dsendf("vp %d\n", PAGE_FIX_PD);
      startTime = time();
 	 stopTime = startTime;
 	 while (trlRunning && VERT_RFRSH_COUNT < VERT_RFRSH_SSD)
@@ -97,10 +95,10 @@ process TEST_SSD() enabled
        // Lets us count left Trigs
 	   if (PD_TRIG_L)
 	   {
-	      VERT_RFRSH_COUNT = VERT_RFRSH_COUNT + 1; 
-		  // do not count for 5 ticks 
-		  // as the trig will be on for about 3 ms		  
-          nexttick 2; 
+	      VERT_RFRSH_COUNT = VERT_RFRSH_COUNT + 1;
+		  // do not count for 5 ticks
+		  // as the trig will be on for about 3 ms
+          nexttick 2;
 	   }
 	   // expire some random no. ticks before deciding broke fix state
 	   if (ticks < currWatchEyeTicks)
@@ -110,10 +108,10 @@ process TEST_SSD() enabled
 	   }
        // check eye state
 	   if (currBreakFix == 1 && ticks > currWatchEyeTicks -1)
-	   {		 
-		dsendf("vp %d\n", PAGE_BLANK); 
+	   {
+		dsendf("vp %d\n", PAGE_BLANK);
 		trlRunning = 0;
-	   } 
+	   }
        nexttick;
 	 }
 	 if (trlRunning) // ie no Break fixation...
@@ -154,12 +152,11 @@ process SETUP_SCRN_CLRS_PGS()
   dsend("vi 256;");
   // flush all vdosync memory
   dsend("ca");
-  wait 5000;
   // Set up pages
   spawnwait SET_SCRN();
-  spawnwait SET_CLRS();
-  spawnwait CMD_PGS();
-  wait 5000;
+  spawnwait TEST_SET_CLRS();
+  spawnwait TEST_PGS();
+  nexttick 5000;
 }
 process SETUP_DATA_ACQ_PARMS()
 {
@@ -171,7 +168,7 @@ process WTCH_PD_SCHMITT()
   declare float pdValL = 0;
   declare float pdValR = 0;
   declare int threshLo = 100;//both hi and lo
- 
+
   while(1)
   {
     pdValL = atable(PHOTOCELL_L_CHANNEL);
@@ -198,46 +195,13 @@ process WTCH_PD_SCHMITT()
 	nexttick;
   }
 }
-process WTCH_PD()
-{
-  declare float pdValL = 0;
-  declare float pdValR = 0;
-  declare int threshHi = -150;
-  declare int threshLo = -150;
-
-  while(1)
-  {
-    pdValL = atable(PHOTOCELL_L_CHANNEL);
-    pdValR = atable(PHOTOCELL_R_CHANNEL);
-	if (pdValL > threshHi && PD_TRIG_L == 0)
-	{
-	  PD_TRIG_L = 1;
-	}
-	else if (pdValL < threshLo && PD_TRIG_L == 1)
-	{
-	  PD_TRIG_L = 0;
-	}
-	if (pdValR > threshHi && PD_TRIG_R == 0)
-	{
-	  PD_TRIG_R = 1;
-	}
-	else if (pdValR < threshLo && PD_TRIG_R == 1)
-	{
-	  PD_TRIG_R = 0;
-	}
-    printf("%d,%d,%d,%d,%d\n",TRL_NUM,pdValL,pdValR,PD_TRIG_L,PD_TRIG_R);
-
-    writef("pdVals.csv %d,%d,%d,%d,%d\n",TRL_NUM,pdValL,pdValR,PD_TRIG_L,PD_TRIG_R);
-	nexttick;
-  }
-}
 
 process WTCH_EYE()
 {
 	while(1)
 	{
 	  BREAK_FIX_FLAG = random(2);
-      nexttick;	  
+      nexttick;
 	}
 }
 

@@ -1,5 +1,5 @@
 //==========================================================================
-// CMD_CLRS.PRO
+// TEST_COL.PRO
 //   Description: Function to setup all colors/palettes for CMD task
 //   Author: chenchal.subraveti@vanderbilt.edu
 //   Date: 2018-12-07
@@ -9,7 +9,7 @@
 //       Global color indices and palettes for colors
 //
 //
-declare SET_CLR(int colorIndex, int color_r, int color_g, int color_b);
+declare TEST_SET_CLRS(int colorIndex, int color_r, int color_g, int color_b);
 // Global color Variables
 // Default palettes
 declare int constant PAL_DEFAULT = 0;
@@ -22,7 +22,7 @@ int CLR_IDX_STOP_SIGNAL = 254;
 int CLR_IDX_IGNORE = 253;
 int CLR_IDX_PTOTODIODE = 247;
 
-process SET_CLRS()
+process TEST_SET_CLRS()
 {
   declare int r_, g_, b_;
   declare targetIndex;
@@ -63,7 +63,7 @@ process SET_CLRS()
 		targetIndex = targetIndex + 1;
 		nexttick;
 	}
-	
+
 	spawn SET_CLR(1, 255, 0, 0);	spawn SET_CLR(2, 0, 0, 255);
 }
 

@@ -1,6 +1,7 @@
 //==========================================================================
 // SET_SCRN.PRO
-//   Description: Set Virtual screen coordinates.(0,0 is center)
+//   Description: Set Virtual screen coordinates.(0,0 is center).
+//                Depends on global variables in ROOM_xxx.PRO
 //   Author: chenchal.subraveti@vanderbilt.edu
 //   Date: 2018-09-06
 //==========================================================================
@@ -17,9 +18,12 @@
 //               |
 //               |
 //            (-384)
+// 002: 2019/01/14  chenchal subraveti
+//      Updated description.
 //
+
 declare SET_SCRN();
-//==========Derived measurements from global variables=============
+//==========Depends on global variables in ROOM_xxx.PRO=============
 // Screen mm to pixel conversion factor
 declare float constant MM_2_PIX_X = SCRN_PIX_X/SCRN_MM_X;
 declare float constant MM_2_PIX_Y = SCRN_PIX_Y/SCRN_MM_Y;

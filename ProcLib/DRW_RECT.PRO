@@ -24,12 +24,12 @@ declare DRW_RECT(float sizeX, float sizeY, float angle, float eccentricity, int 
 //
 process DRW_RECT(float sizeX, float sizeY, float angle, float eccentricity, int colorIndex, int fillFlag)
 	{
-	declare hide float stim_ecc_x;
-	declare hide float stim_ecc_y;
-	declare hide int ulx;
-	declare hide int uly;
-	declare hide int lrx;
-	declare hide int lry;
+	declare float stim_ecc_x;
+	declare float stim_ecc_y;
+	declare int ulx;
+	declare int uly;
+	declare int lrx;
+	declare int lry;
 
 	// find the center of the box in x and y space based on the angle and eccentricity
 	stim_ecc_x = cos(angle) * eccentricity;
@@ -41,8 +41,8 @@ process DRW_RECT(float sizeX, float sizeY, float angle, float eccentricity, int 
 	lrx       = round((stim_ecc_x + sizeX/2)*DEG_2_PIX_X);
 	lry       = round((stim_ecc_y - sizeY/2)*DEG_2_PIX_Y);
 
-	printf("DRW_RECT: COLOR_INDEX %d\n", colorIndex);
-	printf("DRW_RECT: sizeX %0.2d, sizeY %0.2d, angle %0.2d, eccentricity %0.2d, colorIndex %d, fillFlag %d\n",sizeX, sizeY, angle, eccentricity, colorIndex, fillFlag);
+	//printf("DRW_RECT: COLOR_INDEX %d\n", colorIndex);
+	//printf("DRW_RECT: sizeX %0.2d, sizeY %0.2d, angle %0.2d, eccentricity %0.2d, colorIndex %d, fillFlag %d\n",sizeX, sizeY, angle, eccentricity, colorIndex, fillFlag);
 	dsendf("co %d;\n",colorIndex);
 	if(fillFlag == 0)
 		{
