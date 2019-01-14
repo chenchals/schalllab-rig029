@@ -9,14 +9,16 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
-// Room variables
-#include C:/TEMPO/ProcLib/Room/ROOM_029.PRO
-// Screen parameters including isoluminant colors,
+// Room variables: screen, isoluminant colors, data channels
+#include C:/TEMPO/ProcLib/Room/VAR_029.PRO
+// Screen parameters
 #include C:/TEMPO/ProcLib/SET_SCRN.PRO
+// Stimulus Variables: fixation, target, photodiode
+#include C:/TEMPO/ProcLib/VAR_STIM.PRO
 // Set palatte colors and color indices
 #include C:/TEMPO/ProcLib/SET_CLRS.PRO
 // set pages to load CMD_PGS.PRO?
-#include C:/TEMPO/ProcLib/TEST/TEST_PGS.PRO
+#include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 //==========================================================================
 declare IDLE();
 
@@ -42,5 +44,5 @@ declare int fix_manual = 1;
 
 process IDLE() enabled
 {
-  
+
 }
