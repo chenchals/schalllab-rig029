@@ -33,17 +33,17 @@ process INFOS()
   declare int tempInfosN;
   declare int nInfos;
 
-  stop_sig_color_r = Stop_sig_color[0];
-  stop_sig_color_g = Stop_sig_color[1];
-  stop_sig_color_b = Stop_sig_color[2];
+  stop_sig_color_r = STOP_SIGNAL_COLOR[0];
+  stop_sig_color_g = STOP_SIGNAL_COLOR[1];
+  stop_sig_color_b = STOP_SIGNAL_COLOR[2];
 
-  ignore_sig_color_r = Ignore_sig_color[0];
-  ignore_sig_color_g = Ignore_sig_color[1];
-  ignore_sig_color_b = Ignore_sig_color[2];
+  ignore_sig_color_r = IGNORE_SIGNAL_COLOR[0];
+  ignore_sig_color_g = IGNORE_SIGNAL_COLOR[1];
+  ignore_sig_color_b = IGNORE_SIGNAL_COLOR[2];
 
-  fixation_color_r = Fixation_color[0];
-  fixation_color_g = Fixation_color[1];
-  fixation_color_b = Fixation_color[2];
+  fixation_color_r = FIX_COLOR[0];
+  fixation_color_g = FIX_COLOR[1];
+  fixation_color_b = FIX_COLOR[2];
 
   target_color_r = Color_list[Curr_target, 0];
   target_color_g = Color_list[Curr_target, 1];

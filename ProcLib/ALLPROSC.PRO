@@ -45,4 +45,13 @@ declare int fix_manual = 1;
 process IDLE() enabled
 {
   printf("ALLPROSC.PRO Running IDLE()\n");
+  printf("ALLPROSC.PRO Running SET_SCRN()\n");
+  spawnwait SET_SCRN();
+  printf("ALLPROSC.PRO Running SET_DEFAULT_STIM_VARS()\n");
+  spawnwait SET_DEFAULT_STIM_VARS();
+  printf("ALLPROSC.PRO Running SET_CLR_PALETTE()\n");
+  spawnwait SET_CLR_PALETTE();
+  printf("ALLPROSC.PRO Running CMD_PGS()\n");
+  spawnwait CMD_PGS(1);
+  printf("DONE....!\n");
 }

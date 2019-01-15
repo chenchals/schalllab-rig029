@@ -29,7 +29,7 @@ process TEST_PGS()
 	declare float adjacent;
 	declare int open = 0;
 	declare int fill = 1;
-	declare float pdSize = 4;
+	declare float PD_WIDTH_DEG = 4;
 	printf("TEST_PGS: Drawing pages\n");
 	adjacent = SCRN_DEG_X;
 	opposite = SCRN_DEG_Y;
@@ -39,7 +39,7 @@ process TEST_PGS()
 	pdAngleR = -rad2deg(atan(opposite/adjacent));
 
 
-	printf("TEST_PGS: pdSize %d, pdAngleL %0.4d, pdAngleR %0.4d, fix_size %0.2d\n",pdSize,pdAngleL,pdAngleR,FIX_SIZE);
+	printf("TEST_PGS: PD_WIDTH_DEG %d, pdAngleL %0.4d, pdAngleR %0.4d, fix_size %0.2d\n",PD_WIDTH_DEG,pdAngleL,pdAngleR,FIX_SIZE);
 	//--------------------------------------------------------------------------------------------------------------------
 	// Draw pg 0
 	printf("-----------------\n");
@@ -50,30 +50,30 @@ process TEST_PGS()
 	nexttick 10;
 	//--------------------------------------------------------------------------------------------------------------------
 	// Draw pg 1 FIXATION_PD - PD is drawn on LEFT-TOP of screen only
-	printf("TEST_PGS: Drawing page %d FIX_SIZE %d, pdSize %3.4d, pdAngleL %3.2d\n",PAGE_FIX_PD,FIX_SIZE,pdSize,pdAngleL);
+	printf("TEST_PGS: Drawing page %d FIX_SIZE %d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PAGE_FIX_PD,FIX_SIZE,PD_WIDTH_DEG,pdAngleL);
 	dsendf("rw %d,%d;\n",PAGE_FIX_PD,PAGE_FIX_PD);
 	dsendf("cl:\n");
 	spawnwait DRW_RECT(FIX_SIZE, FIX_SIZE, 0.0, 0.0, CLR_IDX_FIX, fill);
-	spawnwait DRW_RECT(pdSize,pdSize/4,pdAngleL,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
+	spawnwait DRW_RECT(PD_WIDTH_DEG,PD_WIDTH_DEG/4,pdAngleL,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
  	printf("-----------------\n");
     nexttick 10;
    //--------------------------------------------------------------------------------------------------------------------
 	// Draw pg 2 STOP_SIGNAL_PD - PD is drawn on RIGHT-TOP of screen only
-	printf("TEST_PGS: Drawing page %d FIX_SIZE %d, pdSize %3.4d, pdAngleR %3.2d\n",PAGE_STOP_SIGNAL_PD,FIX_SIZE,pdSize,pdAngleR);
+	printf("TEST_PGS: Drawing page %d FIX_SIZE %d, PD_WIDTH_DEG %3.4d, pdAngleR %3.2d\n",PAGE_STOP_SIGNAL_PD,FIX_SIZE,PD_WIDTH_DEG,pdAngleR);
 	dsendf("rw %d,%d;\n",PAGE_STOP_SIGNAL_PD,PAGE_STOP_SIGNAL_PD);
 	dsendf("cl:\n");
 	spawnwait DRW_RECT(FIX_SIZE, FIX_SIZE, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, fill);
-	spawnwait DRW_RECT(pdSize,pdSize/4,pdAngleR,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
+	spawnwait DRW_RECT(PD_WIDTH_DEG,PD_WIDTH_DEG/4,pdAngleR,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
  	printf("-----------------\n");
     nexttick 10;
 	//--------------------------------------------------------------------------------------------------------------------
 	// Draw pg 100 PAGE_TEST_PD - PD is drawn on LEFT-TOP and RIGHT-TOP of screen
-	printf("TEST_PGS: Drawing page %d FIX_SIZE %d, pdSize %3.4d, pdAngleL %3.2d, pdAngleR %3.2d\n",PAGE_TEST_PD,FIX_SIZE,pdSize,pdAngleR,pdAngleR);
+	printf("TEST_PGS: Drawing page %d FIX_SIZE %d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d, pdAngleR %3.2d\n",PAGE_TEST_PD,FIX_SIZE,PD_WIDTH_DEG,pdAngleR,pdAngleR);
 	dsendf("rw %d,%d;\n",PAGE_TEST_PD,PAGE_TEST_PD);
 	dsendf("cl:\n");
 	spawnwait DRW_RECT(FIX_SIZE, FIX_SIZE, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, fill);
-	spawnwait DRW_RECT(pdSize,pdSize/4,pdAngleL,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
-	spawnwait DRW_RECT(pdSize,pdSize/4,pdAngleR,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
+	spawnwait DRW_RECT(PD_WIDTH_DEG,PD_WIDTH_DEG/4,pdAngleL,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
+	spawnwait DRW_RECT(PD_WIDTH_DEG,PD_WIDTH_DEG/4,pdAngleR,pd_eccentricity,CLR_IDX_PTOTODIODE,fill);
  	printf("-----------------\n");
     nexttick 10;
 

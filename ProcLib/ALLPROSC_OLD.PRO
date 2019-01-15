@@ -102,7 +102,7 @@ declare int fix_manual = 1;                  //auto fixation task = 1
 #include C:/TEMPO/ProcLib/SET_SOA.PRO
 #include C:/TEMPO/ProcLib/SET_SCH.PRO  // sets parameters for search RT graph
 #include C:/TEMPO/ProcLib/SET_PA.PRO
-#include C:/TEMPO/ProcLib/WINDOWS.PRO  // sets fixation and target window size (these valeus are needed in WATCHEYE.PRO)
+#include C:/TEMPO/ProcLib/WINDOWS.PRO  // sets fixation and target window CURR_TARG_SIZE (these valeus are needed in WATCHEYE.PRO)
 #include C:/TEMPO/ProcLib/WATCHEYE.PRO // monitors eye position on each process cyle
 #include C:/TEMPO/ProcLib/TONE.PRO     // does simple frequency conversion and presents tone accordingly
 #include C:/TEMPO/ProcLib/TONESWEP.PRO // a sweep through several tones for a sound which can be distinguished from pure tones

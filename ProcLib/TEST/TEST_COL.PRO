@@ -24,32 +24,32 @@ int CLR_IDX_PTOTODIODE = 247;
 
 process TEST_SET_CLRS()
 {
-  declare int r_, g_, b_;
+  declare int RGB_R_IDX, RGB_G_IDX, RGB_B_IDX;
   declare targetIndex;
   declare nTargets;
   declare int fixation_color[3];
   declare int stop_sig_color[3];
   declare int ignore_sig_color[3];
 
-  r_ = 0; g_ = 1; b_ = 2;
+  RGB_R_IDX = 0; RGB_G_IDX = 1; RGB_B_IDX = 2;
 
   printf("CMD_CLRS: Setting indexed colors for default palette\n");
 
   // Default to gray
-  fixation_color[r_]		= RED_VAL - WR_OFF;
-  fixation_color[g_]		= GREEN_VAL - WG_OFF;
-  fixation_color[b_]		= BLUE_VAL - WB_OFF;
-  spawn SET_CLR(CLR_IDX_FIX, fixation_color[r_],	fixation_color[g_], fixation_color[b_]);
+  fixation_color[RGB_R_IDX]		= RED_VAL - WR_OFF;
+  fixation_color[RGB_G_IDX]		= GREEN_VAL - WG_OFF;
+  fixation_color[RGB_B_IDX]		= BLUE_VAL - WB_OFF;
+  spawn SET_CLR(CLR_IDX_FIX, fixation_color[RGB_R_IDX],	fixation_color[RGB_G_IDX], fixation_color[RGB_B_IDX]);
 
-  stop_sig_color[r_]		= 40;
-  stop_sig_color[g_]		= 40;
-  stop_sig_color[b_]		= 0;
-  spawn SET_CLR(CLR_IDX_STOP_SIGNAL, stop_sig_color[r_],	stop_sig_color[g_], stop_sig_color[b_]);
+  stop_sig_color[RGB_R_IDX]		= 40;
+  stop_sig_color[RGB_G_IDX]		= 40;
+  stop_sig_color[RGB_B_IDX]		= 0;
+  spawn SET_CLR(CLR_IDX_STOP_SIGNAL, stop_sig_color[RGB_R_IDX],	stop_sig_color[RGB_G_IDX], stop_sig_color[RGB_B_IDX]);
 
-  ignore_sig_color[r_]	= 0;
-  ignore_sig_color[g_]	= 36;
-  ignore_sig_color[b_]	= 0;
-  spawn SET_CLR(CLR_IDX_STOP_SIGNAL, ignore_sig_color[r_],	ignore_sig_color[g_], ignore_sig_color[b_]);
+  ignore_sig_color[RGB_R_IDX]	= 0;
+  ignore_sig_color[RGB_G_IDX]	= 36;
+  ignore_sig_color[RGB_B_IDX]	= 0;
+  spawn SET_CLR(CLR_IDX_STOP_SIGNAL, ignore_sig_color[RGB_R_IDX],	ignore_sig_color[RGB_G_IDX], ignore_sig_color[RGB_B_IDX]);
 
   spawn SET_CLR(CLR_IDX_PTOTODIODE, 255, 255, 255);
 
