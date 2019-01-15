@@ -52,5 +52,4 @@ process DRW_RECT(float sizeX, float sizeY, float CURR_TARG_ANGLE, float CURR_TAR
 		{
 		dsendf("rf %d,%d,%d,%d;\n",ulx,uly,lrx,lry);
 		}
-
 	}
