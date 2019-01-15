@@ -81,7 +81,7 @@ process CMD_PGS(int currTargetIdx)
                          CLR_IDX_PTOTODIODE,
                          fill);
 
-  printf("-----------------\n");
+  //printf("-----------------\n");
   nexttick;
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 2 FIXATION - No PD
