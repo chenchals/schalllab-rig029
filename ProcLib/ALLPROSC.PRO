@@ -44,6 +44,8 @@ process IDLE() enabled
 	declare int tempVar;
 	declare int trlNum;
 	printf("ALLPROSC.PRO Running IDLE()\n");
+	printf("ALLPROSC.PRO Running RIG_029()\n");
+	spawnwait SETUP_029();
 	printf("ALLPROSC.PRO Running SET_SCRN()\n");
 	spawnwait SET_SCRN();
 	printf("ALLPROSC.PRO Running SET_DEFAULT_STIM_VARS()\n");

@@ -35,7 +35,9 @@ declare int WB_OFF; // DATA ACQUISITION PARAMS
 //==========================================================================
 // Eye x scaling factor to convert eye trace voltage to degrees declare float EYE_X_GAIN;//5.1;//9.74; //50; //3.492;
 // Eye y scaling factor to convert eye trace voltage to degrees
-declare float EYE_Y_GAIN; // Hardware setup
+declare float EYE_X_GAIN; 
+declare float EYE_Y_GAIN; 
+// Hardware setup
 declare int JUICE_CHANNEL;
 declare int STIM_CHANNEL;
 declare int EYE_X_CHANNEL;

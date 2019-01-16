@@ -25,8 +25,8 @@
 declare SET_SCRN();
 //==========Depends on global variables in ROOM_xxx.PRO=============
 // Screen mm to pixel conversion factor
-declare float constant MM_2_PIX_X = SCRN_PIX_X/SCRN_MM_X;
-declare float constant MM_2_PIX_Y = SCRN_PIX_Y/SCRN_MM_Y;
+declare float MM_2_PIX_X;
+declare float MM_2_PIX_Y;
 // Screen in degrees of visual CURR_TARG_ANGLE
 // Visual CURR_TARG_ANGLE is CURR_TARG_ANGLE subtended by gaze shift from center of screen to either
 // Left/right or top/bottom of the screen. Therefore,
@@ -48,6 +48,8 @@ declare float DEG_2_PIX_Y;
 
 process SET_SCRN()
 {
+	MM_2_PIX_X = SCRN_PIX_X/SCRN_MM_X;
+    MM_2_PIX_Y = SCRN_PIX_Y/SCRN_MM_Y;
 
 	SCRN_DEG_X = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
 	SCRN_DEG_Y = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));
