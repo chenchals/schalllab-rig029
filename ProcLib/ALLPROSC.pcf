@@ -2,10 +2,10 @@
 ; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
-; Mon Jan 14 14:52:45 2019
+; Wed Jan 16 07:32:42 2019
 ; CLOAD ALLPROSC.pcf
 
-; tempow 16.10 Set 49.20   'ADMINf813659' connected to 'TEMPO1'
+; tempow 16.10 Set 49.20   'ADMINf811435' connected to 'TEMPO1'
 ; KPED 17.1 Set 49
 ; KSRV 16.8 Set 49.20 (Server 'TEMPO1          ' running on computer '')
 ; PCL 0.0     TEMPO 0.0
@@ -21,23 +21,30 @@
 ;
 ; Parameter       Limit          Used    Pct        Bytes/Total        Develop    Stable
 ; -------------   -------     -------  -----        -----------        -------    ------
-; PROCESSES       =300              0     0%            0/13200         =0         =0       
-; INSTRUCTIONS    =1820             0     0%            0/32760         =1         =1       
-; InstructionsXMS =20025            0     0%            0/360448        =1         =1       
-; SYMBOLTABLE     =4000             0     0%            0/32000         =0         =0       
-; NametableXMS    =208896           0     0%            0/208896                        
-; NAMETABLE       =40894      -168002  10502272%      -168002/40894         =5052705052  =4520841362
+; PROCESSES       =300              7     2%          308/13200         =10        =7       
+; INSTRUCTIONS    =1820           169     9%         3038/32760         =212       =179     
+; InstructionsXMS =20025          169     1%         3038/360448        =212       =179     
+; SYMBOLTABLE     =4000           212     5%         1696/32000         =249       =223     
+; NametableXMS    =208896      170724    82%       170724/208896                        
+; NAMETABLE       =40894         2722     7%         2722/40894         =3202      =2865    
 ; DATABASES       =16               0     0%            0/960           =0         =0       
-; ARRAYTABLE      =30000            0     0%            0/30000         =0         =0       
-; ARRAYDATA       =30000128         0     0%            0/30000128      =0         =0       
+; ARRAYTABLE      =30000           74     0%           74/30000         =93        =76      
+; ARRAYDATA       =30000128      4372     0%         4372/30000128      =5465      =4507    
 ; OBJECTS         =0                0     0%            0/0             =0         =0       
 ;
 ; PROTOCOL PROCESS CONTROL BLOCKS (XMS Instructions Caching ENABLED)
 ; INSTRUCTIONS=1820,20024
-; Memory (bytes):  0/32760 Conventional, 0/360448 XMS
+; Memory (bytes):  3038/32760 Conventional, 3038/360448 XMS
 ; Server CPU Mhz  Empirical 3391.6    Theoretical 3400.0
 ;
 ;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec 
+;   1 SUSP SET_SCRN                     0    0    0    0  0.000  0.000  0.000   108    notLoaded         2-109         0     0
+;   2 SUSP SET_DEFAULT_STIM_VARS        0    0    0    0  0.000  0.000  0.000   246    notLoaded       110-355         0     0
+;   3 SUSP SET_CLR_PALETTE              0    0    0    0  0.000  0.000  0.000   306    notLoaded       356-661         0     0
+;   4 SUSP SET_CLR                      0    0    0    0  0.000  0.000  0.000    56    notLoaded       662-717         0     0
+;   5 SUSP DRW_RECT                     0    0    0    0  0.000  0.000  0.000   426    notLoaded       718-1143        0     0
+;   6 SUSP CMD_PGS                      0    0    0    0  0.000  0.000  0.000  1566    notLoaded      1144-2709        0     0
+;   7 RUN  IDLE                         0    0    0    0  0.000  0.000  0.000   328    notLoaded      2710-3037        0     0
 
 
 SPEED 1000
@@ -55,6 +62,7 @@ ACHANINFO 0
 
 ECHANINFO 0
 
+
 PLOAD ALLPROSC.PRO
 
 ; DATABASES=16
@@ -65,6 +73,8 @@ PLOAD ALLPROSC.PRO
 SCREENRES 1280,768,32,1,0,0
 MAINWND 1,-1,-1,-1,-1,23,-2,983,539,0
 MSGWND 1,-1,-1,-1,-1,770,30,1250,480,0
+STATUSWND 1,-1,-1,-1,-1,0,67,668,510,0
+SHOW s 0
 
 ; DATABASES PAGES & VIEWS
 
@@ -72,9 +82,4 @@ DBPCOLORS 0x0,0x0,0x0,0x0,0x0
 
 ; END GRAPH CONFIGURATION
 
-; DIALOGS
-
-SCREENRES 1280,768,32,1,0,0
-
-; END OF DIALOGS
-
+DLOAD C:\\tempo\\ProcLib\\MAIN_MNU.dcf

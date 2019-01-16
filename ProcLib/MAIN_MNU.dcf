@@ -1,0 +1,23 @@
+; TEMPO DIALOG CONFIGURATION FILE
+; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
+; This file was created by TEMPO and should not be edited directly by the user.
+; The commands in this file are undocumented and subject to change in future releases.
+; Wed Jan 16 08:26:13 2019
+; DLOAD C:\tempo\ProcLib\MAIN_MNU.dcf
+
+; DIALOGS
+
+SCREENRES 1280,768,32,1,0,0
+
+DIAPAGE 0,"Main Menu"
+DIAPOS   0,0,-1,-1,-1,-1,6,85,520,531,0
+DIAOBJ   0,0,1,223,14,301,32,"","Main Menu"
+DIAOBJ   0,1,2,17,380,102,402,"Help",""
+DIAOBJ   0,2,2,213,379,298,401,"Cancel","DPOP"
+DIAOBJ   0,3,2,409,381,494,403,"OK","DSET; DPOP"
+DIAOBJ   0,4,1,35,50,50,70,"","Rig"
+DIAOBJ   0,5,1,140,50,200,70,"","Subject"
+DIAOBJ   0,6,1,300,50,350,70,"","Task"
+
+; END OF DIALOGS
+
