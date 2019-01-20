@@ -3,7 +3,7 @@
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
 ; Wed Jan 16 07:42:53 2019
-; CLOAD ALLPRO_VARS.pcf
+; CLOAD REF_VARS.pcf
 
 ; tempow 16.10 Set 49.20   'ADMINf812776' connected to 'TEMPO1'
 ; KPED 17.1 Set 49
@@ -17,27 +17,27 @@
 ; CCHANNELS=0
 ; ECHANNELS=2
 ;
-;                          Protocol Usage of Kernel Resources  
+;                          Protocol Usage of Kernel Resources
 ;
 ; Parameter       Limit          Used    Pct        Bytes/Total        Develop    Stable
 ; -------------   -------     -------  -----        -----------        -------    ------
-; PROCESSES       =300              0     0%            0/13200         =0         =0       
-; INSTRUCTIONS    =1820             0     0%            0/32760         =1         =1       
-; InstructionsXMS =20025            0     0%            0/360448        =1         =1       
-; SYMBOLTABLE     =4000             0     0%            0/32000         =0         =0       
-; NametableXMS    =208896           0     0%            0/208896                        
+; PROCESSES       =300              0     0%            0/13200         =0         =0
+; INSTRUCTIONS    =1820             0     0%            0/32760         =1         =1
+; InstructionsXMS =20025            0     0%            0/360448        =1         =1
+; SYMBOLTABLE     =4000             0     0%            0/32000         =0         =0
+; NametableXMS    =208896           0     0%            0/208896
 ; NAMETABLE       =40894      -168002  10502272%      -168002/40894         =5052705052  =4520841362
-; DATABASES       =16               0     0%            0/960           =0         =0       
-; ARRAYTABLE      =30000            0     0%            0/30000         =0         =0       
-; ARRAYDATA       =30000128         0     0%            0/30000128      =0         =0       
-; OBJECTS         =0                0     0%            0/0             =0         =0       
+; DATABASES       =16               0     0%            0/960           =0         =0
+; ARRAYTABLE      =30000            0     0%            0/30000         =0         =0
+; ARRAYDATA       =30000128         0     0%            0/30000128      =0         =0
+; OBJECTS         =0                0     0%            0/0             =0         =0
 ;
 ; PROTOCOL PROCESS CONTROL BLOCKS (XMS Instructions Caching ENABLED)
 ; INSTRUCTIONS=1820,20024
 ; Memory (bytes):  0/32760 Conventional, 0/360448 XMS
 ; Server CPU Mhz  Empirical 3391.6    Theoretical 3400.0
 ;
-;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec 
+;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec
 
 
 SPEED 1000
@@ -76,4 +76,3 @@ DBPCOLORS 0x0,0x0,0x0,0x0,0x0
 SCREENRES 1280,768,32,1,0,0
 
 ; END OF DIALOGS
-

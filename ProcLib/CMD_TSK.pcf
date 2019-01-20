@@ -3,7 +3,7 @@
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
 ; Wed Jan 16 07:32:42 2019
-; CLOAD ALLPROSC.pcf
+; CLOAD CMD_TSK.pcf
 
 ; tempow 16.10 Set 49.20   'ADMINf811435' connected to 'TEMPO1'
 ; KPED 17.1 Set 49
@@ -17,27 +17,27 @@
 ; CCHANNELS=0
 ; ECHANNELS=2
 ;
-;                          Protocol Usage of Kernel Resources  
+;                          Protocol Usage of Kernel Resources
 ;
 ; Parameter       Limit          Used    Pct        Bytes/Total        Develop    Stable
 ; -------------   -------     -------  -----        -----------        -------    ------
-; PROCESSES       =300              7     2%          308/13200         =10        =7       
-; INSTRUCTIONS    =1820           169     9%         3038/32760         =212       =179     
-; InstructionsXMS =20025          169     1%         3038/360448        =212       =179     
-; SYMBOLTABLE     =4000           212     5%         1696/32000         =249       =223     
-; NametableXMS    =208896      170724    82%       170724/208896                        
-; NAMETABLE       =40894         2722     7%         2722/40894         =3202      =2865    
-; DATABASES       =16               0     0%            0/960           =0         =0       
-; ARRAYTABLE      =30000           74     0%           74/30000         =93        =76      
-; ARRAYDATA       =30000128      4372     0%         4372/30000128      =5465      =4507    
-; OBJECTS         =0                0     0%            0/0             =0         =0       
+; PROCESSES       =300              7     2%          308/13200         =10        =7
+; INSTRUCTIONS    =1820           169     9%         3038/32760         =212       =179
+; InstructionsXMS =20025          169     1%         3038/360448        =212       =179
+; SYMBOLTABLE     =4000           212     5%         1696/32000         =249       =223
+; NametableXMS    =208896      170724    82%       170724/208896
+; NAMETABLE       =40894         2722     7%         2722/40894         =3202      =2865
+; DATABASES       =16               0     0%            0/960           =0         =0
+; ARRAYTABLE      =30000           74     0%           74/30000         =93        =76
+; ARRAYDATA       =30000128      4372     0%         4372/30000128      =5465      =4507
+; OBJECTS         =0                0     0%            0/0             =0         =0
 ;
 ; PROTOCOL PROCESS CONTROL BLOCKS (XMS Instructions Caching ENABLED)
 ; INSTRUCTIONS=1820,20024
 ; Memory (bytes):  3038/32760 Conventional, 3038/360448 XMS
 ; Server CPU Mhz  Empirical 3391.6    Theoretical 3400.0
 ;
-;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec 
+;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec
 ;   1 SUSP SET_SCRN                     0    0    0    0  0.000  0.000  0.000   108    notLoaded         2-109         0     0
 ;   2 SUSP SET_DEFAULT_STIM_VARS        0    0    0    0  0.000  0.000  0.000   246    notLoaded       110-355         0     0
 ;   3 SUSP SET_CLR_PALETTE              0    0    0    0  0.000  0.000  0.000   306    notLoaded       356-661         0     0
@@ -63,7 +63,7 @@ ACHANINFO 0
 ECHANINFO 0
 
 
-PLOAD ALLPROSC.PRO
+PLOAD CMD_TSK.PRO
 
 ; DATABASES=16
 

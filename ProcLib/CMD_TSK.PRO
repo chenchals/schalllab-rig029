@@ -1,6 +1,6 @@
 //==========================================================================
-// ALLPROS.PRO
-//   Description: Loads all PRO files
+// CMD_TSK.PRO
+//   Description: Loads all PRO files for CMD task
 //   Author: chenchal.subraveti@vanderbilt.edu
 //   Date: 2019-01-14
 //==========================================================================
@@ -9,20 +9,14 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
-// Load all constants and related gobal vars
-#include C:/TEMPO/ProcLib/CONSTNTS.PRO
-// Load all constants and related gobal vars
-#include C:/TEMPO/ProcLib/VAR_RIG.PRO
-// Stimulus Variables: fixation, target, photodiode
-#include C:/TEMPO/ProcLib/VAR_STIM.PRO
+// Setup all Variables
+#include C:/TEMPO/PROCLIB/VAR/SET_VARS.PRO;
 // Room variables: screen, isoluminant colors, data channels
-#include C:/TEMPO/ProcLib/RIGS/RIG_029.PRO
+#include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
 // Screen parameters
-#include C:/TEMPO/ProcLib/SET_SCRN.PRO
-// Trial Variables: For Countermanding only
-#include C:/TEMPO/ProcLib/VAR_CMD.PRO
+#include C:/TEMPO/ProcLib/RIG/SET_SCRN.PRO
 // Set palatte colors and color indices
-#include C:/TEMPO/ProcLib/SET_CLRS.PRO
+#include C:/TEMPO/ProcLib/RIG/SET_CLRS.PRO
 // set pages to load CMD_PGS.PRO?
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 //==========================================================================
@@ -73,7 +67,7 @@ process IDLE() enabled
 			dsendf("vp %d\n",PG_SIGNAL_PD);
 			dsendf("VW %d\n", 1);
 			dsendf("vp %d\n",PG_BLANK);
-			nexttick 1000; 
+			nexttick 1000;
 			tempVar = tempVar + 1;
 			trlNum = trlNum + 1;
 		}

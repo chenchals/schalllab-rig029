@@ -12,19 +12,18 @@
 //  Revision History:
 //
 
-declare MONK_AUTO();
+declare AUTO_MONK();
 
-process MONK_AUTO()
+process AUTO_MONK()
 {
   declare int tempVar = 0;
-  //SSD list is not set
-  while (tempVar < N_SSD_MAX)
-  {
-    SSD_ARRY[tempVar] = tempVar * 2 + 2;
-    tempVar = tempVar + 1;
-  }
- // See CMD_VARS and add those that you want to change.
-
+//SSD list is not set
+while (tempVar < N_SSD_MAX)
+{
+  SSD_ARRY[tempVar] = tempVar * 2 + 2;
+  tempVar = tempVar + 1;
+}
+// See CMD_VARS and add those that you want to change.
 
 
 }

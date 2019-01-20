@@ -3,7 +3,7 @@
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
 ; Tue Aug 07 16:25:36 2018
-; DLOAD C:\tempo\ProcLib\ALL_PROS.dcf
+; DLOAD C:\tempo\ProcLib\REF_PROS.dcf
 
 ; DIALOGS
 
@@ -961,4 +961,3 @@ DIAOBJ   31,5,2,25,102,153,124,"Set","DSET;"
 DIAOBJ   31,6,3,162,17,290,39,"","pdIsOn"
 
 ; END OF DIALOGS
-
