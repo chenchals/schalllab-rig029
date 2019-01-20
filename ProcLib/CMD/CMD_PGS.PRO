@@ -10,7 +10,7 @@
 //
 
 // Room variables
-#include C:/TEMPO/ProcLib/DRW_RECT.PRO
+#include C:/TEMPO/ProcLib/UTIL/DRW_RECT.PRO
 
 // Virtual Page indices
 declare int PG_BLANK       = 0;

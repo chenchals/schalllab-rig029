@@ -30,7 +30,7 @@ declare float TARG_WIN_SIZE = 7;
 
 //============= Timing variables    ===================
 // subject has this long to acquire fixation before a new trial is initiated
-declare int ALLOWED_FIX_TIME; = 1000
+declare int ALLOWED_FIX_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
 // minimum time after fixation before target presentation

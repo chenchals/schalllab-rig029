@@ -10,7 +10,7 @@
 // Use variables on the fly - no declaration
 #pragma declare = 1
 // Setup all Variables
-#include C:/TEMPO/PROCLIB/VAR/SET_VARS.PRO;
+#include C:/TEMPO/PROCLIB/VAR/SET_VARS.PRO
 // Room variables: screen, isoluminant colors, data channels
 #include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
 // Screen parameters
