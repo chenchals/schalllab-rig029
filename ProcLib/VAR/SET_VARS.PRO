@@ -13,7 +13,6 @@
 #include C:/TEMPO/ProcLib/VAR/VAR_RIG.PRO
 // Stimulus Variables: fixation, target, photodiode
 #include C:/TEMPO/ProcLib/VAR/VAR_STIM.PRO
-
 //===========Task Variables=====================
 // CMD Task
 #include C:/TEMPO/ProcLib/VAR/VAR_CMD.PRO

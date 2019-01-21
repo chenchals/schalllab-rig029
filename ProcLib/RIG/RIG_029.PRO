@@ -13,9 +13,9 @@
 //       Converted to process so that different rigs may be used
 
 // For Room 29: DEFINE Global variables declared in VAR_RIG.PRO
-declare SETUP_029();
+declare RIG_029();
 
-process SETUP_029()
+process RIG_029()
 {
 	RIG = 29;
     // Screen Params

@@ -10,15 +10,14 @@
 // Use variables on the fly - no declaration
 #pragma declare = 1
 // Room variables: screen, isoluminant colors, data channels
-#include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
-// Screen parameters
-#include C:/TEMPO/ProcLib/RIG/SET_SCRN.PRO
-// Setup all Variables, SET_VARS depends on SET_SCRN.PRO
-#include C:/TEMPO/PROCLIB/VAR/SET_VARS.PRO
-// Set palatte colors and color indices
-#include C:/TEMPO/ProcLib/RIG/SET_CLRS.PRO
+#include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
 // set pages to load CMD_PGS.PRO?
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
+// Set up watches
+#include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
+// Set up watches
+#include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
+
 //==========================================================================
 // The State global variable allows the control structure to run tasks...
 // ...depending on the current stystem state. The beginning state is idling.
@@ -37,15 +36,16 @@ process IDLE() enabled
 {
 	declare int tempVar;
 	declare int trlNum;
-	printf("ALLPROSC.PRO Running IDLE()\n");
-	printf("ALLPROSC.PRO Running RIG_029()\n");
-	spawnwait SETUP_029();
-	printf("ALLPROSC.PRO Running SET_SCRN()\n");
+  // ========== Call once =============
+	spawnwait RIG_029();
 	spawnwait SET_SCRN();
-	printf("ALLPROSC.PRO Running SET_DEFAULT_STIM_VARS()\n");
-	spawnwait SET_DEFAULT_STIM_VARS();
-	printf("ALLPROSC.PRO Running SET_CLR_PALETTE()\n");
 	spawnwait SET_CLR_PALETTE();
+	spawnwait SET_DEFAULT_STIM_VARS();
+
+  spawn QUE_EVT();
+	spawn WATCH_EYE();
+	spawn WATCH_PD();
+
 	printf("ALLPROSC.PRO Running CMD_PGS()\n");
 	spawnwait CMD_PGS(1);
 	printf("DONE....!\n");

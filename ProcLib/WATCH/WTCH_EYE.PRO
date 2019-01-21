@@ -12,12 +12,12 @@
 //  Revision History:
 //
 
-declare WATCHEYE();
+declare WATCH_EYE();
 declare LOCATE_EYE(float degX,
-                     float degY);
+                   float degY);
 
 
-process WATCHEYE()
+process WATCH_EYE()
 {
   declare float eye_x, eye_y, oldx, oldy;
   declare int   lasttime, plot_x, plot_y;
@@ -38,7 +38,8 @@ process WATCHEYE()
       EYE_Y_OFFSET   = EYE_Y_OFFSET + eye_y;
       CENTER_EYE_NOW = 0;
     }
-    spawn LOCATE_EYE(eye_x, eye_y);
+    spawn LOCATE_EYE(eye_x,
+                     eye_y);
 
     plot_x = eye_x * DEG_2_PIX_X;
     plot_y = eye_Y * DEG_2_PIX_Y;
