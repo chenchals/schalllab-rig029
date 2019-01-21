@@ -17,7 +17,7 @@ declare RIG_029();
 
 process RIG_029()
 {
-	RIG = 29;
+	RIG_ID = 29;
     // Screen Params
 	//==========================================================================
 	// Screen width and height in pixels

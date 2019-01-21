@@ -26,6 +26,7 @@ declare float        TARG_ECCENTRICITY_ARRY[MAX_TARG_POS];
 declare float        TARG_WIN_SIZE = 7;
 declare float        TARG_WIN[MAX_TARG_POS, 4];
 declare int          EYE_IN_TARG_WIN;
+declare int          CURR_TARG_IDX;
 
 // Stop / ignore trial Cue
 declare int   STOP_SIGNAL_COLOR[3];

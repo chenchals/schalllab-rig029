@@ -13,6 +13,8 @@
 #include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
 // set pages to load CMD_PGS.PRO?
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
+// Setup event defs so events can be sent
+#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
 // Set up watches
@@ -37,17 +39,17 @@ process IDLE() enabled
 	declare int tempVar;
 	declare int trlNum;
   // ========== Call once =============
-	spawnwait RIG_029();
+	spawnwait SET_RIG(29);
 	spawnwait SET_SCRN();
 	spawnwait SET_CLR_PALETTE();
 	spawnwait SET_DEFAULT_STIM_VARS();
 
-  spawn QUE_EVT();
+    spawn QUE_EVT();
 	spawn WATCH_EYE();
-	spawn WATCH_PD();
+	spawn WTCH_SCHMITT();
 
 	printf("ALLPROSC.PRO Running CMD_PGS()\n");
-	spawnwait CMD_PGS(1);
+	spawnwait CMD_PGS();
 	printf("DONE....!\n");
 	printf("Showing pages....!\n");
 	trlNum = 1;

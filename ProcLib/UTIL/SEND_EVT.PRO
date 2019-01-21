@@ -13,6 +13,15 @@
 
 #include C:/TEMPO/ProcLib/UTIL/WAIT_MU.PRO
 
+// Definitions for use with TEMPO's DIO module
+// Copyright 1994-2002 Reflective Computing.  All rights reserved.
+//
+// OR these in dioSetMode() function(s) to set output TTL ports.
+
+declare constant PORTA =    0x1;
+declare constant PORTB =    0x2;
+declare constant PORTC =    0x4;
+
 // Events: Length of strobed event buffer
 declare int          CURR_EVENT_FIFO_IDX = 0;
 declare int constant N_EVENT_FIFO        = 1000;
@@ -83,7 +92,6 @@ process QUE_EVT()
     // ...single cycle.
   }
 }
-
 
 process SEND_TTL(int value)
 {

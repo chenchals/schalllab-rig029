@@ -7,11 +7,6 @@
 //==========================================================================
 //  Revision History:
 
-// Room Definitions
-declare int          RIG;
-declare constant int RIG_029 = 1;
-declare constant int RIG_030 = 2;
-
 // Color indexes
 declare constant int R_IDX = 0;
 declare constant int G_IDX = 1;
@@ -30,8 +25,3 @@ declare constant int TASK_COUNTERMANDING = 1;
 declare constant int TASK_FIXATION       = 2;
 declare constant int TASK_SEARCH         = 3;
 declare constant int TASK_MEMORY_GUIDED  = 4;
-
-// Events: Length of strobed event buffer
-declare int          CURR_EVENT_FIFO_IDX = 0;
-declare int constant N_EVENT_FIFO        = 1000;
-declare int          EVENT_FIFO[N_EVENT_FIFO];

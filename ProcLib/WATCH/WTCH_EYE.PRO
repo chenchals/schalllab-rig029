@@ -48,7 +48,7 @@ process WATCH_EYE()
       // why should this be with screen refresh?
       if (time() > lasttime + 16)
       {
-        oMove(object_eye, plot_x, plot_y);
+        //oMove(object_eye, plot_x, plot_y);
         if (EYE_ON_VDOSYNC)
         {
           dsendf("cl;\n");

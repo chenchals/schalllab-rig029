@@ -23,17 +23,14 @@
 // Send event processes
 #include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
 
-
 // Rig 029
-#include C:/ProcLib/RIG/RIG_029.PRO
+#include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
 
-
-declare int RIG_ID;
 declare int RIG_029_ID = 29;
 
 declare SET_RIG(int rigId);
 
-process SET_MONK(int rigId)
+process SET_RIG(int rigId)
 {
   RIG_ID = rigId;
   if (RIG_ID == RIG_029_ID)

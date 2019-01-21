@@ -8,9 +8,9 @@
 //==========================================================================
 // Revision History:
 // 001: 2019/01/16 chenchal subraveti
-// Renamed from VAR_029 as this file contains variables declarations only
-// Global variables for ALL rigs
-declare int RIG;
+//
+
+declare int RIG_ID;
 //==========================================================================
 // Screen width and height in pixels
 declare int   SCRN_PIX_X;
