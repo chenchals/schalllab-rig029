@@ -30,22 +30,21 @@ declare int CLR_IDX_PTOTODIODE  = 247;
 
 process SET_CLR_PALETTE()
 {
-  declare int stimColorIdx;
+  declare int targIdx;
 
   printf("CMD_CLRS: Setting indexed colors for default palette\n");
   // Default to gray
-  dsendf("cm %d %d %d %d;\n", CLR_IDX_FIX, FIX_COLOR[RGB_R_IDX], FIX_COLOR[RGB_G_IDX], FIX_COLOR[RGB_B_IDX]);
-  dsendf("cm %d %d %d %d;\n", CLR_IDX_STOP_SIGNAL, STOP_SIGNAL_COLOR[RGB_R_IDX], STOP_SIGNAL_COLOR[RGB_G_IDX], STOP_SIGNAL_COLOR[RGB_B_IDX]);
-  dsendf("cm %d %d %d %d;\n", CLR_IDX_STOP_SIGNAL, IGNORE_SIGNAL_COLOR[RGB_R_IDX], IGNORE_SIGNAL_COLOR[RGB_G_IDX], IGNORE_SIGNAL_COLOR[RGB_B_IDX]);
+  dsendf("cm %d %d %d %d;\n", CLR_IDX_FIX, FIX_COLOR[R_IDX], FIX_COLOR[G_IDX], FIX_COLOR[B_IDX]);
+  dsendf("cm %d %d %d %d;\n", CLR_IDX_STOP_SIGNAL, STOP_SIGNAL_COLOR[R_IDX], STOP_SIGNAL_COLOR[G_IDX], STOP_SIGNAL_COLOR[B_IDX]);
+  dsendf("cm %d %d %d %d;\n", CLR_IDX_STOP_SIGNAL, IGNORE_SIGNAL_COLOR[R_IDX], IGNORE_SIGNAL_COLOR[G_IDX], IGNORE_SIGNAL_COLOR[B_IDX]);
   dsendf("cm %d %d %d %d;\n", CLR_IDX_PTOTODIODE, 255, 255, 255);
   // All target position colors are same see original DEFAULT.PRO
-  stimColorIdx = 1;
-  while (stimColorIdx <= N_TARG_POS)
+  targIdx = 0;
+  while (targIdx < N_TARG_POS)
   {
     //35, 33, 27
-	TARG_COLOR_IDX_ARRY[stimColorIdx-1] = stimColorIdx;
-    dsendf("cm %d %d %d %d;\n", stimColorIdx, TARG_COLOR_ARRY[stimColorIdx-1,RGB_R_IDX],TARG_COLOR_ARRY[stimColorIdx-1,RGB_G_IDX], TARG_COLOR_ARRY[stimColorIdx-1,RGB_B_IDX]);
-    stimColorIdx = stimColorIdx + 1;
+    dsendf("cm %d %d %d %d;\n", TARG_COLOR_IDX_ARRY[targIdx], TARG_COLOR_ARRY[targIdx,R_IDX],TARG_COLOR_ARRY[targIdx,G_IDX], TARG_COLOR_ARRY[targIdx,B_IDX]);
+    targIdx = targIdx + 1;
     nexttick;
   }
 }

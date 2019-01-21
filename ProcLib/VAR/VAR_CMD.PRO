@@ -15,18 +15,14 @@ declare int TRL_NUMBER;
 declare int TRIALS_PER_BLOCK = 30;
 
 //===========Trial types and distributions==================
-declare int TRIAL_TYPE;
-declare constant int TRIAL_TYPE_GO = 0;
-declare constant int TRIAL_TYPE_STOP = 1;
+declare int          TRIAL_TYPE;
+declare constant int TRIAL_TYPE_GO     = 0;
+declare constant int TRIAL_TYPE_STOP   = 1;
 declare constant int TRIAL_TYPE_IGNORE = 2;
 // Percentage of trial types (must sum to 100)
-declare float GO_WEIGHT = 50;
-declare float STOP_WEIGHT = 50;
-declare float IGNORE_WEIGHT = 0;
-
-//=========== Window sizes (degrees) ==================
-declare float FIX_WIN_SIZE = 5;
-declare float TARG_WIN_SIZE = 7;
+declare float        GO_WEIGHT     = 50;
+declare float        STOP_WEIGHT   = 50;
+declare float        IGNORE_WEIGHT = 0;
 
 //============= Timing variables    ===================
 // subject has this long to acquire fixation before a new trial is initiated
@@ -57,7 +53,7 @@ declare int   MAX_SSD;
 declare int   MIN_SSD;
 // for training to cancel consistently
 declare int   SSD_FLOOR = 0;
-declare int   SSD_CEIL = 0;
+declare int   SSD_CEIL  = 0;
 // do we select the next SSD based on a staircasing algorithm?
 declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // needs to be in refresh rate units
@@ -65,27 +61,27 @@ declare float SSD_ARRY[N_SSD_MAX];
 // subject must hold fixation for this long on a stop trial to be deemed canceled
 declare int   CANCEL_TIME = MAX_SACCADE_TIME * 2;
 // Alert operator that the monk has canceled a trial (during training)
-declare int CANCEL_ALERT = 0;
+declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
-declare int IS_TRL_LENGTH_FIXED = 1;
+declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
-declare int TRL_LENGTH_TIME = 5000;
+declare int   TRL_LENGTH_TIME = 5000;
 // Extra punish time
-declare int EXTRA_PUNISH_TIME = TRL_LENGTH_TIME;
+declare int   EXTRA_PUNISH_TIME = TRL_LENGTH_TIME;
 // how long between trials (only works if Fixed_trl_length == 0)
-declare int INTER_TRL_INTERVAL_TIME = 800;
-declare int NOGO_SOA;
-declare int TARG_ON_TIME = 100;
+declare int   INTER_TRL_INTERVAL_TIME = 800;
+declare int   NOGO_SOA;
+declare int   TARG_ON_TIME = 100;
 
 //===========================Reward and punishment======================
 // how long should the error and success tones be presented?
-declare int TONE_DURATION = 0;
+declare int   TONE_DURATION = 0;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int REWARD_OFFSET = 600;
+declare int   REWARD_OFFSET = 600;
 // how long will the juice solonoid remain open (monkeys are very interested in this varaible)
-declare int BASE_REWARD_TIME = 20;
+declare int   BASE_REWARD_TIME = 20;
 // time out for messing up
-declare int BASE_PUNISH_TIME = 2000;
+declare int   BASE_PUNISH_TIME = 2000;
 // Reward weights
 declare float BIG_REWARD_WEIGHT = 0.3;
 declare float MED_REWARD_WEIGHT = 0.2;

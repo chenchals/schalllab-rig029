@@ -49,7 +49,7 @@ declare float DEG_2_PIX_Y;
 process SET_SCRN()
 {
 	MM_2_PIX_X = SCRN_PIX_X/SCRN_MM_X;
-    MM_2_PIX_Y = SCRN_PIX_Y/SCRN_MM_Y;
+  MM_2_PIX_Y = SCRN_PIX_Y/SCRN_MM_Y;
 
 	SCRN_DEG_X = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
 	SCRN_DEG_Y = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));

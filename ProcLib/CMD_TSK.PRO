@@ -9,12 +9,12 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
-// Setup all Variables
-#include C:/TEMPO/PROCLIB/VAR/SET_VARS.PRO
 // Room variables: screen, isoluminant colors, data channels
 #include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
 // Screen parameters
 #include C:/TEMPO/ProcLib/RIG/SET_SCRN.PRO
+// Setup all Variables, SET_VARS depends on SET_SCRN.PRO
+#include C:/TEMPO/PROCLIB/VAR/SET_VARS.PRO
 // Set palatte colors and color indices
 #include C:/TEMPO/ProcLib/RIG/SET_CLRS.PRO
 // set pages to load CMD_PGS.PRO?
@@ -53,11 +53,11 @@ process IDLE() enabled
 	trlNum = 1;
 	while(1)
 	{
-		tempVar = 0;
-		while (tempVar < N_TARG_POS)
+		CURR_TARGET_IDX = 0;
+		while (CURR_TARGET_IDX < N_TARG_POS)
 		{
-			printf("Trial num %d, Target pos %d\n",trlNum,tempVar);
-			spawnwait CMD_PGS(tempVar);
+			printf("Trial num %d, Target pos %d\n",trlNum,CURR_TARGET_IDX);
+			spawnwait CMD_PGS();
 			dsendf("vp %d\n",PG_FIXATION_PD);
 			dsendf("VW %d\n", 2);
 			dsendf("vp %d\n",PG_BLANK);
@@ -68,7 +68,7 @@ process IDLE() enabled
 			dsendf("VW %d\n", 1);
 			dsendf("vp %d\n",PG_BLANK);
 			nexttick 1000;
-			tempVar = tempVar + 1;
+			CURR_TARGET_IDX = CURR_TARGET_IDX + 1;
 			trlNum = trlNum + 1;
 		}
 	}

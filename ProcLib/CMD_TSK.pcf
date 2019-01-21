@@ -83,3 +83,19 @@ DBPCOLORS 0x0,0x0,0x0,0x0,0x0
 ; END GRAPH CONFIGURATION
 
 DLOAD C:\\tempo\\ProcLib\\MAIN_MNU.dcf
+
+; BEGIN KEY DEFINITIONS
+
+; KEY F1 = dialog Info_and_StartClock
+; KEY ESC = dpop
+; KEY INSERT = spawn key_rewd
+KEY ALTE = EYE_ON_VDOSYNC = 1
+KEY ALTX = EYE_ON_VDOSYNC = 0
+KEY ALTC = CENTER_EYE_NOW = 1
+; KEY F2 = dialog Choose_Task
+; KEY F3 = dialog Fixation_Main
+; KEY F4 = dialog In_Task_pane
+; KEY ALTS = spawn key_stim
+; KEY F12 = spawn key_stim
+
+; END KEY DEFINITIONS

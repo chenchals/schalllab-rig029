@@ -21,15 +21,16 @@ declare int PG_TARGET      = 4;
 declare int PG_SIGNAL_PD   = 5;
 declare int PG_SIGNAL      = 6;
 // Attributes of Current Target
+declare int CURR_TARGET_IDX;
 declare float CURR_TARG_SIZE;
 declare float CURR_TARG_ANGLE;
 declare float CURR_TARG_ECCENTRICITY;
 declare int   CURR_TARG_COLOR_IDX;
 
-declare CMD_PGS(int currTargetIdx);
+declare CMD_PGS();
 
 
-process CMD_PGS(int currTargetIdx)
+process CMD_PGS()
 {
   declare float pdEccentricity;
   declare float pdAngleR;
@@ -43,17 +44,17 @@ process CMD_PGS(int currTargetIdx)
 
   //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Calculate screen coordinates for stimuli on this trial
-  CURR_TARG_SIZE         = TARG_SIZE_ARRY[currTargetIdx];
-  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[currTargetIdx];
-  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[currTargetIdx];
+  CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARGET_IDX];
+  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARGET_IDX];
+  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
   // Zero is black.  see SET_CLRS.pro
-  CURR_TARG_COLOR_IDX     = TARG_COLOR_IDX_ARRY[currTargetIdx];
+  CURR_TARG_COLOR_IDX     = TARG_COLOR_IDX_ARRY[CURR_TARGET_IDX];
   // find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
-  stim_ecc_x = cos(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;                                                                                       
+  stim_ecc_x = cos(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
   stim_ecc_y = sin(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY * -1;
   // Update animated graph object and resize PG_FIXATION object
-  //oMove(object_targ, stim_ecc_x * DEG_2_PIX_X, stim_ecc_y * DEG_2_PIX_Y);                                                           
-  //oSetAttribute(object_targ, aSIZE, CURR_TARG_SIZE * DEG_2_PIX_X, CURR_TARG_SIZE * DEG_2_PIX_Y);                                                        
+  //oMove(object_targ, stim_ecc_x * DEG_2_PIX_X, stim_ecc_y * DEG_2_PIX_Y);
+  //oSetAttribute(object_targ, aSIZE, CURR_TARG_SIZE * DEG_2_PIX_X, CURR_TARG_SIZE * DEG_2_PIX_Y);
   //oSetAttribute(object_fix, aSIZE, 1 * DEG_2_PIX_X, 1 * DEG_2_PIX_Y);
 
   // For PD
