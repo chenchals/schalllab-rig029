@@ -58,12 +58,8 @@ process IDLE() enabled
   spawnwait SET_MONK(AUTO_ID);
 
   spawn QUE_TTL();
-  spawn WATCH_EYE();
+  spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
-
-  //printf("DOing DIO_OUT()\n");
-  //spawnwait DIO_OUT();
-
 
   while (1)
   {

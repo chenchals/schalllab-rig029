@@ -12,51 +12,65 @@
 //  Revision History:
 //
 
-declare WATCH_EYE();
-declare LOCATE_EYE(float degX,
-                   float degY);
+declare WTCH_EYE();
+declare LOCATE_EYE(float degX, float degY);
+declare WRITE_EYE2FILE(float currX, float currY);
 
 
-process WATCH_EYE()
+process WTCH_EYE()
 {
+  declare int DEBUG = 0;
+  declare int xVal, yVal;
   declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
   declare int   lasttime, eyeXpixels, eyeYpixels;
-
+  
   while (1)
   {
-    eyeXdeg = atable(EYE_X_CHANNEL);
-    eyeYdeg = atable(EYE_Y_CHANNEL);
-
-
-    eyeXdeg = (eyeXdeg * ((MAX_VOLTAGE * 2) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-    eyeYdeg = (eyeYdeg * ((MAX_VOLTAGE * 2) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
-
+    xVal = atable(EYE_X_CHANNEL);
+    yVal = atable(EYE_Y_CHANNEL);
+    
+	if (DEBUG == 1 )
+	{
+		xVal = random(5000)+10000;
+		yVal = random(5000)+10000;
+		printf("DEBUG: Eye: %d, %d\n",xVal,yVal); 		
+	}
+	else
+	{
+		printf("Eye: %d, %d\n",xVal,yVal);
+	}
+  
+    eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+    eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+		
     if (CENTER_EYE_NOW)
     {
       EYE_X_OFFSET   = EYE_X_OFFSET + eyeXdeg;
       EYE_Y_OFFSET   = EYE_Y_OFFSET + eyeYdeg;
       CENTER_EYE_NOW = 0;
     }
-    spawn LOCATE_EYE(eyeXdeg,
-                     eyeYdeg);
-
-    eyeXpixels = eyeXdeg * DEG_2_PIX_X;
-    eyeYpixels = eyeYdeg * DEG_2_PIX_Y;
-    if (eyeXpixels != oldXdeg || eyeYpixels != oldYdeg)
+	
+	
+    if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
     {
+	  spawn LOCATE_EYE(eyeXdeg,eyeYdeg);
+
       // why should this be with screen refresh?
       if (time() > lasttime + 16)
       {
         //oMove(object_eye, eyeXpixels, eyeYpixels);
         if (EYE_ON_VDOSYNC)
         {
+		  eyeXpixels = eyeXdeg * DEG_2_PIX_X;
+	      eyeYpixels = eyeYdeg * DEG_2_PIX_Y;
+
           dsendf("cl;\n");
           dsendf("ru %d,%d,%d,%d;\n", eyeXpixels - 4, (-1 * eyeYpixels) - 4, eyeXpixels + 3, (-1 * eyeYpixels) + 3);
           dsendf("co %d;\n", 5);
         }
         lasttime = time();
-        oldXdeg  = eyeXpixels;
-        oldYdeg  = eyeYpixels;
+        oldXdeg  = eyeXdeg;
+        oldYdeg  = eyeYdeg;
       }
     }
     nexttick;
@@ -66,9 +80,6 @@ process WATCH_EYE()
 
 process LOCATE_EYE(float degX, float degY)
 {
-  declare float currEyeAngle;
-  declare float currEyeEcc;
-
   // Sets flags for 6 global variables:
   // EYE_IN_FIX_WIN, EYE_BTWN_FIX_WINS
   // EYE_IN_TARG_WIN, EYE_BTWN_TARG_WINS
@@ -150,10 +161,16 @@ process LOCATE_EYE(float degX, float degY)
     EYE_IN_TARG_WIN_ANTI    = 0;
     EYE_BTWN_TARG_WINS_ANTI = 0;
   }
-
-  currEyeAngle = rad2deg(atan(CURR_EYE_Y_DEG/CURR_EYE_X_DEG));
-  currEyeEcc = sqrt((CURR_EYE_Y_DEG * CURR_EYE_Y_DEG) + (CURR_EYE_X_DEG * CURR_EYE_X_DEG));
-
-  writef("eyeVals.csv %d,%d,%d,%d\n",round(CURR_EYE_X_DEG),round(CURR_EYE_X_DEG),round(currEyeAngle*10),round(currEyeEcc*10));
-
+  spawn WRITE_EYE2FILE(CURR_EYE_X_DEG,CURR_EYE_Y_DEG);
 } /* LOCATE_EYE */
+
+process WRITE_EYE2FILE(float currX, float currY)
+{
+	declare float currEyeAngle;
+    declare float currEyeEcc;
+
+	currEyeAngle = rad2deg(atan(currY/currX));
+	currEyeEcc = sqrt((currY * currY) + (currX * currX));
+	printf("EyeVals: %d,%d,%d,%d\n",currX*10,currY*10,currEyeAngle*10,currEyeEcc*10);
+    writef("eyeVals.csv %d,%d,%d,%d\n",currX*10,currY*10,currEyeAngle*10,currEyeEcc*10);
+}

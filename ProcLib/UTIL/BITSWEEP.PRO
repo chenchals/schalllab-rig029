@@ -19,7 +19,7 @@ process BITSWEEP()
 {
   declare int maxBits  = 16;
   declare int thisBit  = 0;
-  declare int waitTime = 100;
+  declare int waitTime = 400;
   declare int sentTime;
   declare int bitValue;
 

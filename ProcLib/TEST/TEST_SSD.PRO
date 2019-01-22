@@ -15,7 +15,6 @@
 declare SETUP_SCRN_CLRS_PGS();
 declare SETUP_DATA_ACQ_PARMS();
 declare ESTMT_MS_PER_TICK();
-declare WTCH_PD();
 declare WTCH_PD_SCHMITT();
 declare WTCH_EYE();
 
@@ -32,13 +31,13 @@ declare int TRL_NUM = 0;
 declare int BREAK_FIX_FLAG = 0;
 
 // Room variables
-#include C:/TEMPO/ProcLib/Room/ROOM_029.PRO
+#include C:/TEMPO/ProcLib/TEST/ROOM_029.PRO
 // Screen parameters including isoluminant colors,
-#include C:/TEMPO/ProcLib/SET_SCRN.PRO
+#include C:/TEMPO/ProcLib/TEST/SET_SCRN.PRO
 // Set palatte colors for countermanding
-#include C:/TEMPO/ProcLib/TEST/TEST_COL.PRO
+#include C:/TEMPO/ProcLib/TEST/CMD_CLRS.PRO
 // set pages to load CMD_PGS.PRO?
-#include C:/TEMPO/ProcLib/TEST/TEST_PGS.PRO
+#include C:/TEMPO/ProcLib/TEST/CMD_PGS.PRO
 // GLOBAL variables for color:
 //==========================================================================
 
@@ -139,8 +138,8 @@ process TEST_SSD() enabled
 	 {
 		 printf("===OK OK OK====\n");
 	 }
-     printf("TRL %d, V_RFRSH_SSD [%d], V_RFRSH_COUNT [%d], ssdTime [%d], ssdExpec [%d], isiTicks [%d], eyeTicks [%d], breakFix [%d]\n", TRL_NUM,VERT_RFRSH_SSD,VERT_RFRSH_COUNT,ssdTime,ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
-     writef("testSSDRun.csv %d,%d,%d,%d,%d,%d,%d,%d\n", TRL_NUM, VERT_RFRSH_SSD, VERT_RFRSH_COUNT, ssdTime, ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
+     //printf("TRL %d, V_RFRSH_SSD [%d], V_RFRSH_COUNT [%d], ssdTime [%d], ssdExpec [%d], isiTicks [%d], eyeTicks [%d], breakFix [%d]\n", TRL_NUM,VERT_RFRSH_SSD,VERT_RFRSH_COUNT,ssdTime,ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
+     //writef("C:\\tempo\\ProcLib\\TEST\\testSSDR.csv %d,%d,%d,%d,%d,%d,%d,%d\n", TRL_NUM, VERT_RFRSH_SSD, VERT_RFRSH_COUNT, ssdTime, ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
 	 }
 }
 
@@ -154,8 +153,8 @@ process SETUP_SCRN_CLRS_PGS()
   dsend("ca");
   // Set up pages
   spawnwait SET_SCRN();
-  spawnwait TEST_SET_CLRS();
-  spawnwait TEST_PGS();
+  spawnwait SET_CLRS();
+  spawnwait CMD_PGS();
   nexttick 5000;
 }
 process SETUP_DATA_ACQ_PARMS()
@@ -189,9 +188,9 @@ process WTCH_PD_SCHMITT()
 	{
 	  PD_TRIG_R = 0;
 	}
-    //printf("%d,%d,%d,%d,%d\n",TRL_NUM,pdValL,pdValR,PD_TRIG_L,PD_TRIG_R);
+    printf("%d,%d,%d,%d,%d\n",TRL_NUM,pdValL,pdValR,PD_TRIG_L,PD_TRIG_R);
 
-    //writef("pdValsSc.csv %d,%d,%d,%d,%d\n",TRL_NUM,pdValL,pdValR,PD_TRIG_L,PD_TRIG_R);
+    writef("pdValsSc.csv %d,%d,%d,%d,%d\n",TRL_NUM,pdValL,pdValR,PD_TRIG_L,PD_TRIG_R);
 	nexttick;
   }
 }
