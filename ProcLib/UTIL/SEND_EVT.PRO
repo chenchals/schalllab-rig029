@@ -18,9 +18,9 @@
 //
 // OR these in dioSetMode() function(s) to set output TTL ports.
 
-declare constant PORTA =    0x1;
-declare constant PORTB =    0x2;
-declare constant PORTC =    0x4;
+declare constant PORTA = 0x1;
+declare constant PORTB = 0x2;
+declare constant PORTC = 0x4;
 
 // Events: Length of strobed event buffer
 declare int          CURR_EVENT_FIFO_IDX = 0;
@@ -63,6 +63,7 @@ process SEND_EVT(int eventCode)
 //
 // written by david.c.godlove@vanderbilt.edu  January, 2011
 
+
 process QUE_TTL()
 {
   // Max number of events to send during 1 process cycle
@@ -99,7 +100,7 @@ process SEND_TTL(int value)
   declare int output = 1;
 
   // set ports A, B, and C to send strobes (output)
-  dioSetMode(output, PORTA|PORTB|PORTC);
+  dioSetMode(output, PORTA | PORTB | PORTC);
   // Clear ports before sending
   dioSetA(output, ~0xFF);
   dioSetB(output, ~0xFF);
@@ -110,10 +111,9 @@ process SEND_TTL(int value)
   dioSetB(output, (value >> 8) & 0xFF);
   //wait 100 micro seconds to avoid losing events
   spawnwait WAIT_MU(200);
+
   // Clear ports after sending
   dioSetA(output, ~0xFF);
   dioSetB(output, ~0xFF);
   //spawnwait WAIT_MU(100);
-
-  
 }

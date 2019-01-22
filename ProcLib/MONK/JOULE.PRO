@@ -13,14 +13,16 @@
 
 declare JOULE();
 
+
 process JOULE()
 {
   declare int tempVar = 0;
+
   //SSD list is not set
   while (tempVar < N_SSD_MAX)
   {
     SSD_ARRY[tempVar] = tempVar * 2 + 2;
-    tempVar = tempVar + 1;
+    tempVar           = tempVar + 1;
   }
   // See CMD_VARS and add those that you want to change.
   // Check VAR_STIM.PRO --> SET_DEFAULT_STIM_VARS()
@@ -37,27 +39,26 @@ process JOULE()
   IGNORE_SIGNAL_COLOR[B_IDX] = 43;
   // Check VAR_STIM.PRO --> SET_DEFAULT_STIM_VARS()
   N_TARG_POS = 2;
-  tempVar = 0;
+  tempVar    = 0;
   while (tempVar < MAX_TARG_POS)
   {
-    TARG_SIZE_ARRY[tempVar] = 5.0;
-    TARG_ANGLE_ARRY[tempVar] = -tempVar * (360.0/N_TARG_POS);
+    TARG_SIZE_ARRY[tempVar]         = 5.0;
+    TARG_ANGLE_ARRY[tempVar]        = -tempVar * (360.0 / N_TARG_POS);
     TARG_ECCENTRICITY_ARRY[tempVar] = 12.0;
-    TARG_COLOR_ARRY[tempVar,R_IDX] = 35;
-    TARG_COLOR_ARRY[tempVar,G_IDX] = 33;
-    TARG_COLOR_ARRY[tempVar,B_IDX] = 27;
-    TARG_COLOR_IDX_ARRY[tempVar] = tempVar + 1;
-    if (tempVar > N_TARG_POS +1)
+    TARG_COLOR_ARRY[tempVar, R_IDX] = 35;
+    TARG_COLOR_ARRY[tempVar, G_IDX] = 33;
+    TARG_COLOR_ARRY[tempVar, B_IDX] = 27;
+    TARG_COLOR_IDX_ARRY[tempVar]    = tempVar + 1;
+    if (tempVar > N_TARG_POS + 1)
     {
-      TARG_SIZE_ARRY[tempVar] = 0.0;
-      TARG_ANGLE_ARRY[tempVar] = 0.0;
+      TARG_SIZE_ARRY[tempVar]         = 0.0;
+      TARG_ANGLE_ARRY[tempVar]        = 0.0;
       TARG_ECCENTRICITY_ARRY[tempVar] = 0;
-      TARG_COLOR_ARRY[tempVar,R_IDX] = 0;
-      TARG_COLOR_ARRY[tempVar,G_IDX] = 0;
-      TARG_COLOR_ARRY[tempVar,B_IDX] = 0;
-      TARG_COLOR_IDX_ARRY[tempVar] = 0;
+      TARG_COLOR_ARRY[tempVar, R_IDX] = 0;
+      TARG_COLOR_ARRY[tempVar, G_IDX] = 0;
+      TARG_COLOR_ARRY[tempVar, B_IDX] = 0;
+      TARG_COLOR_IDX_ARRY[tempVar]    = 0;
     }
     tempVar = tempVar + 1;
   }
-
-}
+} /* JOULE */

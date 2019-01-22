@@ -15,15 +15,18 @@
 //  Revision History:
 //
 
-declare int PD_TRIG_L = 0;
-declare int PD_TRIG_R = 0;
+declare int PD_TRIG_L    = 0;
+declare int PD_TRIG_R    = 0;
 declare int PD_THRESHOLD = 500;
+
 declare WTCH_SCHMITT();
+
 
 process WTCH_SCHMITT()
 {
-  declare float pdValL   = 5000;
-  declare float pdValR   = 5000;
+  declare float pdValL = 5000;
+  declare float pdValR = 5000;
+
   while (1)
   {
     pdValL = atable(PHOTOCELL_L_CHANNEL);

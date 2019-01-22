@@ -40,6 +40,10 @@ declare float EYE_Y_GAIN;
 // For seroing Eye x,y location to center of screen
 declare float EYE_X_OFFSET;
 declare float EYE_Y_OFFSET;
+// Current Eyex and Eyey
+declare float CURR_EYE_X_DEG;
+declare float CURR_EYE_Y_DEG;
+
 // For dynamically centering the Eye position
 // Add these to .pcf file
 //         KEY ALTE = Eye_on_VDOSync = 1

@@ -28,6 +28,7 @@ declare int CLR_IDX_STOP_SIGNAL = 254;
 declare int CLR_IDX_IGNORE      = 253;
 declare int CLR_IDX_PTOTODIODE  = 247;
 
+
 process SET_CLR_PALETTE()
 {
   declare int targIdx;
@@ -43,11 +44,12 @@ process SET_CLR_PALETTE()
   while (targIdx < N_TARG_POS)
   {
     //35, 33, 27
-    dsendf("cm %d %d %d %d;\n", TARG_COLOR_IDX_ARRY[targIdx], TARG_COLOR_ARRY[targIdx,R_IDX],TARG_COLOR_ARRY[targIdx,G_IDX], TARG_COLOR_ARRY[targIdx,B_IDX]);
+    dsendf("cm %d %d %d %d;\n", TARG_COLOR_IDX_ARRY[targIdx], TARG_COLOR_ARRY[targIdx, R_IDX], TARG_COLOR_ARRY[targIdx, G_IDX], TARG_COLOR_ARRY[targIdx, B_IDX]);
     targIdx = targIdx + 1;
     nexttick;
   }
 }
+
 
 process SET_CLR(int colorIndex, int color_r, int color_g, int color_b)
 {

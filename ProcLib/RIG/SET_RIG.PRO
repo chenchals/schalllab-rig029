@@ -30,6 +30,7 @@ declare int RIG_029_ID = 29;
 
 declare SET_RIG(int rigId);
 
+
 process SET_RIG(int rigId)
 {
   RIG_ID = rigId;

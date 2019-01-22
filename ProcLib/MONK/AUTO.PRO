@@ -14,15 +14,16 @@
 
 declare AUTO();
 
+
 process AUTO()
 {
   declare int tempVar = 0;
+
   //SSD list is not set
   while (tempVar < N_SSD_MAX)
   {
     SSD_ARRY[tempVar] = tempVar * 2 + 2;
-    tempVar = tempVar + 1;
+    tempVar           = tempVar + 1;
   }
   // See CMD_VARS and add those that you want to change.
-
 }

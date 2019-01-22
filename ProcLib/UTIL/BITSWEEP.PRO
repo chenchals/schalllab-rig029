@@ -22,18 +22,18 @@ process BITSWEEP()
   declare int waitTime = 100;
   declare int sentTime;
   declare int bitValue;
- 
+
   thisBit = 0;
   while (thisBit < maxBits)
   {
- 	if (thisBit == 0)
-	{
-		bitValue = 1;
-	}
-	else
-	{
-		bitValue = bitValue * 2;
-	}
+    if (thisBit == 0)
+    {
+      bitValue = 1;
+    }
+    else
+    {
+      bitValue = bitValue * 2;
+    }
     printf("Sending bit [%d] value(2^%d) = [%d]\n", thisBit, thisBit, -bitValue);
     spawnwait SEND_EVT(bitValue);
 

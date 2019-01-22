@@ -11,6 +11,8 @@
 #pragma declare = 1
 // Room variables: screen, isoluminant colors, data channels
 #include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
+// Set monk
+#include C:/TEMPO/ProcLib/MONK/SET_MONK.PRO
 // set pages to load CMD_PGS.PRO?
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 // Setup event defs so events can be sent
@@ -42,57 +44,115 @@ declare int LAST_TASK;
 
 declare IDLE();
 
+
 process IDLE() enabled
 {
-	declare int tempVar;
-	declare int trlNum;
-		
+  declare int tempVar;
+  int         tempTrlNumber;
+
   // ========== Call once =============
-	spawnwait SET_RIG(29);
-	spawnwait SET_SCRN();
-	spawnwait SET_CLR_PALETTE();
-	spawnwait SET_DEFAULT_STIM_VARS();
+  spawnwait SET_RIG(29);
+  spawnwait SET_SCRN();
+  spawnwait SET_CLR_PALETTE();
+  spawnwait SET_DEFAULT_STIM_VARS();
+  spawnwait SET_MONK(AUTO_ID);
 
-    spawn QUE_TTL();
-	spawn WATCH_EYE();
-	spawn WTCH_SCHMITT();	
+  spawn QUE_TTL();
+  spawn WATCH_EYE();
+  spawn WTCH_SCHMITT();
 
-	//printf("DOing DIO_OUT()\n");
-	//spawnwait DIO_OUT();
-	
-	
-	while(1)
-	{
-		printf("Doing Bitsweep()\n");
-		spawnwait BITSWEEP();
-	}
-		
-	
-	printf("ALLPROSC.PRO Running CMD_PGS()\n");
+  //printf("DOing DIO_OUT()\n");
+  //spawnwait DIO_OUT();
+
+
+  while (1)
+  {
+    printf("Doing Bitsweep()\n");
+    spawnwait BITSWEEP();
+  }
+
+
+  printf("ALLPROSC.PRO Running CMD_PGS()\n");
+  spawnwait CMD_PGS();
+
+  printf("DONE....!\n");
+  printf("Showing pages....!\n");
+
+  while (1)
+  {
+    //===============For each Trial=====================
+    tempTrlNumber = tempTrlNumber + 1;
+    spawnwait SETC_TRL();
+
+    //================ STATE == READY ===================
+    // STATE = READY
+    //when monk's eye os outside the large fix window
+    TRL_NUMBER = tempTrlNumber
+    printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARGET_IDX);
+
+    dsendf("vp %d\n", PG_FIXATION_PD);
+    dsendf("VW %d\n", 2);
+    dsendf("vp %d\n", PG_BLANK);
+    dsendf("VW %d\n", 5);
+    dsendf("vp %d\n", PG_TARGET_PD);
+    dsendf("VW %d\n", 5);
+    dsendf("vp %d\n", PG_SIGNAL_PD);
+    dsendf("VW %d\n", 1);
+    dsendf("vp %d\n", PG_BLANK);
+    nexttick 1000;
+    CURR_TARGET_IDX = CURR_TARGET_IDX + 1;
+  }
+} /* IDLE */
+
+
+process SETC_TRL()
+{
+  declare float eccX, eccY;
+
+
+
+  // Compute fix win size
+  // Fix spot center is at 0,0, so we do not need to compute
+  FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
+  FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
+  FIX_WIN[UP]    = -FIX_WIN_SIZE/2;
+  FIX_WIN[DOWN]  = FIX_WIN_SIZE/2;
+  // Larger fix win - For inaccurate eye position
+  FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE/2;
+  FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE/2;
+  FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
+  FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
+
+  // pick current target location
+  CURR_TARGET_IDX = random(N_TARG_POS);
+
+  // Compute TARG_WIN and TARG_WIN_LARGE
+  eccX            = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
+  TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
+  TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
+  TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE/2;
+  // Larger target window - For inaccurate eye position
+  TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+  // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
+  eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARGET_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
+  TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
+  TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
+  TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE/2;
+  // Larget ANTI target window - For inaccurate Eye position
+  TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+
+
+	// Setup CMD PAGES
 	spawnwait CMD_PGS();
-	printf("DONE....!\n");
-	printf("Showing pages....!\n");
-	trlNum = 1;
-	while(1)
-	{
-		CURR_TARGET_IDX = 0;
-		while (CURR_TARGET_IDX < N_TARG_POS)
-		{
-			printf("Trial num %d, Target pos %d\n",trlNum,CURR_TARGET_IDX);
-			spawnwait CMD_PGS();
-			dsendf("vp %d\n",PG_FIXATION_PD);
-			dsendf("VW %d\n", 2);
-			dsendf("vp %d\n",PG_BLANK);
-			dsendf("VW %d\n", 5);
-			dsendf("vp %d\n",PG_TARGET_PD);
-			dsendf("VW %d\n", 5);
-			dsendf("vp %d\n",PG_SIGNAL_PD);
-			dsendf("VW %d\n", 1);
-			dsendf("vp %d\n",PG_BLANK);
-			nexttick 1000;
-			CURR_TARGET_IDX = CURR_TARGET_IDX + 1;
-			trlNum = trlNum + 1;
-		}
-	}
 
-}
+} /* SETC_TRL */
