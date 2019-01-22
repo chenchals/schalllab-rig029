@@ -28,8 +28,8 @@ declare int constant N_EVENT_FIFO        = 1000;
 declare int          EVENT_FIFO[N_EVENT_FIFO];
 
 declare SEND_EVT(int eventCode);
-declare QUE_EVT();
 declare SEND_TTL(int value);
+declare QUE_TTL();
 
 
 process SEND_EVT(int eventCode)
@@ -37,6 +37,7 @@ process SEND_EVT(int eventCode)
   EVENT_FIFO[CURR_EVENT_FIFO_IDX] = eventCode;
   CURR_EVENT_FIFO_IDX             = (CURR_EVENT_FIFO_IDX + 1) % N_EVENT_FIFO;
 }
+
 //==== Comments form QUE_TTL.PRO=============================
 //-------------------------------------------------------------------------
 // Process QUE_TTL() runs in the background and sends up to 5 event codes
@@ -62,11 +63,10 @@ process SEND_EVT(int eventCode)
 //
 // written by david.c.godlove@vanderbilt.edu  January, 2011
 
-
-process QUE_EVT()
+process QUE_TTL()
 {
   // Max number of events to send during 1 process cycle
-  declare int events_per_cycle = 5;
+  declare int events_per_cycle = 16;
   // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
   // then there are no more events  to send in EVENT_FIFO buffer
   declare int event_idx;
@@ -93,19 +93,27 @@ process QUE_EVT()
   }
 }
 
+
 process SEND_TTL(int value)
 {
   declare int output = 1;
 
   // set ports A, B, and C to send strobes (output)
-  dioSetMode(output, PORTA | PORTB | PORTC);
+  dioSetMode(output, PORTA|PORTB|PORTC);
+  // Clear ports before sending
+  dioSetA(output, ~0xFF);
+  dioSetB(output, ~0xFF);
+  //spawnwait WAIT_MU(100);
   // load the low 8 bits on port A
   dioSetA(output, value & 0xFF);
   // load the high 8 bits on port B
-  dioSetB(output, (value >> 8) | 0x80);
-// wait 100 micro seconds to avoid losing events
-  spawnwait WAIT_MU(100);
-
+  dioSetB(output, (value >> 8) & 0xFF);
+  //wait 100 micro seconds to avoid losing events
+  spawnwait WAIT_MU(200);
+  // Clear ports after sending
   dioSetA(output, ~0xFF);
   dioSetB(output, ~0xFF);
+  //spawnwait WAIT_MU(100);
+
+  
 }

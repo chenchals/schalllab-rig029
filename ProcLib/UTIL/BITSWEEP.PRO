@@ -17,38 +17,31 @@ declare BITSWEEP();
 
 process BITSWEEP()
 {
-//printf("Bitsweep entered\n");
-  declare hide int maxBits  = 15;
-  declare hide int thisBit  = 1;
-  declare hide int waitTime = 400;
-  declare hide int sentTime;
-  declare hide int thisVal;
-  declare hide int bitInc;
-
-//printf("thisBit=%d\n",thisBit);
-  thisBit = 1;
-  while (thisBit <= maxBits)
+  declare int maxBits  = 16;
+  declare int thisBit  = 0;
+  declare int waitTime = 100;
+  declare int sentTime;
+  declare int bitValue;
+ 
+  thisBit = 0;
+  while (thisBit < maxBits)
   {
-    printf("thisBit=%d\n", thisBit);
-    thisVal = 1;
-    bitInc  = 1;
-    while (bitInc < thisBit)
-    {
-      thisVal = thisVal * 2;
-      bitInc  = bitInc + 1;
-    }
-    spawnwait SEND_EVT(thisVal);
+ 	if (thisBit == 0)
+	{
+		bitValue = 1;
+	}
+	else
+	{
+		bitValue = bitValue * 2;
+	}
+    printf("Sending bit [%d] value(2^%d) = [%d]\n", thisBit, thisBit, -bitValue);
+    spawnwait SEND_EVT(bitValue);
 
-    printf("Sending code: %d\n", (thisVal));
     sentTime = time();
     while (time() < (sentTime + waitTime))
     {
       nexttick;
     }
-
     thisBit = thisBit + 1;
-
-    //State = 0;							// If we are out of the while loop the user wanted...
-    // ...to stop Search.
   }
 }

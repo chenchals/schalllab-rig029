@@ -19,6 +19,14 @@
 #include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
+// Send event code
+#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
+//#include C:/TEMPO/ProcLib/UTIL/SEND_TTL.PRO
+//#include C:/TEMPO/ProcLib/UTIL/QUE_TTL.PRO
+
+#include C:/TEMPO/ProcLib/UTIL/BITSWEEP.PRO
+
+//#include C:/TEMPO/ProcLib/TEST/DIOTEST.PRO
 
 //==========================================================================
 // The State global variable allows the control structure to run tasks...
@@ -38,16 +46,28 @@ process IDLE() enabled
 {
 	declare int tempVar;
 	declare int trlNum;
+		
   // ========== Call once =============
 	spawnwait SET_RIG(29);
 	spawnwait SET_SCRN();
 	spawnwait SET_CLR_PALETTE();
 	spawnwait SET_DEFAULT_STIM_VARS();
 
-    spawn QUE_EVT();
+    spawn QUE_TTL();
 	spawn WATCH_EYE();
-	spawn WTCH_SCHMITT();
+	spawn WTCH_SCHMITT();	
 
+	//printf("DOing DIO_OUT()\n");
+	//spawnwait DIO_OUT();
+	
+	
+	while(1)
+	{
+		printf("Doing Bitsweep()\n");
+		spawnwait BITSWEEP();
+	}
+		
+	
 	printf("ALLPROSC.PRO Running CMD_PGS()\n");
 	spawnwait CMD_PGS();
 	printf("DONE....!\n");
