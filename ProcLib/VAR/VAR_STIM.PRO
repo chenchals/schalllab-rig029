@@ -30,6 +30,7 @@ declare float        TARG_WIN_SIZE = 7;
 declare float        TARG_WIN[4];
 declare float        TARG_WIN_ANTI[4];
 declare int          EYE_IN_TARG_WIN;
+declare int          EYE_IN_TARG_WIN_ANTI;
 declare float        TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
 declare float        TARG_WIN_LARGE[4];
 declare float        TARG_WIN_ANTI_LARGE[4];

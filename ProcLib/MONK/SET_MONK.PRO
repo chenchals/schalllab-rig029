@@ -14,8 +14,9 @@
 //==========================================================================
 //  Revision History:
 //
-#include C:/ProcLib/MONK/MNK_AUTO.PRO
-#include C:/ProcLib/MONK/MNK_JOULE.PRO
+
+#include C:/TEMPO/ProcLib/MONK/AUTO.PRO
+#include C:/TEMPO/ProcLib/MONK/JOULE.PRO
 
 declare int MONK_ID;
 declare int AUTO_ID  = 0;

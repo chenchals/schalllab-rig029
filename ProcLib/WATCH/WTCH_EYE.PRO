@@ -41,7 +41,7 @@ process WATCH_EYE()
                      eyeYdeg);
 
     eyeXpixels = eyeXdeg * DEG_2_PIX_X;
-    eyeYpixels = eye_Y * DEG_2_PIX_Y;
+    eyeYpixels = eyeYdeg * DEG_2_PIX_Y;
     if (eyeXpixels != oldXdeg || eyeYpixels != oldYdeg)
     {
       // why should this be with screen refresh?
@@ -151,9 +151,9 @@ process LOCATE_EYE(float degX, float degY)
     EYE_BTWN_TARG_WINS_ANTI = 0;
   }
 
-  currEyeAngle = rad2deg(arctan(CURR_EYE_Y_DEG/CURR_EYE_X_DEG));
+  currEyeAngle = rad2deg(atan(CURR_EYE_Y_DEG/CURR_EYE_X_DEG));
   currEyeEcc = sqrt((CURR_EYE_Y_DEG * CURR_EYE_Y_DEG) + (CURR_EYE_X_DEG * CURR_EYE_X_DEG));
 
-  writef("eyeVals.csv %d,%d,%d,%d\n",round(CURR_EYE_X_DEG),round(CURR_EYE_X_DEG),tound(currEyeAngle*10),round(currEyeEcc*10));
+  writef("eyeVals.csv %d,%d,%d,%d\n",round(CURR_EYE_X_DEG),round(CURR_EYE_X_DEG),round(currEyeAngle*10),round(currEyeEcc*10));
 
 } /* LOCATE_EYE */
