@@ -11,32 +11,28 @@
 
 #include C:/TEMPO/ProcLib/GRAFS/OBJECT.PRO
 
-//
-declare constant int SHOW = 1;
-declare constant int HIDE = 0;
 // graph objects for LEFT window
 declare OBJ_EYE;
 declare OBJ_FIX;
 declare OBJ_FIX_WIN;
+declare OBJ_FIX_WIN_L;
 declare OBJ_TARG;
 declare OBJ_TARG_WIN;
 
+//
+declare int GRF_SHOW = 1;
+declare int GRF_HIDE = 0;
+
+
 declare GRAPHS();
-process GRAF_UPD8_EYE(float currEyeX, float currEyeY);
-process GRAF_SHOW_FIX(int showHide);
+declare GRAF_UPD8_EYE(float currEyeX, float currEyeY);
+declare GRAF_SHOW_FIX(int showHide);
 
 
 process GRAPHS()
 {
-  declare hide int left, right, down, up;
-
+ 
   oSetGraph(gLEFT, aCLEAR);
-
-  // SETUP UP TARGET & EYE OBJECTS IN LEFT GRAPH
-  left  = Scr_pixX / -2;
-  right = Scr_pixX / 2;
-  up    = Scr_pixY / -2;
-  down  = Scr_pixY / 2;
   // set LEFT graph to virtual coordinates
   oSetGraph(gLEFT, aRANGE, -SCRN_PIX_X / 2, SCRN_PIX_X / 2, -SCRN_PIX_Y / 2, SCRN_PIX_Y / 2);
   oSetGraph(gLEFT, aTITLE, "TASk PROGRESS");
@@ -53,6 +49,9 @@ process GRAPHS()
   OBJ_FIX_WIN = oCreate(tBOX, gLEFT, 0, 0);
   oSetAttribute(OBJ_FIX_WIN, aUNFILLED);
   oSetAttribute(OBJ_FIX_WIN, aINVISIBLE);
+  OBJ_FIX_WIN_L = oCreate(tBOX, gLEFT, 0, 0);
+  oSetAttribute(OBJ_FIX_WIN_L, aUNFILLED);
+  oSetAttribute(OBJ_FIX_WIN_L, aINVISIBLE);
   //=======TARGET / TARGET_WINDOW OBJECTS============
   // Create invisible filled box type graph for target
   OBJ_TARG = oCreate(tBOX, gLEFT, 0, 0);
@@ -73,12 +72,14 @@ process GRAF_UPD8_EYE(float currEyeX, float currEyeY)
 
 process GRAF_SHOW_FIX(int showHide)
 {
-  if (showHide = SHOW)
+  if (showHide == GRF_SHOW)
   {
-    oSetAttribute(OBJ_FIX, aSIZE, FIX_SIZE_DEG * DEG_2_PIX_X, FIX_SIZE_DEG * DEG_2_PIX_Y);
+    oSetAttribute(OBJ_FIX, aSIZE, ceil(FIX_SIZE_DEG * DEG_2_PIX_X), ceil(FIX_SIZE_DEG * DEG_2_PIX_Y));
     oSetAttribute(OBJ_FIX, aVISIBLE);
-    oSetAttribute(OBJ_FIX_WIN, aSIZE, FIX_SIZE_DEG * DEG_2_PIX_X, FIX_SIZE_DEG * DEG_2_PIX_Y);
+    oSetAttribute(OBJ_FIX_WIN, aSIZE, FIX_WIN_SIZE * DEG_2_PIX_X, FIX_WIN_SIZE * DEG_2_PIX_Y);
     oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_L, aSIZE, FIX_WIN_SIZE_LARGE * DEG_2_PIX_X, FIX_WIN_SIZE_LARGE * DEG_2_PIX_Y);
+    oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
   }
   else
   {

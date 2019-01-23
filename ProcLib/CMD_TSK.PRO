@@ -62,6 +62,8 @@ process IDLE() enabled
   spawn QUE_TTL();
   spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
+  spawn GRAPHS();
+  spawn GRAF_SHOW_FIX(GRF_SHOW);
 
   while (1)
   {

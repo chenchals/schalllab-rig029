@@ -18,7 +18,8 @@ declare LOCATE_EYE(float degX,
 declare COMPUTE_EYE_POS(float currX,
                         float currY);
 
-declare int DEBUG = 1;
+declare int DEBUG = 0;
+declare int WRITE_FILE = 0;
 
 
 process WTCH_EYE()
@@ -204,9 +205,9 @@ process COMPUTE_EYE_POS(float currX, float currY)
     CURR_EYE_ANGLE = 9999999;//undefined;
   }
   CURR_EYE_ECC = sqrt((currY * currY) + (currX * currX));
-  if (DEBUG)
+  if (WRITE_FILE == 1)
   {
     printf("EyeVals: %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
-    writef("eyeVals.csv %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
+    //writef("eyeVals.csv %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
   }
 }
