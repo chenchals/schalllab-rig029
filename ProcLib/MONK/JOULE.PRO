@@ -44,6 +44,10 @@ process JOULE()
   {
     TARG_SIZE_ARRY[tempVar]         = 5.0;
     TARG_ANGLE_ARRY[tempVar]        = -tempVar * (360.0 / N_TARG_POS);
+    if (TARG_ANGLE_ARRY[tempVar] <= -180)
+    {
+      TARG_ANGLE_ARRY[tempVar] = TARG_ANGLE_ARRY[tempVar] + 360;
+    }
     TARG_ECCENTRICITY_ARRY[tempVar] = 12.0;
     TARG_COLOR_ARRY[tempVar, R_IDX] = 35;
     TARG_COLOR_ARRY[tempVar, G_IDX] = 33;

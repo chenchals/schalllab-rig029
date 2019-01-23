@@ -23,34 +23,34 @@ process WTCH_EYE()
   declare int xVal, yVal;
   declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
   declare int   lasttime, eyeXpixels, eyeYpixels;
-  
+
   while (1)
   {
     xVal = atable(EYE_X_CHANNEL);
     yVal = atable(EYE_Y_CHANNEL);
-    
+
 	if (DEBUG == 1 )
 	{
 		xVal = random(5000)+10000;
 		yVal = random(5000)+10000;
-		printf("DEBUG: Eye: %d, %d\n",xVal,yVal); 		
+		printf("DEBUG: Eye: %d, %d\n",xVal,yVal);
 	}
 	else
 	{
 		printf("Eye: %d, %d\n",xVal,yVal);
 	}
-  
-    eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-    eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
-		
+
+    eyeXcurrEyeAngle = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+    eyeYcurrEyeAngle = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+
     if (CENTER_EYE_NOW)
     {
       EYE_X_OFFSET   = EYE_X_OFFSET + eyeXdeg;
       EYE_Y_OFFSET   = EYE_Y_OFFSET + eyeYdeg;
       CENTER_EYE_NOW = 0;
     }
-	
-	
+
+
     if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
     {
 	  spawn LOCATE_EYE(eyeXdeg,eyeYdeg);
@@ -84,8 +84,6 @@ process LOCATE_EYE(float degX, float degY)
   // EYE_IN_FIX_WIN, EYE_BTWN_FIX_WINS
   // EYE_IN_TARG_WIN, EYE_BTWN_TARG_WINS
   // EYE_IN_TARG_WIN_ANTI, EYE_BTWN_TARG_WINS_ANTI
-  CURR_EYE_X_DEG = degX;
-  CURR_EYE_Y_DEG = degY;
   // Check Eye pos in FIX window area
   if (  degX >= FIX_WIN[LEFT] && degX <= FIX_WIN[RIGHT]
      && degY >= FIX_WIN[UP] && degY <= FIX_WIN[DOWN])
@@ -161,16 +159,55 @@ process LOCATE_EYE(float degX, float degY)
     EYE_IN_TARG_WIN_ANTI    = 0;
     EYE_BTWN_TARG_WINS_ANTI = 0;
   }
-  spawn WRITE_EYE2FILE(CURR_EYE_X_DEG,CURR_EYE_Y_DEG);
+  // We want to pass this, since the Global var
+  // could change while coputation is done
+  spawn COMPUTE_EYE_POS();
 } /* LOCATE_EYE */
 
-process WRITE_EYE2FILE(float currX, float currY)
+process COMPUTE_EYE_POS(float currX, float currY)
 {
-	declare float currEyeAngle;
-    declare float currEyeEcc;
+  // Write code to do arctan2d
+  // see https://en.wikipedia.org/wiki/Atan2 (expression)
+  declare float atanVal;
 
-	currEyeAngle = rad2deg(atan(currY/currX));
-	currEyeEcc = sqrt((currY * currY) + (currX * currX));
-	printf("EyeVals: %d,%d,%d,%d\n",currX*10,currY*10,currEyeAngle*10,currEyeEcc*10);
-    writef("eyeVals.csv %d,%d,%d,%d\n",currX*10,currY*10,currEyeAngle*10,currEyeEcc*10);
+  CURR_EYE_X_DEG = currX;
+  CURR_EYE_Y_DEG = currY;
+
+
+  atanVal = atan(currY / currX);
+  if (currX > 0)
+  {
+   CURR_EYE_ANGLE = rad2deg(atanVal);
+  }
+  else if (currX < 0 && currY >= 0)
+  {
+   CURR_EYE_ANGLE = rad2deg(atanVal + 22 / 7);
+  }
+  else if (currX < 0 && currY < 0)
+  {
+   CURR_EYE_ANGLE = rad2deg(atanVal - 22 / 7);
+  }
+  else if (currX == 0 && currY > 0)
+  {
+   CURR_EYE_ANGLE = rad2deg(22 / (7 / 2));
+  }
+  else if (currX == 0 && currY < 0)
+  {
+   CURR_EYE_ANGLE = rad2deg(-22 / (7 * 2));
+  }
+  else if (currX == 0 && y == 0)
+  {
+   CURR_EYE_ANGLE = 9999999;//undefined;
+  }
+ CURR_EYE_ECC = sqrt((currY * currY) + (currX * currX));
+  if (DEBUG)
+  {
+    printf("EyeVals: %d,%d,%d,%d\n", currX * 10, currY * 10,CURR_EYE_ANGLE * 10,CURR_EYE_ECC * 10);
+    writef("eyeVals.csv %d,%d,%d,%d\n", currX * 10, currY * 10,CURR_EYE_ANGLE * 10,CURR_EYE_ECC * 10);
+  }
+}
+
+
+
+
 }

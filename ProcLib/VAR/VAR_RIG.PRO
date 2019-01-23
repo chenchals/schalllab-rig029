@@ -43,6 +43,8 @@ declare float EYE_Y_OFFSET;
 // Current Eyex and Eyey
 declare float CURR_EYE_X_DEG;
 declare float CURR_EYE_Y_DEG;
+declare float CURR_EYE_ANGLE;
+declare float CURR_EYE_ECC;
 
 // For dynamically centering the Eye position
 // Add these to .pcf file

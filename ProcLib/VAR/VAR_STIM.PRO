@@ -75,7 +75,13 @@ process SET_DEFAULT_STIM_VARS()
     TARG_COLOR_ARRY[tempCounter, R_IDX] = 35;
     TARG_COLOR_ARRY[tempCounter, G_IDX] = 33;
     TARG_COLOR_ARRY[tempCounter, B_IDX] = 27;
+    // counter-clockwise: 0, -45, -19, -135
     TARG_ANGLE_ARRY[tempCounter]        = -tempCounter * (360.0 / N_TARG_POS);
+    if (TARG_ANGLE_ARRY[tempCounter] <= -180)
+    {
+      // clockwise: 45, 90, 135,180
+      TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] + 360;
+    }
     TARG_ECCENTRICITY_ARRY[tempCounter] = 3.0;
     tempCounter                         = tempCounter + 1;
     nexttick;
