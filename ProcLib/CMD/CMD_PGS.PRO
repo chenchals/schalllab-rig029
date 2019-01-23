@@ -20,15 +20,8 @@ declare int   PG_TARGET_PD   = 3;
 declare int   PG_TARGET      = 4;
 declare int   PG_SIGNAL_PD   = 5;
 declare int   PG_SIGNAL      = 6;
-// Attributes of Current Target
-declare int   CURR_TARGET_IDX;
-declare float CURR_TARG_SIZE;
-declare float CURR_TARG_ANGLE;
-declare float CURR_TARG_ECCENTRICITY;
-declare int   CURR_TARG_COLOR_IDX;
 
 declare CMD_PGS();
-
 
 process CMD_PGS()
 {

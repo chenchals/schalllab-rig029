@@ -21,8 +21,8 @@ declare OBJ_TARG_WIN;
 declare OBJ_TARG_WIN_L;
 
 //
-declare int GRF_SHOW = 1;
-declare int GRF_HIDE = 0;
+declare int GRAF_SHOW = 1;
+declare int GRAF_HIDE = 0;
 
 
 declare GRAPHS();
@@ -39,7 +39,7 @@ process GRAPHS()
   oSetGraph(gLEFT, aCLEAR);
   // set LEFT graph to virtual coordinates
   oSetGraph(gLEFT, aRANGE, -SCRN_PIX_X/2, SCRN_PIX_X/2, -SCRN_PIX_Y/2, SCRN_PIX_Y/2);
-  oSetGraph(gLEFT, aTITLE, "TASk PROGRESS");
+  oSetGraph(gLEFT, aTITLE, "TASK PROGRESS");
   //=======EYE OBJECT============
   // Create eye as a visible + type graph
   OBJ_EYE = oCreate(tCross, gLEFT, DEG_2_PIX_X, DEG_2_PIX_Y);
@@ -65,6 +65,9 @@ process GRAPHS()
   OBJ_TARG_WIN = oCreate(tBOX, gLEFT, 0, 0);
   oSetAttribute(OBJ_TARG_WIN, aUNFILLED);
   oSetAttribute(OBJ_TARG_WIN, aINVISIBLE);
+  OBJ_TARG_WIN_L = oCreate(tBOX, gLEFT, 0, 0);
+  oSetAttribute(OBJ_TARG_WIN_L, aUNFILLED);
+  oSetAttribute(OBJ_TARG_WIN_L, aINVISIBLE);
 }
 
 
@@ -96,13 +99,13 @@ process GRAF_UPD8_TARG()
   oSetAttribute(OBJ_TARG_WIN, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
   oSetAttribute(OBJ_TARG_WIN_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
-  oMove(OBJ_TARG_WINL, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oMove(OBJ_TARG_WIN_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
 }
 
 
 process GRAF_SHOW_FIX(int showHide)
 {
-  if (showHide == GRF_SHOW)
+  if (showHide == GRAF_SHOW)
   {
     oSetAttribute(OBJ_FIX, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
@@ -119,7 +122,7 @@ process GRAF_SHOW_FIX(int showHide)
 
 process GRAF_SHOW_TARG(int showHide)
 {
-  if (showHide == GRF_SHOW)
+  if (showHide == GRAF_SHOW)
   {
     oSetAttribute(OBJ_TARG, aVISIBLE);
     oSetAttribute(OBJ_TARG_WIN, aVISIBLE);

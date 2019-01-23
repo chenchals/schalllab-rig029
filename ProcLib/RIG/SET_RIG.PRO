@@ -18,22 +18,21 @@
 #include C:/TEMPO/ProcLib/VAR/CONSTNTS.PRO
 // Load all constants and related gobal vars
 #include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
+// CMD VArs ??
+#include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
 // Screen parameters
 #include C:/TEMPO/ProcLib/RIG/SET_SCRN.PRO
-// Setup Monk also
-#include C:/TEMPO/ProcLib/MONK/SET_MONK.PRO
 // Stimulus Variables: fixation, target, photodiode
 #include C:/TEMPO/ProcLib/VAR/VAR_STIM.PRO
 // Set palatte colors and color indices
 #include C:/TEMPO/ProcLib/RIG/SET_CLRS.PRO
-// CMD VArs ??
-#include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
-
 // Send event processes
 #include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
 
 // Rig 029
 #include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
+// Setup Monk also
+#include C:/TEMPO/ProcLib/MONK/SET_MONK.PRO
 
 declare int RIG_029_ID = 29;
 

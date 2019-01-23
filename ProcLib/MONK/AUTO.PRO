@@ -14,7 +14,6 @@
 
 declare AUTO();
 
-
 process AUTO()
 {
   declare int tempVar = 0;

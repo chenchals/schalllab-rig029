@@ -33,6 +33,14 @@ declare float        TARG_WIN_ANTI_LARGE[4];
 declare int          EYE_BTWN_TARG_WINS;
 declare int          EYE_BTWN_TARG_WINS_ANTI;
 
+// Attributes of Current Target
+declare int   CURR_TARGET_IDX;
+declare float CURR_TARG_SIZE;
+declare float CURR_TARG_ANGLE;
+declare float CURR_TARG_ECCENTRICITY;
+declare int   CURR_TARG_COLOR_IDX;
+
+
 // Photocell marker CURR_TARG_SIZE
 declare float PD_WIDTH_DEG = 4.0;
 
@@ -50,14 +58,13 @@ process SET_DEFAULT_STIM_VARS()
   while (tempCounter < N_TARG_POS)
   {
     TARG_SIZE_ARRY[tempCounter] = 0.5;
-    // counter-clockwise: 0, -45, -19, -135
-    TARG_ANGLE_ARRY[tempCounter] = -tempCounter * (360.0/N_TARG_POS);
-    if (TARG_ANGLE_ARRY[tempCounter] <= -180)
-    {
-      // clockwise: 45, 90, 135,180
-      TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] + 360;
-    }
-    TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
+    // clockwise: -45, -19, -135
+    TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0/N_TARG_POS);
+      if (TARG_ANGLE_ARRY[tempCounter] > 180)
+      {
+        TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] - 360;
+      }    
+	  TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
     tempCounter                         = tempCounter + 1;
     nexttick;
   }
