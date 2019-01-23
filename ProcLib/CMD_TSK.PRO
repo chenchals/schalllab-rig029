@@ -17,6 +17,8 @@
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 // Setup event defs so events can be sent
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
+// Setup GRAPHS
+#include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
 // Set up watches
