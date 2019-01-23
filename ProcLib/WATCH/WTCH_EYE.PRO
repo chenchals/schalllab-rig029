@@ -14,12 +14,12 @@
 
 declare WTCH_EYE();
 declare LOCATE_EYE(float degX, float degY);
-declare WRITE_EYE2FILE(float currX, float currY);
+declare COMPUTE_EYE_POS(float currX, float currY);
 
+declare int DEBUG = 1;
 
 process WTCH_EYE()
 {
-  declare int DEBUG = 0;
   declare int xVal, yVal;
   declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
   declare int   lasttime, eyeXpixels, eyeYpixels;
@@ -31,8 +31,8 @@ process WTCH_EYE()
 
 	if (DEBUG == 1 )
 	{
-		xVal = random(5000)+10000;
-		yVal = random(5000)+10000;
+		xVal = (random(500)+random(25)+1)* 3.3;
+		yVal = (random(500)+random(25)+1)* 3.5;
 		printf("DEBUG: Eye: %d, %d\n",xVal,yVal);
 	}
 	else
@@ -40,8 +40,8 @@ process WTCH_EYE()
 		printf("Eye: %d, %d\n",xVal,yVal);
 	}
 
-    eyeXcurrEyeAngle = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-    eyeYcurrEyeAngle = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+    eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+    eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
 
     if (CENTER_EYE_NOW)
     {
@@ -161,7 +161,7 @@ process LOCATE_EYE(float degX, float degY)
   }
   // We want to pass this, since the Global var
   // could change while coputation is done
-  spawn COMPUTE_EYE_POS();
+  spawn COMPUTE_EYE_POS(degX, degY);
 } /* LOCATE_EYE */
 
 process COMPUTE_EYE_POS(float currX, float currY)
@@ -172,7 +172,6 @@ process COMPUTE_EYE_POS(float currX, float currY)
 
   CURR_EYE_X_DEG = currX;
   CURR_EYE_Y_DEG = currY;
-
 
   atanVal = atan(currY / currX);
   if (currX > 0)
@@ -195,7 +194,7 @@ process COMPUTE_EYE_POS(float currX, float currY)
   {
    CURR_EYE_ANGLE = rad2deg(-22 / (7 * 2));
   }
-  else if (currX == 0 && y == 0)
+  else if (currX == 0 && currY == 0)
   {
    CURR_EYE_ANGLE = 9999999;//undefined;
   }
@@ -207,7 +206,3 @@ process COMPUTE_EYE_POS(float currX, float currY)
   }
 }
 
-
-
-
-}
