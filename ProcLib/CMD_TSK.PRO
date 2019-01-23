@@ -65,11 +65,11 @@ process IDLE() enabled
   spawn GRAPHS();
   spawn GRAF_SHOW_FIX(GRF_SHOW);
 
-  while (1)
-  {
-    printf("Doing Bitsweep()\n");
-    spawnwait BITSWEEP();
-  }
+  //while (1)
+  //{
+  //  printf("Doing Bitsweep()\n");
+  //  spawnwait BITSWEEP();
+  //}
 
 
   printf("ALLPROSC.PRO Running CMD_PGS()\n");
@@ -77,13 +77,13 @@ process IDLE() enabled
 
   printf("DONE....!\n");
   printf("Showing pages....!\n");
-
+  CURR_TARGET_IDX = 0;
   while (1)
   {
     //===============For each Trial=====================
     tempTrlNumber = tempTrlNumber + 1;
     spawnwait SETC_TRL();
-
+    
     //================ STATE == READY ===================
     // STATE = READY
     //when monk's eye os outside the large fix window
@@ -91,16 +91,20 @@ process IDLE() enabled
     printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARGET_IDX);
 
     dsendf("vp %d\n", PG_FIXATION_PD);
-    dsendf("VW %d\n", 2);
-    dsendf("vp %d\n", PG_BLANK);
-    dsendf("VW %d\n", 5);
+    //dsendf("VW %d\n", 2);
+    //dsendf("vp %d\n", PG_BLANK);
+    //dsendf("VW %d\n", 5);
     dsendf("vp %d\n", PG_TARGET_PD);
-    dsendf("VW %d\n", 5);
-    dsendf("vp %d\n", PG_SIGNAL_PD);
-    dsendf("VW %d\n", 1);
-    dsendf("vp %d\n", PG_BLANK);
+    dsendf("VW %d\n", 20);
+    //dsendf("vp %d\n", PG_SIGNAL_PD);
+    //dsendf("VW %d\n", 1);
+    //dsendf("vp %d\n", PG_BLANK);
     nexttick 1000;
-    CURR_TARGET_IDX = CURR_TARGET_IDX + 1;
+   CURR_TARGET_IDX = CURR_TARGET_IDX  + 1;
+   if(CURR_TARGET_IDX == N_TARG_POS)
+   {
+	   CURR_TARGET_IDX = 0;
+   }
   }
 } /* IDLE */
 
@@ -124,7 +128,7 @@ process SETC_TRL()
   FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
 
   // pick current target location
-  CURR_TARGET_IDX = random(N_TARG_POS);
+  //CURR_TARGET_IDX = random(N_TARG_POS);
 
   // Compute TARG_WIN and TARG_WIN_LARGE
   eccX            = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];

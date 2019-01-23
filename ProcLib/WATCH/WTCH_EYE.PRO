@@ -39,10 +39,6 @@ process WTCH_EYE()
       yVal = (random(500) + random(25) + 1) * 3.5;
       printf("DEBUG: Eye: %d, %d\n", xVal, yVal);
     }
-    else
-    {
-      printf("Eye: %d, %d\n", xVal, yVal);
-    }
 
     eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
     eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;

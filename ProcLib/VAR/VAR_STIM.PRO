@@ -34,7 +34,6 @@ declare int          EYE_IN_TARG_WIN_ANTI;
 declare float        TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
 declare float        TARG_WIN_LARGE[4];
 declare float        TARG_WIN_ANTI_LARGE[4];
-declare int          CURR_TARG_IDX;
 declare int          EYE_BTWN_TARG_WINS;
 declare int          EYE_BTWN_TARG_WINS_ANTI;
 
