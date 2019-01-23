@@ -109,7 +109,7 @@ process SEND_TTL(int value)
   dioSetA(output, value & 0xFF);
   // load the high 8 bits on port B
   dioSetB(output, (value >> 8) & 0xFF);
-  //wait 100 micro seconds to avoid losing events
+  //wait 200 micro seconds to avoid losing events
   spawnwait WAIT_MU(200);
 
   // Clear ports after sending

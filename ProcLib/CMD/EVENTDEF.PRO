@@ -18,7 +18,7 @@
 //       Comments are imported for older EVENTCODES.PRO file and inserted at
 //       appropriate locations.
 // 002: 2019/01/08 chenchal subravtei
-//      Added / modified event codes:
+//      Added/modified event codes:
 //      PDTriggerLeft_  = 2990 and
 //      PDTriggerRight_ = 2991
 //

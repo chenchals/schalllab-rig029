@@ -23,6 +23,7 @@
 
 declare INFOS();
 
+
 process INFOS()
 {
   declare int stop_sig_color_r, stop_sig_color_g, stop_sig_color_b;

@@ -15,5 +15,5 @@
 #include C:/TEMPO/ProcLib/VAR/VAR_STIM.PRO
 //===========Task Variables=====================
 // CMD Task
-#include C:/TEMPO/ProcLib/VAR/VAR_CMD.PRO
+#include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
 // When writing for other task.. extract common Vars

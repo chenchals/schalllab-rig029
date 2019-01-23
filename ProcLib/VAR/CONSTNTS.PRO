@@ -7,6 +7,9 @@
 //==========================================================================
 //  Revision History:
 
+// For debugging and file writing of vars
+declare int DEBUG      = 0;
+declare int WRITE_FILE = 0;
 // Color indexes
 declare constant int R_IDX = 0;
 declare constant int G_IDX = 1;
@@ -25,3 +28,7 @@ declare constant int TASK_COUNTERMANDING = 1;
 declare constant int TASK_FIXATION       = 2;
 declare constant int TASK_SEARCH         = 3;
 declare constant int TASK_MEMORY_GUIDED  = 4;
+
+// graphics
+declare constant int OPEN = 0;
+declare constant int FILL = 1;

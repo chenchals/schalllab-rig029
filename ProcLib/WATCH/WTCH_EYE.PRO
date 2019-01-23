@@ -13,13 +13,8 @@
 //
 
 declare WTCH_EYE();
-declare LOCATE_EYE(float degX,
-                   float degY);
-declare COMPUTE_EYE_POS(float currX,
-                        float currY);
-
-declare int DEBUG = 0;
-declare int WRITE_FILE = 0;
+declare LOCATE_EYE(float degX, float degY);
+declare COMPUTE_EYE_POS(float currX, float currY);
 
 
 process WTCH_EYE()
@@ -33,15 +28,8 @@ process WTCH_EYE()
     xVal = atable(EYE_X_CHANNEL);
     yVal = atable(EYE_Y_CHANNEL);
 
-    if (DEBUG == 1)
-    {
-      xVal = (random(500) + random(25) + 1) * 3.3;
-      yVal = (random(500) + random(25) + 1) * 3.5;
-      printf("DEBUG: Eye: %d, %d\n", xVal, yVal);
-    }
-
-    eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-    eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+    eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+    eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
 
     if (CENTER_EYE_NOW)
     {
@@ -50,16 +38,15 @@ process WTCH_EYE()
       CENTER_EYE_NOW = 0;
     }
 
-
     if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
     {
-      spawn LOCATE_EYE(eyeXdeg,eyeYdeg);
+      spawn LOCATE_EYE(eyeXdeg, eyeYdeg);
 
       // why should this be with screen refresh?
       if (time() > lasttime + 16)
       {
-        spawn GRAF_UPD8_EYE(eyeXdeg,eyeYdeg);
-        //oMove(object_eye, eyeXpixels, eyeYpixels);
+        spawn GRAF_UPD8_EYE(eyeXdeg, eyeYdeg);
+
         if (EYE_ON_VDOSYNC)
         {
           eyeXpixels = eyeXdeg * DEG_2_PIX_X;
@@ -162,7 +149,7 @@ process LOCATE_EYE(float degX, float degY)
   }
   // We want to pass this, since the Global var
   // could change while coputation is done
-  spawn COMPUTE_EYE_POS(degX,degY);
+  spawn COMPUTE_EYE_POS(degX, degY);
 } /* LOCATE_EYE */
 
 
@@ -175,26 +162,26 @@ process COMPUTE_EYE_POS(float currX, float currY)
   CURR_EYE_X_DEG = currX;
   CURR_EYE_Y_DEG = currY;
 
-  atanVal = atan(currY / currX);
+  atanVal = atan(currY/currX);
   if (currX > 0)
   {
     CURR_EYE_ANGLE = rad2deg(atanVal);
   }
   else if (currX < 0 && currY >= 0)
   {
-    CURR_EYE_ANGLE = rad2deg(atanVal + 22 / 7);
+    CURR_EYE_ANGLE = rad2deg(atanVal + 22/7);
   }
   else if (currX < 0 && currY < 0)
   {
-    CURR_EYE_ANGLE = rad2deg(atanVal - 22 / 7);
+    CURR_EYE_ANGLE = rad2deg(atanVal - 22/7);
   }
   else if (currX == 0 && currY > 0)
   {
-    CURR_EYE_ANGLE = rad2deg(22 / (7 / 2));
+    CURR_EYE_ANGLE = rad2deg(22/(7/2));
   }
   else if (currX == 0 && currY < 0)
   {
-    CURR_EYE_ANGLE = rad2deg(-22 / (7 * 2));
+    CURR_EYE_ANGLE = rad2deg(-22/(7 * 2));
   }
   else if (currX == 0 && currY == 0)
   {
@@ -203,7 +190,10 @@ process COMPUTE_EYE_POS(float currX, float currY)
   CURR_EYE_ECC = sqrt((currY * currY) + (currX * currX));
   if (WRITE_FILE == 1)
   {
-    printf("EyeVals: %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
-    //writef("eyeVals.csv %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
+    writef("eyeVals.csv %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
   }
-}
+  if (DEBUG == 1)
+  {
+    printf("EyeVals: %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
+  }
+} /* COMPUTE_EYE_POS */

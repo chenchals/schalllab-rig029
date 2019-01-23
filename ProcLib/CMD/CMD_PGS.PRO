@@ -37,10 +37,6 @@ process CMD_PGS()
   declare float pdAngleL;
   declare float opposite;
   declare float adjacent;
-  declare float stim_ecc_x;
-  declare float stim_ecc_y;
-  declare int   open = 0;
-  declare int   fill = 1;
 
   //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Calculate screen coordinates for stimuli on this trial
@@ -48,39 +44,26 @@ process CMD_PGS()
   CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARGET_IDX];
   CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
   // Zero is black.  see SET_CLRS.pro
-  CURR_TARG_COLOR_IDX = TARG_COLOR_IDX_ARRY[CURR_TARGET_IDX];
-  // find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
-  stim_ecc_x = cos(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
-  stim_ecc_y = sin(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY * -1;
-  // Update animated graph object and resize PG_FIXATION object
-  //oMove(object_targ, stim_ecc_x * DEG_2_PIX_X, stim_ecc_y * DEG_2_PIX_Y);
-  //oSetAttribute(object_targ, aSIZE, CURR_TARG_SIZE * DEG_2_PIX_X, CURR_TARG_SIZE * DEG_2_PIX_Y);
-  //oSetAttribute(object_fix, aSIZE, 1 * DEG_2_PIX_X, 1 * DEG_2_PIX_Y);
+  CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+  // Update graph object for Target
+  spawn GRAF_UPD8_FIX();
+  spawn GRAF_UPD8_TARG();
 
-  // For PD
-  adjacent       = rad2deg(atan((SCRN_MM_X / 2) / SUBJ_DIST_MM));
-  opposite       = rad2deg(atan((SCRN_MM_Y / 2) / SUBJ_DIST_MM));
+  // For Photodiode marker
+  adjacent = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
+
+  opposite       = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));
   pdEccentricity = sqrt((opposite * opposite) + (adjacent * adjacent)) - 0.5;
-  pdAngleL       = rad2deg(atan(opposite / adjacent)) + 180;
-  pdAngleR       = -rad2deg(atan(opposite / adjacent));
+  pdAngleL       = rad2deg(atan(opposite/adjacent)) + 180;
+  pdAngleR       = -rad2deg(atan(opposite/adjacent));
 
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 1 FIXATION_PD - PD is drawn on LEFT-TOP of screen only
   //printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_FIXATION_PD,FIX_SIZE_DEG,PD_WIDTH_DEG,pdAngleL);
   dsendf("rw %d,%d;\n", PG_FIXATION_PD, PG_FIXATION_PD);
   dsendf("cl:\n");
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_FIX,
-                     fill);
-  spawnwait DRW_RECT(PD_WIDTH_DEG,
-                     PD_WIDTH_DEG / 4,
-                     pdAngleL,
-                     pdEccentricity,
-                     CLR_IDX_PTOTODIODE,
-                     fill);
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
+  spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
   //printf("-----------------\n");
   nexttick;
@@ -89,12 +72,7 @@ process CMD_PGS()
   //printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d\n",PG_FIXATION,FIX_SIZE_DEG);
   dsendf("rw %d,%d;\n", PG_FIXATION, PG_FIXATION);
   dsendf("cl:\n");
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_FIX,
-                     fill);
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
 
   nexttick;
   //--------------------------------------------------------------------------------------------------------------------
@@ -103,28 +81,13 @@ process CMD_PGS()
   dsendf("rw %d,%d;\n", PG_TARGET_PD, PG_TARGET_PD);
   dsendf("cl:\n");
   // draw PG_TARGET
-  spawnwait DRW_RECT(CURR_TARG_SIZE,
-                     CURR_TARG_SIZE,
-                     CURR_TARG_ANGLE,
-                     CURR_TARG_ECCENTRICITY,
-                     CURR_TARG_COLOR_IDX,
-                     fill);
+  spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
-  // draw open PG_FIXATION point
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_FIX,
-                     open);
+  // draw OPEN PG_FIXATION point
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
   // Draw left PD marker
-  spawnwait DRW_RECT(PD_WIDTH_DEG,
-                     PD_WIDTH_DEG / 4,
-                     pdAngleL,
-                     pdEccentricity,
-                     CLR_IDX_PTOTODIODE,
-                     fill);
+  spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
   nexttick;
   //--------------------------------------------------------------------------------------------------------------------
@@ -132,20 +95,10 @@ process CMD_PGS()
   //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_TARGET,CURR_TARG_SIZE);
   dsendf("rw %d,%d;\n", PG_TARGET, PG_TARGET);
   dsendf("cl:\n");
-  spawnwait DRW_RECT(CURR_TARG_SIZE,
-                     CURR_TARG_SIZE,
-                     CURR_TARG_ANGLE,
-                     CURR_TARG_ECCENTRICITY,
-                     CURR_TARG_COLOR_IDX,
-                     fill);
+  spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
-  // draw open PG_FIXATION point
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_FIX,
-                     open);
+  // draw OPEN PG_FIXATION point
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
   nexttick;
 
@@ -154,36 +107,16 @@ process CMD_PGS()
   //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleR %3.2d\n",PG_SIGNAL_PD,CURR_TARG_SIZE,PD_WIDTH_DEG,pdAngleR);
   dsendf("rw %d,%d;\n", PG_SIGNAL_PD, PG_SIGNAL_PD);
   dsendf("cl:\n");
-  spawnwait DRW_RECT(CURR_TARG_SIZE,
-                     CURR_TARG_SIZE,
-                     CURR_TARG_ANGLE,
-                     CURR_TARG_ECCENTRICITY,
-                     CURR_TARG_COLOR_IDX,
-                     fill);
+  spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
   // draw PG_TARGET
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_STOP_SIGNAL,
-                     fill);
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, FILL);
 
   // draw PG_FIXATION point
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_FIX,
-                     open);
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
   // Draw right PD marker
-  spawnwait DRW_RECT(PD_WIDTH_DEG,
-                     PD_WIDTH_DEG / 4,
-                     pdAngleR,
-                     pdEccentricity,
-                     CLR_IDX_PTOTODIODE,
-                     fill);
+  spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleR, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
   nexttick;
   //--------------------------------------------------------------------------------------------------------------------
@@ -191,28 +124,13 @@ process CMD_PGS()
   //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_SIGNAL,CURR_TARG_SIZE);
   dsendf("rw %d,%d;\n", PG_SIGNAL, PG_SIGNAL);
   dsendf("cl:\n");
-  spawnwait DRW_RECT(CURR_TARG_SIZE,
-                     CURR_TARG_SIZE,
-                     CURR_TARG_ANGLE,
-                     CURR_TARG_ECCENTRICITY,
-                     CURR_TARG_COLOR_IDX,
-                     fill);
+  spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
   // draw PG_TARGET
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_STOP_SIGNAL,
-                     fill);
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, FILL);
 
   // draw PG_FIXATION point
-  spawnwait DRW_RECT(FIX_SIZE_DEG,
-                     FIX_SIZE_DEG,
-                     0.0,
-                     0.0,
-                     CLR_IDX_FIX,
-                     open);
+  spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
   nexttick;
   //--------------------------------------------------------------------------------------------------------------------
