@@ -14,27 +14,22 @@
 //==========================================================================
 //  Revision History:
 
-#include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
-// Screen parameters
-#include C:/TEMPO/ProcLib/RIG/SET_SCRN.PRO
+// Screen setip
+#include C:/TEMPO/ProcLib/UTIL/SET_SCRN.PRO
 
 // Rig 029
 #include C:/TEMPO/ProcLib/RIG/RIG_029.PRO
 
 declare int RIG_029_ID = 29;
 
-declare SET_RIG(int rigId);
+declare SET_RIG();
 
 
-process SET_RIG(int rigId)
+process SET_RIG()
 {
-  RIG_ID = rigId;
   if (RIG_ID == RIG_029_ID)
   {
     spawnwait RIG_029();
   }
   spawnwait SET_SCRN();
-  spawnwait SET_CLRS();
-  spawnwait SET_DEFAULT_STIM_VARS();
-
 }

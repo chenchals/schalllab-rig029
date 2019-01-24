@@ -2,28 +2,27 @@
 ; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
-; Wed Jan 23 16:36:31 2019
+; Thu Jan 24 08:54:08 2019
 ; DLOAD C:\tempo\ProcLib\CMD_TSK.dcf
 
 ; DIALOGS
 
-SCREENRES 1280,768,32,1,0,0
+SCREENRES 1366,768,32,1,0,0
 
-DIAPAGE 0,"Main_Menu"
-DIAPOS   0,0,-1,-1,-1,-1,15,55,364,503,0
-DIAONENTRY 0,"spawn SET_RIG(RIG_029_ID);"
-DIAOBJ   0,0,1,10,6,88,24,"","Main Menu"
-DIAOBJ   0,1,2,17,380,116,402,"Help",""
-DIAOBJ   0,2,2,126,380,225,402,"Cancel","DPOP"
-DIAOBJ   0,3,1,16,32,92,52,"","Current Rig"
-DIAOBJ   0,4,1,124,34,206,52,"","Current Subj."
-DIAOBJ   0,5,1,27,150,77,170,"","Task"
-DIAOBJ   0,6,3,22,55,87,70,"","RIG_ID"
-DIAOBJ   0,7,3,127,55,198,73,"","MONK_ID"
-DIAOBJ   0,8,2,26,74,88,94,"Rig_029",""
-DIAOBJ   0,9,2,121,74,203,93,"Auto_Monk","MONK_ID=AUTO_ID"
-DIAOBJ   0,10,2,121,106,203,125,"Joule_01","MONK_ID=JOULE_ID"
-DIAOBJ   0,11,2,230,380,329,402,"OK","start;DPOP Main_Menu;"
+DIAPAGE 0,"CMD_Task_Menu"
+DIAPOS   0,0,0,0,-1,-1,16,55,388,503,0
+DIAOBJ   0,0,1,63,6,247,23,"","Countermanding Task Menu"
+DIAOBJ   0,1,2,18,380,123,405,"Main_Menu","STOP;\r\nCCLEAR;\r\nCLOAD C:/TEMPO/PROCLIB/MAIN_MENU.pcf;\r\n"
+DIAOBJ   0,2,2,134,380,240,405,"Cancel","DPOP"
+DIAOBJ   0,3,1,17,32,98,57,"","Current Rig"
+DIAOBJ   0,4,1,132,34,219,59,"","Current Subj."
+DIAOBJ   0,5,1,28,150,82,175,"","Task"
+DIAOBJ   0,6,3,23,55,92,80,"","RIG_ID"
+DIAOBJ   0,7,3,135,55,211,80,"","MONK_ID"
+DIAOBJ   0,8,2,27,74,93,99,"Rig_029","RIG_ID=RIG_029_ID;"
+DIAOBJ   0,9,2,129,74,216,99,"Auto_Monk","MONK_ID=AUTO_ID"
+DIAOBJ   0,10,2,129,106,216,131,"Joule_01","MONK_ID=JOULE_ID"
+DIAOBJ   0,11,2,245,380,351,405,"OK","start;DPOP CMD_Task_Menu;"
 
 ; END OF DIALOGS
 

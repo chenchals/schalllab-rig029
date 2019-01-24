@@ -10,9 +10,7 @@
 // Use variables on the fly - no declaration
 #pragma declare = 1
 
-#include C:/TEMPO/ProcLib/UTIL/BITSWEEP.PRO
-
-//#include C:/TEMPO/ProcLib/TEST/DIOTEST.PRO
+#include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 
 //==========================================================================
 
@@ -23,10 +21,13 @@ declare SETC_TRL();
 process IDLE() enabled
 {
   declare int tempVar;
-  int         tempTrlNumber;
+  declare int tempTrlNumber;
 
   // ========== Call once =============
-  spawnwait SET_RIG(29,AUTO_ID);
+  RIG_ID = 29;
+  spawnwait SET_RIG();
+  spawnwait SET_CLRS();
+  spawnwait SET_DEFAULT_STIM_VARS();
   spawnwait SET_MONK(AUTO_ID);
 
 
@@ -34,16 +35,9 @@ process IDLE() enabled
   spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
-  spawn GRAF_SHOW_FIX(GRF_SHOW);
+  spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
-  //while (1)
-  //{
-  //  printf("Doing Bitsweep()\n");
-  //  spawnwait BITSWEEP();
-  //}
-
-
-  printf("ALLPROSC.PRO Running CMD_PGS()\n");
+  printf("CMD_TSK Running \n");
   spawnwait CMD_PGS();
 
   printf("DONE....!\n");

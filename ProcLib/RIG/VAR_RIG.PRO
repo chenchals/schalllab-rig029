@@ -20,6 +20,13 @@ declare float SCRN_MM_X;
 declare float SCRN_MM_Y;
 declare float REFRESH_RATE; // Distance from center of Subject's eyeball to screen
 declare float SUBJ_DIST_MM; // ISOLUMINANT colors
+// Screen mm to degrees
+declare float SCRN_DEG_X;
+declare float SCRN_DEG_Y;
+// Screen degrees to pixel conversion factor
+declare float DEG_2_PIX_X;
+declare float DEG_2_PIX_Y;
+
 //==========================================================================
 declare int   RED_VAL;
 declare int   GREEN_VAL;
