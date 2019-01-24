@@ -13,8 +13,8 @@ DIAPAGE 0,"Main_Menu"
 DIAPOS   0,0,-1,-1,-1,-1,84,134,444,314,0
 DIAOBJ   0,0,2,272,15,336,37,"OK","DSET; DPOP"
 DIAOBJ   0,1,2,272,45,336,67,"Cancel","DPOP"
-DIAOBJ   0,2,2,16,30,144,52,"TEST_SSD","cclear;\r\ncload c:/tempo/proclib/test/test_ssd.pcf;\r\n"
-DIAOBJ   0,3,2,18,63,146,85,"Countermanding","cclear;\r\ncload c:/tempo/proclib/cmd_tsk.pcf;\r\n"
+DIAOBJ   0,2,2,16,30,144,55,"TEST_SSD","cclear;\r\ncload c:/tempo/proclib/test/test_ssd.pcf;\r\n"
+DIAOBJ   0,3,2,16,65,144,90,"Bitsweep","cclear;\r\ncload c:/tempo/proclib/bitsweep_tsk.pcf;\r\n"
+DIAOBJ   0,4,2,16,100,144,125,"Countermanding","cclear;\r\ncload c:/tempo/proclib/cmd_tsk.pcf;\r\n"
 
 ; END OF DIALOGS
-

@@ -15,7 +15,7 @@
 declare BITSWEEP();
 
 
-process BITSWEEP()
+process BITSWEEP() enabled
 {
   declare int maxBits  = 16;
   declare int thisBit  = 0;

@@ -17,27 +17,27 @@
 ; CCHANNELS=0
 ; ECHANNELS=2
 ;
-;                          Protocol Usage of Kernel Resources  
+;                          Protocol Usage of Kernel Resources
 ;
 ; Parameter       Limit          Used    Pct        Bytes/Total        Develop    Stable
 ; -------------   -------     -------  -----        -----------        -------    ------
-; PROCESSES       =300             22     7%          968/13200         =31        =23      
-; INSTRUCTIONS    =1820           480    26%         8624/32760         =600       =505     
-; InstructionsXMS =20025          480     2%         8624/360448        =600       =505     
-; SYMBOLTABLE     =4000           469    12%         3752/32000         =552       =494     
-; NametableXMS    =208896      173794    83%       173794/208896                        
-; NAMETABLE       =40894         5792    14%         5792/40894         =6814      =6097    
-; DATABASES       =16               0     0%            0/960           =0         =0       
-; ARRAYTABLE      =30000          130     0%          130/30000         =163       =134     
-; ARRAYDATA       =30000128      4548     0%         4548/30000128      =5685      =4689    
-; OBJECTS         =0                0     0%            0/0             =0         =0       
+; PROCESSES       =300             22     7%          968/13200         =31        =23
+; INSTRUCTIONS    =1820           480    26%         8624/32760         =600       =505
+; InstructionsXMS =20025          480     2%         8624/360448        =600       =505
+; SYMBOLTABLE     =4000           469    12%         3752/32000         =552       =494
+; NametableXMS    =208896      173794    83%       173794/208896
+; NAMETABLE       =40894         5792    14%         5792/40894         =6814      =6097
+; DATABASES       =16               0     0%            0/960           =0         =0
+; ARRAYTABLE      =30000          130     0%          130/30000         =163       =134
+; ARRAYDATA       =30000128      4548     0%         4548/30000128      =5685      =4689
+; OBJECTS         =0                0     0%            0/0             =0         =0
 ;
 ; PROTOCOL PROCESS CONTROL BLOCKS (XMS Instructions Caching ENABLED)
 ; INSTRUCTIONS=1820,20024
 ; Memory (bytes):  8624/32760 Conventional, 8624/360448 XMS
 ; Server CPU Mhz  Empirical 3391.6    Theoretical 3400.0
 ;
-;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec 
+;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec
 ;   1 SUSP SET_DEFAULT_STIM_VARS        0    0    0    0  0.000  0.000  0.000   294    notLoaded         2-295         0     0
 ;   2 SUSP SET_SCRN                     0    0    0    0  0.000  0.000  0.000   276    notLoaded       296-571         0     0
 ;   3 SUSP SET_CLR_PALETTE              0    0    0    0  0.000  0.000  0.000   250    notLoaded       572-821         0     0
@@ -97,6 +97,7 @@ DBPCOLORS 0x0,0x0,0x0,0x0,0x0
 
 ; END GRAPH CONFIGURATION
 
+DLOAD C:/tempo/ProcLib/CMD_TSK.dcf
 
 ; BEGIN KEY DEFINITIONS
 
@@ -105,4 +106,3 @@ KEY ALTX = EYE_ON_VDOSYNC = 0
 KEY ALTC = CENTER_EYE_NOW = 1
 
 ; END KEY DEFINITIONS
-

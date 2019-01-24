@@ -9,41 +9,16 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
-// Room variables: screen, isoluminant colors, data channels
-#include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
-// Setup GRAPHS
-#include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
-// set pages to load CMD_PGS.PRO?
-#include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
-// Setup event defs so events can be sent
-#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
-// Set up watches
-#include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
-// Set up watches
-#include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
-// Send event code
-#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
-//#include C:/TEMPO/ProcLib/UTIL/SEND_TTL.PRO
-//#include C:/TEMPO/ProcLib/UTIL/QUE_TTL.PRO
 
 #include C:/TEMPO/ProcLib/UTIL/BITSWEEP.PRO
 
 //#include C:/TEMPO/ProcLib/TEST/DIOTEST.PRO
 
 //==========================================================================
-// The State global variable allows the control structure to run tasks...
-// ...depending on the current stystem state. The beginning state is idling.
-declare int TASK;
-// Starts tasks after setting variables;
-declare int OK;
-// Give user ability to pause task with a button press
-declare int PAUSE;
-// Keeps track of the last task which was run to hold onto default variable values
-declare int LAST_TASK;
-
 
 declare IDLE();
 declare SETC_TRL();
+
 
 process IDLE() enabled
 {
@@ -51,12 +26,15 @@ process IDLE() enabled
   int         tempTrlNumber;
 
   // ========== Call once =============
-  spawnwait SET_RIG(29, JOULE_ID);
-  
+  spawnwait SET_RIG(29,AUTO_ID);
+  spawnwait SET_MONK(AUTO_ID);
+
+
   spawn QUE_TTL();
   spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
+  spawn GRAF_SHOW_FIX(GRF_SHOW);
 
   //while (1)
   //{
@@ -76,7 +54,7 @@ process IDLE() enabled
     //===============For each Trial=====================
     tempTrlNumber = tempTrlNumber + 1;
     spawnwait SETC_TRL();
-    
+
     //================ STATE == READY ===================
     // STATE = READY
     //when monk's eye os outside the large fix window
@@ -84,22 +62,16 @@ process IDLE() enabled
     printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARGET_IDX);
 
     dsendf("vp %d\n", PG_FIXATION_PD);
+    nexttick 1000;
     //dsendf("VW %d\n", 2);
-	spawn GRAF_SHOW_FIX(GRAF_SHOW);
     //dsendf("vp %d\n", PG_BLANK);
     //dsendf("VW %d\n", 5);
     dsendf("vp %d\n", PG_TARGET_PD);
-    //dsendf("VW %d\n", 100);
-	spawn GRAF_SHOW_TARG(GRAF_SHOW);
+    //dsendf("VW %d\n", 20);
     //dsendf("vp %d\n", PG_SIGNAL_PD);
-    dsendf("VW %d\n", 1);
+    //dsendf("VW %d\n", 1);
     //dsendf("vp %d\n", PG_BLANK);
-    nexttick 3000;
-   CURR_TARGET_IDX = CURR_TARGET_IDX  + 1;
-   if(CURR_TARGET_IDX == N_TARG_POS)
-   {
-	   CURR_TARGET_IDX = 0;
-   }
+    nexttick 1000;
   }
 } /* IDLE */
 
@@ -109,6 +81,8 @@ process SETC_TRL()
   declare float eccX, eccY;
 
 
+  // pick current target location
+  CURR_TARGET_IDX = (CURR_TARGET_IDX + 1) % N_TARG_POS;
 
   // Compute fix win size
   // Fix spot center is at 0,0, so we do not need to compute
@@ -122,8 +96,6 @@ process SETC_TRL()
   FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
   FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
 
-  // pick current target location
-  //CURR_TARGET_IDX = random(N_TARG_POS);
 
   // Compute TARG_WIN and TARG_WIN_LARGE
   eccX            = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
@@ -151,7 +123,6 @@ process SETC_TRL()
   TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
 
 
-	// Setup CMD PAGES
-	spawnwait CMD_PGS();
-
+  // Setup CMD PAGES
+  spawnwait CMD_PGS();
 } /* SETC_TRL */
