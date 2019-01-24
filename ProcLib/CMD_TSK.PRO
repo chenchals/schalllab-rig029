@@ -92,7 +92,7 @@ process IDLE() enabled
     //dsendf("VW %d\n", 100);
 	spawn GRAF_SHOW_TARG(GRAF_SHOW);
     //dsendf("vp %d\n", PG_SIGNAL_PD);
-    //dsendf("VW %d\n", 1);
+    dsendf("VW %d\n", 1);
     //dsendf("vp %d\n", PG_BLANK);
     nexttick 3000;
    CURR_TARGET_IDX = CURR_TARGET_IDX  + 1;

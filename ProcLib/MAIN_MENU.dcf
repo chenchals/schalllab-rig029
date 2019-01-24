@@ -1,0 +1,20 @@
+; TEMPO DIALOG CONFIGURATION FILE
+; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
+; This file was created by TEMPO and should not be edited directly by the user.
+; The commands in this file are undocumented and subject to change in future releases.
+; Wed Jan 23 22:53:50 2019
+; DLOAD C:\tempo\ProcLib\MAIN_MENU.dcf
+
+; DIALOGS
+
+SCREENRES 1280,768,32,1,0,0
+
+DIAPAGE 0,"Main_Menu"
+DIAPOS   0,0,-1,-1,-1,-1,84,134,444,314,0
+DIAOBJ   0,0,2,272,15,336,37,"OK","DSET; DPOP"
+DIAOBJ   0,1,2,272,45,336,67,"Cancel","DPOP"
+DIAOBJ   0,2,2,16,30,144,52,"TEST_SSD","cclear;\r\ncload c:/tempo/proclib/test/test_ssd.pcf;\r\n"
+DIAOBJ   0,3,2,18,63,146,85,"Countermanding","cclear;\r\ncload c:/tempo/proclib/cmd_tsk.pcf;\r\n"
+
+; END OF DIALOGS
+

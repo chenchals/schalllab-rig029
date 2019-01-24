@@ -41,6 +41,7 @@ declare SET_RIG(int rigId, int monkId);
 
 process SET_RIG(int rigId, int monkId)
 {
+  printf("Running SET_RIG(%d,%d)\n",rigId, monkId);
   RIG_ID = rigId;
   if (RIG_ID == RIG_029_ID)
   {
