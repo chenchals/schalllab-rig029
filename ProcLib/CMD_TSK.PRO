@@ -30,20 +30,13 @@ process IDLE() enabled
   spawnwait SET_CLRS();
   spawnwait SET_DEFAULT_STIM_VARS();
   spawnwait SET_MONK(MONK_ID);
-
-
+  // Setup WATCHES
   spawn QUE_TTL();
   spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
-  
-
-  printf("CMD_TSK Running \n");
   spawnwait CMD_PGS();
 
-  printf("DONE....!\n");
-  printf("Showing pages....!\n");
-  CURR_TARGET_IDX = 0;
   while (1)
   {
     //===============For each Trial=====================
