@@ -22,11 +22,12 @@
 
 declare int RIG_029_ID = 29;
 
-declare SET_RIG();
+declare SET_RIG(int id);
 
 
-process SET_RIG()
+process SET_RIG(int id)
 {
+  RIG_ID = id;
   if (RIG_ID == RIG_029_ID)
   {
     spawnwait RIG_029();

@@ -24,18 +24,19 @@ process IDLE() enabled
   declare int tempTrlNumber;
 
   // ========== Call once =============
-  RIG_ID = 29;
-  spawnwait SET_RIG();
+  //RIG_ID = 29;
+  //MONK_ID = JOULE_ID;
+  spawnwait SET_RIG(RIG_ID);
   spawnwait SET_CLRS();
   spawnwait SET_DEFAULT_STIM_VARS();
-  spawnwait SET_MONK(AUTO_ID);
+  spawnwait SET_MONK(MONK_ID);
 
 
   spawn QUE_TTL();
   spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
-  spawn GRAF_SHOW_FIX(GRAF_SHOW);
+  
 
   printf("CMD_TSK Running \n");
   spawnwait CMD_PGS();
@@ -56,11 +57,13 @@ process IDLE() enabled
     printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARGET_IDX);
 
     dsendf("vp %d\n", PG_FIXATION_PD);
+	spawn GRAF_SHOW_FIX(GRAF_SHOW);
     nexttick 1000;
     //dsendf("VW %d\n", 2);
     //dsendf("vp %d\n", PG_BLANK);
     //dsendf("VW %d\n", 5);
     dsendf("vp %d\n", PG_TARGET_PD);
+	spawn GRAF_SHOW_TARG(GRAF_SHOW);
     //dsendf("VW %d\n", 20);
     //dsendf("vp %d\n", PG_SIGNAL_PD);
     //dsendf("VW %d\n", 1);
