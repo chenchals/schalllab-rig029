@@ -30,14 +30,16 @@ declare int VERT_RFRSH_SSD = 0;
 declare int TRL_NUM = 0;
 declare int BREAK_FIX_FLAG = 0;
 
+// RIG variables
+#include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
 // Room variables
-#include C:/TEMPO/ProcLib/TEST/ROOM_029.PRO
+#include C:/TEMPO/ProcLib/TEST/TEST_029.PRO
 // Screen parameters including isoluminant colors,
-#include C:/TEMPO/ProcLib/TEST/SET_SCRN.PRO
+#include C:/TEMPO/ProcLib/UTIL/SET_SCRN.PRO
 // Set palatte colors for countermanding
-#include C:/TEMPO/ProcLib/TEST/CMD_CLRS.PRO
+#include C:/TEMPO/ProcLib/TEST/TEST_CLRS.PRO
 // set pages to load CMD_PGS.PRO?
-#include C:/TEMPO/ProcLib/TEST/CMD_PGS.PRO
+#include C:/TEMPO/ProcLib/TEST/TEST_PGS.PRO
 // GLOBAL variables for color:
 //==========================================================================
 
@@ -153,8 +155,8 @@ process SETUP_SCRN_CLRS_PGS()
   dsend("ca");
   // Set up pages
   spawnwait SET_SCRN();
-  spawnwait SET_CLRS();
-  spawnwait CMD_PGS();
+  spawnwait TEST_SET_CLRS();
+  spawnwait TEST_PGS();
   nexttick 5000;
 }
 process SETUP_DATA_ACQ_PARMS()

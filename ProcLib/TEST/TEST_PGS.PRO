@@ -9,8 +9,7 @@
 //       Global color indices and palettes for colors
 //
 
-// Room variables
-#include C:/TEMPO/ProcLib/DRW_RECT.PRO
+#include C:/TEMPO/ProcLib/UTIL/DRW_RECT.PRO
 
 // number the pgs that need to be drawn
 declare int PAGE_BLANK 	        = 0;
