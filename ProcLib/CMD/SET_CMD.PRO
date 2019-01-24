@@ -22,6 +22,8 @@
 #include C:/TEMPO/ProcLib/CMD/SET_CLRS.PRO
 // set pages to load CMD_PGS.PRO?
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
+// Setup event defs so events can be sent
+#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 // Send event processes
 #include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
 // Setup GRAPHS
@@ -30,8 +32,7 @@
 #include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
-// Setup event defs so events can be sent
-#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
+
 
 
 declare SET_CMD();
