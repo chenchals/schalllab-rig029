@@ -25,11 +25,15 @@ process WTCH_EYE()
 
   while (1)
   {
-    xVal = atable(EYE_X_CHANNEL);
-    yVal = atable(EYE_Y_CHANNEL);
+    EYE_X_VOLTS = atable(EYE_X_CHANNEL);
+    EYE_Y_VOLTS = atable(EYE_Y_CHANNEL);
+    if(MONK_ID == AUTO_ID)
+    {
+      spawnwait AUTO_EYE();
+    }
 
-    eyeXdeg = (xVal * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-    eyeYdeg = (yVal * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+    eyeXdeg = (EYE_X_VOLTS * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+    eyeYdeg = (EYE_Y_VOLTS * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
 
     if (CENTER_EYE_NOW)
     {

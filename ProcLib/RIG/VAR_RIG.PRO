@@ -48,6 +48,8 @@ declare float EYE_Y_GAIN;
 declare float EYE_X_OFFSET;
 declare float EYE_Y_OFFSET;
 // Current Eyex and Eyey
+declare float EYE_X_VOLTS;
+declare float EYE_Y_VOLTS;
 declare float CURR_EYE_X_DEG;
 declare float CURR_EYE_Y_DEG;
 declare float CURR_EYE_ANGLE;

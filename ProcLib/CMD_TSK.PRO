@@ -18,14 +18,13 @@ declare IDLE();
 declare SETC_TRL();
 declare PCK_TRL_TYP();
 
-
 process IDLE() enabled
 {
   declare int tempVar;
   declare int tempTrlNumber;
   seed1(time());
   normal(1);
- 
+
   // ========== Call once =============
   //RIG_ID = 29;
   //MONK_ID = JOULE_ID;
@@ -39,7 +38,7 @@ process IDLE() enabled
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
   spawnwait CMD_PGS();
-  
+
  //  while(1)
   //{
   // spawnwait PCK_TRL_TYP();
@@ -140,7 +139,6 @@ process SETC_TRL()
   TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
   TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
   TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
-
 
   // Setup CMD PAGES
   spawnwait CMD_PGS();
