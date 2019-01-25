@@ -37,6 +37,6 @@ process AUTO_EYE()
   // Convert to possible voltage value that we would get from atable[EYE_X_CHANNEL]
   EYE_X_VOLTS = (eyeXdeg + EYE_X_OFFSET)/(( EYE_X_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
   // Convert to possible voltage value that we would get from atable[EYE_Y_CHANNEL]
-  EYE_Y_VOLTS = (eyeXdeg + EYE_Y_OFFSET)/(( EYE_Y_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
+  EYE_Y_VOLTS = (eyeYdeg + EYE_Y_OFFSET)/(( EYE_Y_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
 
 }
