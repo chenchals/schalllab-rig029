@@ -16,13 +16,16 @@
 
 declare IDLE();
 declare SETC_TRL();
+declare PCK_TRL_TYP();
 
 
 process IDLE() enabled
 {
   declare int tempVar;
   declare int tempTrlNumber;
-
+  seed1(time());
+  normal(1);
+ 
   // ========== Call once =============
   //RIG_ID = 29;
   //MONK_ID = JOULE_ID;
@@ -36,6 +39,14 @@ process IDLE() enabled
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
   spawnwait CMD_PGS();
+  
+ //  while(1)
+  //{
+  // spawnwait PCK_TRL_TYP();
+  // printf("TRIAL_TYPE : %d\n\n\n",TRIAL_TYPE);
+  // nexttick 100;
+  //}
+
 
   while (1)
   {
@@ -65,6 +76,24 @@ process IDLE() enabled
   }
 } /* IDLE */
 
+process PCK_TRL_TYP()
+{
+   declare float trlType;
+   trlType = (1.0+random(9999))/100.0;
+   printf("trlType %2.3d ",trlType);
+   if (trlType <= GO_WEIGHT)
+   {
+     TRIAL_TYPE = TRIAL_TYPE_GO;
+   }
+   else if (trlType <= GO_WEIGHT + STOP_WEIGHT)
+   {
+     TRIAL_TYPE = TRIAL_TYPE_STOP;
+   }
+   else
+   {
+     TRIAL_TYPE = TRIAL_TYPE_IGNORE;
+   }
+ }
 
 process SETC_TRL()
 {

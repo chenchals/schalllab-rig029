@@ -19,6 +19,8 @@ declare OBJ_FIX_WIN_L;
 declare OBJ_TARG;
 declare OBJ_TARG_WIN;
 declare OBJ_TARG_WIN_L;
+declare OBJ_TARG_WIN_ANTI;
+declare OBJ_TARG_WIN_ANTI_L;
 
 //
 declare int GRAF_SHOW = 1;
@@ -68,6 +70,13 @@ process GRAPHS()
   OBJ_TARG_WIN_L = oCreate(tBOX, gLEFT, 0, 0);
   oSetAttribute(OBJ_TARG_WIN_L, aUNFILLED);
   oSetAttribute(OBJ_TARG_WIN_L, aINVISIBLE);
+  // Create invisible unfilled box type graph for target window ANTI
+  OBJ_TARG_WIN_ANTI = oCreate(tBOX, gLEFT, 0, 0);
+  oSetAttribute(OBJ_TARG_WIN, aUNFILLED);
+  oSetAttribute(OBJ_TARG_WIN, aINVISIBLE);
+  OBJ_TARG_WIN_ANTI_L = oCreate(tBOX, gLEFT, 0, 0);
+  oSetAttribute(OBJ_TARG_WIN_L, aUNFILLED);
+  oSetAttribute(OBJ_TARG_WIN_L, aINVISIBLE);
 }
 
 
@@ -92,7 +101,7 @@ process GRAF_UPD8_TARG()
 
   // find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
   eccX = cos(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
-  eccY = sin(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY * -1;
+  eccY = -sin(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
   // Update animated graph object
   oMove(OBJ_TARG, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
   oSetAttribute(OBJ_TARG, aSIZE, CURR_TARG_SIZE * DEG_2_PIX_X, CURR_TARG_SIZE * DEG_2_PIX_Y);
@@ -100,6 +109,15 @@ process GRAF_UPD8_TARG()
   oMove(OBJ_TARG_WIN, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
   oSetAttribute(OBJ_TARG_WIN_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  // ANTI- find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
+  eccX = cos(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
+  eccY = -sin(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
+  // Update animated graph object
+  oSetAttribute(OBJ_TARG_WIN_ANTI, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
+  oMove(OBJ_TARG_WIN_ANTI, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN_ANTI_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
+  oMove(OBJ_TARG_WIN_ANTI_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+
 }
 
 

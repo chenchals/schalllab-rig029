@@ -20,9 +20,9 @@ declare constant int TRIAL_TYPE_GO     = 0;
 declare constant int TRIAL_TYPE_STOP   = 1;
 declare constant int TRIAL_TYPE_IGNORE = 2;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 50;
-declare float        STOP_WEIGHT   = 50;
-declare float        IGNORE_WEIGHT = 0;
+declare float        GO_WEIGHT     = 30.0;
+declare float        STOP_WEIGHT   = 30.0;
+declare float        IGNORE_WEIGHT = 40.0;
 
 //============= Timing variables    ===================
 // subject has this long to acquire fixation before a new trial is initiated
