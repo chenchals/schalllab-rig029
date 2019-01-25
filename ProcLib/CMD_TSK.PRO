@@ -11,6 +11,7 @@
 #pragma declare = 1
 
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/CMD_STAT.PRO
 
 //==========================================================================
 
@@ -45,7 +46,8 @@ process IDLE() enabled
   // printf("TRIAL_TYPE : %d\n\n\n",TRIAL_TYPE);
   // nexttick 100;
   //}
-
+  CURR_STAT = STAT_IDLE;
+  CURR_OUTCOME = O_NOT_REDY;
 
   while (1)
   {
