@@ -43,11 +43,11 @@ process JOULE()
   COLOR_ARRY[0, B_IDX] = 27;
 
   // Check VAR_STIM.PRO --> SET_DEFAULT_STIM_VARS()
-  N_TARG_POS = 8;
+  N_TARG_POS = 2;
   tempVar    = 0;
   while (tempVar < MAX_TARG_POS)
   {
-    if (tempVar > N_TARG_POS + 1)
+    if (tempVar >= N_TARG_POS)
     {
       TARG_SIZE_ARRY[tempVar]         = 0.0;
       TARG_ANGLE_ARRY[tempVar]        = 0.0;

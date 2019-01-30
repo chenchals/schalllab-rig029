@@ -32,16 +32,6 @@ process CMD_PGS()
   declare float adjacent;
 
   //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  // Calculate screen coordinates for stimuli on this trial
-  CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARGET_IDX];
-  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARGET_IDX];
-  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
-  // Zero is black.  see SET_CLRS.pro
-  CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
-  // Update graph object for Target
-  spawn GRAF_UPD8_FIX();
-  spawn GRAF_UPD8_TARG();
-
   // For Photodiode marker
   adjacent = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
 
@@ -52,7 +42,7 @@ process CMD_PGS()
 
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 1 FIXATION_PD - PD is drawn on LEFT-TOP of screen only
-  //printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_FIXATION_PD,FIX_SIZE_DEG,PD_WIDTH_DEG,pdAngleL);
+  printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_FIXATION_PD,FIX_SIZE_DEG,PD_WIDTH_DEG,pdAngleL);
   dsendf("rw %d,%d;\n", PG_FIXATION_PD, PG_FIXATION_PD);
   dsendf("cl:\n");
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);

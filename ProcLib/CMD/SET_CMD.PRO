@@ -12,6 +12,8 @@
 #include C:/TEMPO/ProcLib/CONSTNTS.PRO
 // CMD Vars only...?
 #include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
+// State defs
+#include C:/TEMPO/ProcLib/CMD/STATES/CMD_STAT.PRO
 // Rig specific vars for colors, mainly
 #include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
 // Stimulus Variables: fixation, target, photodiode
@@ -44,6 +46,8 @@ declare SET_WINS();
 declare PCK_TRL_TYP();
 
 // Trial Timees
+declare int TRL_CUM_TIME;
+declare int TRL_GET_READY_TIME;
 declare int TRL_READY_TIME;
 declare int TRL_START_TIME;
 declare int TRL_END_TIME;
@@ -56,14 +60,27 @@ declare int TRL_TARG_ACQ_TIME;
 declare int TRL_TARG_FIXATED_TIME;
 declare int TRL_DECIDE_TIME;
 
+declare int TRL_FIX_VRT_RFRSH_COUNT;
+declare int TRL_TARG_VRT_RFRSH_COUNT;
+
 process SET_CMD_TRL()
 {
   // setup trial type
   spawnwait PCK_TRL_TYP();
   // pick current target location AND SET WINDOWS
-  CURR_TARGET_IDX = (CURR_TARGET_IDX + 1) % N_TARG_POS;
+  CURR_TARGET_IDX = random(N_TARG_POS);
   spawnwait SET_WINS();
+  // Target stimulus on this trial
+  CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARGET_IDX];
+  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARGET_IDX];
+  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  // Zero is black.  see SET_CLRS.pro
+  CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+  // Update graph object for Target
+  spawnwait GRAF_UPD8_FIX();
+  spawnwait GRAF_UPD8_TARG();
   // Setup CMD PAGES
+  printf("Calling CMD-PGS\n");
   spawnwait CMD_PGS();
 
   // Set up any timing jitters etc
@@ -82,7 +99,6 @@ process PCK_TRL_TYP()
   declare float trlType;
 
   trlType = (1.0 + random(9999))/100.0;
-  printf("trlType %2.3d ", trlType);
   if (trlType <= GO_WEIGHT)
   {
     TRIAL_TYPE = TRIAL_TYPE_GO;

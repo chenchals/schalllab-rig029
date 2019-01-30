@@ -12,14 +12,6 @@
 //  Revision History:
 //
 
-// Eye location flags
-declare int I_FIX;
-declare int I_FIX_WIDE;
-declare int I_TARG;
-declare int I_TARG_ANTI;
-declare int I_TARG_WIDE;
-declare int I_TARG_ANTI_WIDE;
-
 declare WTCH_EYE();
 declare LOCATE_EYE(float degX, float degY);
 declare COMPUTE_EYE_POS(float currX, float currY);

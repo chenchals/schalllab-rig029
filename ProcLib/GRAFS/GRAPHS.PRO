@@ -32,6 +32,7 @@ declare GRAF_UPD8_EYE(float currEyeX, float currEyeY);
 declare GRAF_UPD8_FIX();
 declare GRAF_UPD8_TARG();
 
+declare GRAF_SHOW_FIX_WIN();
 declare GRAF_SHOW_FIX(int showHide);
 declare GRAF_SHOW_TARG(int showHide);
 declare GRAF_HIDE_FIX_TARG();
@@ -91,8 +92,11 @@ process GRAF_UPD8_EYE(float currEyeX, float currEyeY)
 process GRAF_UPD8_FIX()
 {
   oSetAttribute(OBJ_FIX, aSIZE, ceil(FIX_SIZE_DEG * DEG_2_PIX_X), ceil(FIX_SIZE_DEG * DEG_2_PIX_Y));
+  oSetAttribute(OBJ_FIX,aINVISIBLE);
   oSetAttribute(OBJ_FIX_WIN, aSIZE, FIX_WIN_SIZE * DEG_2_PIX_X, FIX_WIN_SIZE * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_FIX,aINVISIBLE);
   oSetAttribute(OBJ_FIX_WIN_L, aSIZE, FIX_WIN_SIZE_LARGE * DEG_2_PIX_X, FIX_WIN_SIZE_LARGE * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_FIX,aINVISIBLE);
 }
 
 
@@ -105,21 +109,29 @@ process GRAF_UPD8_TARG()
   eccX = cos(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
   eccY = -sin(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
   // Update animated graph object
-  oMove(OBJ_TARG, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
   oSetAttribute(OBJ_TARG, aSIZE, CURR_TARG_SIZE * DEG_2_PIX_X, CURR_TARG_SIZE * DEG_2_PIX_Y);
+  oMove(OBJ_TARG, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG,aINVISIBLE);
+
   oSetAttribute(OBJ_TARG_WIN, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN,aINVISIBLE);
+
   oSetAttribute(OBJ_TARG_WIN_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN_L,aINVISIBLE);
+
   // ANTI- find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
   eccX = cos(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
   eccY = -sin(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
   // Update animated graph object
-  oSetAttribute(OBJ_TARG_WIN_ANTI, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN_ANTI, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
-  oSetAttribute(OBJ_TARG_WIN_ANTI_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
-  oMove(OBJ_TARG_WIN_ANTI_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN_ANTI, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN_ANTI,aINVISIBLE);
 
+  oMove(OBJ_TARG_WIN_ANTI_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN_ANTI_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
+  oSetAttribute(OBJ_TARG_WIN_ANTI_L,aINVISIBLE);
 }
 
 process GRAF_HIDE_FIX_TARG()
@@ -132,6 +144,12 @@ process GRAF_SHOW_FIX_TARG()
 {
   spawn GRAF_SHOW_FIX(GRAF_SHOW);
   spawn GRAF_SHOW_TARG(GRAF_SHOW);
+}
+
+process GRAF_SHOW_FIX_WIN()
+{
+	oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
 }
 
 process GRAF_SHOW_FIX(int showHide)

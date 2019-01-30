@@ -19,22 +19,10 @@
 
 declare SET_CURR_STAT(int inTime);
 
-
-//Current State variables in the absence of structs
-declare int PREV_STAT;
-declare int CURR_STAT;
-declare int STAT_STRT_T;
-declare int STAT_STP_T;
-declare int STAT_DLTA_T;
-declare int STAT_OUTCOME;
-
-
-
-
 process SET_CURR_STAT(int inTime)
 {
   PREV_STAT   = CURR_STAT;
-  CURR_STAT   = STAT_WAIT_FIX;
+  CURR_STAT   = STAT_GET_READY;
   STAT_STRT_T = inTime;
   STAT_DLTA_T = 0;
 }

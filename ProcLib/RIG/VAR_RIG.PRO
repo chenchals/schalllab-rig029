@@ -55,6 +55,14 @@ declare float CURR_EYE_Y_DEG;
 declare float CURR_EYE_ANGLE;
 declare float CURR_EYE_ECC;
 
+// Eye location flags
+declare int I_FIX;
+declare int I_FIX_WIDE;
+declare int I_TARG;
+declare int I_TARG_ANTI;
+declare int I_TARG_WIDE;
+declare int I_TARG_ANTI_WIDE;
+
 // For dynamically centering the Eye position
 // Add these to .pcf file
 //         KEY ALTE = Eye_on_VDOSync = 1

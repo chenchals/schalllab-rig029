@@ -17,6 +17,15 @@
 //  Revision History:
 //
 
+//Current State variables in the absence of structs
+declare int PREV_STAT;
+declare int CURR_STAT;
+declare int STAT_STRT_T;
+declare int STAT_STP_T;
+declare int STAT_DLTA_T;
+declare int STAT_ALLOWED_T;
+declare int STAT_OUTCOME;
+
 // Eyes are anywhere on the screen
 declare constant int STAT_IDLE = 0;
 //
@@ -26,7 +35,7 @@ declare constant int STAT_IDLE = 0;
 //        Outcome -->go to (set)--->Next State ------> Action
 //        O_REDY      --->   STAT_FIX_ON -----> Show Fixspot
 //        O_NOT_REDY  --->   STAT_IDLE  ------> Do not show Fixspot
-declare constant int STAT_WAIT_FIX = 1;
+declare constant int STAT_GET_READY = 1;
 // Fixspot is ON: Waiting for subject to reach the fix window and Fixate
 // Check: Eyes must get to WITHIN smaller FIX_WIN, BEFORE FIX_ACQ_T expires
 //        Outcome -->go to (set)--->Next State
@@ -66,5 +75,3 @@ declare constant int STAT_TARG_ON = 4;
 declare constant int STAT_FIXATE_TARG = 5;
 
 
-//============== EYE Outcomes=============
-declare constant int I_FIX = 0;

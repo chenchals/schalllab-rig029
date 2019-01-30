@@ -27,7 +27,7 @@ declare float        IGNORE_WEIGHT = 40.0;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DIALATION_FACTOR = 1;
+declare int TIME_DILATE_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
@@ -46,7 +46,7 @@ declare int MIN_MAX_SACCADE_TIME[2] = {100, 700};
 // once the eyes leave fixation they must be in the target before this time is up
 declare int MAX_SACCADE_DURATION = 50;
 // after saccade subject must hold fixation at target for this long
-declare int MIN_MAX_TARGET_HOLD_TIME = {1500, 1500};
+declare int MIN_MAX_TARGET_HOLD_TIME[2] = {1500, 1500};
 declare int TARGET_HOLD_TIME;
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 20;
@@ -66,7 +66,7 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // needs to be in refresh rate units
 declare float SSD_ARRY[N_SSD_MAX];
 // subject must hold fixation for this long on a stop trial to be deemed canceled
-declare int   CANCEL_TIME = MIN_MAX_SACCADE_TIME[1] * 2;
+declare int   CANCEL_TIME = 700 * 2;
 // Alert operator that the monk has canceled a trial (during training)
 declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals

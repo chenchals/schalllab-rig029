@@ -9,7 +9,7 @@
 
 // Fix vars
 //=========== Window sizes (degrees) ==================
-declare float        FIX_SIZE_DEG = 0.5;
+declare float        FIX_SIZE_DEG = 1.0;
 declare float        FIX_WIN_SIZE = 5;
 declare float        FIX_WIN[4];
 declare float        FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
@@ -48,14 +48,14 @@ process SET_DEFAULT_STIM_VARS()
 
   N_TARG_POS  = MAX_TARG_POS;
   tempCounter = 0;
-  // Default all target sizes to same
-  TARG_SIZE_ARRY[N_TARG_POS] = 0.5;
-  // Default all eccentricities to be same
-  TARG_ECCENTRICITY_ARRY[N_TARG_POS] = 12.0;
 
   // Default Target angle
   while (tempCounter < N_TARG_POS)
   {
+  // Default all target sizes to same
+  TARG_SIZE_ARRY[tempCounter] = 1.0;
+  // Default all eccentricities to be same
+  TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
     // clockwise: 45, 90, 135, ...
     TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0 / N_TARG_POS);
     if (TARG_ANGLE_ARRY[tempCounter] > 180)
