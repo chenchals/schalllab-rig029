@@ -34,6 +34,8 @@ declare GRAF_UPD8_TARG();
 
 declare GRAF_SHOW_FIX(int showHide);
 declare GRAF_SHOW_TARG(int showHide);
+declare GRAF_HIDE_FIX_TARG();
+declare GRAF_SHOW_FIX_TARG();
 
 
 process GRAPHS()
@@ -120,6 +122,17 @@ process GRAF_UPD8_TARG()
 
 }
 
+process GRAF_HIDE_FIX_TARG()
+{
+  spawn GRAF_SHOW_FIX(GRAF_HIDE);
+  spawn GRAF_SHOW_TARG(GRAF_HIDE);
+}
+
+process GRAF_SHOW_FIX_TARG()
+{
+  spawn GRAF_SHOW_FIX(GRAF_SHOW);
+  spawn GRAF_SHOW_TARG(GRAF_SHOW);
+}
 
 process GRAF_SHOW_FIX(int showHide)
 {

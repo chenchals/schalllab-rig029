@@ -39,12 +39,24 @@
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
 
-declare SETC_TRL();
+declare SET_CMD_TRL();
 declare SET_WINS();
 declare PCK_TRL_TYP();
 
+// Trial Timees
+declare int TRL_READY_TIME;
+declare int TRL_START_TIME;
+declare int TRL_END_TIME;
+declare int TRL_FIX_ON_TIME;
+declare int TRL_FIX_ACQ_TIME;
+declare int TRL_FIXATED_TIME;
+declare int TRL_TARG_ON_TIME;
+declare int TRL_SACCADE_TIME;
+declare int TRL_TARG_ACQ_TIME;
+declare int TRL_TARG_FIXATED_TIME;
+declare int TRL_DECIDE_TIME;
 
-process SETC_TRL()
+process SET_CMD_TRL()
 {
   // setup trial type
   spawnwait PCK_TRL_TYP();
@@ -55,8 +67,8 @@ process SETC_TRL()
   spawnwait CMD_PGS();
 
   // Set up any timing jitters etc
-  FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[2]-MIN_MAX_FIX_HOLD_TIME[1]) + MIN_MAX_FIX_HOLD_TIME[1];
-  TARGET_HOLD_TIME = random(MIN_MAX_TARGET_HOLD_TIME[2]-MIN_MAX_TARGET_HOLD_TIME[1]) + MIN_MAX_TARGET_HOLD_TIME[1];
+  FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1]-MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
+  TARGET_HOLD_TIME = random(MIN_MAX_TARGET_HOLD_TIME[1]-MIN_MAX_TARGET_HOLD_TIME[0]) + MIN_MAX_TARGET_HOLD_TIME[0];
   // ITI TIME?
 
 

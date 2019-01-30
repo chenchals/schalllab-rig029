@@ -12,6 +12,14 @@
 //  Revision History:
 //
 
+// Eye location flags
+declare int I_FIX;
+declare int I_FIX_WIDE;
+declare int I_TARG;
+declare int I_TARG_ANTI;
+declare int I_TARG_WIDE;
+declare int I_TARG_ANTI_WIDE;
+
 declare WTCH_EYE();
 declare LOCATE_EYE(float degX, float degY);
 declare COMPUTE_EYE_POS(float currX, float currY);
@@ -27,13 +35,13 @@ process WTCH_EYE()
   {
     EYE_X_VOLTS = atable(EYE_X_CHANNEL);
     EYE_Y_VOLTS = atable(EYE_Y_CHANNEL);
-    if(MONK_ID == AUTO_ID)
+    if (MONK_ID == AUTO_ID)
     {
       spawnwait AUTO_EYE();
     }
 
-    eyeXdeg = (EYE_X_VOLTS * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-    eyeYdeg = (EYE_Y_VOLTS * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+    eyeXdeg = (EYE_X_VOLTS * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+    eyeYdeg = (EYE_Y_VOLTS * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
 
     if (CENTER_EYE_NOW)
     {
@@ -73,83 +81,83 @@ process WTCH_EYE()
 process LOCATE_EYE(float degX, float degY)
 {
   // Sets flags for 6 global variables:
-  // EYE_IN_FIX_WIN, EYE_BTWN_FIX_WINS
-  // EYE_IN_TARG_WIN, EYE_BTWN_TARG_WINS
-  // EYE_IN_TARG_WIN_ANTI, EYE_BTWN_TARG_WINS_ANTI
+  // I_FIX, I_FIX_WIDE
+  // I_TARG, I_TARG_WIDE
+  // I_TARG_ANTI, I_TARG_ANTI_WIDE
   // Check Eye pos in FIX window area
   if (  degX >= FIX_WIN[LEFT] && degX <= FIX_WIN[RIGHT]
      && degY >= FIX_WIN[UP] && degY <= FIX_WIN[DOWN])
   {
-    EYE_IN_FIX_WIN          = 1;
-    EYE_BTWN_FIX_WINS       = 0;
-    EYE_IN_TARG_WIN         = 0;
-    EYE_BTWN_TARG_WINS      = 0;
-    EYE_IN_TARG_WIN_ANTI    = 0;
-    EYE_BTWN_TARG_WINS_ANTI = 0;
+    I_FIX            = 1;
+    I_FIX_WIDE       = 0;
+    I_TARG           = 0;
+    I_TARG_WIDE      = 0;
+    I_TARG_ANTI      = 0;
+    I_TARG_ANTI_WIDE = 0;
   }
   else if (  degX >= FIX_WIN_LARGE[LEFT] && degX <= FIX_WIN_LARGE[RIGHT]
           && degY >= FIX_WIN_LARGE[UP] && degY <= FIX_WIN_LARGE[DOWN])
   {
     // INACCURATE Between FIX_WIN_LARGE and FIX_WIN
-    EYE_IN_FIX_WIN          = 0;
-    EYE_BTWN_FIX_WINS       = 1;
-    EYE_IN_TARG_WIN         = 0;
-    EYE_BTWN_TARG_WINS      = 0;
-    EYE_IN_TARG_WIN_ANTI    = 0;
-    EYE_BTWN_TARG_WINS_ANTI = 0;
+    I_FIX            = 0;
+    I_FIX_WIDE       = 1;
+    I_TARG           = 0;
+    I_TARG_WIDE      = 0;
+    I_TARG_ANTI      = 0;
+    I_TARG_ANTI_WIDE = 0;
   }
   else if (  degX >= TARG_WIN[LEFT] && degX <= TARG_WIN[RIGHT]
           && degY >= TARG_WIN[UP] && degY <= TARG_WIN[DOWN])
   {
     // Check Eye pos in TARGET window area
-    EYE_IN_FIX_WIN          = 0;
-    EYE_BTWN_FIX_WINS       = 0;
-    EYE_IN_TARG_WIN         = 1;
-    EYE_BTWN_TARG_WINS      = 0;
-    EYE_IN_TARG_WIN_ANTI    = 0;
-    EYE_BTWN_TARG_WINS_ANTI = 0;
+    I_FIX            = 0;
+    I_FIX_WIDE       = 0;
+    I_TARG           = 1;
+    I_TARG_WIDE      = 0;
+    I_TARG_ANTI      = 0;
+    I_TARG_ANTI_WIDE = 0;
   }
   else if (  degX >= TARG_WIN_LARGE[LEFT] && degX <= TARG_WIN_LARGE[RIGHT]
           && degY >= TARG_WIN_LARGE[UP] && degY <= TARG_WIN_LARGE[DOWN])
   {
     // INACCURATE Between TARG_WIN_LARGE and TARG_WIN
-    EYE_IN_FIX_WIN          = 0;
-    EYE_BTWN_FIX_WINS       = 0;
-    EYE_IN_TARG_WIN         = 0;
-    EYE_BTWN_TARG_WINS      = 1;
-    EYE_IN_TARG_WIN_ANTI    = 0;
-    EYE_BTWN_TARG_WINS_ANTI = 0;
+    I_FIX            = 0;
+    I_FIX_WIDE       = 0;
+    I_TARG           = 0;
+    I_TARG_WIDE      = 1;
+    I_TARG_ANTI      = 0;
+    I_TARG_ANTI_WIDE = 0;
   }
   else if (  degX >= TARG_WIN_ANTI[LEFT] && degX <= TARG_WIN_ANTI[RIGHT]
           && degY >= TARG_WIN_ANTI[UP] && degY <= TARG_WIN_ANTI[DOWN])
   {
     // Check Eye pos in ANTI - TARGET window area
-    EYE_IN_FIX_WIN          = 0;
-    EYE_BTWN_FIX_WINS       = 0;
-    EYE_IN_TARG_WIN         = 0;
-    EYE_BTWN_TARG_WINS      = 0;
-    EYE_IN_TARG_WIN_ANTI    = 1;
-    EYE_BTWN_TARG_WINS_ANTI = 0;
+    I_FIX            = 0;
+    I_FIX_WIDE       = 0;
+    I_TARG           = 0;
+    I_TARG_WIDE      = 0;
+    I_TARG_ANTI      = 1;
+    I_TARG_ANTI_WIDE = 0;
   }
   else if (  degX >= TARG_WIN_ANTI_LARGE[LEFT] && degX <= TARG_WIN_ANTI_LARGE[RIGHT]
           && degY >= TARG_WIN_ANTI_LARGE[UP] && degY <= TARG_WIN_ANTI_LARGE[DOWN])
   {
-    // INACCURATE Between TARG_WIN_ANTI_LARGE and EYE_BTWN_TARG_WINS_ANTI
-    EYE_IN_FIX_WIN          = 0;
-    EYE_BTWN_FIX_WINS       = 0;
-    EYE_IN_TARG_WIN         = 0;
-    EYE_BTWN_TARG_WINS      = 0;
-    EYE_IN_TARG_WIN_ANTI    = 0;
-    EYE_BTWN_TARG_WINS_ANTI = 1;
+    // INACCURATE Between TARG_WIN_ANTI_LARGE and I_TARG_ANTI_WIDE
+    I_FIX            = 0;
+    I_FIX_WIDE       = 0;
+    I_TARG           = 0;
+    I_TARG_WIDE      = 0;
+    I_TARG_ANTI      = 0;
+    I_TARG_ANTI_WIDE = 1;
   }
   else
   {
-    EYE_IN_FIX_WIN          = 0;
-    EYE_BTWN_FIX_WINS       = 0;
-    EYE_IN_TARG_WIN         = 0;
-    EYE_BTWN_TARG_WINS      = 0;
-    EYE_IN_TARG_WIN_ANTI    = 0;
-    EYE_BTWN_TARG_WINS_ANTI = 0;
+    I_FIX            = 0;
+    I_FIX_WIDE       = 0;
+    I_TARG           = 0;
+    I_TARG_WIDE      = 0;
+    I_TARG_ANTI      = 0;
+    I_TARG_ANTI_WIDE = 0;
   }
   // We want to pass this, since the Global var
   // could change while coputation is done
@@ -166,26 +174,26 @@ process COMPUTE_EYE_POS(float currX, float currY)
   CURR_EYE_X_DEG = currX;
   CURR_EYE_Y_DEG = currY;
 
-  atanVal = atan(currY/currX);
+  atanVal = atan(currY / currX);
   if (currX > 0)
   {
     CURR_EYE_ANGLE = rad2deg(atanVal);
   }
   else if (currX < 0 && currY >= 0)
   {
-    CURR_EYE_ANGLE = rad2deg(atanVal + 22/7);
+    CURR_EYE_ANGLE = rad2deg(atanVal + 22 / 7);
   }
   else if (currX < 0 && currY < 0)
   {
-    CURR_EYE_ANGLE = rad2deg(atanVal - 22/7);
+    CURR_EYE_ANGLE = rad2deg(atanVal - 22 / 7);
   }
   else if (currX == 0 && currY > 0)
   {
-    CURR_EYE_ANGLE = rad2deg(22/(7/2));
+    CURR_EYE_ANGLE = rad2deg(22 / (7 / 2));
   }
   else if (currX == 0 && currY < 0)
   {
-    CURR_EYE_ANGLE = rad2deg(-22/(7 * 2));
+    CURR_EYE_ANGLE = rad2deg(-22 / (7 * 2));
   }
   else if (currX == 0 && currY == 0)
   {

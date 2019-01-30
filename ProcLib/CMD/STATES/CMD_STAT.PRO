@@ -66,10 +66,5 @@ declare constant int STAT_TARG_ON = 4;
 declare constant int STAT_FIXATE_TARG = 5;
 
 
-//============== Outcomes=============
-declare constant int O_NOT_REDY = 0;
-declare constant int O_REDY = 1;
-
-declare constant int O_ACQ_FIX = 10;
-declare constant int O_ACQ_FIX_WIDE = 11;
-declare constant int O_ACQ_FIX_BRK = 12;
+//============== EYE Outcomes=============
+declare constant int I_FIX = 0;

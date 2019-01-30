@@ -12,10 +12,8 @@
 declare float        FIX_SIZE_DEG = 0.5;
 declare float        FIX_WIN_SIZE = 5;
 declare float        FIX_WIN[4];
-declare int          EYE_IN_FIX_WIN;
 declare float        FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
 declare float        FIX_WIN_LARGE[4];
-declare int          EYE_BTWN_FIX_WINS;
 // Stimulus - target attributes
 declare constant int MAX_TARG_POS = 12;
 declare int          N_TARG_POS;
@@ -25,13 +23,9 @@ declare float        TARG_ECCENTRICITY_ARRY[MAX_TARG_POS];
 declare float        TARG_WIN_SIZE = 7;
 declare float        TARG_WIN[4];
 declare float        TARG_WIN_ANTI[4];
-declare int          EYE_IN_TARG_WIN;
-declare int          EYE_IN_TARG_WIN_ANTI;
 declare float        TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
 declare float        TARG_WIN_LARGE[4];
 declare float        TARG_WIN_ANTI_LARGE[4];
-declare int          EYE_BTWN_TARG_WINS;
-declare int          EYE_BTWN_TARG_WINS_ANTI;
 
 // Attributes of Current Target
 declare int   CURR_TARGET_IDX;

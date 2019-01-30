@@ -40,6 +40,8 @@ declare constant DelayedHeader_ = 1504;
 declare constant SearchHeader_  = 1507;
 declare constant CaptureHeader_ = 1508;
 declare constant AntiHeader_    = 1509;
+
+declare constant TrialReady_     = 1665;
 declare constant TrialStart_    = 1666;
 declare constant Eot_           = 1667;
 declare constant Tone_          = 2001;

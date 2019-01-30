@@ -29,7 +29,7 @@ declare float        IGNORE_WEIGHT = 40.0;
 // 1 = default to be used when running expreriment;
 declare int TIME_DIALATION_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
-declare int WAIT_READY_TIME = 1000;
+declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
 declare int ALLOWED_FIX_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
@@ -66,7 +66,7 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // needs to be in refresh rate units
 declare float SSD_ARRY[N_SSD_MAX];
 // subject must hold fixation for this long on a stop trial to be deemed canceled
-declare int   CANCEL_TIME = MIN_MAX_SACCADE_TIME[2] * 2;
+declare int   CANCEL_TIME = MIN_MAX_SACCADE_TIME[1] * 2;
 // Alert operator that the monk has canceled a trial (during training)
 declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals

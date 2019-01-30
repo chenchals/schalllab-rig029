@@ -41,118 +41,59 @@ process IDLE() enabled
   spawn WTCH_EYE();
   spawn WTCH_SCHMITT();
   spawn GRAPHS();
-  spawnwait CMD_PGS();
 
-  //  while(1)
-  //{
-  // spawnwait PCK_TRL_TYP();
-  // printf("TRIAL_TYPE : %d\n\n\n",TRIAL_TYPE);
-  // nexttick 100;
-  //}
   TRL_NUMBER = 0;
+  CURR_STAT = STAT_IDLE;
+  spawn SEND_EVT(Identify_Room_);
+  spawn SEND_EVT(RIG_ID);
   while (1)
   {
     //===============For each Trial=====================
-    CURR_STAT    = STAT_IDLE;
-    STAT_OUTCOME = O_NOT_REDY;
-    spawnwait SETC_TRL();
-
+    spawnwait SET_CMD_TRL();
     trlRunning = 1;
+    printf("Trial running....\n")
+    spawn SEND_EVT(TaskStart_);
+    spawn SEND_EVT(CmanHeader_);
+    dsendf("vp %d\n", PG_BLANK);
+    TRL_READY_TIME = time();
+    spawn GRAF_HIDE_FIX_TARG();
+    CURR_STAT = STAT_WAIT_FIX;
+    STAT_DLTA_T = 0;
     while (trlRunning)
     {
       //================= State = STAT_WAIT_FIX===============
-      printf("Trial running....\n")
-      dsendf("vp %d\n", PG_BLANK);
-      // Check of eyes are outside FIX_WIN_SIZE_LARGE
-      // TRL_START_TIME = time();
-      spawnwait PROC_WAIT_FIX(time(), WAIT_READY_TIME);
-
-      //================= State = STAT_FIX_ON===============
-      dsendf("vp %d\n", PG_FIXATION_PD);
-      spawn GRAF_SHOW_FIX(GRAF_SHOW);
-      // TRL_FIX_ON_TIME = time();
-      spawn SEND_EVT(FixSpotOn_);
-      spawnwait PROC_FIX_ON(time(), ALLOWED_FIX_TIME);
-      TRL_NUMBER = TRL_NUMBER + 1;
-      if (STAT_OUTCOME != O_ACQ_FIX)
+      if (CURR_STAT == STAT_WAIT_FIX)
       {
-        spawn GRAF_SHOW_FIX(GRAF_HIDE);
-        trlRunning = 0;
-        // TRL_FIX_ABORT_TIME = time();
-        // do other stuff -->
-        // Tone?
-        // punish time...
+        // Check of eyes are outside FIX_WIN_SIZE_LARGE
+          STAT_DLTA_T = time() - TRL_READY_TIME;
+          if (I_FIX || I_FIX_WIDE)
+          {
+            STAT_DLTA_T = 0;
+          }
+          else if (STAT_DLTA_T >= READY_TIME)
+          {
+            CURR_STAT = STAT_FIX_ON;
+          }
+          spawn SEND_EVT(TrialReady_);
+      }
+      //================= State = STAT_FIX_ON===============
+      if (CURR_STAT == STAT_FIX_ON)
+      {
+        TRL_START_TIME = time();
+        TRL_NUMBER     = TRL_NUMBER + 1;
+        dsendf("vp %d\n", PG_FIXATION_PD);
+        spawn GRAF_SHOW_FIX(GRAF_SHOW);
+        while (!PD_TRIG_L)
+        {
+          nexttick;
+        }
+        TRL_FIX_ON_TIME = time();
+        spawn SEND_EVT(FixSpotOn_);
+        dsendf("vp %d\n", PG_FIXATION);
+        if(I_FIX)
       }
       //================= State = STAT_FIXATE===============
-      if (trlRunning)
-      {
-        // TRL_FIX_ACQ_TIME = time();
-        spawnwait PROC_FIXATE(time(), FIX_HOLD_TIUME);
-        if(STAT_OUTCOME != O_FIXATE)
-        {
-          spawn GRAF_SHOW_FIX(GRAF_HIDE);
-          trlRunning = 0;
-          // TRL_BRK_FIX_TIME = time()
-          spawn SEND_EVT(Abort_);
-          // do other stuff -->
-          // Tone?
-          // punish time...
-        }
-      }
-      //================= State = STAT_TARG_ON===============
-      if(trlRunning) // and TRIAL_TYPE == TRIAL_TYPE_GO
-      {
-        // TRL_FIXATE_TIME = time();
-        spawn SEND_EVT(Fixate_);
-        dsendf("vp %d\n", PG_TARGET_PD)
-        spawn SEND_EVT(Target_);
-        // TRL_TARG_ON_TIME = time()
-        spawn GRAF_SHOW_TARG(GRAF_SHOW);
-        spawnwait PROC_TARG_ON(time(),MIN_MAX_SACCADE_TIME[1]);
-        // Eye moved before MIN_SACCADE_TIME
-        if(STAT_OUTCOME != O_FIXATE)
-        {
-          spawn GRAF_SHOW_FIX(GRAF_HIDE);
-          spawn GRAF_SHOW_TARG(GRAF_HIDE);
-          trlRunning = 0;
-          // TRL_BRK_FIX_TIME = time()
-          spawn SEND_EVT(Abort_);
-          // do other stuff -->
-          // Tone?
-          // punish time...
-        }
-        else
-        {
-           spawnwait PROC_FIXATE_TARG(time(),MIN_MAX_SACCADE_TIME[2]-MIN_MAX_SACCADE_TIME[1],TARG_HOLD_TIME);
-
-        }
-
-
-      }
-
       nexttick;
-
-
-      //================ STATE == READY ===================
-      // STATE = READY
-      //when monk's eye os outside the large fix window
-      //tempTrlNumber = tempTrlNumber + 1;
-      //TRL_NUMBER = tempTrlNumber;
-      //  printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARGET_IDX);
-
-      //  dsendf("vp %d\n", PG_FIXATION_PD);
-//	spawn GRAF_SHOW_FIX(GRAF_SHOW);
-      //  nexttick 1000;
-      //dsendf("VW %d\n", 2);
-      //dsendf("vp %d\n", PG_BLANK);
-      //dsendf("VW %d\n", 5);
-      //  dsendf("vp %d\n", PG_TARGET_PD);
-//	spawn GRAF_SHOW_TARG(GRAF_SHOW);
-      //dsendf("VW %d\n", 20);
-      //dsendf("vp %d\n", PG_SIGNAL_PD);
-      //dsendf("VW %d\n", 1);
-      //dsendf("vp %d\n", PG_BLANK);
-      //nexttick;
-    }
-  }
-} /* IDLE */
+    }/*while(trlRunning)*/
+  }/*while(1)*/
+}/*IDLE()*/

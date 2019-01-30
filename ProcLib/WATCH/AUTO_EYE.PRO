@@ -50,16 +50,16 @@ process AUTO_EYE()
 process RAND_EYE()
 {
   declare float slope;
-  if (AUTO_EYE_TICS_START <=1 || AUTO_EYE_TICS_START >= MAX_SACCADE_TIME)
+  if (AUTO_EYE_TICS_START <=1 || AUTO_EYE_TICS_START >= MIN_MAX_SACCADE_TIME[1])
   {
     AUTO_EYE_TICS_START = 1;
     // Auto eye Angle and destination the eye should reach within MAX_SACCADE_DURATION
     AUTO_EYE_A         = random(3600) / 10.0;
     // unit change in X, Y for each tick - Assume: CURR_EYE_X_DEG = 0, and CURR_EYE_Y_DEG = 0
-    AUTO_EYE_X_DEG_END = (cos(AUTO_EYE_A) * random(SCRN_DEG_X * 10) / 10.0)/MAX_SACCADE_TIME;
-    AUTO_EYE_Y_DEG_END = (-sin(AUTO_EYE_A) * random(SCRN_DEG_Y * 10) / 10.0)/MAX_SACCADE_TIME;
+    AUTO_EYE_X_DEG_END = (cos(AUTO_EYE_A) * random(SCRN_DEG_X * 10) / 10.0)/MIN_MAX_SACCADE_TIME[1];
+    AUTO_EYE_Y_DEG_END = (-sin(AUTO_EYE_A) * random(SCRN_DEG_Y * 10) / 10.0)/MIN_MAX_SACCADE_TIME[1];
   }
-  else if (AUTO_EYE_TICS_START < MAX_SACCADE_TIME)
+  else if (AUTO_EYE_TICS_START < MIN_MAX_SACCADE_TIME[1])
   {
     AUTO_EYE_TICS_START = AUTO_EYE_TICS_START + 1;
   }
