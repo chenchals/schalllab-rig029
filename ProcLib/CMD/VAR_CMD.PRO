@@ -25,24 +25,29 @@ declare float        STOP_WEIGHT   = 30.0;
 declare float        IGNORE_WEIGHT = 40.0;
 
 //============= Timing variables    ===================
+// Time dialation factor to multiply all times for manual operation
+// 1 = default to be used when running expreriment;
+declare int TIME_DIALATION_FACTOR = 1;
+// subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
+declare int WAIT_READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
 declare int ALLOWED_FIX_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
-// minimum time after fixation before target presentation
-declare int MIN_HOLD_TIME = 500;
+// minimum - maximum time after fixation before target presentation
+declare int MIN_MAX_FIX_HOLD_TIME[2] = {500, 1000};
+declare int FIX_HOLD_TIME;
 // maximum time after fixation before target presentation
-declare int MAX_HOLD_TIME = 1000;
+//declare int MAX_HOLD_TIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_SACCADE_TIME = 100;
+declare int MIN_MAX_SACCADE_TIME[2] = {100, 700};
 // subject has this long to saccade to the target
-declare int MAX_SACCADE_TIME = 700;
+//declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
 declare int MAX_SACCADE_DURATION = 50;
 // after saccade subject must hold fixation at target for this long
-declare int TARGET_HOLD_TIME = 1500;
-
-//==================Countermanding specific?=============
+declare int MIN_MAX_TARGET_HOLD_TIME = {1500, 1500};
+declare int TARGET_HOLD_TIME;
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 20;
 // number of *non-zero* stop signal delays
@@ -51,6 +56,8 @@ declare int   N_SSD;
 declare int   MAX_SSD;
 // shortest SSD (in number of screen refreshes)
 declare int   MIN_SSD;
+// SSD for current trial (in number of screen refreshes)
+declare int CURR_SSD;
 // for training to cancel consistently
 declare int   SSD_FLOOR = 0;
 declare int   SSD_CEIL  = 0;
@@ -59,7 +66,7 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // needs to be in refresh rate units
 declare float SSD_ARRY[N_SSD_MAX];
 // subject must hold fixation for this long on a stop trial to be deemed canceled
-declare int   CANCEL_TIME = MAX_SACCADE_TIME * 2;
+declare int   CANCEL_TIME = MIN_MAX_SACCADE_TIME[2] * 2;
 // Alert operator that the monk has canceled a trial (during training)
 declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals

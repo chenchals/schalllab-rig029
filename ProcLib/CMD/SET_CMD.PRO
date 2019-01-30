@@ -39,14 +39,90 @@
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
 
+declare SETC_TRL();
+declare SET_WINS();
+declare PCK_TRL_TYP();
 
 
-declare SET_CMD();
-
-
-process SET_CMD()
+process SETC_TRL()
 {
-  // Nothing to do...
-  printf("SET_CMD called\n");
+  // setup trial type
+  spawnwait PCK_TRL_TYP();
+  // pick current target location AND SET WINDOWS
+  CURR_TARGET_IDX = (CURR_TARGET_IDX + 1) % N_TARG_POS;
+  spawnwait SET_WINS();
+  // Setup CMD PAGES
+  spawnwait CMD_PGS();
 
-}
+  // Set up any timing jitters etc
+  FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[2]-MIN_MAX_FIX_HOLD_TIME[1]) + MIN_MAX_FIX_HOLD_TIME[1];
+  TARGET_HOLD_TIME = random(MIN_MAX_TARGET_HOLD_TIME[2]-MIN_MAX_TARGET_HOLD_TIME[1]) + MIN_MAX_TARGET_HOLD_TIME[1];
+  // ITI TIME?
+
+
+  // wait 1 sec for everything to complete
+  nexttick 1000;
+} /* SETC_TRL */
+
+
+process PCK_TRL_TYP()
+{
+  declare float trlType;
+
+  trlType = (1.0 + random(9999))/100.0;
+  printf("trlType %2.3d ", trlType);
+  if (trlType <= GO_WEIGHT)
+  {
+    TRIAL_TYPE = TRIAL_TYPE_GO;
+  }
+  else if (trlType <= GO_WEIGHT + STOP_WEIGHT)
+  {
+    TRIAL_TYPE = TRIAL_TYPE_STOP;
+  }
+  else
+  {
+    TRIAL_TYPE = TRIAL_TYPE_IGNORE;
+  }
+}/* PCK_TRL_TYP */
+
+
+process SET_WINS()
+{
+  declare float eccX, eccY;
+
+  // Compute fix win size
+  // Fix spot center is at 0,0, so we do not need to compute
+  FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
+  FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
+  FIX_WIN[UP]    = -FIX_WIN_SIZE/2;
+  FIX_WIN[DOWN]  = FIX_WIN_SIZE/2;
+  // Larger fix win - For inaccurate eye position
+  FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE/2;
+  FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE/2;
+  FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
+  FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
+  // Compute TARG_WIN and TARG_WIN_LARGE
+  eccX            = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
+  TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
+  TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
+  TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE/2;
+  // Larger target window - For inaccurate eye position
+  TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+  // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
+  eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARGET_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
+  TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
+  TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
+  TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE/2;
+  // Larget ANTI target window - For inaccurate Eye position
+  TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+  TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+} /* SET_WINS */

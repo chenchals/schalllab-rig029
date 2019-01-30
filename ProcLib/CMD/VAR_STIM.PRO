@@ -54,18 +54,22 @@ process SET_DEFAULT_STIM_VARS()
 
   N_TARG_POS  = MAX_TARG_POS;
   tempCounter = 0;
-  // Default Target size, color, angle, eccentricity
+  // Default all target sizes to same
+  TARG_SIZE_ARRY[N_TARG_POS] = 0.5;
+  // Default all eccentricities to be same
+  TARG_ECCENTRICITY_ARRY[N_TARG_POS] = 12.0;
+
+  // Default Target angle
   while (tempCounter < N_TARG_POS)
   {
-    TARG_SIZE_ARRY[tempCounter] = 0.5;
-    // clockwise: -45, -19, -135
-    TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0/N_TARG_POS);
-      if (TARG_ANGLE_ARRY[tempCounter] > 180)
-      {
-        TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] - 360;
-      }    
-	  TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
-    tempCounter                         = tempCounter + 1;
+    // clockwise: 45, 90, 135, ...
+    TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0 / N_TARG_POS);
+    if (TARG_ANGLE_ARRY[tempCounter] > 180)
+    {
+      // counter clockwise : -45, -90, -135, ...
+      TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] - 360;
+    }
+    tempCounter = tempCounter + 1;
     nexttick;
   }
 } /* SET_DEFAULT_STIM_VARS */
