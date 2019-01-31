@@ -18,7 +18,11 @@ declare AUTO();
 process AUTO()
 {
   declare int tempVar = 0;
-
+  EYE_X_GAIN = 1.0;
+  EYE_Y_GAIN = 1.0;
+  EYE_X_OFFSET = 0.0;
+  EYE_Y_OFFSET = 0.0;
+  spawn AUTO_EYE();
   //SSD list is not set
   while (tempVar < N_SSD_MAX)
   {

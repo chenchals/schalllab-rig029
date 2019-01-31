@@ -26,6 +26,8 @@ declare int STAT_DLTA_T;
 declare int STAT_ALLOWED_T;
 declare int STAT_OUTCOME;
 
+// 
+declare constant int STAT_TEST = 99;
 // Eyes are anywhere on the screen
 declare constant int STAT_IDLE = 0;
 //

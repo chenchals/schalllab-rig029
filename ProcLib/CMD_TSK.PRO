@@ -17,7 +17,7 @@
 
 declare IDLE();
 
-
+declare int TEST = 100;
 process IDLE() enabled
 {
 	// A temporary state acitivity
@@ -60,6 +60,7 @@ process IDLE() enabled
 	while (1)
 	{
 		//===============For each Trial=====================
+		spawnwait SET_CMD_TRL();
 		tempProcessState = 0;
 		TRL_CUM_TIME = 0;
 		TRL_FIX_VRT_RFRSH_COUNT = 0;
@@ -75,6 +76,27 @@ process IDLE() enabled
 		STAT_DLTA_T = 0;
 		while (trlRunning)
 		{
+			
+			while(CURR_STAT == STAT_TEST)
+			{
+				printf("Eyes must be updating continuously...\n");
+				CURR_STAT = STAT_IDLE;
+				
+				spawn GRAF_SHOW_FIX_WIN();
+				//nexttick 5000;
+				//CURR_STAT = STAT_GET_READY;
+				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
+				//nexttick 5000;
+				//CURR_STAT = STAT_FIX_ON;
+				//STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
+				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
+				//nexttick 5000;
+				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
+
+				trlRunning = 0;
+				nexttick 10000;
+			}
+
 			//================= State = STAT_GET_READY===============
 			if (CURR_STAT == STAT_GET_READY)
 			{
@@ -84,10 +106,8 @@ process IDLE() enabled
 					TRL_NUMBER     = TRL_NUMBER + 1;
 					STAT_DLTA_T = 0;
 					STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR;
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_GET_READY\n", TRL_NUMBER, TRL_CUM_TIME);
+					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_GET_READY[%d]\n", TRL_NUMBER, TRL_CUM_TIME, STAT_DLTA_T);
 					spawn GRAF_SHOW_FIX_WIN();
-					// Check of eyes are outside FIX_WIN_SIZE_LARGE
-					printf("STAT_DLTA_T %d\n",STAT_DLTA_T);
 				}
 				STAT_DLTA_T = time() - TRL_GET_READY_TIME;				
 				if (I_FIX || I_FIX_WIDE)
@@ -119,35 +139,39 @@ process IDLE() enabled
 					dsendf("vp %d\n", PG_FIXATION_PD);
 					spawn GRAF_SHOW_FIX(GRAF_SHOW);
 				}
-				STAT_DLTA_T = time() - TRL_START_TIME;
-				if (PD_TRIG_L)
-				{
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
+					STAT_DLTA_T = time() - TRL_START_TIME;
+					if (PD_TRIG_L)
+					{
+						printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
+						TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
+						TRL_FIX_ON_TIME = time();
+						spawn SEND_EVT(FixSpotOn_);
+						dsendf("vp %d\n", PG_FIXATION);
+					}
+					if (!I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
+					{
+						tempProcessState = 0;
 
-					TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-					TRL_FIX_ON_TIME = time();
-					spawn SEND_EVT(FixSpotOn_);
-					dsendf("vp %d\n", PG_FIXATION);
-				}
-				if (!I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
-				{
-					// Not acquired fixation
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
-					printf("Fixation not acquired\n");
-					//?send event abort_?
-					tempProcessState = 0;
-					CURR_STAT = STAT_IDLE;
-					trlRunning = 0; // to go to next trial
-				}
-				else if(I_FIX && STAT_DLTA_T < STAT_ALLOWED_T )
-				{
-					printf("*****************Next state --> fixate************\n");
-					tempProcessState = 0;
-					TRL_FIX_VRT_RFRSH_COUNT = 0;
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
-					CURR_STAT = STAT_IDLE;
-					trlRunning = 0; // to go to next trial
-				}
+						// Not acquired fixation
+						printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
+						printf("AUTO_EYE_TICS [%d], STAT_DLTA_T [%d], STAT_ALLOWED_T [%d]\n", AUTO_EYE_TICS, STAT_DLTA_T, STAT_ALLOWED_T);
+						printf(":-(:-(:-(:-(:-(Fixation not acquired\n");
+						//?send event abort_?
+						CURR_STAT = STAT_IDLE;
+						trlRunning = 0; // to go to next trial
+					}
+					if(I_FIX && STAT_DLTA_T < STAT_ALLOWED_T )
+					{
+						tempProcessState = 0;
+
+						printf("*****************Next state --> fixate************\n");
+						TRL_FIX_VRT_RFRSH_COUNT = 0;
+						printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
+						CURR_STAT = STAT_IDLE;
+						nexttick 2000;
+						trlRunning = 0; // to go to next trial
+					}
+				
 			}
 			//================= State = STAT_FIXATE===============
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;

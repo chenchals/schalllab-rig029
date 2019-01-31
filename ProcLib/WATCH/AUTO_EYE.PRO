@@ -20,79 +20,112 @@ declare int AUTO_EYE_TICS;
 
 process AUTO_EYE()
 {
-	// Random eye position which is ON the screen
-	// Eccentricity: Between screen degrees X, screen degrees Y
-	// Angle any
+	declare int march;
+	march = 1;
+	while(1)
+	{
+		// Random eye position which is ON the screen
+		// Eccentricity: Between screen degrees X, screen degrees Y
+		// Angle any
 
-	//spawnwait RAND_EYE();
-	if (CURR_STAT == STAT_GET_READY )
-	{
-		spawnwait AUTO_EYE_GET_READY();
+		//spawnwait RAND_EYE();
+		if (CURR_STAT == STAT_TEST)
+		{
+			if (march)
+			{
+				if (AUTO_EYE_TICS ==0)
+				{
+					AUTO_EYE_TICS = 1;
+					AUTO_EYE_X_DEG = -15.0;
+					AUTO_EYE_Y_DEG = -15.0;
+				}
+				else
+				{
+					AUTO_EYE_TICS = AUTO_EYE_TICS +1;
+					if (AUTO_EYE_TICS >= 20)
+					{
+						AUTO_EYE_TICS = 1;
+						AUTO_EYE_X_DEG = AUTO_EYE_X_DEG + 1.0;
+						AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG + 1.0;
+					}
+					else if(AUTO_EYE_X_DEG >= 15)
+					{
+						AUTO_EYE_X_DEG = -15.0;
+						AUTO_EYE_Y_DEG = -15.0;
+					}
+					else 
+					{
+						AUTO_EYE_TICS = AUTO_EYE_TICS + 1;
+					}	
+				}
+				
+			}
+		}
+		
+		
+		if(CURR_STAT == STAT_IDLE)
+		{
+			AUTO_EYE_X_DEG = random(10) + random(10)/10.0;
+			AUTO_EYE_Y_DEG = random(10) + random(10)/10.0;
+			if(random(2))
+			{
+				AUTO_EYE_X_DEG = AUTO_EYE_X_DEG * -1;
+			}
+			if(random(2))
+			{
+				AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG * -1;
+			}
+			
+		}
+		if (CURR_STAT == STAT_GET_READY )
+		{
+			spawnwait AUTO_EYE_GET_READY();
+		}
+		else if (CURR_STAT == STAT_FIX_ON)
+		{
+			spawnwait AUTO_EYE_FIX_ON();
+		}
+		nexttick;
 	}
-	else if (CURR_STAT == STAT_FIX_ON)
-	{
-		spawnwait AUTO_EYE_FIX_ON();
-	}
-	// Convert to possible voltage value that we would get from atable[EYE_X_CHANNEL]
-	EYE_X_VOLTS = (AUTO_EYE_X_DEG + EYE_X_OFFSET)/(( EYE_X_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
-	// Convert to possible voltage value that we would get from atable[EYE_Y_CHANNEL]
-	EYE_Y_VOLTS = (AUTO_EYE_Y_DEG + EYE_Y_OFFSET)/(( EYE_Y_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
 
 }
 
 process AUTO_EYE_GET_READY()
 {	
-	if (AUTO_EYE_TICS > 0)
-	{
-		AUTO_EYE_TICS = 0;
-	}
-	else
-	{
-		AUTO_EYE_TICS = AUTO_EYE_TICS + 1; 
-		if (AUTO_EYE_TICS <= (STAT_ALLOWED_T) + 10)
+	declare float halfWin;
+	halfWin = (FIX_WIN_SIZE+2.0)/2.0;
+
+		if (STAT_DLTA_T <= (STAT_ALLOWED_T) + 10)
 		{
+			AUTO_EYE_X_DEG = halfWin + random(50)/10.0;
+			AUTO_EYE_Y_DEG = halfWin + random(50)/10.0;
 			// for eyeXdeg
-			if(random(1))
+			if(random(2))
 			{
-				AUTO_EYE_X_DEG = (FIX_WIN_SIZE + 1) - random(10)/10;
-			}
-			else
-			{
-				AUTO_EYE_X_DEG = FIX_WIN_SIZE + random(10)/10;
+				AUTO_EYE_X_DEG = AUTO_EYE_X_DEG * -1.0;
 			}
 			// for eyeYdeg
-			if(random(1))
+			if(random(2))
 			{
-				AUTO_EYE_Y_DEG = (FIX_WIN_SIZE + 1) - random(10)/10;
-			}
-			else
-			{
-				AUTO_EYE_Y_DEG = FIX_WIN_SIZE + random(10)/10;
+				AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG * -1.0;
 			}
 
 		}		
-	}
+	
 }
 
 process AUTO_EYE_FIX_ON()
-{	
-	if (AUTO_EYE_TICS > 0)
-	{
-		AUTO_EYE_TICS = 0;
-	}
-	else
-	{
-		AUTO_EYE_TICS = AUTO_EYE_TICS + 1;
-		if (AUTO_EYE_TICS <= round((STAT_ALLOWED_T*0.5)))
+{			
+		if (STAT_DLTA_T <= round(STAT_ALLOWED_T*0.5))
 		{
 			// hold position for half the allowed fix timetime
-			AUTO_EYE_X_DEG = AUTO_EYE_X_DEG;
-			AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG;
+			AUTO_EYE_X_DEG = AUTO_EYE_X_DEG + random(10)/10.0;
+			AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG + random(10)/10.0;
 		}
 		else // fixate
 		{
-			AUTO_EYE_X_DEG = random(round(FIX_WIN_SIZE*10.0/2.0))/10.0;
-			AUTO_EYE_Y_DEG = random(round(FIX_WIN_SIZE*10.0/2.0))/10.0;
+			AUTO_EYE_X_DEG = 0.1;
+			AUTO_EYE_Y_DEG = 0.1;
 		}	
-	}
+	
 }
