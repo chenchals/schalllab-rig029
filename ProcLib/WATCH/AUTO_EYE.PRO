@@ -13,6 +13,7 @@ declare AUTO_EYE();
 declare AUTO_EYE_GET_READY();
 declare AUTO_EYE_FIX_ON();
 declare AUTO_EYE_FIXATE();
+declare AUTO_EYE_TARG_ON();
 
 
 declare AUTO_EYE_RAND();
@@ -53,6 +54,10 @@ process AUTO_EYE()
 		else if (CURR_STAT == STAT_FIXATE)
 		{
 			spawnwait AUTO_EYE_FIXATE();
+		}
+		else if (CURR_STAT == STAT_TARG_ON)
+		{
+			spawnwait AUTO_EYE_TARG_ON();
 		}
 		else
 		{
@@ -137,7 +142,7 @@ process AUTO_EYE_FIX_WIDE()
 
 process AUTO_EYE_FIX_ON()
 {		
-	if (STAT_DLTA_T <= round(STAT_ALLOWED_T*0.8 ))
+	if (STAT_DLTA_T <= round(STAT_ALLOWED_T*0.8))
 	{
 		// hold position for half the allowed fix timetime
 		AUTO_EYE_X_DEG = AUTO_EYE_X_DEG + random(10)/10.0;
@@ -152,7 +157,21 @@ process AUTO_EYE_FIX_ON()
 
 process AUTO_EYE_FIXATE()
 {		
-	if (STAT_DLTA_T <= round(STAT_ALLOWED_T*0.8))
+	if (STAT_DLTA_T <= round(STAT_ALLOWED_T*1.1))
+	{
+		// hold fix 
+		AUTO_EYE_X_DEG =  random(5)/10.0;
+		AUTO_EYE_Y_DEG =  random(5)/10.0;
+	}
+	else // break fix
+	{
+		spawnwait AUTO_EYE_FIX_WIDE();
+	}	
+}
+
+process AUTO_EYE_TARG_ON()
+{		
+	if (STAT_DLTA_T <= round(STAT_ALLOWED_T*0.5))
 	{
 		// hold fix 
 		AUTO_EYE_X_DEG =  random(5)/10.0;

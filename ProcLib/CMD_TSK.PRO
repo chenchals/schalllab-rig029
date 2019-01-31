@@ -9,6 +9,7 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
+#include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/PRC_STAT.PRO
@@ -16,18 +17,22 @@
 //==========================================================================
 
 declare IDLE();
+
 declare UPD8_MSG();
+declare INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
+
+declare int targVertRefreshCountTime;
 
 declare int TEST = 100;
 process IDLE() enabled
 {
 	// A temporary state acitivity
 	declare int tempProcessState;
-	// A temporary counter
-	declare int tempVar;
+	// A flag for sending event only 1 time Ex. FixSpotOn (based on trigger)
+	declare int sendEventOnce;
 	declare int tempTrlNumber;
 	declare int trlRunning;
-
+	spawn CLEAR_VDO();
 	seed1(time());
 	normal(1);
 
@@ -71,13 +76,10 @@ process IDLE() enabled
 		spawn SEND_EVT(CmanHeader_);
 		spawn GRAF_HIDE_FIX_TARG();
 		dsendf("vp %d\n", PG_BLANK);
-		TRL_GET_READY_TIME = time();
-		spawn SEND_EVT(TrialGetReady_);
 		CURR_STAT = STAT_GET_READY;
 		STAT_DLTA_T = 0;
 		while (trlRunning)
-		{
-			
+		{		
 			while(CURR_STAT == STAT_TEST)
 			{
 				printf("Eyes must be updating continuously...\n");
@@ -103,8 +105,12 @@ process IDLE() enabled
 			{
 				if (!tempProcessState)
 				{
+					sendEventOnce = 1;
 					tempProcessState = 1;
 					TRL_NUMBER     = TRL_NUMBER + 1;
+					TRL_GET_READY_TIME = time();
+					spawn SEND_EVT(TrialGetReady_);
+
 					STAT_DLTA_T = 0;
 					STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR;
 					spawn UPD8_MSG();
@@ -129,8 +135,9 @@ process IDLE() enabled
 			{
 				if (!tempProcessState) // First time showing fixspot on
 				{
+					sendEventOnce = 1;
 					tempProcessState = 1;
-					tempVar = 0;
+					TRL_FIX_VRT_RFRSH_COUNT = 0;
 					TRL_START_TIME = time();
 					spawn SEND_EVT(TrialStart_);
 					STAT_DLTA_T = 0;
@@ -144,8 +151,15 @@ process IDLE() enabled
 				{
 					spawn UPD8_MSG();
 					TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-					TRL_FIX_ON_TIME = time();
-					spawn SEND_EVT(FixSpotOn_);
+					printf("TRL_FIX_VRT_RFRSH_COUNT [%d]\n",TRL_FIX_VRT_RFRSH_COUNT);
+					if(sendEventOnce)
+					{
+						// do not send event multiple times
+						sendEventOnce = 0;
+						TRL_FIX_ON_TIME = time();
+						printf("Sending event FixSpotOn_\n");
+						spawn SEND_EVT(FixSpotOn_);						
+					}
 					dsendf("vp %d\n", PG_FIXATION);
 				}
 				if (!I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
@@ -174,8 +188,8 @@ process IDLE() enabled
 			{
 				if (!tempProcessState) // First time showing fixspot on
 				{
+					sendEventOnce = 1;
 					tempProcessState = 1;
-					tempVar = 0;
 					spawn SEND_EVT(TrialStart_);
 					STAT_DLTA_T = 0;
 					STAT_ALLOWED_T = FIX_HOLD_TIME*TIME_DILATE_FACTOR;
@@ -186,7 +200,8 @@ process IDLE() enabled
 				{
 					tempProcessState = 0;
 					spawn UPD8_MSG();
-					printf("****Not fixated\n");
+					printf("****Not fixated******\n");
+					printf("Send.... event Abort_??\n");
 					//?send event abort_?
 					CURR_STAT = STAT_IDLE;
 					trlRunning = 0; // to go to next trial
@@ -196,14 +211,69 @@ process IDLE() enabled
 					tempProcessState = 0;
 					spawn UPD8_MSG();
 					TRL_FIXATED_TIME = time();
+					printf("Sending event Fixate_\n");
+
 					spawn SEND_EVT(Fixate_);
 					printf("****Fixated\n");
 					CURR_STAT = STAT_TARG_ON;
-					nexttick 2000;
-					trlRunning = 0; // to go to next trial
 				}				
 			}
 			//================= State = STAT_TARG_ON===============
+			//================= State = STAT_TARG_ON===============
+			if (CURR_STAT == STAT_TARG_ON)
+			{
+				if(!tempProcessState)
+				{
+					sendEventOnce = 1;
+					tempProcessState = 1;
+					targVertRefreshCountTime = 0;
+					TRL_TARG_VRT_RFRSH_COUNT = 0;
+					TRL_PRE_TARG_ON_TIME = time();
+					spawn SEND_EVT(TargetPre_);
+					STAT_DLTA_T = 0;
+					STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[0]*TIME_DILATE_FACTOR;
+					spawn UPD8_MSG();
+					dsendf("vp %d\n", PG_TARGET_PD);
+					spawn GRAF_SHOW_FIX(GRAF_HIDE);
+					spawn GRAF_SHOW_TARG(GRAF_SHOW);
+				}
+				STAT_DLTA_T = time() - TRL_PRE_TARG_ON_TIME;
+				if (PD_TRIG_L)
+				{
+					spawn INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
+					if(sendEventOnce)
+					{
+						// do not send event multiple times
+						sendEventOnce = 0;
+						TRL_TARG_ON_TIME = time();
+						printf("Sending event Target_\n");
+						spawn SEND_EVT(Target_);
+						spawn SEND_EVT(FixSpotOff_);
+					}
+				}
+				if(!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
+				{
+					// Early saccade
+					tempProcessState = 0;
+					spawn UPD8_MSG();
+					TRL_SACCADE_TIME = time();
+					spawn SEND_EVT(EarlySaccade_);
+					printf("****Early Saccade\n");
+					CURR_STAT = STAT_TARG_ACQ;
+				}
+				if(I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
+				{
+					// Ready for saccade...
+					tempProcessState = 0;
+					spawn UPD8_MSG();
+					printf("****Fixated ready for saccade...\n");
+					CURR_STAT = STAT_TARG_ACQ;
+					dsendf("vp %d\n",PG_BLANK);
+					nexttick 2000;
+					trlRunning = 0;
+				}
+			}
+			//================= State = STAT_TARG_FIXATE===============
 			
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;
 			nexttick;
@@ -215,4 +285,24 @@ process IDLE() enabled
 process UPD8_MSG()
 {
 	printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME,CURR_STAT,STAT_DLTA_T);
+}
+
+// Do not double count same trigger
+process INCREMENT_TRL_TARG_VRT_RFRSH_COUNT()
+{
+	declare int trigWidth = 3;
+	if (TRL_TARG_VRT_RFRSH_COUNT == 0)
+	{
+		TRL_TARG_VRT_RFRSH_COUNT = 1;
+		spawn UPD8_MSG();
+		printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n",TRL_TARG_VRT_RFRSH_COUNT);
+	}
+	else if ((STAT_DLTA_T - targVertRefreshCountTime) > trigWidth)
+	{
+		TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
+		spawn UPD8_MSG();
+		printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n",TRL_TARG_VRT_RFRSH_COUNT);
+	}
+	targVertRefreshCountTime = STAT_DLTA_T;
+
 }
