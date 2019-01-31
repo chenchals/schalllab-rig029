@@ -50,6 +50,10 @@ process AUTO_EYE()
 		{
 			spawnwait AUTO_EYE_FIX_ON();
 		}
+		else if (CURR_STAT == STAT_FIXATE)
+		{
+			spawnwait AUTO_EYE_FIXATE();
+		}
 		else
 		{
 			//freeze
@@ -144,11 +148,11 @@ process AUTO_EYE_FIX_ON()
 		AUTO_EYE_X_DEG = 0.1;
 		AUTO_EYE_Y_DEG = 0.1;
 	}	
-	
 }
+
 process AUTO_EYE_FIXATE()
 {		
-	if (STAT_DLTA_T >= round(STAT_ALLOWED_T*0.5))
+	if (STAT_DLTA_T <= round(STAT_ALLOWED_T*0.8))
 	{
 		// hold fix 
 		AUTO_EYE_X_DEG =  random(5)/10.0;
@@ -158,5 +162,4 @@ process AUTO_EYE_FIXATE()
 	{
 		spawnwait AUTO_EYE_FIX_WIDE();
 	}	
-	
 }
