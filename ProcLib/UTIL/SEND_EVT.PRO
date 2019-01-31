@@ -67,7 +67,7 @@ process SEND_EVT(int eventCode)
 process QUE_TTL()
 {
   // Max number of events to send during 1 process cycle
-  declare int events_per_cycle = 5;
+  declare int events_per_cycle = 4;
   // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
   // then there are no more events  to send in EVENT_FIFO buffer
   declare int event_idx;

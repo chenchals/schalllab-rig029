@@ -59,6 +59,8 @@ declare int TRL_SACCADE_TIME;
 declare int TRL_TARG_ACQ_TIME;
 declare int TRL_TARG_FIXATED_TIME;
 declare int TRL_DECIDE_TIME;
+// any break fixations?
+declare int TRL_ABORT_TIME;
 
 declare int TRL_FIX_VRT_RFRSH_COUNT;
 declare int TRL_TARG_VRT_RFRSH_COUNT;

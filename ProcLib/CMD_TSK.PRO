@@ -16,6 +16,7 @@
 //==========================================================================
 
 declare IDLE();
+declare UPD8_MSG();
 
 declare int TEST = 100;
 process IDLE() enabled
@@ -106,22 +107,21 @@ process IDLE() enabled
 					TRL_NUMBER     = TRL_NUMBER + 1;
 					STAT_DLTA_T = 0;
 					STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR;
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_GET_READY[%d]\n", TRL_NUMBER, TRL_CUM_TIME, STAT_DLTA_T);
+					spawn UPD8_MSG();
 					spawn GRAF_SHOW_FIX_WIN();
 				}
 				STAT_DLTA_T = time() - TRL_GET_READY_TIME;				
 				if (I_FIX || I_FIX_WIDE)
 				{
 					STAT_DLTA_T = 0;
-					//STAT_DLTA_T = STAT_DLTA_T;
 				}
 				if (STAT_DLTA_T >= STAT_ALLOWED_T)
 				{
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_GET_READY [%d]\n", TRL_NUMBER, TRL_CUM_TIME, STAT_DLTA_T);
+					tempProcessState = 0;
+					spawn UPD8_MSG();
 					TRL_READY_TIME = time();
 					spawn SEND_EVT(TrialReady_);
 					CURR_STAT = STAT_FIX_ON;
-					tempProcessState = 0;
 				}
 			}
 			//================= State = STAT_FIX_ON===============
@@ -135,48 +135,84 @@ process IDLE() enabled
 					spawn SEND_EVT(TrialStart_);
 					STAT_DLTA_T = 0;
 					STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR;
-					printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
+					spawn UPD8_MSG();
 					dsendf("vp %d\n", PG_FIXATION_PD);
 					spawn GRAF_SHOW_FIX(GRAF_SHOW);
 				}
-					STAT_DLTA_T = time() - TRL_START_TIME;
-					if (PD_TRIG_L)
-					{
-						printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
-						TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-						TRL_FIX_ON_TIME = time();
-						spawn SEND_EVT(FixSpotOn_);
-						dsendf("vp %d\n", PG_FIXATION);
-					}
-					if (!I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
-					{
-						tempProcessState = 0;
-
-						// Not acquired fixation
-						printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
-						printf("AUTO_EYE_TICS [%d], STAT_DLTA_T [%d], STAT_ALLOWED_T [%d]\n", AUTO_EYE_TICS, STAT_DLTA_T, STAT_ALLOWED_T);
-						printf(":-(:-(:-(:-(:-(Fixation not acquired\n");
-						//?send event abort_?
-						CURR_STAT = STAT_IDLE;
-						trlRunning = 0; // to go to next trial
-					}
-					if(I_FIX && STAT_DLTA_T < STAT_ALLOWED_T )
-					{
-						tempProcessState = 0;
-
-						printf("*****************Next state --> fixate************\n");
-						TRL_FIX_VRT_RFRSH_COUNT = 0;
-						printf("Trial TRL_NUMUMBR = %d, TRL_CUM_TIME = %d, CURR_STAT == STAT_FIX_ON [%d]\n", TRL_NUMBER, TRL_CUM_TIME,STAT_DLTA_T);
-						CURR_STAT = STAT_IDLE;
-						nexttick 2000;
-						trlRunning = 0; // to go to next trial
-					}
+				STAT_DLTA_T = time() - TRL_START_TIME;
+				if (PD_TRIG_L)
+				{
+					spawn UPD8_MSG();
+					TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
+					TRL_FIX_ON_TIME = time();
+					spawn SEND_EVT(FixSpotOn_);
+					dsendf("vp %d\n", PG_FIXATION);
+				}
+				if (!I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
+				{
+					tempProcessState = 0;
+					spawn UPD8_MSG();
+					printf("****Fixation not acquired\n");
+					//?send event abort_?
+					CURR_STAT = STAT_IDLE;
+					trlRunning = 0; // to go to next trial
+				}
+				if(I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T )
+				{
+					tempProcessState = 0;
+					spawn UPD8_MSG();
+					TRL_FIX_VRT_RFRSH_COUNT = 0;
+					TRL_FIX_ACQ_TIME = time();
+					spawn SEND_EVT(AcquireFix_);
+					printf("****Fixation acquired\n");
+					CURR_STAT = STAT_FIXATE;
+				}
 				
 			}
 			//================= State = STAT_FIXATE===============
+			if (CURR_STAT == STAT_FIXATE)
+			{
+				if (!tempProcessState) // First time showing fixspot on
+				{
+					tempProcessState = 1;
+					tempVar = 0;
+					spawn SEND_EVT(TrialStart_);
+					STAT_DLTA_T = 0;
+					STAT_ALLOWED_T = FIX_HOLD_TIME*TIME_DILATE_FACTOR;
+					spawn UPD8_MSG();
+				}
+				STAT_DLTA_T = time() - TRL_FIX_ACQ_TIME;
+				if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
+				{
+					tempProcessState = 0;
+					spawn UPD8_MSG();
+					printf("****Not fixated\n");
+					//?send event abort_?
+					CURR_STAT = STAT_IDLE;
+					trlRunning = 0; // to go to next trial
+				}
+				if(I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
+				{
+					tempProcessState = 0;
+					spawn UPD8_MSG();
+					TRL_FIXATED_TIME = time();
+					spawn SEND_EVT(Fixate_);
+					printf("****Fixated\n");
+					CURR_STAT = STAT_TARG_ON;
+					nexttick 2000;
+					trlRunning = 0; // to go to next trial
+				}				
+			}
+			//================= State = STAT_TARG_ON===============
+			
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;
 			nexttick;
 		}/*while(trlRunning)*/
 		nexttick;
 	}/*while(1)*/
 }/*IDLE()*/
+
+process UPD8_MSG()
+{
+	printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME,CURR_STAT,STAT_DLTA_T);
+}
