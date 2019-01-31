@@ -70,6 +70,7 @@ declare constant AcquireFix_       = 2659;
 declare constant Fixate_           = 2660;
 declare constant CueOn_            = 2661;
 declare constant AcquireTarget_    = 2670;
+declare constant AcquireTargetSlow_= 2671;
 declare constant TaskEnd_          = 2680;
 declare constant TaskStart_        = 2681;
 declare constant Reward_           = 2727;

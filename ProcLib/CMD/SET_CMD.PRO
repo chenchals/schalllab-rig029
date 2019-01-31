@@ -58,8 +58,13 @@ declare int TRL_FIXATED_TIME;
 declare int TRL_PRE_TARG_ON_TIME;
 // when PD trigger occurs
 declare int TRL_TARG_ON_TIME;
-declare int TRL_SACCADE_TIME;
+declare int TRL_ERLY_SACC_TIME;
+declare int TRL_SACC_TIME;
+declare int TRL_LATE_SACC_TIME;
+
 declare int TRL_TARG_ACQ_TIME;
+declare int TRL_TARG_ACQ_SLOW_TIME;
+
 declare int TRL_TARG_FIXATED_TIME;
 declare int TRL_DECIDE_TIME;
 // any break fixations?
