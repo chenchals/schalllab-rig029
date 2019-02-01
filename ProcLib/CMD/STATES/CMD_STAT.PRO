@@ -80,3 +80,7 @@ declare constant int STAT_TARG_ON = 4;
 //        O_FIXATE_TARG_WIDE_ANTI --->   Timeout? tome? next_state? STAT_IDLE
 //        O_FIXATE_TARG_BRK       --->   Timeout? tone? STAT_IDLE
 declare constant int STAT_TARG_ACQ = 5;
+
+declare constant int STAT_TARG_FIXATE = 6;
+
+

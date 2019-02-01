@@ -21,7 +21,7 @@ declare SET_CURR_STAT(int inTime);
 
 process SET_CURR_STAT(int inTime)
 {
-  PREV_STAT   = CURR_STAT;
+  //PREV_STAT   = CURR_STAT;
   CURR_STAT   = STAT_GET_READY;
   STAT_STRT_T = inTime;
   STAT_DLTA_T = 0;

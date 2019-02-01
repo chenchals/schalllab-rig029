@@ -9,10 +9,10 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
-#include C: / TEMPO / ProcLib / CLEAR_VDO.PRO
-#include C: / TEMPO / ProcLib / CMD / SET_CMD.PRO
-#include C: / TEMPO / ProcLib / CMD / EVENTDEF.PRO
-#include C: / TEMPO / ProcLib / CMD / STATES / PRC_STAT.PRO
+#include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
+#include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
+#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/PRC_STAT.PRO
 
 //==========================================================================
 
@@ -20,407 +20,408 @@ declare IDLE();
 
 declare UPD8_MSG();
 declare INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
+declare CHECK_TARG_ACQUIRED();
+declare CHECK_TARG_VERT_RFRSH();
 
 declare int TARG_VR_COUNT_TIME;
 // A flag for sending event only 1 time Ex. FixSpotOn (based on trigger)
 declare int SEND_EVNT_ONCE;
-
+// A temporary state acitivity
+declare int SETUP_STATE;
 declare int TEST = 100;
 
 
 process IDLE() enabled
 {
-    // A temporary state acitivity
-    declare int setupState;
-    declare int tempTrlNumber;
-    declare int trlRunning;
+	declare int tempTrlNumber;
+	declare int trlRunning;
 
-    spawn CLEAR_VDO();
+	spawn CLEAR_VDO();
 
-    seed1(time());
-    normal(1);
+	seed1(time());
+	normal(1);
 
-    // ========== Call once =============
-    //RIG_ID = 29;
-    //MONK_ID = JOULE_ID;
-    printf("Setting SET_RIG\n");
-    spawnwait SET_RIG(RIG_ID);
+	// ========== Call once =============
+	//RIG_ID = 29;
+	//MONK_ID = JOULE_ID;
+	printf("Setting SET_RIG\n");
+	spawnwait SET_RIG(RIG_ID);
 
-    printf("Setting SET_CLRS\n");
-    spawnwait SET_CLRS();
+	printf("Setting SET_CLRS\n");
+	spawnwait SET_CLRS();
 
-    printf("Setting SET_DEFAULT_STIM_VARS\n");
-    spawnwait SET_DEFAULT_STIM_VARS();
+	printf("Setting SET_DEFAULT_STIM_VARS\n");
+	spawnwait SET_DEFAULT_STIM_VARS();
 
-    printf("Setting monkID\n");
-    spawnwait SET_MONK(MONK_ID);
+	printf("Setting monkID\n");
+	spawnwait SET_MONK(MONK_ID);
 
-    // Setup WATCHES
-    printf("Setting QUE_TTL\n");
-    spawn QUE_TTL();
+	// Setup WATCHES
+	printf("Setting QUE_TTL\n");
+	spawn QUE_TTL();
 
-    printf("Setting WTCH_EYE\n");
-    spawn WTCH_EYE();
+	printf("Setting WTCH_EYE\n");
+	spawn WTCH_EYE();
 
-    printf("Setting WTCH_SCHMITT\n");
-    spawn WTCH_SCHMITT();
+	printf("Setting WTCH_SCHMITT\n");
+	spawn WTCH_SCHMITT();
 
-    printf("Setting GRAPHS\n");
-    spawn GRAPHS();
+	printf("Setting GRAPHS\n");
+	spawn GRAPHS();
 
-    CURR_STAT  = STAT_IDLE;
-    TRL_NUMBER = 0;
-    printf("Setting SEND_EVT Room\n");
-    spawn SEND_EVT(Identify_Room_);
-    spawn SEND_EVT(RIG_ID);
+	CURR_STAT  = STAT_IDLE;
+	TRL_NUMBER = 0;
+	printf("Setting SEND_EVT Room\n");
+	spawn SEND_EVT(Identify_Room_);
+	spawn SEND_EVT(RIG_ID);
 
-    while (1)
-    {
-        //===============For each Trial=====================
-        spawnwait SET_CMD_TRL();
+	while (1)
+	{
+		//===============For each Trial=====================
+		spawnwait SET_CMD_TRL();
 
-        setupState              = 0;
-        TRL_CUM_TIME            = 0;
-        TRL_FIX_VRT_RFRSH_COUNT = 0;
-        trlRunning              = 1;
-        printf("Trial running....\n");
-        spawn SEND_EVT(TaskStart_);
-        spawn SEND_EVT(CmanHeader_);
-        spawn GRAF_HIDE_FIX_TARG();
+		SETUP_STATE              = 0;
+		TRL_CUM_TIME            = 0;
+		TRL_FIX_VRT_RFRSH_COUNT = 0;
+		trlRunning              = 1;
+		printf("Trial running....\n");
+		spawn SEND_EVT(TaskStart_);
+		spawn SEND_EVT(CmanHeader_);
+		spawn GRAF_HIDE_FIX_TARG();
 
-        dsendf("vp %d\n", PG_BLANK);
-        CURR_STAT   = STAT_GET_READY;
-        STAT_DLTA_T = 0;
-        while (trlRunning)
-        {
-            while (CURR_STAT == STAT_TEST)
-            {
-                printf("Eyes must be updating continuously...\n");
-                CURR_STAT = STAT_IDLE;
+		dsendf("vp %d\n", PG_BLANK);
+		CURR_STAT   = STAT_GET_READY;
+		STAT_DLTA_T = 0;
+		while (trlRunning)
+		{
+			while (CURR_STAT == STAT_TEST)
+			{
+				printf("Eyes must be updating continuously...\n");
+				CURR_STAT = STAT_IDLE;
 
-                spawn GRAF_SHOW_FIX_WIN();
+				spawn GRAF_SHOW_FIX_WIN();
 
-                //nexttick 5000;
-                //CURR_STAT = STAT_GET_READY;
-                //STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
-                //nexttick 5000;
-                //CURR_STAT = STAT_FIX_ON;
-                //STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
-                //spawn GRAF_SHOW_FIX(GRAF_SHOW);
-                //nexttick 5000;
-                //spawn GRAF_SHOW_FIX(GRAF_HIDE);
+				//nexttick 5000;
+				//CURR_STAT = STAT_GET_READY;
+				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
+				//nexttick 5000;
+				//CURR_STAT = STAT_FIX_ON;
+				//STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
+				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
+				//nexttick 5000;
+				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
-                trlRunning = 0;
-                nexttick 10000;
-            }
+				trlRunning = 0;
+				nexttick 10000;
+			}
 
-            //================= State = STAT_GET_READY===============
-            if (CURR_STAT == STAT_GET_READY)
-            {
-                if (!setupState)
-                {
-                    SEND_EVNT_ONCE     = 1;
-                    setupState         = 1;
-                    TRL_NUMBER         = TRL_NUMBER + 1;
-                    TRL_GET_READY_TIME = time();
-                    spawn SEND_EVT(TrialGetReady_);
+			//================= State = STAT_GET_READY===============
+			if (CURR_STAT == STAT_GET_READY)
+			{
+				if (!SETUP_STATE)
+				{
+					SEND_EVNT_ONCE     = 1;
+					SETUP_STATE         = 1;
+					TRL_NUMBER         = TRL_NUMBER + 1;
+					TRL_GET_READY_TIME = time();
+					spawn SEND_EVT(TrialGetReady_);
 
-                    STAT_STRT_T    = TRL_GET_READY_TIME;
-                    STAT_DLTA_T    = 0;
-                    STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
-                    spawn UPD8_MSG();
-                    spawn GRAF_SHOW_FIX_WIN();
-                }
-                STAT_DLTA_T = time() - STAT_STRT_T;
-                if (I_FIX || I_FIX_WIDE)
-                {
-                    STAT_DLTA_T = 0;
-                }
-                if (STAT_DLTA_T >= STAT_ALLOWED_T)
-                {
-                    setupState = 0;
-                    spawn UPD8_MSG();
+					STAT_STRT_T    = TRL_GET_READY_TIME;
+					STAT_DLTA_T    = 0;
+					STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
+					spawn UPD8_MSG();
+					spawn GRAF_SHOW_FIX_WIN();
+				}
+				STAT_DLTA_T = time() - STAT_STRT_T;
+				if (I_FIX || I_FIX_WIDE)
+				{
+					STAT_DLTA_T = 0;
+				}
+				if (STAT_DLTA_T >= STAT_ALLOWED_T)
+				{
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    TRL_READY_TIME = time();
-                    spawn SEND_EVT(TrialReady_);
+					TRL_READY_TIME = time();
+					spawn SEND_EVT(TrialReady_);
 
-                    CURR_STAT = STAT_FIX_ON;
-                }
-            }
-            //================= State = STAT_FIX_ON===============
-            if (CURR_STAT == STAT_FIX_ON)
-            {
-                if (!setupState)                                                                                 // First time showing fixspot on
-                {
-                    SEND_EVNT_ONCE          = 1;
-                    setupState              = 1;
-                    TRL_FIX_VRT_RFRSH_COUNT = 0;
-                    TRL_START_TIME          = time();
-                    spawn SEND_EVT(TrialStart_);
+					CURR_STAT = STAT_FIX_ON;
+				}
+			}
+			//================= State = STAT_FIX_ON===============
+			if (CURR_STAT == STAT_FIX_ON)
+			{
+				if (!SETUP_STATE)                                                                                 // First time showing fixspot on
+				{
+					SEND_EVNT_ONCE          = 1;
+					SETUP_STATE              = 1;
+					TRL_FIX_VRT_RFRSH_COUNT = 0;
+					TRL_START_TIME          = time();
+					spawn SEND_EVT(TrialStart_);
 
-                    STAT_STRT_T    = TRL_START_TIME;
-                    STAT_DLTA_T    = 0;
-                    STAT_ALLOWED_T = ALLOWED_FIX_TIME * TIME_DILATE_FACTOR;
-                    spawn UPD8_MSG();
+					STAT_STRT_T    = TRL_START_TIME;
+					STAT_DLTA_T    = 0;
+					STAT_ALLOWED_T = ALLOWED_FIX_TIME * TIME_DILATE_FACTOR;
+					spawn UPD8_MSG();
 
-                    dsendf("vp %d\n", PG_FIXATION_PD);
-                    spawn GRAF_SHOW_FIX(GRAF_SHOW);
-                }
-                STAT_DLTA_T = time() - STAT_STRT_T;
-                if (PD_TRIG_L)
-                {
-                    spawn UPD8_MSG();
+					dsendf("vp %d\n", PG_FIXATION_PD);
+					spawn GRAF_SHOW_FIX(GRAF_SHOW);
+				}
+				STAT_DLTA_T = time() - STAT_STRT_T;
+				if (PD_TRIG_L)
+				{
+					spawn UPD8_MSG();
 
-                    TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-                    printf("****STAT_FIX_ON:TRL_FIX_VRT_RFRSH_COUNT [%d]\n", TRL_FIX_VRT_RFRSH_COUNT);
-                    if (SEND_EVNT_ONCE)
-                    {
-                        // do not send event multiple times
-                        SEND_EVNT_ONCE  = 0;
-                        TRL_FIX_ON_TIME = time();
-                        printf("****STAT_FIX_ON:Sending event FixSpotOn_\n");
-                        spawn SEND_EVT(FixSpotOn_);
-                    }
-                    dsendf("vp %d\n", PG_FIXATION);
-                }
-                if (!I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
-                {
-                    setupState = 0;
-                    spawn UPD8_MSG();
+					TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
+					printf("****STAT_FIX_ON:TRL_FIX_VRT_RFRSH_COUNT [%d]\n", TRL_FIX_VRT_RFRSH_COUNT);
+					if (SEND_EVNT_ONCE)
+					{
+						// do not send event multiple times
+						SEND_EVNT_ONCE  = 0;
+						TRL_FIX_ON_TIME = time();
+						printf("****STAT_FIX_ON:Sending event FixSpotOn_\n");
+						spawn SEND_EVT(FixSpotOn_);
+					}
+					dsendf("vp %d\n", PG_FIXATION);
+				}
+				if (!I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
+				{
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    printf("****STAT_FIX_ON:Fixation not acquired\n");
-                    //?send event abort_?
-                    CURR_STAT  = STAT_IDLE;
-                    trlRunning = 0;                                                                                                     // to go to next trial
-                }
-                if (I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
-                {
-                    setupState = 0;
-                    spawn UPD8_MSG();
+					printf("****STAT_FIX_ON:Fixation not acquired\n");
+					//?send event abort_?
+					CURR_STAT  = STAT_IDLE;
+					trlRunning = 0;                                                                                                     // to go to next trial
+				}
+				if (I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
+				{
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    TRL_FIX_VRT_RFRSH_COUNT = 0;
-                    TRL_FIX_ACQ_TIME        = time();
-                    spawn SEND_EVT(AcquireFix_);
+					TRL_FIX_VRT_RFRSH_COUNT = 0;
+					TRL_FIX_ACQ_TIME        = time();
+					spawn SEND_EVT(AcquireFix_);
 
-                    printf("****STAT_FIX_ON:Fixation acquired\n");
-                    CURR_STAT = STAT_FIXATE;
-                }
-            }
-            //================= State = STAT_FIXATE===============
-            if (CURR_STAT == STAT_FIXATE)
-            {
-                if (!setupState)                                                                                 // First time showing fixspot on
-                {
-                    SEND_EVNT_ONCE = 1;
-                    setupState     = 1;
-                    spawn SEND_EVT(TrialStart_);
+					printf("****STAT_FIX_ON:Fixation acquired\n");
+					CURR_STAT = STAT_FIXATE;
+				}
+			}
+			//================= State = STAT_FIXATE===============
+			if (CURR_STAT == STAT_FIXATE)
+			{
+				if (!SETUP_STATE)                                                                                 // First time showing fixspot on
+				{
+					SEND_EVNT_ONCE = 1;
+					SETUP_STATE     = 1;
+					spawn SEND_EVT(TrialStart_);
 
-                    // actually TRL_FIX_ACQ_TIME, however the below is practically
-                    //same and it keeps this state independent of previous state
-                    STAT_STRT_T    = time();
-                    STAT_DLTA_T    = 0;
-                    STAT_ALLOWED_T = FIX_HOLD_TIME * TIME_DILATE_FACTOR;
-                    spawn UPD8_MSG();
-                }
-                STAT_DLTA_T = time() - STAT_STRT_T;
-                if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
-                {
-                    setupState = 0;
-                    spawn UPD8_MSG();
+					// actually TRL_FIX_ACQ_TIME, however the below is practically
+					//same and it keeps this state independent of previous state
+					STAT_STRT_T    = time();
+					STAT_DLTA_T    = 0;
+					STAT_ALLOWED_T = FIX_HOLD_TIME * TIME_DILATE_FACTOR;
+					spawn UPD8_MSG();
+				}
+				STAT_DLTA_T = time() - STAT_STRT_T;
+				if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
+				{
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    printf("****STAT_FIXATE:Not fixated******\n");
-                    printf("Send.... event Abort_??\n");
-                    //?send event abort_?
-                    CURR_STAT  = STAT_IDLE;
-                    trlRunning = 0;                                                                                                     // to go to next trial
-                }
-                if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
-                {
-                    setupState = 0;
-                    spawn UPD8_MSG();
+					printf("****STAT_FIXATE:Not fixated******\n");
+					printf("Send.... event Abort_??\n");
+					//?send event abort_?
+					CURR_STAT  = STAT_IDLE;
+					trlRunning = 0;                                                                                                     // to go to next trial
+				}
+				if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
+				{
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    TRL_FIXATED_TIME = time();
-                    printf("Sending event Fixate_\n");
-                    spawn SEND_EVT(Fixate_);
+					TRL_FIXATED_TIME = time();
+					printf("Sending event Fixate_\n");
+					spawn SEND_EVT(Fixate_);
 
-                    printf("****STAT_FIXATE:Fixated\n");
-                    CURR_STAT = STAT_TARG_ON;
-                }
-            }
-            //================= State = STAT_TARG_ON===============
-            if (CURR_STAT == STAT_TARG_ON)
-            {
-                if (!setupState)
-                {
-                    SEND_EVNT_ONCE           = 1;
-                    setupState               = 1;
-                    TARG_VR_COUNT_TIME       = 0;
-                    TRL_TARG_VRT_RFRSH_COUNT = 0;
-                    TRL_ERLY_SACC_TIME       = 0;
-                    TRL_PRE_TARG_ON_TIME     = time();
-                    spawn SEND_EVT(TargetPre_);
+					printf("****STAT_FIXATE:Fixated\n");
+					CURR_STAT = STAT_TARG_ON;
+				}
+			}
+			//================= State = STAT_TARG_ON===============
+			if (CURR_STAT == STAT_TARG_ON)
+			{
+				if (!SETUP_STATE)
+				{
+					SEND_EVNT_ONCE           = 1;
+					SETUP_STATE               = 1;
+					TARG_VR_COUNT_TIME       = 0;
+					TRL_TARG_VRT_RFRSH_COUNT = 0;
+					TRL_ERLY_SACC_TIME       = 0;
+					TRL_PRE_TARG_ON_TIME     = time();
+					spawn SEND_EVT(TargetPre_);
 
-                    STAT_STRT_T    = TRL_PRE_TARG_ON_TIME;
-                    STAT_DLTA_T    = 0;
-                    STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[0] * TIME_DILATE_FACTOR;
-                    spawn UPD8_MSG();
+					STAT_STRT_T    = TRL_PRE_TARG_ON_TIME;
+					STAT_DLTA_T    = 0;
+					STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[0] * TIME_DILATE_FACTOR;
+					spawn UPD8_MSG();
 
-                    dsendf("vp %d\n", PG_TARGET_PD);
-                    spawn GRAF_SHOW_FIX(GRAF_HIDE);
-                    spawn GRAF_SHOW_TARG(GRAF_SHOW);
-                }
-                STAT_DLTA_T = time() - STAT_STRT_T;
-                spawnwait CHECK_TARG_VERT_RFRSH();
+					dsendf("vp %d\n", PG_TARGET_PD);
+					spawn GRAF_SHOW_FIX(GRAF_HIDE);
+					spawn GRAF_SHOW_TARG(GRAF_SHOW);
+				}
+				STAT_DLTA_T = time() - STAT_STRT_T;
+				spawnwait CHECK_TARG_VERT_RFRSH();
 
-                if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
-                {
-                    // Early saccade
-                    setupState = 0;
-                    spawn UPD8_MSG();
+				if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
+				{
+					// Early saccade
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    TRL_ERLY_SACC_TIME = time();
-                    spawn SEND_EVT(EarlySaccade_);
+					TRL_ERLY_SACC_TIME = time();
+					spawn SEND_EVT(EarlySaccade_);
 
-                    printf("****STAT_TARG_ON:Early Saccade\n");
-                    CURR_STAT = STAT_TARG_ACQ;
-                }
-                if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
-                {
-                    // Ready for saccade...
-                    setupState = 0;
-                    spawn UPD8_MSG();
+					printf("****STAT_TARG_ON:Early Saccade\n");
+					CURR_STAT = STAT_TARG_ACQ;
+				}
+				if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
+				{
+					// Ready for saccade...
+					SETUP_STATE = 0;
+					spawn UPD8_MSG();
 
-                    printf("****STAT_TARG_ON:MIN_SACCADE_TIME expired still fixated\n");
-                    CURR_STAT = STAT_TARG_ACQ;
-                }
-            }
-            //================= State = STAT_TARG_ACQ===============
-            if (CURR_STAT == STAT_TARG_ACQ)
-            {
-                // Target not yet acquired
-                if (!setupState)
-                {
-                    SEND_EVNT_ONCE = 1;
-                    setupState     = 1;
-                    // Keep independent of previous state times if any.
-                    STAT_STRT_T    = time();
-                    STAT_DLTA_T    = 0;
-                    STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[1] * TIME_DILATE_FACTOR;
-                    // Extra variable needed for saccade duration
-                    STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION;
-                    spawn UPD8_MSG();
-                }
-                STAT_DLTA_T = time() - STAT_STRT_T;
-                spawnwait CHECK_TARG_VERT_RFRSH();
+					printf("****STAT_TARG_ON:MIN_SACCADE_TIME expired still fixated\n");
+					CURR_STAT = STAT_TARG_ACQ;
+				}
+			}
+			//================= State = STAT_TARG_ACQ===============
+			if (CURR_STAT == STAT_TARG_ACQ)
+			{
+				// Target not yet acquired
+				if (!SETUP_STATE)
+				{
+					SEND_EVNT_ONCE = 1;
+					SETUP_STATE     = 1;
+					// Keep independent of previous state times if any.
+					STAT_STRT_T    = time();
+					STAT_DLTA_T    = 0;
+					STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[1] * TIME_DILATE_FACTOR;
+					// Extra variable needed for saccade duration
+					STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION;
+					spawn UPD8_MSG();
+				}
+				STAT_DLTA_T = time() - STAT_STRT_T;
+				spawnwait CHECK_TARG_VERT_RFRSH();
 
-                if (TRL_ERLY_SACC_TIME)
-                {
-                  // Eye already out of Fix window
-                  spawnwait CHECK_TARG_ACQUIRED();
-                }
-                else
-                {
-                    setupState = 0;
-                    if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
-                    {
-                        // still fixating after max-sacc-time
-                        // check if it is Late target aquire
-                        // or Error no saccade for Go trial
-                        CURR_STAT = STAT_TARG_FIXATE;
-                    }
-                    else if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
-                    {
-                      // Eye out of Fix window
-                      if(SEND_EVNT_ONCE)
-                      {
-                        // do not send event multiple times
-                        SEND_EVNT_ONCE   = 0;
-                        TRL_SACC_TIME = time();
-                        printf("Sending event Saccade_\n");
-                        spawn SEND_EVT(Saccade_);
-                      }
-                      spawnwait CHECK_TARG_ACQUIRED();
-                    }
-                }
-            }
-//================= State = STAT_TARG_FIXATE===============
-            TRL_CUM_TIME = TRL_CUM_TIME + 1;
-            nexttick;
-        } /*while(trlRunning)*/
-        nexttick;
-    }     /*while(1)*/
+				if (TRL_ERLY_SACC_TIME)
+				{
+					// Eye already out of Fix window
+					spawnwait CHECK_TARG_ACQUIRED();
+				}
+				else
+				{
+					SETUP_STATE = 0;
+					if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
+					{
+						// still fixating after max-sacc-time
+						// check if it is Late target aquire
+						// or Error no saccade for Go trial
+						CURR_STAT = STAT_TARG_FIXATE;
+					}
+					else if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
+					{
+						// Eye out of Fix window
+						if(SEND_EVNT_ONCE)
+						{
+							// do not send event multiple times
+							SEND_EVNT_ONCE   = 0;
+							TRL_SACC_TIME = time();
+							printf("Sending event Saccade_\n");
+							spawn SEND_EVT(Saccade_);
+						}
+						spawnwait CHECK_TARG_ACQUIRED();
+					}
+				}
+			}
+			//================= State = STAT_TARG_FIXATE===============
+			TRL_CUM_TIME = TRL_CUM_TIME + 1;
+			nexttick;
+		} /*while(trlRunning)*/
+		nexttick;
+	}     /*while(1)*/
 }         /*IDLE()*/
 
 
 process UPD8_MSG()
 {
-    printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
+	printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
 }
 
 
 // For counting Target vertical refresh for both GO and STOP trials
 process CHECK_TARG_VERT_RFRSH()
 {
-    if (PD_TRIG_L)
-    {
-        spawn INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
+	if (PD_TRIG_L)
+	{
+		spawn INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
 
-        if (SEND_EVNT_ONCE)
-        {
-            // do not send event multiple times
-            SEND_EVNT_ONCE   = 0;
-            TRL_TARG_ON_TIME = time();
-            printf("Sending event Target_\n");
-            spawn SEND_EVT(Target_);
-            spawn SEND_EVT(FixSpotOff_);
-        }
-    }
+		if (SEND_EVNT_ONCE)
+		{
+			// do not send event multiple times
+			SEND_EVNT_ONCE   = 0;
+			TRL_TARG_ON_TIME = time();
+			printf("Sending event Target_\n");
+			spawn SEND_EVT(Target_);
+			spawn SEND_EVT(FixSpotOff_);
+		}
+	}
 }
 
 // Do not double count same trigger
 process INCREMENT_TRL_TARG_VRT_RFRSH_COUNT()
 {
-    declare int trigWidth = 3;
+	declare int trigWidth = 3;
 
-    if (TRL_TARG_VRT_RFRSH_COUNT == 0)
-    {
-        TRL_TARG_VRT_RFRSH_COUNT = 1;
-        spawn UPD8_MSG();
+	if (TRL_TARG_VRT_RFRSH_COUNT == 0)
+	{
+		TRL_TARG_VRT_RFRSH_COUNT = 1;
+		spawn UPD8_MSG();
 
-        printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n", TRL_TARG_VRT_RFRSH_COUNT);
-    }
-    else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
-    {
-        TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
-        spawn UPD8_MSG();
+		printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n", TRL_TARG_VRT_RFRSH_COUNT);
+	}
+	else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
+	{
+		TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
+		spawn UPD8_MSG();
 
-        printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n", TRL_TARG_VRT_RFRSH_COUNT);
-    }
-    TARG_VR_COUNT_TIME = STAT_DLTA_T;
+		printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n", TRL_TARG_VRT_RFRSH_COUNT);
+	}
+	TARG_VR_COUNT_TIME = STAT_DLTA_T;
 }
 
 process CHECK_TARG_ACQUIRED()
 {
-  if (I_TARG && STAT_DLTA_T <= STAT_I_MOVE_DURATION)
-  {
-      TRL_TARG_ACQ_TIME = time();
-      spawn SEND_EVT(AcquireTarget_);
+	if (I_TARG && STAT_DLTA_T <= STAT_I_MOVE_DURATION)
+	{
+		TRL_TARG_ACQ_TIME = time();
+		spawn SEND_EVT(AcquireTarget_);
 
-      CURR_STAT  = STAT_TARG_FIXATE;
-      setupState = 0;
-  }
-  else if (I_TARG && STAT_DLTA_T > STAT_I_MOVE_DURATION)
-  {
-      TRL_TARG_ACQ_SLOW_TIME = time();
-      spawn SEND_EVT(AcquireTargetSlow_);
+		CURR_STAT  = STAT_TARG_FIXATE;
+		SETUP_STATE = 0;
+	}
+	else if (I_TARG && STAT_DLTA_T > STAT_I_MOVE_DURATION)
+	{
+		TRL_TARG_ACQ_SLOW_TIME = time();
+		spawn SEND_EVT(AcquireTargetSlow_);
 
-      CURR_STAT  = STAT_TARG_FIXATE;
-      setupState = 0;
-  }
-  else if (!I_TARG && STAT_DLTA_T > STAT_I_MOVE_DURATION)
-  {
-      // check if it is Late target aquire or really break fix
-      CURR_STAT  = STAT_TARG_FIXATE;
-      setupState = 0;
-  }
+		CURR_STAT  = STAT_TARG_FIXATE;
+		SETUP_STATE = 0;
+	}
+	else if (!I_TARG && STAT_DLTA_T > STAT_I_MOVE_DURATION)
+	{
+		// check if it is Late target aquire or really break fix
+		CURR_STAT  = STAT_TARG_FIXATE;
+		SETUP_STATE = 0;
+	}
 }
