@@ -20,12 +20,17 @@ declare IDLE();
 
 declare UPD8_MSG();
 declare INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
-declare CHECK_TARG_ACQUIRED();
+declare CHECK_TARG_ACQUIRED(int saccBeginOffset);
 declare CHECK_TARG_VERT_RFRSH();
 
 declare int TARG_VR_COUNT_TIME;
 // A flag for sending event only 1 time Ex. FixSpotOn (based on trigger)
 declare int SEND_EVNT_ONCE;
+// increment trial target on duration flag
+// =1 first time PD_TRIG_L is detected for Target on page
+// =0 first rime PD_TRIG_R is detected for Stop signal page
+// =0 when blank page for GO trial?
+declare int IS_TARG_ON_FLAG;
 // A temporary state acitivity
 declare int SETUP_STATE;
 declare int TEST = 100;
@@ -257,10 +262,11 @@ process IDLE() enabled
 					SETUP_STATE               = 1;
 					TARG_VR_COUNT_TIME       = 0;
 					TRL_TARG_VRT_RFRSH_COUNT = 0;
+					TRL_TARG_ON_DURATION = 0;
+					IS_TARG_ON_FLAG = 0;
 					TRL_ERLY_SACC_TIME       = 0;
 					TRL_PRE_TARG_ON_TIME     = time();
 					spawn SEND_EVT(TargetPre_);
-
 					STAT_STRT_T    = TRL_PRE_TARG_ON_TIME;
 					STAT_DLTA_T    = 0;
 					STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[0] * TIME_DILATE_FACTOR;
@@ -301,27 +307,31 @@ process IDLE() enabled
 				// Target not yet acquired
 				if (!SETUP_STATE)
 				{
-					SEND_EVNT_ONCE = 1;
+					SEND_EVNT_ONCE = 0;
 					SETUP_STATE     = 1;
 					// Keep independent of previous state times if any.
 					STAT_STRT_T    = time();
 					STAT_DLTA_T    = 0;
-					STAT_ALLOWED_T = MIN_MAX_SACCADE_TIME[1] * TIME_DILATE_FACTOR;
+					//MIN_SACC_TIME accounted for in TARG_ON
+					// now reamining is the difference between MIN and MAX sacc time
+					STAT_ALLOWED_T = (MIN_MAX_SACCADE_TIME[1] -MIN_MAX_SACCADE_TIME[0])* TIME_DILATE_FACTOR;
 					// Extra variable needed for saccade duration
 					STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION;
 					spawn UPD8_MSG();
 				}
 				STAT_DLTA_T = time() - STAT_STRT_T;
 				spawnwait CHECK_TARG_VERT_RFRSH();
-
 				if (TRL_ERLY_SACC_TIME)
-				{
-					// Eye already out of Fix window
-					spawnwait CHECK_TARG_ACQUIRED();
+				{	
+					if(STAT_DLTA_T > 1)
+					{
+					 // Wait a cycle before processing
+					 // Eye already out of Fix window
+					 spawnwait CHECK_TARG_ACQUIRED(1);
+					}
 				}
 				else
-				{
-					SETUP_STATE = 0;
+				{					
 					if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 					{
 						// still fixating after max-sacc-time
@@ -340,11 +350,23 @@ process IDLE() enabled
 							printf("Sending event Saccade_\n");
 							spawn SEND_EVT(Saccade_);
 						}
-						spawnwait CHECK_TARG_ACQUIRED();
+						spawnwait CHECK_TARG_ACQUIRED(TRL_SACC_TIME-STAT_STRT_T);
 					}
 				}
 			}
 			//================= State = STAT_TARG_FIXATE===============
+			if (CURR_STAT == STAT_TARG_ACQ)
+			{
+				nexttick 2000;
+				trlRunning = 0;
+
+			}
+			//================= State = STAT_TARG_FIXATE===============
+				if(IS_TARG_ON_FLAG)
+			{
+				// if target is on update target on duration every process cycle
+				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
+			}
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;
 			nexttick;
 		} /*while(trlRunning)*/
@@ -364,7 +386,7 @@ process CHECK_TARG_VERT_RFRSH()
 {
 	if (PD_TRIG_L)
 	{
-		spawn INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
+		spawnwait INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
 
 		if (SEND_EVNT_ONCE)
 		{
@@ -385,42 +407,46 @@ process INCREMENT_TRL_TARG_VRT_RFRSH_COUNT()
 
 	if (TRL_TARG_VRT_RFRSH_COUNT == 0)
 	{
+		IS_TARG_ON_FLAG = 1;
 		TRL_TARG_VRT_RFRSH_COUNT = 1;
 		spawn UPD8_MSG();
 
-		printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n", TRL_TARG_VRT_RFRSH_COUNT);
+		printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
 	}
 	else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
 	{
 		TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
 		spawn UPD8_MSG();
 
-		printf("TRL_TARG_VRT_RFRSH_COUNT [%d]\n", TRL_TARG_VRT_RFRSH_COUNT);
+		printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
 	}
 	TARG_VR_COUNT_TIME = STAT_DLTA_T;
 }
 
-process CHECK_TARG_ACQUIRED()
+process CHECK_TARG_ACQUIRED(int sacBeginTime)
 {
-	if (I_TARG && STAT_DLTA_T <= STAT_I_MOVE_DURATION)
+	// EarlySaccade: sacBeginTime = 0 
+	// Normal saccade: sacBeginTime = STAT_DLTA_T when the saccade is made
+	if (I_TARG && (STAT_DLTA_T+sacBeginTime) <= STAT_I_MOVE_DURATION )
 	{
 		TRL_TARG_ACQ_TIME = time();
 		spawn SEND_EVT(AcquireTarget_);
-
+        printf("		*******AcquireTarget_(before MAX_SACC_DURATION)\n");
 		CURR_STAT  = STAT_TARG_FIXATE;
 		SETUP_STATE = 0;
 	}
-	else if (I_TARG && STAT_DLTA_T > STAT_I_MOVE_DURATION)
+	else if (I_TARG && (STAT_DLTA_T+sacBeginTime) > STAT_I_MOVE_DURATION)
 	{
 		TRL_TARG_ACQ_SLOW_TIME = time();
 		spawn SEND_EVT(AcquireTargetSlow_);
-
+        printf("		*******AcquireTargetSlow_(after MAX_SACC_DURATION)\n");
 		CURR_STAT  = STAT_TARG_FIXATE;
 		SETUP_STATE = 0;
 	}
-	else if (!I_TARG && STAT_DLTA_T > STAT_I_MOVE_DURATION)
+	else if (!I_TARG && (STAT_DLTA_T+sacBeginTime) > STAT_I_MOVE_DURATION)
 	{
 		// check if it is Late target aquire or really break fix
+        printf("		*******AcquireTarget - NO (after MAX_SACC_DURATION)\n");
 		CURR_STAT  = STAT_TARG_FIXATE;
 		SETUP_STATE = 0;
 	}
