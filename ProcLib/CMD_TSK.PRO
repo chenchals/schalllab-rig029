@@ -172,13 +172,13 @@ process IDLE() enabled
                     spawn UPD8_MSG();
 
                     TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-                    printf("TRL_FIX_VRT_RFRSH_COUNT [%d]\n", TRL_FIX_VRT_RFRSH_COUNT);
+                    printf("****STAT_FIX_ON:TRL_FIX_VRT_RFRSH_COUNT [%d]\n", TRL_FIX_VRT_RFRSH_COUNT);
                     if (SEND_EVNT_ONCE)
                     {
                         // do not send event multiple times
                         SEND_EVNT_ONCE  = 0;
                         TRL_FIX_ON_TIME = time();
-                        printf("Sending event FixSpotOn_\n");
+                        printf("****STAT_FIX_ON:Sending event FixSpotOn_\n");
                         spawn SEND_EVT(FixSpotOn_);
                     }
                     dsendf("vp %d\n", PG_FIXATION);
@@ -188,7 +188,7 @@ process IDLE() enabled
                     setupState = 0;
                     spawn UPD8_MSG();
 
-                    printf("****Fixation not acquired\n");
+                    printf("****STAT_FIX_ON:Fixation not acquired\n");
                     //?send event abort_?
                     CURR_STAT  = STAT_IDLE;
                     trlRunning = 0;                                                                                                     // to go to next trial
@@ -202,7 +202,7 @@ process IDLE() enabled
                     TRL_FIX_ACQ_TIME        = time();
                     spawn SEND_EVT(AcquireFix_);
 
-                    printf("****Fixation acquired\n");
+                    printf("****STAT_FIX_ON:Fixation acquired\n");
                     CURR_STAT = STAT_FIXATE;
                 }
             }
@@ -228,7 +228,7 @@ process IDLE() enabled
                     setupState = 0;
                     spawn UPD8_MSG();
 
-                    printf("****Not fixated******\n");
+                    printf("****STAT_FIXATE:Not fixated******\n");
                     printf("Send.... event Abort_??\n");
                     //?send event abort_?
                     CURR_STAT  = STAT_IDLE;
@@ -243,7 +243,7 @@ process IDLE() enabled
                     printf("Sending event Fixate_\n");
                     spawn SEND_EVT(Fixate_);
 
-                    printf("****Fixated\n");
+                    printf("****STAT_FIXATE:Fixated\n");
                     CURR_STAT = STAT_TARG_ON;
                 }
             }
@@ -281,7 +281,7 @@ process IDLE() enabled
                     TRL_ERLY_SACC_TIME = time();
                     spawn SEND_EVT(EarlySaccade_);
 
-                    printf("****Early Saccade\n");
+                    printf("****STAT_TARG_ON:Early Saccade\n");
                     CURR_STAT = STAT_TARG_ACQ;
                 }
                 if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
@@ -290,7 +290,7 @@ process IDLE() enabled
                     setupState = 0;
                     spawn UPD8_MSG();
 
-                    printf("****Fixated ready for saccade...\n");
+                    printf("****STAT_TARG_ON:MIN_SACCADE_TIME expired still fixated\n");
                     CURR_STAT = STAT_TARG_ACQ;
                 }
             }
