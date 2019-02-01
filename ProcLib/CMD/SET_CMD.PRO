@@ -57,12 +57,13 @@ declare int TRL_FIXATED_TIME;
 // when command sent to vdosync
 declare int TRL_PRE_TARG_ON_TIME;
 // Actively count how long target was on
-declare INT TRL_TARG_ON_DURATION;
+declare int TRL_TARG_ON_DURATION;
 // when PD trigger occurs
 declare int TRL_TARG_ON_TIME;
 declare int TRL_ERLY_SACC_TIME;
 declare int TRL_SACC_TIME;
 declare int TRL_LATE_SACC_TIME;
+declare int TRL_SACC_DURATION;
 
 declare int TRL_TARG_ACQ_TIME;
 declare int TRL_TARG_ACQ_SLOW_TIME;

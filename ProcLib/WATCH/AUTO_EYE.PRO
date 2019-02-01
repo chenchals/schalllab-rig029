@@ -19,6 +19,7 @@ declare AUTO_EYE_TARG_ON();
 declare AUTO_EYE_TARG_ACQ();
 
 // Utils for eye pos
+declare AUTO_EYE_POS_ACQ_TARG();
 declare AUTO_EYE_POS_MARCH();
 declare AUTO_EYE_POS_RAND();
 declare AUTO_EYE_POS_FIX();
@@ -29,6 +30,7 @@ declare float AUTO_EYE_A;
 declare float AUTO_EYE_X_DEG;
 declare float AUTO_EYE_Y_DEG;
 declare int AUTO_EYE_TICS;
+declare int AUTO_TRIG_SACC;
 
 //======Flags for states======
 //0= no early sacc
@@ -154,23 +156,47 @@ process AUTO_EYE_TARG_ON()
 // State TARG_ACQ
 process AUTO_EYE_TARG_ACQ()
 {		
-	// 0=stay in FIX (for late saccade)
-	// 1=goto Target within SACC_DURATION
-	// 2=goto Target After SACC_DURATION
-	// 3=goto random loc out of FIX WIN_W
-	//declare int DO_TARG_ACQ = 1;
 
-	// STAT_ALLOWED_T = MAX_SACC_TIME-MIN_SAC_TIME
-	// STAT_I_MOVE_DURATION = MAX_SACC_DURATION
-	// Case 1: Early saccade:
-	if(DO_SACC_EARLY)
+	if(DO_SACC_EARLY)// has till max_sacc_duration
 	{
 		//DO_TARG_ACQ cannot be zero as eye in flight
-		if(DO_TARG_ACQ==1 )
+		spawnwait AUTO_EYE_POS_ACQ_TARG();
+
+	}
+	else // has till max_SAC_TIME
+	{
+		if(STAT_DLTA_T < round((STAT_ALLOWED_T)*0.7))
+		{
+			if (DO_TARG_ACQ ==2)
+			{
+				spawnwait AUTO_EYE_POS_FIX_WIDE();
+			}
+			else if(DO_TARG_ACQ ==1)
+			{
+				spawnwait AUTO_EYE_POS_FIX();
+			}				
+		}		
+		else
+		{
+			
+			//saccade
+			spawnwait AUTO_EYE_POS_ACQ_TARG();
+		}
+	}	
+}
+//Util functions
+
+
+process AUTO_EYE_POS_ACQ_TARG()
+{
+		if(!DO_TARG_ACQ && !DO_SACC_EARLY )
+		{
+			spawnwait AUTO_EYE_POS_FIX();
+		}
+		else if(DO_TARG_ACQ==1 )
 		{
 			if (STAT_DLTA_T < random(round(STAT_I_MOVE_DURATION*0.8))+5)
 			{
-				// sometimes the pos maybe in targ window
 				spawnwait AUTO_EYE_POS_FIX_WIDE();
 			}
 			else 
@@ -180,26 +206,20 @@ process AUTO_EYE_TARG_ACQ()
 		}
 		else if (DO_TARG_ACQ == 2 )
 		{
-			if (STAT_DLTA_T <= (STAT_I_MOVE_DURATION + 5 + random(10) ) )
+			if (STAT_DLTA_T < (STAT_I_MOVE_DURATION + 5 + random(10) ) )
 			{
-				// sometimes the pos maybe in targ window
 				spawnwait AUTO_EYE_POS_FIX_WIDE();
 			}
 			else
 			{
 				spawnwait AUTO_EYE_POS_TARG();
 			}		
-		}else // there is no 0 hereif (DO_ACQ_TARG==3)
+		}
+		else if (DO_TARG_ACQ == 3 )
 		{
 			spawnwait AUTO_EYE_POS_FIX_WIDE();  
 		}
-	}
-	else // has till max_SAC_TIME
-	{
-		printf("Auto-eye normal saccade Not yet\n");
-	}	
 }
-//Util functions
 
 process AUTO_EYE_POS_MARCH()
 {
@@ -263,6 +283,7 @@ process AUTO_EYE_POS_FIX()
 
 process AUTO_EYE_POS_FIX_WIDE()
 {
+	// sometimes the pos maybe in targ window
 	declare float randX;
 	declare float randY;	
 	randX = ((FIX_WIN_LARGE[LEFT] + FIX_WIN_LARGE[RIGHT])/2.0) + 3.0 + random(10)/10.0;

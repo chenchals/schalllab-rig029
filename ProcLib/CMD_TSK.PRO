@@ -20,8 +20,10 @@ declare IDLE();
 
 declare UPD8_MSG();
 declare INCREMENT_TRL_TARG_VRT_RFRSH_COUNT();
-declare CHECK_TARG_ACQUIRED(int saccBeginOffset);
+declare CHECK_TARG_ACQUIRED();
 declare CHECK_TARG_VERT_RFRSH();
+
+declare int TRL_RUNNING;
 
 declare int TARG_VR_COUNT_TIME;
 // A flag for sending event only 1 time Ex. FixSpotOn (based on trigger)
@@ -39,7 +41,6 @@ declare int TEST = 100;
 process IDLE() enabled
 {
 	declare int tempTrlNumber;
-	declare int trlRunning;
 
 	spawn CLEAR_VDO();
 
@@ -88,7 +89,7 @@ process IDLE() enabled
 		SETUP_STATE              = 0;
 		TRL_CUM_TIME            = 0;
 		TRL_FIX_VRT_RFRSH_COUNT = 0;
-		trlRunning              = 1;
+		TRL_RUNNING              = 1;
 		printf("Trial running....\n");
 		spawn SEND_EVT(TaskStart_);
 		spawn SEND_EVT(CmanHeader_);
@@ -97,7 +98,7 @@ process IDLE() enabled
 		dsendf("vp %d\n", PG_BLANK);
 		CURR_STAT   = STAT_GET_READY;
 		STAT_DLTA_T = 0;
-		while (trlRunning)
+		while (TRL_RUNNING)
 		{
 			while (CURR_STAT == STAT_TEST)
 			{
@@ -116,7 +117,7 @@ process IDLE() enabled
 				//nexttick 5000;
 				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
-				trlRunning = 0;
+				TRL_RUNNING = 0;
 				nexttick 10000;
 			}
 
@@ -197,7 +198,7 @@ process IDLE() enabled
 					printf("****STAT_FIX_ON:Fixation not acquired\n");
 					//?send event abort_?
 					CURR_STAT  = STAT_IDLE;
-					trlRunning = 0;                                                                                                     // to go to next trial
+					TRL_RUNNING = 0;                                                                                                     // to go to next trial
 				}
 				if (I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
 				{
@@ -238,7 +239,7 @@ process IDLE() enabled
 					printf("Send.... event Abort_??\n");
 					//?send event abort_?
 					CURR_STAT  = STAT_IDLE;
-					trlRunning = 0;                                                                                                     // to go to next trial
+					TRL_RUNNING = 0;                                                                                                     // to go to next trial
 				}
 				if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
 				{
@@ -312,6 +313,7 @@ process IDLE() enabled
 					// Keep independent of previous state times if any.
 					STAT_STRT_T    = time();
 					STAT_DLTA_T    = 0;
+					TRL_SACC_DURATION = 0;
 					//MIN_SACC_TIME accounted for in TARG_ON
 					// now reamining is the difference between MIN and MAX sacc time
 					STAT_ALLOWED_T = (MIN_MAX_SACCADE_TIME[1] -MIN_MAX_SACCADE_TIME[0])* TIME_DILATE_FACTOR;
@@ -323,8 +325,8 @@ process IDLE() enabled
 				spawnwait CHECK_TARG_VERT_RFRSH();
 				if (TRL_ERLY_SACC_TIME)
 				{	
-						// Eye already out of Fix window
-						spawnwait CHECK_TARG_ACQUIRED(0);
+					// Eye already out of Fix window
+					spawnwait CHECK_TARG_ACQUIRED();
 				}
 				else
 				{					
@@ -343,10 +345,11 @@ process IDLE() enabled
 							// do not send event multiple times
 							SEND_EVNT_ONCE   = 0;
 							TRL_SACC_TIME = time();
+							TRL_SACC_DURATION = 0;
 							printf("Sending event Saccade_\n");
 							spawn SEND_EVT(Saccade_);
 						}
-						spawnwait CHECK_TARG_ACQUIRED(TRL_SACC_TIME-STAT_STRT_T);
+						spawnwait CHECK_TARG_ACQUIRED();
 					}
 				}
 			}
@@ -354,7 +357,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_TARG_FIXATE)
 			{
 				nexttick 2000;
-				trlRunning = 0;
+				TRL_RUNNING = 0;
 
 			}
 			//================= State = STAT_TARG_FIXATE===============
@@ -365,7 +368,7 @@ process IDLE() enabled
 			}
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;
 			nexttick;
-		} /*while(trlRunning)*/
+		} /*while(TRL_RUNNING)*/
 		nexttick;
 	}     /*while(1)*/
 }         /*IDLE()*/
@@ -419,41 +422,49 @@ process INCREMENT_TRL_TARG_VRT_RFRSH_COUNT()
 	TARG_VR_COUNT_TIME = STAT_DLTA_T;
 }
 
-process CHECK_TARG_ACQUIRED(int sacBeginTime)
+process CHECK_TARG_ACQUIRED()
 {
+	// EYE in flight out of FIX_WIN
 	// EarlySaccade: sacBeginTime = 0 
 	// Normal saccade: sacBeginTime = STAT_DLTA_T when the saccade is made
-	if(!I_FIX && (STAT_DLTA_T+sacBeginTime) < STAT_I_MOVE_DURATION)
+	// increment everytime checked (once per cycle)
+	TRL_SACC_DURATION = TRL_SACC_DURATION + 1;
+	if(I_TARG)
 	{
-		if(I_TARG)
+		if( TRL_SACC_DURATION < STAT_I_MOVE_DURATION)
 		{
+
 			TRL_TARG_ACQ_TIME = time();
+			TRL_DECIDE_TIME = time();//?
 			spawn SEND_EVT(AcquireTarget_);
-			printf("		*******AcquireTarget_(before MAX_SACC_DURATION) [%d]\n", (STAT_DLTA_T-sacBeginTime));
+			spawn SEND_EVT(Decide_);
+			printf("		CHECK_TARG_ACQUIRED:AcquireTarget_(before MAX_SACC_DURATION) [%d]\n", TRL_SACC_DURATION);
 			CURR_STAT  = STAT_TARG_FIXATE;
 			SETUP_STATE = 0;			
 		}
+		else if(TRL_SACC_DURATION >= STAT_I_MOVE_DURATION)
+		{
+
+			TRL_TARG_ACQ_SLOW_TIME = time();
+			TRL_DECIDE_TIME = time();//?
+			spawn SEND_EVT(AcquireTargetSlow_);
+			spawn SEND_EVT(Decide_);
+			printf("		CHECK_TARG_ACQUIRED:AcquireTargetSlow_(=after MAX_SACC_DURATION) [%d]\n", TRL_SACC_DURATION);
+			CURR_STAT  = STAT_TARG_FIXATE;
+			SETUP_STATE = 0;			
+		}	
 		// target wide anti etc here....
 	}
-	else if((STAT_DLTA_T+sacBeginTime) >= STAT_I_MOVE_DURATION)
+	else if(STAT_DLTA_T >= STAT_ALLOWED_T)
 	{
-		
-		if(I_FIX)
+		if(!I_TARG && !I_FIX)
 		{
-			// check if it is Late target aquire or really break fix
-			printf("		*******AcquireTarget - Still in FIX (after MAX_SACC_DURATION)\n");
-			CURR_STAT  = STAT_TARG_FIXATE;
+			// Error saccade?
+			printf("		CHECK_TARG_ACQUIRED:Eye elsewhere. ErrorSaccade?????..\n");
+			CURR_STAT  = STAT_IDLE;
 			SETUP_STATE = 0;
+			TRL_RUNNING = 0;			
 		}
-		else if(I_TARG)
-		{
-			TRL_TARG_ACQ_SLOW_TIME = time();
-			spawn SEND_EVT(AcquireTargetSlow_);
-			printf("		*******AcquireTargetSlow_(=after MAX_SACC_DURATION) [%d]\n", (STAT_DLTA_T-sacBeginTime));
-			CURR_STAT  = STAT_TARG_FIXATE;
-			SETUP_STATE = 0;			
-		}		
-		
 	}
 
 }
