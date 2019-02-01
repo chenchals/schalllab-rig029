@@ -323,12 +323,8 @@ process IDLE() enabled
 				spawnwait CHECK_TARG_VERT_RFRSH();
 				if (TRL_ERLY_SACC_TIME)
 				{	
-					if(STAT_DLTA_T > 1)
-					{
-					 // Wait a cycle before processing
-					 // Eye already out of Fix window
-					 spawnwait CHECK_TARG_ACQUIRED(1);
-					}
+						// Eye already out of Fix window
+						spawnwait CHECK_TARG_ACQUIRED(0);
 				}
 				else
 				{					
@@ -355,14 +351,14 @@ process IDLE() enabled
 				}
 			}
 			//================= State = STAT_TARG_FIXATE===============
-			if (CURR_STAT == STAT_TARG_ACQ)
+			if (CURR_STAT == STAT_TARG_FIXATE)
 			{
 				nexttick 2000;
 				trlRunning = 0;
 
 			}
 			//================= State = STAT_TARG_FIXATE===============
-				if(IS_TARG_ON_FLAG)
+			if(IS_TARG_ON_FLAG)
 			{
 				// if target is on update target on duration every process cycle
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
@@ -427,27 +423,37 @@ process CHECK_TARG_ACQUIRED(int sacBeginTime)
 {
 	// EarlySaccade: sacBeginTime = 0 
 	// Normal saccade: sacBeginTime = STAT_DLTA_T when the saccade is made
-	if (I_TARG && (STAT_DLTA_T+sacBeginTime) <= STAT_I_MOVE_DURATION )
+	if(!I_FIX && (STAT_DLTA_T+sacBeginTime) < STAT_I_MOVE_DURATION)
 	{
-		TRL_TARG_ACQ_TIME = time();
-		spawn SEND_EVT(AcquireTarget_);
-        printf("		*******AcquireTarget_(before MAX_SACC_DURATION)\n");
-		CURR_STAT  = STAT_TARG_FIXATE;
-		SETUP_STATE = 0;
+		if(I_TARG)
+		{
+			TRL_TARG_ACQ_TIME = time();
+			spawn SEND_EVT(AcquireTarget_);
+			printf("		*******AcquireTarget_(before MAX_SACC_DURATION) [%d]\n", (STAT_DLTA_T-sacBeginTime));
+			CURR_STAT  = STAT_TARG_FIXATE;
+			SETUP_STATE = 0;			
+		}
+		// target wide anti etc here....
 	}
-	else if (I_TARG && (STAT_DLTA_T+sacBeginTime) > STAT_I_MOVE_DURATION)
+	else if((STAT_DLTA_T+sacBeginTime) >= STAT_I_MOVE_DURATION)
 	{
-		TRL_TARG_ACQ_SLOW_TIME = time();
-		spawn SEND_EVT(AcquireTargetSlow_);
-        printf("		*******AcquireTargetSlow_(after MAX_SACC_DURATION)\n");
-		CURR_STAT  = STAT_TARG_FIXATE;
-		SETUP_STATE = 0;
+		
+		if(I_FIX)
+		{
+			// check if it is Late target aquire or really break fix
+			printf("		*******AcquireTarget - Still in FIX (after MAX_SACC_DURATION)\n");
+			CURR_STAT  = STAT_TARG_FIXATE;
+			SETUP_STATE = 0;
+		}
+		else if(I_TARG)
+		{
+			TRL_TARG_ACQ_SLOW_TIME = time();
+			spawn SEND_EVT(AcquireTargetSlow_);
+			printf("		*******AcquireTargetSlow_(=after MAX_SACC_DURATION) [%d]\n", (STAT_DLTA_T-sacBeginTime));
+			CURR_STAT  = STAT_TARG_FIXATE;
+			SETUP_STATE = 0;			
+		}		
+		
 	}
-	else if (!I_TARG && (STAT_DLTA_T+sacBeginTime) > STAT_I_MOVE_DURATION)
-	{
-		// check if it is Late target aquire or really break fix
-        printf("		*******AcquireTarget - NO (after MAX_SACC_DURATION)\n");
-		CURR_STAT  = STAT_TARG_FIXATE;
-		SETUP_STATE = 0;
-	}
+
 }
