@@ -196,7 +196,7 @@ process IDLE() enabled
                     spawn UPD8_MSG();
                     printf("****STAT_FIX_ON:Fixation not acquired\n");
                     //?send event abort_?
-                    CURR_STAT   = STAT_IDLE;
+                    CURR_STAT   = STAT_TONE;
                     TRL_RUNNING = 0;                                                                                                                         // to go to next trial
                 }
                 if (I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -237,7 +237,7 @@ process IDLE() enabled
                     printf("****STAT_FIXATE:Broke fixation******\n");
                     printf("*****************next trial****************\n");
                     //?send event abort_?
-                    CURR_STAT   = STAT_IDLE;
+                    CURR_STAT   = STAT_TONE;
                     TRL_RUNNING = 0;                                                                                                                         // to go to next trial
                 }
                 if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
@@ -319,7 +319,7 @@ process IDLE() enabled
                     // now reamining is the difference between MIN and MAX sacc time
                     STAT_ALLOWED_T = (MIN_MAX_SACCADE_TIME[1] - MIN_MAX_SACCADE_TIME[0]) * TIME_DILATE_FACTOR;
                     // Extra variable needed for saccade duration
-                    STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION;
+                    STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION * TIME_DILATE_FACTOR;
                     spawn UPD8_MSG();
                 }
                 
@@ -337,6 +337,8 @@ process IDLE() enabled
                         // still fixating after max-sacc-time
                         // check if it is Late target aquire
                         // or Error no saccade for Go trial
+						printf("****STAT_TARG_ACQ: Still fixating after MAX_SACCADE_TIME\n");
+						spawn UPD8_MSG();
                         CURR_STAT = STAT_TARG_FIXATE;
                     }
                     else if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -346,10 +348,11 @@ process IDLE() enabled
                         {
                             // do not send event multiple times
                             SEND_EVNT_ONCE    = 0;
-														I_IN_FLIGHT = 1;
+							I_IN_FLIGHT = 1;
                             TRL_SACC_TIME     = time();
                             TRL_SACC_DURATION = 0;
                             printf("Sending event Saccade_\n");
+							printf("****STAT_TARG_ACQ: Saccade occurred within MAX_SACCADE_TIME\n");
                             spawn SEND_EVT(Saccade_);
                         }
                         spawnwait CHECK_TARG_ACQUIRED();
@@ -362,10 +365,10 @@ process IDLE() enabled
                 // Target acquired, but not fixated yet or eye still in FixWin
                 if (!SETUP_STATE)
                 {
-									 if(I_FIX)
-									 {
-										 I_IN_FLIGHT = 0;
-									 }
+					if(I_FIX)
+					{
+						I_IN_FLIGHT = 0;
+					}
                     SEND_EVNT_ONCE = 0;
                     SETUP_STATE    = 1;
                     // Keep independent of previous state times if any.
@@ -383,18 +386,22 @@ process IDLE() enabled
 
                 if (!I_IN_FLIGHT && STAT_DLTA_T < STAT_ALLOWED_T)
                 {
-									if(!I_FIX)
-									{
-										I_IN_FLIGHT = 1;
-										TRL_LATE_SACC_TIME = time();
-										spawn SEND_EVT(LateSaccade_);
-										spawnwait CHECK_TARG_ACQUIRED();
-									}
+					if(!I_FIX)
+					{
+						I_IN_FLIGHT = 1;
+						TRL_LATE_SACC_TIME = time();
+						spawn SEND_EVT(LateSaccade_);
+						spawnwait CHECK_TARG_ACQUIRED();
+						printf("****STAT_TARG_FIXATE: Late Saccade - after MAX_SACCADE_TIME\n");
+						spawn UPD8_MSG();
+					}
                 }
                 else if (!I_TARG && STAT_DLTA_T < STAT_ALLOWED_T)
                 {
                     TRL_TARG_BREAK_FIX_TIME = time();
                     spawn SEND_EVT(TargetBreakFix_);
+					printf("****STAT_TARG_FIXATE: Broke Target Fixation\n");
+					spawn UPD8_MSG();
 
                     CURR_STAT   = STAT_TONE;
                     SETUP_STATE = 0;
@@ -406,6 +413,8 @@ process IDLE() enabled
                         // Successful target fixation.. for GO_TRIAL
                         TRL_TARG_FIXATED_TIME = time();
                         spawn SEND_EVT(Target_);
+						printf("****STAT_TARG_FIXATE:Target Fixated\n");
+						spawn UPD8_MSG();
 
                         CURR_STAT   = STAT_TONE;
                         SETUP_STATE = 0;
@@ -418,18 +427,21 @@ process IDLE() enabled
                         // the trial was successfully cancelled?
                         TRL_NO_SACCADE_TIME = time();
                         spawn SEND_EVT(GoError_);                        //??? Check
+						printf("****STAT_TARG_FIXATE:No Saccade - Eye in Fix Window\n");
+						spawn UPD8_MSG();
 
                         CURR_STAT   = STAT_TONE;
                         SETUP_STATE = 0;
                     }
                 }
             }
-						//================= State = STAT_TONE===============
-						if(CURR_STAT == STAT_TONE)
-						{
-							nexttick 2000;
-							TRL_RUNNING = 0;
-						}
+			//================= State = STAT_TONE===============
+			if(CURR_STAT == STAT_TONE)
+			{
+				printf("****STAT_TONE:..... NOT YET... NOT YET....\n");
+				nexttick 5000;
+				TRL_RUNNING = 0;
+			}
 						//================= State = STAT_TONE===============
             if (IS_TARG_ON_FLAG)
             {
