@@ -33,6 +33,7 @@ declare int SEND_EVNT_ONCE;
 // =0 first rime PD_TRIG_R is detected for Stop signal page
 // =0 when blank page for GO trial?
 declare int IS_TARG_ON_FLAG;
+declare int I_IN_FLIGHT;
 // A temporary state acitivity
 declare int SETUP_STATE;
 declare int TEST = 100;
@@ -138,7 +139,6 @@ process IDLE() enabled
                     spawn UPD8_MSG();
                     spawn GRAF_SHOW_FIX_WIN();
                 }
-                STAT_DLTA_T = time() - STAT_STRT_T;
                 if (I_FIX || I_FIX_WIDE)
                 {
                     STAT_DLTA_T = 0;
@@ -173,7 +173,7 @@ process IDLE() enabled
                     dsendf("vp %d\n", PG_FIXATION_PD);
                     spawn GRAF_SHOW_FIX(GRAF_SHOW);
                 }
-                STAT_DLTA_T = time() - STAT_STRT_T;
+                
                 if (PD_TRIG_L)
                 {
                     spawn UPD8_MSG();
@@ -229,7 +229,7 @@ process IDLE() enabled
                     STAT_ALLOWED_T = FIX_HOLD_TIME * TIME_DILATE_FACTOR;
                     spawn UPD8_MSG();
                 }
-                STAT_DLTA_T = time() - STAT_STRT_T;
+                
                 if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
                 {
                     SETUP_STATE = 0;
@@ -279,7 +279,7 @@ process IDLE() enabled
                     spawn GRAF_SHOW_FIX(GRAF_HIDE);
                     spawn GRAF_SHOW_TARG(GRAF_SHOW);
                 }
-                STAT_DLTA_T = time() - STAT_STRT_T;
+                
                 spawnwait CHECK_TARG_VERT_RFRSH();
 
                 if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -323,7 +323,7 @@ process IDLE() enabled
                     STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION;
                     spawn UPD8_MSG();
                 }
-                STAT_DLTA_T = time() - STAT_STRT_T;
+                
                 spawnwait CHECK_TARG_VERT_RFRSH();
 
                 if (TRL_ERLY_SACC_TIME)
@@ -379,7 +379,7 @@ process IDLE() enabled
                     STAT_I_MOVE_DURATION = MAX_SACCADE_DURATION;
                     spawn UPD8_MSG();
                 }
-                STAT_DLTA_T = time() - STAT_STRT_T;
+                
                 spawnwait CHECK_TARG_VERT_RFRSH();
 
                 if (!I_IN_FLIGHT && STAT_DLTA_T < STAT_ALLOWED_T)
@@ -389,7 +389,7 @@ process IDLE() enabled
 										I_IN_FLIGHT = 1;
 										TRL_LATE_SACC_TIME = time();
 										spawn SEND_EVT(LateSaccade_);
-										spawnwait CHECK_TARG_ACQUIRED()
+										spawnwait CHECK_TARG_ACQUIRED();
 									}
                 }
                 else if (!I_TARG && STAT_DLTA_T < STAT_ALLOWED_T)
@@ -437,6 +437,7 @@ process IDLE() enabled
                 // if target is on update target on duration every process cycle
                 TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
             }
+			STAT_DLTA_T = STAT_DLTA_T + 1;
             TRL_CUM_TIME = TRL_CUM_TIME + 1;
             nexttick;
         } /*while(TRL_RUNNING)*/
@@ -482,14 +483,14 @@ process INCREMENT_TRL_TARG_VRT_RFRSH_COUNT()
         TRL_TARG_VRT_RFRSH_COUNT = 1;
         spawn UPD8_MSG();
 
-        printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
+        //printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
     }
     else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
     {
         TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
         spawn UPD8_MSG();
 
-        printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
+        //printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
     }
     TARG_VR_COUNT_TIME = STAT_DLTA_T;
 }
@@ -536,8 +537,6 @@ process CHECK_TARG_ACQUIRED()
             printf("		CHECK_TARG_ACQUIRED:Eye elsewhere. ErrorSaccade?????..\n");
             TRL_ERROR_SACCADE_TIME = time();
             spawn SEND_EVT(GoError_);            //??? Check
-
-            IS_GO_ERROR = 1;
             CURR_STAT   = STAT_TONE;
             SETUP_STATE = 0;
         }

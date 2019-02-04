@@ -76,7 +76,7 @@ declare int TRL_ERLY_SACC_TIME;
 // saccade left Fix window after MAX saccade time
 declare int TRL_LATE_SACC_TIME;
 // should make a saccade, but eye still in Fix window
-decalre int TRL_NO_SACCADE_TIME;
+declare int TRL_NO_SACCADE_TIME;
 // saccade left Fix window, but eye not in Target window
 declare int TRL_ERROR_SACCADE_TIME;
 // saccade dutation
@@ -87,6 +87,7 @@ declare int TRL_TARG_ACQ_TIME;
 declare int TRL_TARG_ACQ_SLOW_TIME;
 // target fixation achieved time
 declare int TRL_TARG_FIXATED_TIME;
+declare int TRL_TARG_BREAK_FIX_TIME;
 
 // any break fixations?
 declare int TRL_ABORT_TIME;
