@@ -61,6 +61,8 @@ declare int TRL_FIX_ON_TIME;
 declare int TRL_FIX_ACQ_TIME;
 // fixation achieved eye on fixspot for FIX_HOLD_TIME
 declare int TRL_FIXATED_TIME;
+declare int TRL_BREAK_FIX_TIME;
+
 // when command sent to vdosync
 declare int TRL_PRE_TARG_ON_TIME;
 // when PD trigger occurs

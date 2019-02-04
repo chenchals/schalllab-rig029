@@ -86,7 +86,7 @@ process IDLE() enabled
     {
         //===============For each Trial=====================
         spawnwait SET_CMD_TRL();
-
+        
         SETUP_STATE             = 0;
         TRL_CUM_TIME            = 0;
         TRL_FIX_VRT_RFRSH_COUNT = 0;
@@ -139,12 +139,14 @@ process IDLE() enabled
                     spawn UPD8_MSG();
                     spawn GRAF_SHOW_FIX_WIN();
                 }
-                if (I_FIX || I_FIX_WIDE)
+                if (STAT_DLTA_T < STAT_ALLOWED_T && (I_FIX || I_FIX_WIDE))
                 {
+					//printf("****STAT_GET_READY: Resetting Get ready time\n");
                     STAT_DLTA_T = 0;
                 }
-                if (STAT_DLTA_T >= STAT_ALLOWED_T)
+                else if((!I_FIX || !I_FIX_WIDE) && STAT_DLTA_T >= STAT_ALLOWED_T)
                 {
+					printf("****STAT_GET_READY: Ready, showing FixSpot\n");
                     SETUP_STATE = 0;
                     spawn UPD8_MSG();
 
@@ -176,10 +178,7 @@ process IDLE() enabled
                 
                 if (PD_TRIG_L)
                 {
-                    spawn UPD8_MSG();
-
-                    TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-                    printf("****STAT_FIX_ON:TRL_FIX_VRT_RFRSH_COUNT [%d]\n", TRL_FIX_VRT_RFRSH_COUNT);
+                    TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;                    
                     if (SEND_EVNT_ONCE)
                     {
                         // do not send event multiple times
@@ -187,6 +186,7 @@ process IDLE() enabled
                         TRL_FIX_ON_TIME = time();
                         printf("****STAT_FIX_ON:Sending event FixSpotOn_\n");
                         spawn SEND_EVT(FixSpotOn_);
+						spawn UPD8_MSG();
                     }
                     dsendf("vp %d\n", PG_FIXATION);
                 }
@@ -194,7 +194,6 @@ process IDLE() enabled
                 {
                     SETUP_STATE = 0;
                     spawn UPD8_MSG();
-
                     printf("****STAT_FIX_ON:Fixation not acquired\n");
                     //?send event abort_?
                     CURR_STAT   = STAT_IDLE;
@@ -220,8 +219,7 @@ process IDLE() enabled
                 {
                     SEND_EVNT_ONCE = 1;
                     SETUP_STATE    = 1;
-                    spawn SEND_EVT(TrialStart_);
-
+ 
                     // actually TRL_FIX_ACQ_TIME, however the below is practically
                     //same and it keeps this state independent of previous state
                     STAT_STRT_T    = time();
@@ -234,9 +232,10 @@ process IDLE() enabled
                 {
                     SETUP_STATE = 0;
                     spawn UPD8_MSG();
-
-                    printf("****STAT_FIXATE:Not fixated******\n");
-                    printf("Send.... event Abort_??\n");
+					TRL_BREAK_FIX_TIME = time();
+					spawn SEND_EVT(BreakFix_);
+                    printf("****STAT_FIXATE:Broke fixation******\n");
+                    printf("*****************next trial****************\n");
                     //?send event abort_?
                     CURR_STAT   = STAT_IDLE;
                     TRL_RUNNING = 0;                                                                                                                         // to go to next trial
@@ -481,14 +480,14 @@ process INCREMENT_TRL_TARG_VRT_RFRSH_COUNT()
     {
         IS_TARG_ON_FLAG          = 1;
         TRL_TARG_VRT_RFRSH_COUNT = 1;
-        spawn UPD8_MSG();
+        //spawn UPD8_MSG();
 
         //printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
     }
     else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
     {
         TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
-        spawn UPD8_MSG();
+        //spawn UPD8_MSG();
 
         //printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
     }

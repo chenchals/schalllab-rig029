@@ -27,7 +27,7 @@ declare float        IGNORE_WEIGHT = 40.0;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 1;
+declare int TIME_DILATE_FACTOR = 5;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
