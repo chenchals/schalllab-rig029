@@ -47,33 +47,52 @@ declare PCK_TRL_TYP();
 
 // Trial Timees
 declare int TRL_CUM_TIME;
-declare int TRL_GET_READY_TIME;
-declare int TRL_READY_TIME;
+// time trial started
 declare int TRL_START_TIME;
+// time trial ended same as Eot_?
 declare int TRL_END_TIME;
+// time monitoring eye to be outside Fix window wide
+declare int TRL_GET_READY_TIME;
+// eye outside fix window for the duration of READY_TIME
+declare int TRL_READY_TIME;
+// time fixspot was first ON
 declare int TRL_FIX_ON_TIME;
+// eye on fixspot
 declare int TRL_FIX_ACQ_TIME;
+// fixation achieved eye on fixspot for FIX_HOLD_TIME
 declare int TRL_FIXATED_TIME;
 // when command sent to vdosync
 declare int TRL_PRE_TARG_ON_TIME;
-// Actively count how long target was on
-declare int TRL_TARG_ON_DURATION;
 // when PD trigger occurs
 declare int TRL_TARG_ON_TIME;
-declare int TRL_ERLY_SACC_TIME;
-declare int TRL_SACC_TIME;
-declare int TRL_LATE_SACC_TIME;
-declare int TRL_SACC_DURATION;
-
-declare int TRL_TARG_ACQ_TIME;
-declare int TRL_TARG_ACQ_SLOW_TIME;
-
-declare int TRL_TARG_FIXATED_TIME;
+// Actively count how long target was on
+declare int TRL_TARG_ON_DURATION;
+// saccade entered target window
 declare int TRL_DECIDE_TIME;
+// saccde left Fix window between MIN_MAX saccade time
+declare int TRL_SACC_TIME;
+// saccade left Fix window before MIN saccade time
+declare int TRL_ERLY_SACC_TIME;
+// saccade left Fix window after MAX saccade time
+declare int TRL_LATE_SACC_TIME;
+// should make a saccade, but eye still in Fix window
+decalre int TRL_NO_SACCADE_TIME;
+// saccade left Fix window, but eye not in Target window
+declare int TRL_ERROR_SACCADE_TIME;
+// saccade dutation
+declare int TRL_SACC_DURATION;
+// saccade made within max saccade duration
+declare int TRL_TARG_ACQ_TIME;
+// saccade took more than max saccade duration
+declare int TRL_TARG_ACQ_SLOW_TIME;
+// target fixation achieved time
+declare int TRL_TARG_FIXATED_TIME;
+
 // any break fixations?
 declare int TRL_ABORT_TIME;
-
+// number of vertical refreshs FIXSPOT with PD was on
 declare int TRL_FIX_VRT_RFRSH_COUNT;
+// number of vertical refreshs TARGET with PD was on
 declare int TRL_TARG_VRT_RFRSH_COUNT;
 
 process SET_CMD_TRL()

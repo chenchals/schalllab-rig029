@@ -84,8 +84,9 @@ declare constant NOGOCorrect_      = 2756;
 declare constant CatchCorrect_     = 2757;
 declare constant CatchIncorrectG_  = 2758;
 declare constant CatchIncorrectNG_ = 2759;
-declare constant BreakTargFix_     = 2760;
+declare constant TargetBreakFix_   = 2760;
 declare constant EarlySaccade_     = 2761;
+declare constant LateSaccade_      = 2762;
 declare constant FixWindow_        = 2770;
 declare constant TargetWindow_     = 2771;
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)

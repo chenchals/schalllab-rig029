@@ -35,52 +35,37 @@ declare int STAT_I_MOVE_DURATION;
 declare constant int STAT_TEST = 99;
 // Eyes are anywhere on the screen
 declare constant int STAT_IDLE = 0;
-//
+
 // Fixspot is NOT ON: Waiting for subj to be ready
 // Check: Eyes are hanging around the FIX_WIN_LARGE.
 //        Eye has not *crossed* FIX_WIN_LARGE within REDY_T
-//        Outcome -->go to (set)--->Next State ------> Action
-//        O_REDY      --->   STAT_FIX_ON -----> Show Fixspot
-//        O_NOT_REDY  --->   STAT_IDLE  ------> Do not show Fixspot
 declare constant int STAT_GET_READY = 1;
+
 // Fixspot is ON: Waiting for subject to reach the fix window and Fixate
 // Check: Eyes must get to WITHIN smaller FIX_WIN, BEFORE FIX_ACQ_T expires
-//        Outcome -->go to (set)--->Next State
-//        O_ACQ_FIX      --->   STAT_FIXATE
-//        O_ACQ_FIX_WIDE --->   Timeout? STAT_IDLE
-//        O_ACQ_FIX_BRK  --->   Timeout? STAT_IDLE
 declare constant int STAT_FIX_ON = 2;
+
 // Fixspot is ON: Waiting for subject to stay on fixspot
 // Check: Eyes must be WITHIN smaller FIX_WIN until FIX_TIME (HOLD_TIME) expires
-//        Outcome -->go to (set)--->Next State
-//        O_FIXATE       --->   STAT_TARG_ON
-//        O_FIXATE_WIDE --->   Timeout? STAT_IDLE
-//        O_FIXATE_BRK  --->   Timeout? STAT_IDLE
 declare constant int STAT_FIXATE = 3;
+
 // Fixspot is OFF Target is ON:
 //        GO_TRIAL: Waiting for subject to hold gaze till MIN_MAX_SACCADE_TIME[0]
 // Check: Eyes in FIX window till MIN_SACCADE_TIME, else it is early saccade
-//        before MAX_SACCADE_TIME, within MAX_SACCADE_DURATION
-//        Outcome              -->go to (set)--->Next State
-//        O_ACQ_TARG           --->   STAT_FIXATE_TARG
-//        O_ACQ_TARG_WIDE      --->   Timeout? next_state? STAT_IDLE?
-//        O_ACQ_TARG_ANTI      --->   Timeout? tone? next_state? STAT_IDLE
-//        O_ACQ_TARG_WIDE_ANTI --->   Timeout? tome? next_state? STAT_IDLE
-//        O_ACQ_TARG_BRK       --->   Timeout? tone? STAT_IDLE
 declare constant int STAT_TARG_ON = 4;
 
 // Fixspot is OFF Target is ON:
 //        GO_TRIAL: Waiting for subject to shift gaze to target location and hold
 // Check: Eyes leave fixspot and reach TARG_WIN or TARG_WIN_ANTI after MIN_SACCADE_TIME and
-//        before MAX_SACCADE_TIME, within MAX_SACCADE_DURATION and stay for TARG_HOLD_TIME
-//        Outcome              -->go to (set)--->Next State
-//        O_FIXATE_TARG           --->   STAT_FIXATE_TARG
-//        O_FIXATE_TARG_WIDE      --->   Timeout? next_state? STAT_IDLE?
-//        O_FIXATE_TARG_ANTI      --->   Timeout? tone? next_state? STAT_IDLE
-//        O_FIXATE_TARG_WIDE_ANTI --->   Timeout? tome? next_state? STAT_IDLE
-//        O_FIXATE_TARG_BRK       --->   Timeout? tone? STAT_IDLE
+//        before MAX_SACCADE_TIME, within MAX_SACCADE_DURATION
 declare constant int STAT_TARG_ACQ = 5;
 
+// Fixspot is OFF Target is ON:
+//        GO_TRIAL: Waiting for subject Fixate target hold for TARGET_HOLD_TIME
+// Check: Eyes IN TARG_WIN for duration of TARGET_HOLD_TIME, else it is an error
+//        If eye not in flight, and eye leaves Fix window, then Late saccade,
+//            check for saccade duration and target acquisition, in late saccade
 declare constant int STAT_TARG_FIXATE = 6;
 
-
+//
+declare constant int STAT_TONE = 7;
