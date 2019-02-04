@@ -66,9 +66,12 @@ declare constant StopSignal_ = 2653;
 declare constant StopOn_           = 2654;
 declare constant MouthBegin_       = 2655;
 declare constant MouthEnd_         = 2656;
-declare constant BreakFix_         = 2658;
-declare constant AcquireFix_       = 2659;
-declare constant Fixate_           = 2660;
+
+declare constant FixNotAcquired_   = 2657;
+declare constant AcquireFix_       = 2658;
+declare constant Fixate_           = 2659;
+declare constant BreakFix_         = 2660;
+
 declare constant CueOn_            = 2661;
 declare constant AcquireTarget_    = 2670;
 declare constant AcquireTargetSlow_= 2671;
