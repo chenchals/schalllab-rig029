@@ -258,7 +258,7 @@ process IDLE() enabled
             {
                 if (!SETUP_STATE)
                 {
-									  I_IN_FLIGHT = 0;
+					I_IN_FLIGHT = 0;
                     SEND_EVNT_ONCE           = 1;
                     SETUP_STATE              = 1;
                     TARG_VR_COUNT_TIME       = 0;
@@ -340,6 +340,7 @@ process IDLE() enabled
 						printf("****STAT_TARG_ACQ: Still fixating after MAX_SACCADE_TIME\n");
 						spawn UPD8_MSG();
                         CURR_STAT = STAT_TARG_FIXATE;
+						SETUP_STATE = 0;
                     }
                     else if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
                     {
@@ -389,19 +390,19 @@ process IDLE() enabled
 					if(!I_FIX)
 					{
 						I_IN_FLIGHT = 1;
+						printf("****STAT_TARG_FIXATE: Late Saccade - after MAX_SACCADE_TIME\n");
+						spawn UPD8_MSG();
 						TRL_LATE_SACC_TIME = time();
 						spawn SEND_EVT(LateSaccade_);
 						spawnwait CHECK_TARG_ACQUIRED();
-						printf("****STAT_TARG_FIXATE: Late Saccade - after MAX_SACCADE_TIME\n");
-						spawn UPD8_MSG();
 					}
                 }
                 else if (!I_TARG && STAT_DLTA_T < STAT_ALLOWED_T)
                 {
-                    TRL_TARG_BREAK_FIX_TIME = time();
-                    spawn SEND_EVT(TargetBreakFix_);
 					printf("****STAT_TARG_FIXATE: Broke Target Fixation\n");
 					spawn UPD8_MSG();
+                    TRL_TARG_BREAK_FIX_TIME = time();
+                    spawn SEND_EVT(TargetBreakFix_);
 
                     CURR_STAT   = STAT_TONE;
                     SETUP_STATE = 0;
