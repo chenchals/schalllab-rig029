@@ -2,16 +2,22 @@
 ; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
-; Tue Feb 05 16:58:35 2019
-; GLOAD tempo.gcf
+; Tue Feb 05 12:26:03 2019
+; GLOAD C:\tempo\ProcLib\cmd_TSK_1.gcf
 
 
 ; WINDOW CONFIGURATION
 
 SCREENRES 1280,768,32,1,0,0
 MAINWND 1,0,0,-1,-1,1,0,555,52,0
+MSGWND 1,160,729,-1,-1,0,53,405,675,0
+STATUSWND 1,0,0,-1,-1,407,290,1257,734,0
+SHOW s 0
 
 CMDWND 1,160,729,-1,-1,0,675,405,732,0
+ANIMPAGE 0x1,1,0,729,-1,-1,719,5,1271,317,0
+ANIMVIEW 0,1,0,0,0,0,723,35,995,313,0
+ANIMVIEW 1,1,0,0,0,0,995,35,1267,313,1
 
 ; DATABASES PAGES & VIEWS
 

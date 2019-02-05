@@ -122,5 +122,6 @@ process CMD_PGS()
   // draw the PG_BLANK screen last so that it shows up first
   dsendf("rw %d,%d;\n", PG_BLANK, PG_BLANK);
   dsendf("cl\n");
+  printf("CMD_PGS: page %d PG_BLANK ==> DRAWN LAST\n", PG_BLANK);
   nexttick;
 } /* CMD_PGS */

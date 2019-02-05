@@ -27,7 +27,7 @@ declare float        IGNORE_WEIGHT = 40.0;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 5;
+declare int TIME_DILATE_FACTOR = 2;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
@@ -40,11 +40,11 @@ declare int FIX_HOLD_TIME;
 // maximum time after fixation before target presentation
 //declare int MAX_HOLD_TIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_MAX_SACCADE_TIME[2] = {100, 700};
+declare int MIN_MAX_SACCADE_TIME[2] = {500, 1000};
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
-declare int MAX_SACCADE_DURATION = 50;
+declare int MAX_SACCADE_DURATION = 500;
 // after saccade subject must hold fixation at target for this long
 declare int MIN_MAX_TARGET_HOLD_TIME[2] = {1500, 1500};
 declare int TARGET_HOLD_TIME;

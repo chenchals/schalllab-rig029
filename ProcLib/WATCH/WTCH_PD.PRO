@@ -34,7 +34,7 @@ process WTCH_SCHMITT()
     if (pdValL < PD_THRESHOLD && PD_TRIG_L == 0)
     {
       PD_TRIG_L = 1;
-      spawn SEND_EVT(PDTriggerLeft_);
+      //spawn SEND_EVT(PDTriggerLeft_);
     }
     else if (pdValL > PD_THRESHOLD && PD_TRIG_L == 1)
     {
@@ -44,7 +44,7 @@ process WTCH_SCHMITT()
     if (pdValR < PD_THRESHOLD && PD_TRIG_R == 0)
     {
       PD_TRIG_R = 1;
-      spawn SEND_EVT(PDTriggerRight_);
+      //spawn SEND_EVT(PDTriggerRight_);
     }
     else if (pdValR > PD_THRESHOLD && PD_TRIG_R == 1)
     {
