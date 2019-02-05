@@ -68,4 +68,4 @@ declare constant int STAT_TARG_ACQ = 5;
 declare constant int STAT_TARG_FIXATE = 6;
 
 //
-declare constant int STAT_TONE = 7;
+declare constant int STAT_FEEDBACK = 7;
