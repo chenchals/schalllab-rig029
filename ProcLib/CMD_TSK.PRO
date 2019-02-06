@@ -74,7 +74,7 @@ process IDLE() enabled
 	printf("Setting GRAPHS\n");
 	spawn GRAPHS();
 
-	CURR_STAT  = STAT_IDLE;
+	NEXT_STAT  = STAT_IDLE;
 	TRL_NUMBER = 0;
 	printf("Setting SEND_EVT Room\n");
 	spawn SEND_EVT(Identify_Room_);
@@ -96,23 +96,23 @@ process IDLE() enabled
 		spawn GRAF_HIDE_FIX_TARG();
 
 		dsendf("vp %d\n", PG_BLANK);
-		CURR_STAT   = STAT_GET_READY;
+		NEXT_STAT   = STAT_GET_READY;
 		STAT_DLTA_T = 0;
 		while (TRL_RUNNING)
 		{
-			while (CURR_STAT == STAT_TEST)
+			while (NEXT_STAT == STAT_TEST)
 			{
 				printf("Eyes must be updating continuously...\n");
 
 				spawn GRAF_SHOW_FIX_WIN();
 
-				CURR_STAT = STAT_IDLE;
+				NEXT_STAT = STAT_IDLE;
 
 				//nexttick 5000;
-				//CURR_STAT = STAT_GET_READY;
+				//NEXT_STAT = STAT_GET_READY;
 				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
 				//nexttick 5000;
-				//CURR_STAT = STAT_FIX_ON;
+				//NEXT_STAT = STAT_FIX_ON;
 				//STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
 				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
 				//nexttick 5000;
@@ -123,7 +123,7 @@ process IDLE() enabled
 			}
 
 			//================= State = STAT_GET_READY===============
-			if (CURR_STAT == STAT_GET_READY)
+			if (NEXT_STAT == STAT_GET_READY)
 			{
 				if (PROCESS_STATE)
 				{
@@ -155,11 +155,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FIX_ON;
+					NEXT_STAT     = STAT_FIX_ON;
 				}
 			}
 			//================= State = STAT_FIX_ON===============
-			if (CURR_STAT == STAT_FIX_ON)
+			if (NEXT_STAT == STAT_FIX_ON)
 			{
 				if (PROCESS_STATE)
 				{
@@ -206,7 +206,7 @@ process IDLE() enabled
 					printf("****STAT_FIX_ON:ERR (Fixation not acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FEEDBACK;
+					NEXT_STAT     = STAT_FEEDBACK;
 				}
 				else if (I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
 				{
@@ -218,11 +218,11 @@ process IDLE() enabled
 					printf("****STAT_FIX_ON[%d]: OK (Fixation acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FIXATE;
+					NEXT_STAT     = STAT_FIXATE;
 				}
 			}
 			//================= State = STAT_FIXATE===============
-			if (CURR_STAT == STAT_FIXATE)
+			if (NEXT_STAT == STAT_FIXATE)
 			{
 				if (PROCESS_STATE)
 				{
@@ -247,7 +247,7 @@ process IDLE() enabled
 
 					//?send event abort_?
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FEEDBACK;                                                                                                                                          // to go to next trial
+					NEXT_STAT     = STAT_FEEDBACK;                                                                                                                                          // to go to next trial
 				}
 				if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
 				{
@@ -258,11 +258,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_TARG_ON;
+					NEXT_STAT     = STAT_TARG_ON;
 				}
 			}
 			//================= State = STAT_TARG_ON===============
-			if (CURR_STAT == STAT_TARG_ON)
+			if (NEXT_STAT == STAT_TARG_ON)
 			{
 				if (PROCESS_STATE)
 				{
@@ -310,7 +310,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_TARG_ACQ;
+					NEXT_STAT     = STAT_TARG_ACQ;
 				}
 				if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 				{
@@ -320,11 +320,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_TARG_ACQ;
+					NEXT_STAT     = STAT_TARG_ACQ;
 				}
 			}
 			//================= State = STAT_TARG_ACQ===============
-			if (CURR_STAT == STAT_TARG_ACQ)
+			if (NEXT_STAT == STAT_TARG_ACQ)
 			{
 				// Target not yet acquired
 				if (PROCESS_STATE)
@@ -349,7 +349,7 @@ process IDLE() enabled
 					if (I_IN_FLIGHT && !IS_TARG_ACQUIRED)
 					{
 						// Eye already out of Fix window
-						spawnwait CHECK_TARG_ACQUIRED();						
+						spawnwait CHECK_TARG_ACQUIRED();
 					}
 					else if (!I_IN_FLIGHT && !I_FIX)
 					{
@@ -376,11 +376,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_TARG_FIXATE;					
-				}				
+					NEXT_STAT     = STAT_TARG_FIXATE;
+				}
 			}
 			//================= State = STAT_TARG_FIXATE===============
-			if (CURR_STAT == STAT_TARG_FIXATE)
+			if (NEXT_STAT == STAT_TARG_FIXATE)
 			{
 				// Target acquired, but not fixated yet or eye still in FixWin
 				if (PROCESS_STATE)
@@ -399,7 +399,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 				}
 				spawnwait CHECK_TARG_VERT_RFRSH();
-				
+
 				if(STAT_DLTA_T <= STAT_ALLOWED_T)
 				{
 					if(!I_IN_FLIGHT || !IS_TARG_ACQUIRED)
@@ -418,7 +418,7 @@ process IDLE() enabled
 						else if (I_IN_FLIGHT)
 						{
 							spawnwait CHECK_TARG_ACQUIRED();
-						}							
+						}
 					}
 					else if(IS_TARG_ACQUIRED && !I_TARG) // and I_TARG
 					{
@@ -429,8 +429,8 @@ process IDLE() enabled
 						spawn UPD8_MSG();
 
 						PROCESS_STATE = 1;
-						CURR_STAT     = STAT_FEEDBACK;																			
-					}					
+						NEXT_STAT     = STAT_FEEDBACK;
+					}
 				}
 				else if (I_TARG)
 				{
@@ -442,7 +442,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FEEDBACK;					
+					NEXT_STAT     = STAT_FEEDBACK;
 				}
 				else if (I_FIX)
 				{
@@ -457,7 +457,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FEEDBACK;					
+					NEXT_STAT     = STAT_FEEDBACK;
 				}
 				else if(!I_TARG || !I_FIX)
 				{
@@ -469,11 +469,11 @@ process IDLE() enabled
 					printf("		CHECK_TARG_ACQUIRED:Eye elsewhere. ErrorSaccade?????..\n");
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FEEDBACK;					
-				}				
+					NEXT_STAT     = STAT_FEEDBACK;
+				}
 			}
 			//================= State = STAT_FEEDBACK===============
-			if (CURR_STAT == STAT_FEEDBACK)
+			if (NEXT_STAT == STAT_FEEDBACK)
 			{
 				printf(">>>>>>>>>>STAT_FEEDBACK:..... NOT YET... NOT YET....>>>>>>>>>>\n");
 				printf(">>>>>>>>>>GOING TO NEXT TRILA AFTER 5000 MS>>>>>>>>>>\n");
@@ -499,7 +499,7 @@ process UPD8_MSG()
 {
 	declare int dummy =0;
 	dummy =1;
-	printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
+	printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], NEXT_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, NEXT_STAT, STAT_DLTA_T);
 }
 
 // For counting Target vertical refresh for both GO and STOP trials
@@ -548,8 +548,8 @@ process CHECK_TARG_ACQUIRED()
 			printf("		CHECK_TARG_ACQUIRED[%d]: OK (AcquireTarget_); Within: MAX_SACC_DURATION[%d]\n", TRL_SACC_DURATION,STAT_I_MOVE_DURATION);
 
 			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_TARG_FIXATE;
-			
+			NEXT_STAT     = STAT_TARG_FIXATE;
+
 		}
 		else if (TRL_SACC_DURATION > STAT_I_MOVE_DURATION)
 		{
@@ -561,7 +561,7 @@ process CHECK_TARG_ACQUIRED()
 			printf("		CHECK_TARG_ACQUIRED[%d]:OK? (AcquireTargetSlow_); After: MAX_SACC_DURATION[%d]\n", TRL_SACC_DURATION,STAT_I_MOVE_DURATION);
 
 			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_TARG_FIXATE;
+			NEXT_STAT     = STAT_TARG_FIXATE;
 		}
 		// target wide anti etc here....
 	}
@@ -577,7 +577,7 @@ process CHECK_TARG_ACQUIRED()
 			printf("		CHECK_TARG_ACQUIRED[%d]:ERR? (Eye elsewhere); After: MAX_SACC_TIME[%d]\n",STAT_DLTA_T,STAT_ALLOWED_T);
 
 			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_FEEDBACK;
+			NEXT_STAT     = STAT_FEEDBACK;
 		}
 	}
 } /* CHECK_TARG_ACQUIRED */

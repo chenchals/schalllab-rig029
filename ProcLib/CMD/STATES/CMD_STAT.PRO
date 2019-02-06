@@ -23,7 +23,7 @@
 
 
 //Current State variables in the absence of structs
-declare int CURR_STAT;
+declare int NEXT_STAT;
 declare int STAT_STRT_T;
 declare int STAT_STP_T;
 declare int STAT_DLTA_T;
