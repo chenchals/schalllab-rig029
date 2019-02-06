@@ -142,9 +142,6 @@ process SET_CMD_TRL()
   TARGET_HOLD_TIME = random(MIN_MAX_TARGET_HOLD_TIME[1]-MIN_MAX_TARGET_HOLD_TIME[0]) + MIN_MAX_TARGET_HOLD_TIME[0];
   // ITI TIME?
 
-
-  // wait 1 sec for everything to complete
-  nexttick 1000;
 } /* SETC_TRL */
 
 

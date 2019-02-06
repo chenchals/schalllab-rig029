@@ -42,9 +42,9 @@ process CMD_PGS()
 
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 1 FIXATION_PD - PD is drawn on LEFT-TOP of screen only
-  printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_FIXATION_PD,FIX_SIZE_DEG,PD_WIDTH_DEG,pdAngleL);
+  //printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_FIXATION_PD,FIX_SIZE_DEG,PD_WIDTH_DEG,pdAngleL);
   dsendf("rw %d,%d;\n", PG_FIXATION_PD, PG_FIXATION_PD);
-  dsendf("cl\n");
+  dsendf("cl:\n");
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
   spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
@@ -54,7 +54,7 @@ process CMD_PGS()
   // Draw pg 2 FIXATION - No PD
   //printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d\n",PG_FIXATION,FIX_SIZE_DEG);
   dsendf("rw %d,%d;\n", PG_FIXATION, PG_FIXATION);
-  dsendf("cl\n");
+  dsendf("cl:\n");
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
 
   nexttick;
@@ -62,7 +62,7 @@ process CMD_PGS()
   // Draw pg 3 TARGET with PD - PD is drawn on LEFT-TOP of screen only
   //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_TARGET_PD,CURR_TARG_SIZE,PD_WIDTH_DEG,pdAngleL);
   dsendf("rw %d,%d;\n", PG_TARGET_PD, PG_TARGET_PD);
-  dsendf("cl\n");
+  dsendf("cl:\n");
   // draw PG_TARGET
   spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
@@ -77,7 +77,7 @@ process CMD_PGS()
   // Draw pg 4 TARGET no PD
   //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_TARGET,CURR_TARG_SIZE);
   dsendf("rw %d,%d;\n", PG_TARGET, PG_TARGET);
-  dsendf("cl\n");
+  dsendf("cl:\n");
   spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
   // draw OPEN PG_FIXATION point
@@ -89,7 +89,7 @@ process CMD_PGS()
   // Draw pg 5 SIGNAL PD - PD is drawn on the right only
   //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleR %3.2d\n",PG_SIGNAL_PD,CURR_TARG_SIZE,PD_WIDTH_DEG,pdAngleR);
   dsendf("rw %d,%d;\n", PG_SIGNAL_PD, PG_SIGNAL_PD);
-  dsendf("cl\n");
+  dsendf("cl:\n");
   spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
   // draw PG_TARGET
@@ -106,7 +106,7 @@ process CMD_PGS()
   // Draw pg 6 SIGNAL no PD
   //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_SIGNAL,CURR_TARG_SIZE);
   dsendf("rw %d,%d;\n", PG_SIGNAL, PG_SIGNAL);
-  dsendf("cl\n");
+  dsendf("cl:\n");
   spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
 
   // draw PG_TARGET
@@ -121,7 +121,6 @@ process CMD_PGS()
   //printf("CMD_PGS: page %d PG_BLANK\n", PG_BLANK);
   // draw the PG_BLANK screen last so that it shows up first
   dsendf("rw %d,%d;\n", PG_BLANK, PG_BLANK);
-  dsendf("cl\n");
-  printf("CMD_PGS: page %d PG_BLANK ==> DRAWN LAST\n", PG_BLANK);
+  dsendf("cl:\n");
   nexttick;
 } /* CMD_PGS */

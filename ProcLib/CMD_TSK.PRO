@@ -472,7 +472,7 @@ process IDLE() enabled
 			//================= State = STAT_FEEDBACK===============
 			if (CURR_STAT == STAT_FEEDBACK)
 			{
-				//dsendf("vp %d\n",PG_BLANK);
+				dsendf("vp %d\n",PG_BLANK);
 				printf(">>>>>>>>>>STAT_FEEDBACK:..... NOT YET... NOT YET....>>>>>>>>>>\n");
 				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
 				nexttick 2000;
