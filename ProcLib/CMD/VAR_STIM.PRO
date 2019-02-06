@@ -28,7 +28,7 @@ declare float        TARG_WIN_LARGE[4];
 declare float        TARG_WIN_ANTI_LARGE[4];
 
 // Attributes of Current Target
-declare int   CURR_TARGET_IDX;
+declare int   CURR_TARG_IDX;
 declare float CURR_TARG_SIZE;
 declare float CURR_TARG_ANGLE;
 declare float CURR_TARG_ECCENTRICITY;
@@ -58,11 +58,11 @@ process SET_DEFAULT_STIM_VARS()
   TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
     // clockwise: 45, 90, 135, ...
     TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0 / N_TARG_POS);
-    if (TARG_ANGLE_ARRY[tempCounter] > 180)
-    {
+    //if (TARG_ANGLE_ARRY[tempCounter] > 180)
+    ///{
       // counter clockwise : -45, -90, -135, ...
-      TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] - 360;
-    }
+    //  TARG_ANGLE_ARRY[tempCounter] = TARG_ANGLE_ARRY[tempCounter] - 360;
+    //}
     tempCounter = tempCounter + 1;
     nexttick;
   }

@@ -12,7 +12,8 @@
 #include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
-#include C:/TEMPO/ProcLib/CMD/STATES/PRC_STAT.PRO
+// State flow
+#include C:/TEMPO/ProcLib/CMD/STATES/GET_REDY.PRO
 
 //==========================================================================
 
@@ -22,18 +23,7 @@ declare UPD8_MSG();
 declare CHECK_TARG_ACQUIRED();
 declare CHECK_TARG_VERT_RFRSH();
 
-declare int TRL_RUNNING;
 
-declare int TARG_VR_COUNT_TIME;
-// increment trial target on duration flag
-// =1 first time PD_TRIG_L is detected for Target on page
-// =0 first rime PD_TRIG_R is detected for Stop signal page
-// =0 when blank page for GO trial?
-declare int IS_TARG_ON_FLAG;
-declare int IS_TARG_ACQUIRED;
-declare int I_IN_FLIGHT;
-// A temporary state acitivity
-declare int PROCESS_STATE;
 declare int TEST = 100;
 
 
@@ -62,6 +52,9 @@ process IDLE() enabled
 	spawnwait SET_MONK(MONK_ID);
 
 	// Setup WATCHES
+	printf("Setting GRAPHS\n");
+	spawn GRAPHS();
+	
 	printf("Setting QUE_TTL\n");
 	spawn QUE_TTL();
 
@@ -71,10 +64,7 @@ process IDLE() enabled
 	printf("Setting WTCH_SCHMITT\n");
 	spawn WTCH_SCHMITT();
 
-	printf("Setting GRAPHS\n");
-	spawn GRAPHS();
-
-	NEXT_STAT  = STAT_IDLE;
+	CURR_STAT  = STAT_IDLE;
 	TRL_NUMBER = 0;
 	printf("Setting SEND_EVT Room\n");
 	spawn SEND_EVT(Identify_Room_);
@@ -92,27 +82,28 @@ process IDLE() enabled
 		TRL_RUNNING             = 1;
 		printf("Trial running....\n");
 		spawn SEND_EVT(TaskStart_);
+		
 		spawn SEND_EVT(CmanHeader_);
 		spawn GRAF_HIDE_FIX_TARG();
 
 		dsendf("vp %d\n", PG_BLANK);
-		NEXT_STAT   = STAT_GET_READY;
+		CURR_STAT   = STAT_GET_READY;
 		STAT_DLTA_T = 0;
 		while (TRL_RUNNING)
 		{
-			while (NEXT_STAT == STAT_TEST)
+			while (CURR_STAT == STAT_TEST)
 			{
 				printf("Eyes must be updating continuously...\n");
 
 				spawn GRAF_SHOW_FIX_WIN();
 
-				NEXT_STAT = STAT_IDLE;
+				CURR_STAT = STAT_IDLE;
 
 				//nexttick 5000;
-				//NEXT_STAT = STAT_GET_READY;
+				//CURR_STAT = STAT_GET_READY;
 				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
 				//nexttick 5000;
-				//NEXT_STAT = STAT_FIX_ON;
+				//CURR_STAT = STAT_FIX_ON;
 				//STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
 				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
 				//nexttick 5000;
@@ -123,8 +114,10 @@ process IDLE() enabled
 			}
 
 			//================= State = STAT_GET_READY===============
-			if (NEXT_STAT == STAT_GET_READY)
+			if (CURR_STAT == STAT_GET_READY)
 			{
+				spawnwait PROC_GET_REDY();
+				/*
 				if (PROCESS_STATE)
 				{
 					TRL_GET_READY_TIME = time();
@@ -141,25 +134,28 @@ process IDLE() enabled
 					STAT_DLTA_T    = 0;
 					STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
 				}
-				if (STAT_DLTA_T < STAT_ALLOWED_T && (I_FIX || I_FIX_WIDE))
+				else if (STAT_DLTA_T < STAT_ALLOWED_T && (I_FIX || I_FIX_WIDE))
 				{
 					//printf("****STAT_GET_READY[%d]: Resetting Get ready time\n");
 					STAT_DLTA_T = 0;
 				}
 				else if ((!I_FIX || !I_FIX_WIDE) && STAT_DLTA_T >= STAT_ALLOWED_T)
 				{
-					TRL_READY_TIME = time();
-					spawn SEND_EVT(TrialReady_);
-
+					if(!TRL_READY_TIME)
+					{
+						TRL_READY_TIME = time();
+						spawn SEND_EVT(TrialReady_);
+					}
 					printf("****STAT_GET_READY[%d]: OK (Ready); Expired:TRL_GET_READY_TIME\n", STAT_GET_READY);
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FIX_ON;
+					CURR_STAT     = STAT_FIX_ON;
 				}
+				*/
 			}
 			//================= State = STAT_FIX_ON===============
-			if (NEXT_STAT == STAT_FIX_ON)
+			if (CURR_STAT == STAT_FIX_ON)
 			{
 				if (PROCESS_STATE)
 				{
@@ -206,7 +202,7 @@ process IDLE() enabled
 					printf("****STAT_FIX_ON:ERR (Fixation not acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FEEDBACK;
+					CURR_STAT     = STAT_FEEDBACK;
 				}
 				else if (I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
 				{
@@ -218,11 +214,11 @@ process IDLE() enabled
 					printf("****STAT_FIX_ON[%d]: OK (Fixation acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FIXATE;
+					CURR_STAT     = STAT_FIXATE;
 				}
 			}
 			//================= State = STAT_FIXATE===============
-			if (NEXT_STAT == STAT_FIXATE)
+			if (CURR_STAT == STAT_FIXATE)
 			{
 				if (PROCESS_STATE)
 				{
@@ -247,7 +243,7 @@ process IDLE() enabled
 
 					//?send event abort_?
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FEEDBACK;                                                                                                                                          // to go to next trial
+					CURR_STAT     = STAT_FEEDBACK;                                                                                                                                          // to go to next trial
 				}
 				if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
 				{
@@ -258,11 +254,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_TARG_ON;
+					CURR_STAT     = STAT_TARG_ON;
 				}
 			}
 			//================= State = STAT_TARG_ON===============
-			if (NEXT_STAT == STAT_TARG_ON)
+			if (CURR_STAT == STAT_TARG_ON)
 			{
 				if (PROCESS_STATE)
 				{
@@ -310,7 +306,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_TARG_ACQ;
+					CURR_STAT     = STAT_TARG_ACQ;
 				}
 				if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 				{
@@ -320,11 +316,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_TARG_ACQ;
+					CURR_STAT     = STAT_TARG_ACQ;
 				}
 			}
 			//================= State = STAT_TARG_ACQ===============
-			if (NEXT_STAT == STAT_TARG_ACQ)
+			if (CURR_STAT == STAT_TARG_ACQ)
 			{
 				// Target not yet acquired
 				if (PROCESS_STATE)
@@ -376,11 +372,11 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_TARG_FIXATE;
+					CURR_STAT     = STAT_TARG_FIXATE;
 				}
 			}
 			//================= State = STAT_TARG_FIXATE===============
-			if (NEXT_STAT == STAT_TARG_FIXATE)
+			if (CURR_STAT == STAT_TARG_FIXATE)
 			{
 				// Target acquired, but not fixated yet or eye still in FixWin
 				if (PROCESS_STATE)
@@ -429,7 +425,7 @@ process IDLE() enabled
 						spawn UPD8_MSG();
 
 						PROCESS_STATE = 1;
-						NEXT_STAT     = STAT_FEEDBACK;
+						CURR_STAT     = STAT_FEEDBACK;
 					}
 				}
 				else if (I_TARG)
@@ -442,7 +438,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FEEDBACK;
+					CURR_STAT     = STAT_FEEDBACK;
 				}
 				else if (I_FIX)
 				{
@@ -457,7 +453,7 @@ process IDLE() enabled
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FEEDBACK;
+					CURR_STAT     = STAT_FEEDBACK;
 				}
 				else if(!I_TARG || !I_FIX)
 				{
@@ -469,21 +465,22 @@ process IDLE() enabled
 					printf("		CHECK_TARG_ACQUIRED:Eye elsewhere. ErrorSaccade?????..\n");
 
 					PROCESS_STATE = 1;
-					NEXT_STAT     = STAT_FEEDBACK;
+					CURR_STAT     = STAT_FEEDBACK;
 				}
+				
 			}
 			//================= State = STAT_FEEDBACK===============
-			if (NEXT_STAT == STAT_FEEDBACK)
+			if (CURR_STAT == STAT_FEEDBACK)
 			{
+				//dsendf("vp %d\n",PG_BLANK);
 				printf(">>>>>>>>>>STAT_FEEDBACK:..... NOT YET... NOT YET....>>>>>>>>>>\n");
-				printf(">>>>>>>>>>GOING TO NEXT TRILA AFTER 5000 MS>>>>>>>>>>\n");
-				nexttick 5000;
+				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
+				nexttick 2000;
 				TRL_RUNNING = 0;
 			}
 			//================= State = xxxxxx===============
 			if (IS_TARG_ON_FLAG)
 			{
-				// if target is on update target on duration every process cycle
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
@@ -499,7 +496,7 @@ process UPD8_MSG()
 {
 	declare int dummy =0;
 	dummy =1;
-	printf("TRL_NUMUMBR [%d], TRL_CUM_TIME [%d], NEXT_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, NEXT_STAT, STAT_DLTA_T);
+	printf("TRL_NUM [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
 }
 
 // For counting Target vertical refresh for both GO and STOP trials
@@ -548,7 +545,7 @@ process CHECK_TARG_ACQUIRED()
 			printf("		CHECK_TARG_ACQUIRED[%d]: OK (AcquireTarget_); Within: MAX_SACC_DURATION[%d]\n", TRL_SACC_DURATION,STAT_I_MOVE_DURATION);
 
 			PROCESS_STATE = 1;
-			NEXT_STAT     = STAT_TARG_FIXATE;
+			CURR_STAT     = STAT_TARG_FIXATE;
 
 		}
 		else if (TRL_SACC_DURATION > STAT_I_MOVE_DURATION)
@@ -561,7 +558,7 @@ process CHECK_TARG_ACQUIRED()
 			printf("		CHECK_TARG_ACQUIRED[%d]:OK? (AcquireTargetSlow_); After: MAX_SACC_DURATION[%d]\n", TRL_SACC_DURATION,STAT_I_MOVE_DURATION);
 
 			PROCESS_STATE = 1;
-			NEXT_STAT     = STAT_TARG_FIXATE;
+			CURR_STAT     = STAT_TARG_FIXATE;
 		}
 		// target wide anti etc here....
 	}
@@ -577,7 +574,7 @@ process CHECK_TARG_ACQUIRED()
 			printf("		CHECK_TARG_ACQUIRED[%d]:ERR? (Eye elsewhere); After: MAX_SACC_TIME[%d]\n",STAT_DLTA_T,STAT_ALLOWED_T);
 
 			PROCESS_STATE = 1;
-			NEXT_STAT     = STAT_FEEDBACK;
+			CURR_STAT     = STAT_FEEDBACK;
 		}
 	}
 } /* CHECK_TARG_ACQUIRED */

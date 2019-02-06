@@ -138,7 +138,7 @@ process IDLE() enabled
       //when monk's eye os outside the large fix window
       //tempTrlNumber = tempTrlNumber + 1;
       //TRL_NUMBER = tempTrlNumber;
-      //  printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARGET_IDX);
+      //  printf("Trial num %d, Target pos %d\n", TRL_NUMBER, CURR_TARG_IDX);
 
       //  dsendf("vp %d\n", PG_FIXATION_PD);
 //	spawn GRAF_SHOW_FIX(GRAF_SHOW);

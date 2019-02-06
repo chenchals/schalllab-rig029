@@ -45,6 +45,19 @@ declare SET_CMD_TRL();
 declare SET_WINS();
 declare PCK_TRL_TYP();
 
+
+// A temporary state acitivity
+declare int PROCESS_STATE;
+declare int TRL_RUNNING;
+declare int TARG_VR_COUNT_TIME;
+// increment trial target on duration flag
+// =1 first time PD_TRIG_L is detected for Target on page
+// =0 first rime PD_TRIG_R is detected for Stop signal page
+// =0 when blank page for GO trial?
+declare int IS_TARG_ON_FLAG;
+declare int IS_TARG_ACQUIRED;
+declare int I_IN_FLIGHT;
+
 // Trial Timees
 declare int TRL_CUM_TIME;
 // time trial started
@@ -103,17 +116,23 @@ process SET_CMD_TRL()
   // setup trial type
   spawnwait PCK_TRL_TYP();
   // pick current target location AND SET WINDOWS
-  CURR_TARGET_IDX = random(N_TARG_POS);
-  spawnwait SET_WINS();
+  CURR_TARG_IDX = CURR_TARG_IDX +1;
+  CURR_TARG_IDX = (CURR_TARG_IDX) % N_TARG_POS;
+  //CURR_TARG_IDX = random(N_TARG_POS);
   // Target stimulus on this trial
-  CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARGET_IDX];
-  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARGET_IDX];
-  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARG_IDX];
+  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARG_IDX];
+  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
   // Zero is black.  see SET_CLRS.pro
   CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+  spawnwait SET_WINS();
+  
   // Update graph object for Target
   spawnwait GRAF_UPD8_FIX();
   spawnwait GRAF_UPD8_TARG();
+  
+  printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n",TRIAL_TYPE,CURR_TARG_IDX, CURR_TARG_ANGLE);
+
   // Setup CMD PAGES
   printf("Calling CMD-PGS\n");
   spawnwait CMD_PGS();
@@ -165,8 +184,8 @@ process SET_WINS()
   FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
   FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
   // Compute TARG_WIN and TARG_WIN_LARGE
-  eccX            = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
-  eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARGET_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  eccX            = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+  eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
   TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
   TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
   TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
@@ -177,8 +196,8 @@ process SET_WINS()
   TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
   TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
   // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
-  eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARGET_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
-  eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARGET_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARGET_IDX];
+  eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+  eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
   TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
   TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
   TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;

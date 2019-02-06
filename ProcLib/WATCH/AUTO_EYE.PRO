@@ -306,8 +306,8 @@ process AUTO_EYE_POS_FIX_WIDE()
     declare float randX;
     declare float randY;
 
-    randX = ((FIX_WIN_LARGE[LEFT] + FIX_WIN_LARGE[RIGHT]) / 2.0) + 3.0 + random(10) / 10.0;
-    randY = ((FIX_WIN_LARGE[UP] + FIX_WIN_LARGE[DOWN]) / 2.0) + 3.0 + random(10) / 10.0;
+    randX = ((FIX_WIN_LARGE[LEFT] + FIX_WIN_LARGE[RIGHT]) / 2.0) + 4.0 + random(10) / 10.0;
+    randY = ((FIX_WIN_LARGE[UP] + FIX_WIN_LARGE[DOWN]) / 2.0) + 4.0 + random(10) / 10.0;
     // for eyeXdeg
     if (random(2))
     {

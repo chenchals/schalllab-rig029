@@ -35,7 +35,7 @@ process DRW_RECT(float sizeX, float sizeY, float targAngle, float targEcc, int c
 
   // find the center of the box in x and y space based on the targAngle and targEcc
   stim_ecc_x = cos(targAngle) * targEcc;
-  stim_ecc_y = sin(targAngle) * targEcc * -1;
+  stim_ecc_y = sin(targAngle) * targEcc;
 
   // find locations of upper left and lower right corners based on location of center and CURR_TARG_SIZE
   ulx = round((stim_ecc_x - sizeX/2) * DEG_2_PIX_X);

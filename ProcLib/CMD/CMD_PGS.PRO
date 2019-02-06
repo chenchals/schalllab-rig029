@@ -33,12 +33,12 @@ process CMD_PGS()
 
   //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // For Photodiode marker
-  adjacent = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
-
+  adjacent		 = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
   opposite       = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));
+  
   pdEccentricity = sqrt((opposite * opposite) + (adjacent * adjacent)) - 0.5;
-  pdAngleL       = rad2deg(atan(opposite/adjacent)) + 180;
-  pdAngleR       = -rad2deg(atan(opposite/adjacent));
+  pdAngleR       = rad2deg(atan(opposite/adjacent));
+  pdAngleL       = 180 - rad2deg(atan(opposite/adjacent));
 
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 1 FIXATION_PD - PD is drawn on LEFT-TOP of screen only
