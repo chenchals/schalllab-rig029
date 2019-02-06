@@ -24,15 +24,15 @@ process PROC_FIX_ON()
 {
     if (PROCESS_STATE)
     {
+        printf("****STAT_FIX_ON[%d]: Processing Fixspot On\n", STAT_FIX_ON);
         TRL_FIX_VRT_RFRSH_COUNT = 0;
         TRL_START_TIME          = time();
         spawn SEND_EVT(TrialStart_);
 
         dsendf("vp %d\n", PG_FIXATION_PD);
+		// show for only 1 screen refresh
         dsendf("vw 1\n");
         spawn GRAF_SHOW_FIX(GRAF_SHOW);
-
-        printf("****STAT_FIX_ON[%d]: OK (Trial Started)\n", STAT_FIX_ON);
 
         PROCESS_STATE  = 0;
         STAT_STRT_T    = TRL_START_TIME;
@@ -45,24 +45,16 @@ process PROC_FIX_ON()
         TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
         if (TRL_FIX_VRT_RFRSH_COUNT == 1 && !TRL_FIX_ON_TIME)
         {
-            // do not send event multiple times
             TRL_FIX_ON_TIME = time();
             spawn SEND_EVT(FixSpotOn_);
-
             dsendf("vp %d\n", PG_FIXATION);
-
-            printf("****STAT_FIX_ON[%d]: OK (FixSpotOn_)\n", STAT_FIX_ON);
-            spawn UPD8_MSG();
+            printf("****STAT_FIX_ON[%d]:Sending event FixSpotOn_[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
         }
     }
     if (!I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
     {
-        //?send event abort_?
-        //TRL_FIX_ON_TIME = time();???
+        printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
         spawn SEND_EVT(FixNotAcquired_);
-
-        printf("****STAT_FIX_ON:ERR (Fixation not acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
-
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FEEDBACK;
     }
@@ -70,9 +62,7 @@ process PROC_FIX_ON()
     {
         TRL_FIX_ACQ_TIME = time();
         spawn SEND_EVT(AcquireFix_);
-
-        printf("****STAT_FIX_ON[%d]: OK (Fixation acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
-
+        printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FIXATE;
     }

@@ -67,7 +67,7 @@ process SEND_EVT(int eventCode)
 process QUE_TTL()
 {
   // Max number of events to send during 1 process cycle
-  declare int events_per_cycle = 4;
+  declare int events_per_cycle = 10;
   // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
   // then there are no more events  to send in EVENT_FIFO buffer
   declare int event_idx;
@@ -104,7 +104,7 @@ process SEND_TTL(int value)
   // Clear ports before sending
   dioSetA(output, ~0xFF);
   dioSetB(output, ~0xFF);
-  //spawnwait WAIT_MU(100);
+  spawnwait WAIT_MU(50);
   // load the low 8 bits on port A
   dioSetA(output, value & 0xFF);
   // load the high 8 bits on port B
@@ -115,5 +115,5 @@ process SEND_TTL(int value)
   // Clear ports after sending
   dioSetA(output, ~0xFF);
   dioSetB(output, ~0xFF);
-  //spawnwait WAIT_MU(100);
+  spawnwait WAIT_MU(50);
 }
