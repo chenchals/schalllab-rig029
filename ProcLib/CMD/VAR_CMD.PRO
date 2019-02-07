@@ -82,7 +82,7 @@ declare int   TARG_ON_TIME = 100;
 
 //===========================Reward and punishment======================
 // how long should the error and success tones be presented?
-declare int   TONE_DURATION = 0;
+declare int   TONE_DURATION = 50;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
 declare int   REWARD_OFFSET = 600;
 // how long will the juice solonoid remain open (monkeys are very interested in this varaible)

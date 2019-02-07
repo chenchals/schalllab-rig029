@@ -26,6 +26,10 @@ declare IDLE();
 
 declare UPD8_MSG();
 
+declare TONE(int freq, int duration);
+declare TONESWEP();
+declare JUICE(int channel, int duration);
+
 declare int TEST = 100;
 
 process IDLE() enabled
@@ -94,16 +98,29 @@ process IDLE() enabled
 		dsendf("vp %d\n", PG_BLANK);
 		CURR_STAT   = STAT_GET_READY;
 		STAT_DLTA_T = 0;
+		CURR_STAT=STAT_TEST;
 		while (TRL_RUNNING)
 		{
 			while (CURR_STAT == STAT_TEST)
 			{
-				printf("Eyes must be updating continuously...\n");
-
-				spawn GRAF_SHOW_FIX_WIN();
-
-				CURR_STAT = STAT_IDLE;
-
+				CURR_STAT = STAT_TEST;
+				/*
+				printf("SUCCESS_TONE_BIG_REWARD [%d]\n",SUCCESS_TONE_BIG_REWARD);
+                spawnwait TONE(SUCCESS_TONE_BIG_REWARD,TONE_DURATION);
+				nexttick 1000;
+				printf("SUCCESS_TONE_MED_REWARD [%d]\n",SUCCESS_TONE_MED_REWARD);
+                spawnwait TONE(SUCCESS_TONE_MED_REWARD,TONE_DURATION);
+				nexttick 1000;
+				printf("SUCCESS_TONE_SML_REWARD [%d]\n",SUCCESS_TONE_SML_REWARD);
+                spawnwait TONE(SUCCESS_TONE_SML_REWARD,TONE_DURATION);
+				nexttick 1000;
+				printf("Doing TONESWEP()\n");
+				spawnwait TONESWEP();
+				nexttick 1000;
+				*/
+				printf("Giving JUICE\n");
+				spawnwait JUICE(JUICE_CHANNEL,BASE_REWARD_TIME+100);
+				nexttick 1000;
 				//nexttick 5000;
 				//CURR_STAT = STAT_GET_READY;
 				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
@@ -115,7 +132,7 @@ process IDLE() enabled
 				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
 				TRL_RUNNING = 0;
-				nexttick 10000;
+				nexttick 1000;
 			}
 
 			//================= State = STAT_GET_READY===============
@@ -175,3 +192,83 @@ process UPD8_MSG()
 	printf("TRL_NUM [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
 }
 
+//------------------------------------------------------------------------
+// process Tone(int frequency, int duration)
+// Play a tone for the specified frequency and duration
+// INPUT
+//	 frequency = frequency of tone (hz) to be played
+//	 duration  = amount of time (in ms) to pay tone
+//
+// written by david.c.godlove@vanderbilt.edu 	January, 2011
+
+//declare TONE(int frequency, int duration);
+
+process TONE(int frequency, int duration)
+	{
+	declare hide count;			// Count down for the pulse generator to change state (see below)
+	declare hide int off = 0;	// To turn tone off at end
+	
+	/*  A call to the PCI-DAS-1602 analog pulse generator is in the 
+		form of...
+		mio_fout(count) 
+		where "count" specifies a count down in 10 MHz clock cycles 
+		before the square wave switches states.
+		Converting that to frequency is done by...
+		frequency(Hz) = 10,000,000 / count
+		therefore...
+		count = 10,000,000 / frequency(Hz)
+	*/
+	count = 10000000/frequency; // See above
+	//sound(frequency);
+	mio_fout(count);			// Start sending the tone
+	wait(duration);				// Wait for user defined period of time (ms)
+	//sound(0);
+	mio_fout(off);				// Stop sending the tone
+	}
+//declare TONESWEP();
+
+process TONESWEP()
+	{
+	spawnwait TONE(64000,10);
+	
+	spawnwait TONE(32000,10);
+	
+	spawnwait TONE(16000,10);
+	
+	spawnwait TONE(8000,10);
+	
+	spawnwait TONE(4000,10);
+	
+	spawnwait TONE(2000,10);
+	
+	spawnwait TONE(1000,10);
+	
+	spawnwait TONE(500,10);
+	
+	spawnwait TONE(250,10);	
+	}
+	
+//------------------------------------------------------------------------
+// process JUICE(int channel, int duration)
+// Deliver a juice reward to the animal
+// INPUT
+//	 channel  = rig specific TTL channel connected to solenoid (channel 9 in 028)
+//	 duration = amount of time (in ms) to leave solenoid open
+//
+// written by david.c.godlove@vanderbilt.edu 	January, 2011
+
+//declare JUICE(int channel, int duration);
+
+process JUICE(int channel, int duration)
+	{
+	declare hide int open   = 1;	
+	declare hide int closed = 0;	
+	
+	spawn SEND_EVT(JuiceStart_);
+	
+	mio_dig_set(channel,open);		// Start sending the TTL
+	wait(duration);					// Wait for user defined period of time (ms)
+	mio_dig_set(channel,closed);	// Stop sending the TTL
+	
+	spawn SEND_EVT(JuiceEnd_);
+	}
