@@ -125,6 +125,7 @@ process SET_CMD_TRL()
   CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
   // Zero is black.  see SET_CLRS.pro
   CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+  
   spawnwait SET_WINS();
   
   // Update graph object for Target

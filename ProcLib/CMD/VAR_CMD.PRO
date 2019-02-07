@@ -40,11 +40,11 @@ declare int FIX_HOLD_TIME;
 // maximum time after fixation before target presentation
 //declare int MAX_HOLD_TIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_MAX_SACCADE_TIME[2] = {500, 1000};
+declare int MIN_MAX_SACCADE_TIME[2] = {500, 700};
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
-declare int MAX_SACCADE_DURATION = 500;
+declare int MAX_SACCADE_DURATION = 100;
 // after saccade subject must hold fixation at target for this long
 declare int MIN_MAX_TARGET_HOLD_TIME[2] = {1500, 1500};
 declare int TARGET_HOLD_TIME;

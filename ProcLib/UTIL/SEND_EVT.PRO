@@ -102,9 +102,10 @@ process SEND_TTL(int value)
   // set ports A, B, and C to send strobes (output)
   dioSetMode(output, PORTA | PORTB | PORTC);
   // Clear ports before sending
-  dioSetA(output, ~0xFF);
-  dioSetB(output, ~0xFF);
-  spawnwait WAIT_MU(50);
+  //dioSetA(output, ~0xFF);
+  //dioSetB(output, ~0xFF);
+  
+  //spawnwait WAIT_MU(50);
   // load the low 8 bits on port A
   dioSetA(output, value & 0xFF);
   // load the high 8 bits on port B
@@ -115,5 +116,5 @@ process SEND_TTL(int value)
   // Clear ports after sending
   dioSetA(output, ~0xFF);
   dioSetB(output, ~0xFF);
-  spawnwait WAIT_MU(50);
+  //spawnwait WAIT_MU(50);
 }

@@ -24,6 +24,9 @@ process BITSWEEP() enabled
   declare int bitValue;
 
   thisBit = 0;
+  while(1)
+  {
+	  thisBit = 0;
   while (thisBit < maxBits)
   {
     if (thisBit == 0)
@@ -34,7 +37,7 @@ process BITSWEEP() enabled
     {
       bitValue = bitValue * 2;
     }
-    printf("Sending bit [%d] value(2^%d) = [%d]\n", thisBit, thisBit, -bitValue);
+    printf("Sending bit [%d] value(2^%d) = [%d]\n", thisBit, thisBit, bitValue);
     spawnwait SEND_EVT(bitValue);
 
     sentTime = time();
@@ -43,5 +46,8 @@ process BITSWEEP() enabled
       nexttick;
     }
     thisBit = thisBit + 1;
+  }
+  nexttick 1000;
+  printf("Doing next cycle...\n");
   }
 }

@@ -67,14 +67,17 @@ process IDLE() enabled
 
 	CURR_STAT  = STAT_IDLE;
 	TRL_NUMBER = 0;
-	printf("Setting SEND_EVT Room\n");
+	printf("Sending Identify_Room_\n");
 	spawn SEND_EVT(Identify_Room_);
+	printf("Sending RIG_ID\n");
 	spawn SEND_EVT(RIG_ID);
 
 	while (1)
 	{
 		//===============For each Trial=====================
+		printf("Setting TRIAL variables\n");
 		spawnwait SET_CMD_TRL();
+		printf("Done Setting TRIAL variables\n");
 
 		PROCESS_STATE            = 1;
 		TRL_CUM_TIME             = 0;
@@ -86,7 +89,8 @@ process IDLE() enabled
 
 		spawn SEND_EVT(CmanHeader_);
 		spawn GRAF_HIDE_FIX_TARG();
-
+		
+		printf("Sending BLANK page\n");
 		dsendf("vp %d\n", PG_BLANK);
 		CURR_STAT   = STAT_GET_READY;
 		STAT_DLTA_T = 0;

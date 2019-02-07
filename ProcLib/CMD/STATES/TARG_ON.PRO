@@ -68,7 +68,7 @@ process PROC_TARG_ON()
 		spawn SEND_EVT(EarlySaccade_);
 		printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]\n", STAT_TARG_ON, STAT_DLTA_T);
 		PROCESS_STATE = 1;
-		CURR_STAT     = STAT_TARG_FIXATE;
+		CURR_STAT     = STAT_FEEDBACK;
 	}
 	else if (!I_FIX && STAT_DLTA_T <= STAT_ALLOWED_T)
 	{

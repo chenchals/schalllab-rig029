@@ -47,12 +47,10 @@ process CMD_PGS()
   dsendf("cl:\n");
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
   spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
-
-  //printf("-----------------\n");
   nexttick;
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 2 FIXATION - No PD
-  //printf("CMD_PGS: page %d FIX_SIZE %2.2d, PD_WIDTH_DEG %3.4d\n",PG_FIXATION,FIX_SIZE_DEG);
+  //printf("CMD_PGS: page %d FIX_SIZE %d\n",PG_FIXATION,FIX_SIZE_DEG);
   dsendf("rw %d,%d;\n", PG_FIXATION, PG_FIXATION);
   dsendf("cl:\n");
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
@@ -63,12 +61,13 @@ process CMD_PGS()
   //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_TARGET_PD,CURR_TARG_SIZE,PD_WIDTH_DEG,pdAngleL);
   dsendf("rw %d,%d;\n", PG_TARGET_PD, PG_TARGET_PD);
   dsendf("cl:\n");
+  //printf("drawing target \n");
   // draw PG_TARGET
   spawnwait DRW_RECT(CURR_TARG_SIZE, CURR_TARG_SIZE, CURR_TARG_ANGLE, CURR_TARG_ECCENTRICITY, CURR_TARG_COLOR_IDX, FILL);
-
+  //printf("drawing open fix\n");
   // draw OPEN PG_FIXATION point
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
-
+  //printf("drawing left PD\n");
   // Draw left PD marker
   spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
@@ -115,12 +114,12 @@ process CMD_PGS()
   // draw PG_FIXATION point
   spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
-  nexttick;
+  nexttick 5;
   //--------------------------------------------------------------------------------------------------------------------
   // Draw pg 0 BLANK (draw last so it is displayed as default))
   //printf("CMD_PGS: page %d PG_BLANK\n", PG_BLANK);
   // draw the PG_BLANK screen last so that it shows up first
   dsendf("rw %d,%d;\n", PG_BLANK, PG_BLANK);
   dsendf("cl:\n");
-  nexttick;
+  nexttick ;
 } /* CMD_PGS */
