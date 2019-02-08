@@ -125,13 +125,13 @@ process SET_CMD_TRL()
   CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
   // Zero is black.  see SET_CLRS.pro
   CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
-  
+
   spawnwait SET_WINS();
-  
+
   // Update graph object for Target
   spawnwait GRAF_UPD8_FIX();
   spawnwait GRAF_UPD8_TARG();
-  
+
   printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n",TRIAL_TYPE,CURR_TARG_IDX, CURR_TARG_ANGLE);
 
   // Setup CMD PAGES
@@ -140,7 +140,7 @@ process SET_CMD_TRL()
 
   // Set up any timing jitters etc
   FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1]-MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
-  TARGET_HOLD_TIME = random(MIN_MAX_TARGET_HOLD_TIME[1]-MIN_MAX_TARGET_HOLD_TIME[0]) + MIN_MAX_TARGET_HOLD_TIME[0];
+  MIN_TARGET_HOLD_TIME = 1000;
   // ITI TIME?
 
 } /* SETC_TRL */

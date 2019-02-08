@@ -1,8 +1,8 @@
 //==========================================================================
 // CMD_TSK.PRO
-//   Description[%d]: Loads all PRO files for CMD task
-//   Author[%d]: chenchal.subraveti@vanderbilt.edu
-//   Date[%d]: 2019-01-14
+//   Description: Loads all PRO files for CMD task
+//   Author: chenchal.subraveti@vanderbilt.edu
+//   Date: 2019-01-14
 //==========================================================================
 //  Revision History:
 //
@@ -93,7 +93,7 @@ process IDLE() enabled
 
 		spawn SEND_EVT(CmanHeader_);
 		spawn GRAF_HIDE_FIX_TARG();
-		
+
 		printf("Sending BLANK page\n");
 		dsendf("vp %d\n", PG_BLANK);
 		CURR_STAT   = STAT_GET_READY;
@@ -191,84 +191,3 @@ process UPD8_MSG()
 	dummy = 1;
 	printf("TRL_NUM [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
 }
-
-//------------------------------------------------------------------------
-// process Tone(int frequency, int duration)
-// Play a tone for the specified frequency and duration
-// INPUT
-//	 frequency = frequency of tone (hz) to be played
-//	 duration  = amount of time (in ms) to pay tone
-//
-// written by david.c.godlove@vanderbilt.edu 	January, 2011
-
-//declare TONE(int frequency, int duration);
-
-process TONE(int frequency, int duration)
-	{
-	declare hide count;			// Count down for the pulse generator to change state (see below)
-	declare hide int off = 0;	// To turn tone off at end
-	
-	/*  A call to the PCI-DAS-1602 analog pulse generator is in the 
-		form of...
-		mio_fout(count) 
-		where "count" specifies a count down in 10 MHz clock cycles 
-		before the square wave switches states.
-		Converting that to frequency is done by...
-		frequency(Hz) = 10,000,000 / count
-		therefore...
-		count = 10,000,000 / frequency(Hz)
-	*/
-	count = 10000000/frequency; // See above
-	//sound(frequency);
-	mio_fout(count);			// Start sending the tone
-	wait(duration);				// Wait for user defined period of time (ms)
-	//sound(0);
-	mio_fout(off);				// Stop sending the tone
-	}
-//declare TONESWEP();
-
-process TONESWEP()
-	{
-	spawnwait TONE(64000,10);
-	
-	spawnwait TONE(32000,10);
-	
-	spawnwait TONE(16000,10);
-	
-	spawnwait TONE(8000,10);
-	
-	spawnwait TONE(4000,10);
-	
-	spawnwait TONE(2000,10);
-	
-	spawnwait TONE(1000,10);
-	
-	spawnwait TONE(500,10);
-	
-	spawnwait TONE(250,10);	
-	}
-	
-//------------------------------------------------------------------------
-// process JUICE(int channel, int duration)
-// Deliver a juice reward to the animal
-// INPUT
-//	 channel  = rig specific TTL channel connected to solenoid (channel 9 in 028)
-//	 duration = amount of time (in ms) to leave solenoid open
-//
-// written by david.c.godlove@vanderbilt.edu 	January, 2011
-
-//declare JUICE(int channel, int duration);
-
-process JUICE(int channel, int duration)
-	{
-	declare hide int open   = 1;	
-	declare hide int closed = 0;	
-	
-	spawn SEND_EVT(JuiceStart_);
-	
-	mio_dig_set(channel,open);		// Start sending the TTL
-	wait(duration);					// Wait for user defined period of time (ms)
-	mio_dig_set(channel,closed);	// Stop sending the TTL
-	
-	spawn SEND_EVT(JuiceEnd_);
-	}

@@ -8,6 +8,13 @@
 //   Date: 2019-01-14
 //==========================================================================
 //  Revision History:
+//  002: 2019-02-08 chenchal subraveti
+//       Compute MIN_TARG_HOLD_TIME using USE_TONE_AND_REWRD_FOR_MIN_THT
+//       if 0: then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
+//       if 1: then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+REWARD_DURATION+REWARD_DELAY+BASE_TARG_HOLD_TIME
+//       MIN_TARG_HOLD_TIME:
+//       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE / JUICE given
+//       if gaze ob target ==> NO TIMEOUT_TIME
 //
 
 // Trial counters
@@ -18,7 +25,6 @@ declare int TRIALS_PER_BLOCK = 30;
 declare int          TRIAL_TYPE;
 declare constant int TRIAL_TYPE_GO     = 0;
 declare constant int TRIAL_TYPE_STOP   = 1;
-declare constant int TRIAL_TYPE_IGNORE = 2;
 // Percentage of trial types (must sum to 100)
 declare float        GO_WEIGHT     = 30.0;
 declare float        STOP_WEIGHT   = 30.0;
@@ -45,9 +51,15 @@ declare int MIN_MAX_SACCADE_TIME[2] = {500, 700};
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
 declare int MAX_SACCADE_DURATION = 100;
-// after saccade subject must hold fixation at target for this long
-declare int MIN_MAX_TARGET_HOLD_TIME[2] = {1500, 1500};
-declare int TARGET_HOLD_TIME;
+// Base Minimum time subject should hold gaze on TARGET
+declare int BASE_TARG_HOLD_TIME = 100;
+// Use TONE_DELAY and REWARD_DELAY for computing MIN_TARGET_HOLD_TIME
+// if = 0, then MIN_TARGET_HOLD_TIME = BASE_TARG_HOLD_TIME
+// if = 1, then MIN_TARGET_HOLD_TIME = TONE_DELAY+TONE_DURATION+REWARD_DELAY+REWARD_DURATION+BASE_TARG_HOLD_TIME
+declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
+// after saccade subject must hold gaze on target for this long
+// if not, then TIMEOUT is imposed regardless of TONE or REWARD
+declare int MIN_TARG_HOLD_TIME;
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 20;
 // number of *non-zero* stop signal delays
@@ -72,21 +84,24 @@ declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
-declare int   TRL_LENGTH_TIME = 5000;
+declare int   TRL_LEN_TIME = 5000;
+// timeout time for punishment computed
+declare int TIMEOUT_TIME;
 // Extra punish time
-declare int   EXTRA_PUNISH_TIME = TRL_LENGTH_TIME;
+declare int   XTRA_TIMEOUT_IN_TRIAL_LENGTHS = TRL_LENGTH_TIME;
 // how long between trials (only works if Fixed_trl_length == 0)
-declare int   INTER_TRL_INTERVAL_TIME = 800;
+declare int   ITI_TIME = 800;
 declare int   NOGO_SOA;
-declare int   TARG_ON_TIME = 100;
 
 //===========================Reward and punishment======================
+// how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
+declare int   TONE_DELAY = 600;
 // how long should the error and success tones be presented?
 declare int   TONE_DURATION = 50;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   REWARD_OFFSET = 600;
+declare int   REWARD_DELAY = 600;
 // how long will the juice solonoid remain open (monkeys are very interested in this varaible)
-declare int   BASE_REWARD_TIME = 20;
+declare int   BASE_REWARD_DURATION = 20;
 // time out for messing up
 declare int   BASE_PUNISH_TIME = 2000;
 // Reward weights
