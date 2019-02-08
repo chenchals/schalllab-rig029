@@ -115,9 +115,9 @@ process INFOS()
 
   spawn SEND_EVT(InfosZero + Success_Tone);
   spawn SEND_EVT(InfosZero + Tone_Duration);
-  spawn SEND_EVT(InfosZero + Base_Reward_time);
-  spawn SEND_EVT(InfosZero + Reward_Duration);
-  spawn SEND_EVT(InfosZero + Reward_Offset);
+  spawn SEND_EVT(InfosZero + Base_RWRD_time);
+  spawn SEND_EVT(InfosZero + RWRD_Duration);
+  spawn SEND_EVT(InfosZero + RWRD_Offset);
   spawn SEND_EVT(InfosZero + rewardOffset);
 
   nexttick 5;

@@ -68,7 +68,7 @@ process PROC_TARG_ACQ()
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_ABORT;
-						printf("**********Compute timeout for aborting****************\n")
+						printf("**********Compute timeout for aborting****************\n");
         }
     }
 } /* PROC_TARG_ACQ */

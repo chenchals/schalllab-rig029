@@ -28,7 +28,7 @@ declare constant Stimulation_  = 666;
 declare constant EndStim_      = 667;
 declare constant StimFailed_   = 668;
 declare constant Error_tone    = 776;
-declare constant Reward_tone   = 777;
+declare constant RWRD_tone   = 777;
 declare constant Error_sacc    = 887;
 declare constant Correct_sacc  = 888;
 declare constant VSyncRefresh_ = 999;
@@ -55,7 +55,7 @@ declare constant Tone_          = 2001;
 declare constant PunishEnd_     = 2002;
 declare constant ITIStart_      = 2124;
 declare constant ITIEnd_        = 2125;
-declare constant ExtraReward_   = 2127;
+declare constant ExtraRWRD_   = 2127;
 declare constant FixSpotOff_    = 2300;
 declare constant FixSpotOn_     = 2301;
 //Note that this is followed by a 1 or a 2 if MultElectrodeStimFlag is set depending on the stim channel???
@@ -63,11 +63,11 @@ declare constant ZeroEyePosition_ = 2302;
 declare constant PlacOn_          = 2320;
 //===================================================
 // Break target fixation before MIN_TARG_HOLD_TIME
-declare constant TargBreakFix_        = 2400;
-declare constant TargBreakFixPreTone_ = 2402;
-declare constant TargBreakFixTone_    = 2404;
-declare constant TargBreakFixPreRwrd_ = 2406;
-declare constant TargBreakFixRwrd_    = 2408;
+declare constant TargBrkFix_        = 2400;
+declare constant TargBrkFixPreTone_ = 2402;
+declare constant TargBrkFixTone_    = 2404;
+declare constant TargBrkFixPreRwrd_ = 2406;
+declare constant TargBrkFixRwrd_    = 2408;
 //==================================================
 declare constant ToneOn_          = 2412;
 declare constant ToneOff_          = 2414;
@@ -96,7 +96,7 @@ declare constant AcquireTarget_     = 2670;
 declare constant AcquireTargetSlow_ = 2671;
 
 
-declare constant Reward_           = 2727;
+declare constant RWRD_           = 2727;
 declare constant FixError_         = 2750;
 declare constant GoSaccade_        = 2751;
 declare constant GoError_          = 2752;
@@ -122,8 +122,8 @@ declare constant ReturnToFix_ = 2775;
 
 declare constant JuiceStart_    = 2776;
 declare constant JuiceEnd_      = 2777;
-declare constant SoundOnReward_ = 2778;
-declare constant SoundNoReward_ = 2779;
+declare constant SoundOnRWRD_ = 2778;
+declare constant SoundNoRWRD_ = 2779;
 declare constant Saccade_       = 2810;
 declare constant Decide_        = 2811;
 declare constant StimHelp_      = 2820;

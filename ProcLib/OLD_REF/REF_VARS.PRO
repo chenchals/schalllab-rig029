@@ -294,8 +294,8 @@ declare float SSD_list[20];                     // needs to be in refresh rate u
 declare float SOA_list[20];                     // needs to be in refresh rate units
 declare int   Cancl_time;                       // subject must hold fixation for this long on a stop trial to be deemed canceled
 declare int   Tone_Duration;                    // how long should the error and success tones be presented?
-declare int   Reward_Offset;                    // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   Base_Reward_time;                 // how long will the juice solonoid remain open (monkeys are very interested in this varaible)
+declare int   RWRD_Offset;                    // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
+declare int   Base_RWRD_time;                 // how long will the juice solonoid remain open (monkeys are very interested in this varaible)
 declare int   Base_Punish_time;                 // time out for messing up
 declare int   Bmove_tout;                       // additive timeout imposed for each body movement
 declare int   Move_ct;                          // Output lets us know how many times the body has moved.
@@ -311,7 +311,7 @@ declare int   targ_on_time;
 
 //------------------------------------------------------------------------------------------------------------------
 // Globals needed for multiple processes which must be declared here to avoid dependancy conflicts
-declare int Reward_duration;                    //GLOBAL OUTPUT FOR INFOS.pro will be set by END_TRL.pro
+declare int RWRD_duration;                    //GLOBAL OUTPUT FOR INFOS.pro will be set by END_TRL.pro
 declare int Punish_time;                        //GLOBAL OUTPUT FOR INFOS.pro will be set by END_TRL.pro
 declare int Success_tone;                       //GLOBAL OUTPUT FOR INFOS.pro will be set by END_TRL.pro
 declare int Failure_tone;                       //GLOBAL OUTPUT FOR INFOS.pro will be set by END_TRL.pro

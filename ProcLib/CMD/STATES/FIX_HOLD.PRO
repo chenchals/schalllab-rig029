@@ -22,31 +22,32 @@
 
 process PROC_FIX_HOLD()
 {
-    if (PROCESS_STATE)
-    {
-        printf("****STAT_FIXATE[%d]: Processing hold fixation\n", STAT_FIXATE);
-        // actually TRL_FIX_ACQ_TIME, however the below is practically
-        //same and it keeps this state independent of previous state
-        PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
-        STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = FIX_HOLD_TIME * TIME_DILATE_FACTOR;
-    }
+	if (PROCESS_STATE)
+	{
+		printf("****STAT_FIXATE[%d]: Processing hold fixation\n", STAT_FIXATE);
+		// actually TRL_FIX_ACQ_TIME, however the below is practically
+		//same and it keeps this state independent of previous state
+		PROCESS_STATE  = 0;
+		STAT_STRT_T    = time();
+		STAT_DLTA_T    = 0;
+		STAT_ALLOWED_T = FIX_HOLD_TIME * TIME_DILATE_FACTOR;
+	}
 
-    if (!I_FIX && STAT_DLTA_T < STAT_ALLOWED_T)
-    {
-        TRL_BREAK_FIX_TIME = time();
-        spawn SEND_EVT(BreakFix_);
-        printf("****STAT_FIXATE[%d]:ERR (Broke fixation)[%d]\n", STAT_FIXATE,STAT_DLTA_T);
-        PROCESS_STATE = 1;
-        CURR_STAT     = STAT_FEEDBACK;                                                                                                                                                            // to go to next trial
-    }
-    else if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
-    {
-        TRL_FIXATED_TIME = time();
-        spawn SEND_EVT(Fixate_);
-        printf("****STAT_FIXATE[%d]: OK (Fixated)[%d]\n", STAT_FIXATE,STAT_DLTA_T);
-        PROCESS_STATE = 1;
-        CURR_STAT     = STAT_TARG_ON;
-    }
+	if (!I_FIX && STAT_DLTA_T < STAT_ALLOWED_T)
+	{
+		TRL_BREAK_FIX_TIME = time();
+		spawn SEND_EVT(BreakFix_);
+		printf("****STAT_FIXATE[%d]:ERR (Broke fixation)[%d]\n", STAT_FIXATE,STAT_DLTA_T);
+		PROCESS_STATE = 1;
+		CURR_STAT     = STAT_ABORT;
+		printf("**********Compute timeout for aborting****************\n");
+	}
+	else if (I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
+	{
+		TRL_FIXATED_TIME = time();
+		spawn SEND_EVT(Fixate_);
+		printf("****STAT_FIXATE[%d]: OK (Fixated)[%d]\n", STAT_FIXATE,STAT_DLTA_T);
+		PROCESS_STATE = 1;
+		CURR_STAT     = STAT_TARG_ON;
+	}
 } /* PROC_FIX_HOLD */

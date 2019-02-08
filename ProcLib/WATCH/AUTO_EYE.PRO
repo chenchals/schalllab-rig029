@@ -16,7 +16,7 @@ declare AUTO_EYE_GET_READY();
 declare AUTO_EYE_FIX_ON();
 declare AUTO_EYE_FIXATE();
 declare AUTO_EYE_TARG_ON();
-declare AUTO_EYE_TARG_FIXATE();
+declare AUTO_EYE_TARG_ACQ();
 
 // Utils for eye pos
 declare AUTO_EYE_POS_ACQ_TARG();
@@ -78,9 +78,9 @@ process AUTO_EYE()
 		{
 			spawnwait AUTO_EYE_TARG_ON();
 		}
-		else if (CURR_STAT == STAT_TARG_FIXATE)
+		else if (CURR_STAT == STAT_TARG_ACQ)
 		{
-			spawnwait AUTO_EYE_TARG_FIXATE();
+			spawnwait AUTO_EYE_TARG_ACQ();
 		}
 		else
 		{
@@ -179,7 +179,7 @@ process AUTO_EYE_TARG_ON()
 
 
 // State TARG_ACQ
-process AUTO_EYE_TARG_FIXATE()
+process AUTO_EYE_TARG_ACQ()
 {
 	declare float fracTime;
 	// Eye should be in flight or not?

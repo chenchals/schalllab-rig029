@@ -11,7 +11,7 @@
 //  002: 2019-02-08 chenchal subraveti
 //       Compute MIN_TARG_HOLD_TIME using USE_TONE_AND_REWRD_FOR_MIN_THT
 //       if 0: then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
-//       if 1: then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+REWARD_DURATION+REWARD_DELAY+BASE_TARG_HOLD_TIME
+//       if 1: then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+BASE_TARG_HOLD_TIME
 //       MIN_TARG_HOLD_TIME:
 //       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE / JUICE given
 //       if gaze ob target ==> NO TIMEOUT_TIME
@@ -53,9 +53,9 @@ declare int MIN_MAX_SACCADE_TIME[2] = {500, 700};
 declare int MAX_SACCADE_DURATION = 100;
 // Base Minimum time subject should hold gaze on TARGET
 declare int BASE_TARG_HOLD_TIME = 100;
-// Use TONE_DELAY and REWARD_DELAY for computing MIN_TARGET_HOLD_TIME
+// Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGET_HOLD_TIME
 // if = 0, then MIN_TARGET_HOLD_TIME = BASE_TARG_HOLD_TIME
-// if = 1, then MIN_TARGET_HOLD_TIME = TONE_DELAY+TONE_DURATION+REWARD_DELAY+REWARD_DURATION+BASE_TARG_HOLD_TIME
+// if = 1, then MIN_TARGET_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
 declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
@@ -101,15 +101,16 @@ declare int   TONE_DELAY = 600;
 // how long should the error and success tones be presented?
 declare int   TONE_DURATION = 50;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   REWARD_DELAY = 600;
-// how long will the juice solonoid remain open (monkeys are very interested in this varaible)
-declare int   BASE_REWARD_DURATION = 20;
+declare int   RWRD_DELAY = 600;
+// how long will the juice solenoid remain open (monkeys are very interested in this varaible)
+declare int   BASE_RWRD_DURATION = 20;
+declare int RWRD_DURATION;
 // time out for messing up
 declare int   BASE_PUNISH_TIME = 2000;
 // Reward weights
-declare float BIG_REWARD_WEIGHT = 0.3;
-declare float MED_REWARD_WEIGHT = 0.2;
-declare float SML_REWARD_WEIGHT = 0.1;
+declare float BIG_RWRD_WEIGHT = 0.3;
+declare float MED_RWRD_WEIGHT = 0.2;
+declare float SML_RWRD_WEIGHT = 0.1;
 // Punishment weights
 declare float SML_PUNISH_WEIGHT = 0.1;
 declare float MED_PUNISH_WEIGHT = 0.2;
@@ -124,7 +125,7 @@ declare int FAILURE_TONE_SML_TIMEOUT = 800;
 declare int FAILURE_TONE_MED_TIMEOUT = 1600;
 declare int FAILURE_TONE_BIG_TIMEOUT = 3200;
 // Exponential juice reward duration by reaction time
-declare int EXP_JUICE_REWARD_TIME = 0;
+declare int EXP_JUICE_RWRD_TIME = 0;
 
 //==========================Additional Timeouts======================
 // additive timeout imposed for each body movement

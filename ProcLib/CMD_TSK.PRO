@@ -12,23 +12,24 @@
 #include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
+#include C:/TEMPO/ProcLib/UTIL/TONE.PRO
+#include C:/TEMPO/ProcLib/UTIL/JUICE.PRO
+
 // State flow
 #include C:/TEMPO/ProcLib/CMD/STATES/GET_REDY.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/FIX_ON.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/FIX_HOLD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_VR.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ON.PRO
-#include C:/TEMPO/ProcLib/CMD/STATES/TARG_HLD.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/TARG_ACQ.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/TONE_CHK.PRO
+
 
 //==========================================================================
 
 declare IDLE();
 
 declare UPD8_MSG();
-
-declare TONE(int freq, int duration);
-declare TONESWEP();
-declare JUICE(int channel, int duration);
 
 declare int TEST = 100;
 
@@ -120,7 +121,7 @@ process IDLE() enabled
 				nexttick 1000;
 				*/
 				printf("Giving JUICE\n");
-				spawnwait JUICE(JUICE_CHANNEL,BASE_REWARD_TIME+100);
+				spawnwait JUICE(JUICE_CHANNEL,BASE_RWRD_DURATION+100);
 				nexttick 1000;
 				//nexttick 5000;
 				//CURR_STAT = STAT_GET_READY;

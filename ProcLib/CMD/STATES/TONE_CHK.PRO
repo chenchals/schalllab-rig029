@@ -20,10 +20,10 @@
 //==========================================================================
 //  Revision History:
 
-declare PROC_TONE();
+declare PROC_TONE_CHK();
 
 
-process PROC_TONE()
+process PROC_TONE_CHK()
 {
     // Target acquired, but not fixated yet or eye still in FixWin
     if (PROCESS_STATE)
@@ -57,13 +57,13 @@ process PROC_TONE()
         if (!I_TARG)
         {
             TRL_TARG_BRK_FIX_PRE_TONE_TIME = time();
-            spawn SEND_EVT(TargetBrkFixPreTone_);
+            spawn SEND_EVT(TargBrkFixPreTone_);
 
             printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]\n", STAT_TONE_CHK, STAT_DLTA_T);
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_ABORT;
-            printf("**********Compute timeout for aborting****************\n")
+            printf("**********Compute timeout for aborting****************\n");
         }
     }
     else if (STAT_DLTA_T <= STAT_ALLOWED_T + STAT_I_MOVE_DURATION)
@@ -76,13 +76,13 @@ process PROC_TONE()
         if (!I_TARG && TRL_TARG_BRK_FIX_TONE_TIME)
         {
             TRL_TARG_BRK_FIX_PRE_TONE_TIME = time();
-            spawn SEND_EVT(TargetBrkFixTone_);
+            spawn SEND_EVT(TargBrkFixTone_);
 
             printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]\n", STAT_TONE_CHK, STAT_DLTA_T);
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_ABORT;
-            printf("**********Compute timeout for aborting****************\n")
+            printf("**********Compute timeout for aborting****************\n");
         }
     }
     else if (STAT_DLTA_T > STAT_ALLOWED_T + STAT_I_MOVE_DURATION)
