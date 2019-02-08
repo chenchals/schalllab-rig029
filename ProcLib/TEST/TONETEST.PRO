@@ -9,10 +9,11 @@
 //       Adapted from BITSWEEP.PRO
 //
 
-#include C: / TEMPO / ProcLib / UTIL / SEND_EVT.PRO
-#include C: / TEMPO / ProcLib / UTIL / TONE.PRO
+#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
+#include C:/TEMPO/ProcLib/UTIL/TONE.PRO
 
 declare TONETEST();
+declare PLAY_HP();
 
 
 process TONETEST() enabled
@@ -20,10 +21,9 @@ process TONETEST() enabled
     declare int freq[10] = { 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000 };
     declare int duration = 50;
     declare int temp     = 0;
-    declare int playHp   = 0;
+    declare int playHp   = 1;
 
-    while (1)
-    {
+	temp = 0;
         while (temp < 10)
         {
             spawnwait TONE(freq[temp], duration);
@@ -34,8 +34,7 @@ process TONETEST() enabled
         {
             spawnwait PLAY_HP();
         }
-        nexttick 2000;
-    }
+
 } /* TONETEST */
 
 
@@ -71,19 +70,19 @@ process PLAY_HP()
     declare int   tempo    = 400;
 
 
-    spawnwait TONE(B, tempo *one);
-    spawnwait TONE(E, tempo *one_half);
-    spawnwait TONE(G, tempo *half);
-    spawnwait TONE(F, tempo *one);
-    spawnwait TONE(E, tempo *two);
-    spawnwait TONE(B2, tempo *one);
-    spawnwait TONE(A2, tempo *two_half);
-    spawnwait TONE(Fs, tempo *two_half);
+    spawnwait TONE(B, Int(tempo*one));
+    spawnwait TONE(E, Int(tempo*one_half));
+    spawnwait TONE(G, Int(tempo*half));
+    spawnwait TONE(F, Int(tempo*one));
+    spawnwait TONE(E, Int(tempo*two));
+    spawnwait TONE(B2, Int(tempo*one));
+    spawnwait TONE(A2, Int(tempo*two_half));
+    spawnwait TONE(Fs, Int(tempo*two_half));
 
-    spawnwait TONE(E, tempo *one_half);
-    spawnwait TONE(G, tempo *half);
-    spawnwait TONE(F, tempo *one);
-    spawnwait TONE(Ds, tempo *two);
-    spawnwait TONE(F, tempo *one);
-    spawnwait TONE(B, tempo *two_half);
+    spawnwait TONE(E, Int(tempo*one_half));
+    spawnwait TONE(G, Int(tempo*half));
+    spawnwait TONE(F, Int(tempo*one));
+    spawnwait TONE(Ds, Int(tempo*two));
+    spawnwait TONE(F, Int(tempo*one));
+    spawnwait TONE(B, Int(tempo*two_half));
 } /* PLAY_HP */

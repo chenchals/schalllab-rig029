@@ -2,10 +2,10 @@
 ; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
-; Thu Jan 24 08:13:40 2019
-; CLOAD TONETEST.pcf
+; Fri Feb 08 17:18:29 2019
+; CLOAD MAIN_MENU1.pcf
 
-; tempow 16.10 Set 49.20   'ADMINf811251' connected to 'TEMPO1'
+; tempow 16.10 Set 49.20   'ADMINf811798' connected to 'TEMPO1'
 ; KPED 17.1 Set 49
 ; KSRV 16.8 Set 49.20 (Server 'TEMPO1          ' running on computer '')
 ; PCL 0.0     TEMPO 0.0
@@ -55,19 +55,15 @@ ACHANINFO 0
 
 ECHANINFO 0
 
-PLOAD TONETEST.PRO
-
-DLOAD TONETEST.dcf
-DSHOW Tonetest
 
 ; DATABASES=16
 
 
 ; WINDOW CONFIGURATION
 
-SCREENRES 1366,768,32,1,0,0
-MAINWND 1,0,0,-1,-1,47,78,1072,619,0
-MSGWND 1,-1,-1,-1,-1,886,242,1366,692,0
+SCREENRES 1280,768,32,1,0,0
+MAINWND 1,0,0,-1,-1,11,34,971,573,0
+MSGWND 1,0,0,-1,-1,769,30,1249,480,0
 
 ; DATABASES PAGES & VIEWS
 
@@ -75,9 +71,4 @@ DBPCOLORS 0x0,0x0,0x0,0x0,0x0
 
 ; END GRAPH CONFIGURATION
 
-; DIALOGS
-
-SCREENRES 1366,768,32,1,0,0
-
-; END OF DIALOGS
-
+DLOAD C:\\TEMPO\\ProcLib\\MAIN_MENU.dcf
