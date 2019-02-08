@@ -94,9 +94,9 @@ process GRAF_UPD8_FIX()
   oSetAttribute(OBJ_FIX, aSIZE, ceil(FIX_SIZE_DEG * DEG_2_PIX_X), ceil(FIX_SIZE_DEG * DEG_2_PIX_Y));
   oSetAttribute(OBJ_FIX,aINVISIBLE);
   oSetAttribute(OBJ_FIX_WIN, aSIZE, FIX_WIN_SIZE * DEG_2_PIX_X, FIX_WIN_SIZE * DEG_2_PIX_Y);
-  oSetAttribute(OBJ_FIX,aINVISIBLE);
+  oSetAttribute(OBJ_FIX,aVISIBLE);
   oSetAttribute(OBJ_FIX_WIN_L, aSIZE, FIX_WIN_SIZE_LARGE * DEG_2_PIX_X, FIX_WIN_SIZE_LARGE * DEG_2_PIX_Y);
-  oSetAttribute(OBJ_FIX,aINVISIBLE);
+  oSetAttribute(OBJ_FIX,aVISIBLE);
 }
 
 
@@ -115,11 +115,11 @@ process GRAF_UPD8_TARG()
 
   oSetAttribute(OBJ_TARG_WIN, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
-  oSetAttribute(OBJ_TARG_WIN,aINVISIBLE);
+  oSetAttribute(OBJ_TARG_WIN,aVISIBLE);
 
   oSetAttribute(OBJ_TARG_WIN_L, aSIZE, TARG_WIN_SIZE_LARGE * DEG_2_PIX_X, TARG_WIN_SIZE_LARGE * DEG_2_PIX_Y);
   oMove(OBJ_TARG_WIN_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
-  oSetAttribute(OBJ_TARG_WIN_L,aINVISIBLE);
+  oSetAttribute(OBJ_TARG_WIN_L,aVISIBLE);
 
   // ANTI- find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
   eccX = cos(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
@@ -148,8 +148,14 @@ process GRAF_SHOW_FIX_TARG()
 
 process GRAF_SHOW_FIX_WIN()
 {
-	oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+	  oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
+}
+
+process GRAF_SHOW_TARG_WIN()
+{
+  oSetAttribute(OBJ_TARG_WIN, aVISIBLE);
+  oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);
 }
 
 process GRAF_SHOW_FIX(int showHide)
@@ -157,14 +163,10 @@ process GRAF_SHOW_FIX(int showHide)
   if (showHide == GRAF_SHOW)
   {
     oSetAttribute(OBJ_FIX, aVISIBLE);
-    oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
-    oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
   }
   else
   {
     oSetAttribute(OBJ_FIX, aINVISIBLE);
-    oSetAttribute(OBJ_FIX_WIN, aINVISIBLE);
-    oSetAttribute(OBJ_FIX_WIN_L, aINVISIBLE);
   }
 }
 
@@ -174,13 +176,9 @@ process GRAF_SHOW_TARG(int showHide)
   if (showHide == GRAF_SHOW)
   {
     oSetAttribute(OBJ_TARG, aVISIBLE);
-    oSetAttribute(OBJ_TARG_WIN, aVISIBLE);
-    oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);
   }
   else
   {
     oSetAttribute(OBJ_TARG, aINVISIBLE);
-    oSetAttribute(OBJ_TARG_WIN, aINVISIBLE);
-    oSetAttribute(OBJ_TARG_WIN_L, aINVISIBLE);
   }
 }

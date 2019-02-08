@@ -61,7 +61,7 @@ process PROC_TARG_ON()
 		spawn SEND_EVT(FixSpotOff_);
 	}
 
-	if (!I_FIX && STAT_DLTA_T < STAT_I_MOVE_DURATION)
+	if (!I_FIX && STAT_DLTA_T <= STAT_I_MOVE_DURATION)
 	{
 		I_IN_FLIGHT        = 1;
 		TRL_ERLY_SACC_TIME = time();
@@ -77,13 +77,13 @@ process PROC_TARG_ON()
 		spawn SEND_EVT(Saccade_);
 		printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]\n", STAT_TARG_ON, STAT_DLTA_T);
 		PROCESS_STATE = 1;
-		CURR_STAT     = STAT_TARG_FIXATE;
+		CURR_STAT     = STAT_TARG_ACQ;
 	}
 	else if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 	{
 		I_IN_FLIGHT       = 0;
 		printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]\n", STAT_TARG_ON, STAT_DLTA_T);
 		PROCESS_STATE = 1;
-		CURR_STAT     = STAT_FEEDBACK;    
+		CURR_STAT     = STAT_FEEDBACK;
 	}
 } /* PROC_TARG_ON */

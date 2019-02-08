@@ -84,13 +84,15 @@ declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
-declare int   TRL_LEN_TIME = 5000;
+declare int   TRL_LENGTH_TIME = 5000;
+declare int TEMP_TRL_LENGTH_TIME;
 // timeout time for punishment computed
 declare int TIMEOUT_TIME;
 // Extra punish time
-declare int   XTRA_TIMEOUT_IN_TRIAL_LENGTHS = TRL_LENGTH_TIME;
+declare int   XTRA_TIMEOUT_IN_TRIAL_LENGTHS = 4;
 // how long between trials (only works if Fixed_trl_length == 0)
-declare int   ITI_TIME = 800;
+declare int   BASE_ITI_TIME = 800;
+declare int   ITI_TIME = BASE_ITI_TIME;
 declare int   NOGO_SOA;
 
 //===========================Reward and punishment======================

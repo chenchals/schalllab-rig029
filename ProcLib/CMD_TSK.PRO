@@ -39,7 +39,8 @@ process IDLE() enabled
 	spawn CLEAR_VDO();
 
 	seed1(time());
-	normal(1);
+	// activate seed by drawing a number from some distribution
+	random(5);
 
 	// ========== Call once =============
 	//RIG_ID = 29;
@@ -156,17 +157,36 @@ process IDLE() enabled
 				spawnwait PROC_TARG_ON();
 			}
 			//================= State = STAT_TARG_ACQ===============
-			//================= State = STAT_TARG_FIXATE===============
-			if (CURR_STAT == STAT_TARG_FIXATE)
+			if (CURR_STAT == STAT_TARG_ACQ)
 			{
-				spawnwait PROC_TARG_HOLD();
+				spawnwait PROC_TARG_ACQ();
 			}
-			//================= State = STAT_FEEDBACK===============
-			if (CURR_STAT == STAT_FEEDBACK)
+			//================= State = STAT_TONE_CHK===============
+			if (CURR_STAT == STAT_TONE_CHK)
+			{
+				spawnwait PROC_TONE_CHK();
+			}
+			//================= State = STAT_RWRD_CHK===============
+			if (CURR_STAT == STAT_RWRD_CHK)
 			{
 				dsendf("vp %d\n", PG_BLANK);
-				printf(">>>>>>>>>>STAT_FEEDBACK:..... NOT YET... NOT YET....>>>>>>>>>>\n");
+				printf("mspertick() = %d\n", mspertick());
+				printf("mspercycle() = %d\n", mspercycle());
+
+				printf(">>>>>>>>>>STAT_RWRD_CHK>>>>>NOT YET>>>>>NOT YET>>>>>>>>>>\n");
 				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
+				nexttick 2000;
+				TRL_RUNNING = 0;
+			}
+			//================= State = STAT_ABORT===============
+			if (CURR_STAT == STAT_ABORT)
+			{
+				dsendf("vp %d\n", PG_BLANK);
+				printf("mspertick() = %d\n", mspertick());
+				printf("mspercycle() = %d\n", mspercycle());
+
+				printf("!!!!!!!!!!STAT_ABORT:!!!!!!!NOT YET!!!!!!! NOT YET!!!!!!!!!!\n");
+				printf("!!!!!!!!!!GOING TO NEXT TRIAL AFTER 2000 MS!!!!!!!!!!\n");
 				nexttick 2000;
 				TRL_RUNNING = 0;
 			}
@@ -174,6 +194,10 @@ process IDLE() enabled
 			if (IS_TARG_ON_FLAG)
 			{
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
+			}
+			if(IS_TARG_ACQUIRED && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+			{
+				TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;

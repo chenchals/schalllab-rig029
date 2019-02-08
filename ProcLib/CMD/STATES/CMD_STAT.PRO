@@ -37,35 +37,40 @@ declare constant int STAT_TEST = 99;
 declare constant int STAT_IDLE = 0;
 
 // Fixspot is NOT ON: Waiting for subj to be ready
-// Check: Eyes are hanging around the FIX_WIN_LARGE.
-//        Eye has not *crossed* FIX_WIN_LARGE within REDY_T
+// Check: Gaze hanging around the FIX_WIN_LARGE.
+//        Gaze has not *crossed* FIX_WIN_LARGE within REDY_T
 declare constant int STAT_GET_READY = 1;
 
 // Fixspot is ON: Waiting for subject to reach the fix window and Fixate
-// Check: Eyes must get to WITHIN smaller FIX_WIN, BEFORE FIX_ACQ_T expires
+// Check: Gaze within FIX_WIN, before ALLOWED_FIX_TIME
 declare constant int STAT_FIX_ON = 2;
 
 // Fixspot is ON: Waiting for subject to stay on fixspot
-// Check: Eyes must be WITHIN smaller FIX_WIN until FIX_TIME (HOLD_TIME) expires
+// Check: Gaze within FIX_WIN until FIX_HOLD_TIME expires
 declare constant int STAT_FIXATE = 3;
 
 // Fixspot is OFF Target is ON:
-//        GO_TRIAL: Waiting for subject to hold gaze till MIN_MAX_SACCADE_TIME[0]
-// Check: Eyes in FIX window till MIN_SACCADE_TIME, else it is early saccade
+// Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
+//        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 declare constant int STAT_TARG_ON = 4;
 
 // Fixspot is OFF Target is ON:
-//        GO_TRIAL: Waiting for subject to shift gaze to target location and hold
-// Check: Eyes leave fixspot and reach TARG_WIN or TARG_WIN_ANTI after MIN_SACCADE_TIME and
-//        before MAX_SACCADE_TIME, within MAX_SACCADE_DURATION
+// Check: Gaze in TARG_WIN before MAX_SACCADE_DURATION
 declare constant int STAT_TARG_ACQ = 5;
 
 // Fixspot is OFF Target is ON:
-//        GO_TRIAL: Waiting for subject Fixate target hold for TARGET_HOLD_TIME
-// Check: Eyes IN TARG_WIN for duration of TARGET_HOLD_TIME, else it is an error
-//        If eye not in flight, and eye leaves Fix window, then Late saccade,
-//            check for saccade duration and target acquisition, in late saccade
-declare constant int STAT_TARG_FIXATE = 6;
+// Check: case: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
+//         if gaze in TARG_WIN until TONE_DELAY expires: Play (SUCCESS) TONE, goto STAT_RWRD_CHK
+//         if gaze out of TARG_WIN before TONE_DELAY expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_ABORT
+//        case: MIN_TARG_HOLD_TIME < TONE_DELAY
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time,
+//                if gaze in TARG_WIN until TONE_DURATION --> goto STAT_RWRD_CHK
+//                if gaze not in TARG_WIN during TONE_DURATION --> compute TIMEOUT_TIME --> goto STAT_ABORT
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_ABORT
+declare constant int STAT_TONE_CHK = 6;
 
 //
-declare constant int STAT_FEEDBACK = 7;
+declare constant int STAT_RWRD_CHK = 7;
+
+//
+declare constant int STAT_ABORT = 8;

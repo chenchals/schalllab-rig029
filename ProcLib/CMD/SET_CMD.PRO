@@ -102,7 +102,24 @@ declare int TRL_TARG_ACQ_TIME;
 declare int TRL_TARG_ACQ_SLOW_TIME;
 // target fixation achieved time
 declare int TRL_TARG_FIXATED_TIME;
+// target was fixated for this amount of time
+declare int TRL_TARG_HOLD_DURATION;
+
+// target fixation broken
 declare int TRL_TARG_BREAK_FIX_TIME;
+declare int TRL_TARG_BRK_FIX_PRE_TONE_TIME;
+declare int TRL_TARG_BRK_FIX_TONE_TIME;
+declare int TRL_TARG_BRK_FIX_PRE_RWRD_TIME;
+declare int TRL_TARG_BRK_FIX_RWRD_TIME;
+
+// Tone and reward times
+declare int TRL_TONE_ON_TIME;
+declare int TRL_TONE_OFF_TIME;
+declare int TRL_RWRD_ON_TIME;
+declare int TRL_RWRD_OFF_TIME;
+declare int TRL_XTRA_RWRD_ON_TIME;
+declare int TRL_XTRA_RWRD_OFF_TIME;
+
 
 // any break fixations?
 declare int TRL_ABORT_TIME;
@@ -131,6 +148,7 @@ process SET_CMD_TRL()
   // Update graph object for Target
   spawnwait GRAF_UPD8_FIX();
   spawnwait GRAF_UPD8_TARG();
+  // Show the windows - without the fixspot or target to cue user
 
   printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n",TRIAL_TYPE,CURR_TARG_IDX, CURR_TARG_ANGLE);
 
@@ -140,8 +158,27 @@ process SET_CMD_TRL()
 
   // Set up any timing jitters etc
   FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1]-MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
-  MIN_TARGET_HOLD_TIME = 1000;
-  // ITI TIME?
+
+  REWARD_DURATION = BASE_REWARD_DURATION;
+
+  MIN_TARGET_HOLD_TIME = USE_TONE_AND_REWRD_FOR_MIN_THT*(TONE_DELAY+TONE_DURATION+REWARD_DELAY+REWARD_DURATION) + BASE_TARG_HOLD_TIME;
+
+  printf("MIN_TARGET_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n",USE_TONE_AND_REWRD_FOR_MIN_THT,
+        TONE_DELAY,TONE_DURATION,REWARD_DELAY,REWARD_DURATION,BASE_TARG_HOLD_TIME,MIN_TARGET_HOLD_TIME);
+
+  ITI_TIME = BASE_ITI_TIME;
+
+  // TRL_LENGTH_TIME
+  TEMP_TRL_LENGTH_TIME = GET_REDY + ALLOWED_FIX_TIME +MIN_MAX_FIX_HOLD_TIME[1] +MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
+  TEMP_TRL_LENGTH_TIME = TRL_LENGTH_TIME + BASE_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION+REWARD_DELAY+REWARD_DURATION+BASE_ITI_TIME;
+
+  if (TRL_LENGTH_TIME < TEMP_TRL_LENGTH_TIME)
+  {
+    // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
+    // so adjust all times?
+    printf("******Computed trial length time exceeds fixed trial length time specified******\n");
+    dshow Main_menu;
+  }
 
 } /* SETC_TRL */
 
@@ -155,14 +192,11 @@ process PCK_TRL_TYP()
   {
     TRIAL_TYPE = TRIAL_TYPE_GO;
   }
-  else if (trlType <= GO_WEIGHT + STOP_WEIGHT)
+  else
   {
     TRIAL_TYPE = TRIAL_TYPE_STOP;
   }
-  else
-  {
-    TRIAL_TYPE = TRIAL_TYPE_IGNORE;
-  }
+
 }/* PCK_TRL_TYP */
 
 

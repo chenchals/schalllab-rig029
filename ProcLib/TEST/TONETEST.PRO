@@ -41,6 +41,7 @@ process TONETEST() enabled
 
 // Play Harry Potter Theme Song:-)
 // Check the file: https://www.instructables.com/id/Arduino-Harry-Potter-Theme-Song/
+// check: https://www.arduino.cc/en/Tutorial/ToneMelody?from=Tutorial.Tone
 process PLAY_HP()
 {
     declare int   A   = 550;
