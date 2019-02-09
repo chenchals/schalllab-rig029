@@ -23,6 +23,7 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ON.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ACQ.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TONE_CHK.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/RWRD_CHK.PRO
 
 
 //==========================================================================
@@ -100,7 +101,7 @@ process IDLE() enabled
 		dsendf("vp %d\n", PG_BLANK);
 		CURR_STAT   = STAT_GET_READY;
 		STAT_DLTA_T = 0;
-		CURR_STAT=STAT_TEST;
+		//CURR_STAT=STAT_TEST;
 		while (TRL_RUNNING)
 		{
 			while (CURR_STAT == STAT_TEST)
@@ -108,13 +109,13 @@ process IDLE() enabled
 				CURR_STAT = STAT_TEST;
 				/*
 				printf("SUCCESS_TONE_BIG_REWARD [%d]\n",SUCCESS_TONE_BIG_REWARD);
-                spawnwait TONE(SUCCESS_TONE_BIG_REWARD,TONE_DURATION);
+				spawnwait TONE(SUCCESS_TONE_BIG_REWARD,TONE_DURATION);
 				nexttick 1000;
 				printf("SUCCESS_TONE_MED_REWARD [%d]\n",SUCCESS_TONE_MED_REWARD);
-                spawnwait TONE(SUCCESS_TONE_MED_REWARD,TONE_DURATION);
+				spawnwait TONE(SUCCESS_TONE_MED_REWARD,TONE_DURATION);
 				nexttick 1000;
 				printf("SUCCESS_TONE_SML_REWARD [%d]\n",SUCCESS_TONE_SML_REWARD);
-                spawnwait TONE(SUCCESS_TONE_SML_REWARD,TONE_DURATION);
+				spawnwait TONE(SUCCESS_TONE_SML_REWARD,TONE_DURATION);
 				nexttick 1000;
 				printf("Doing TONESWEP()\n");
 				spawnwait TONESWEP();
@@ -170,26 +171,43 @@ process IDLE() enabled
 			//================= State = STAT_RWRD_CHK===============
 			if (CURR_STAT == STAT_RWRD_CHK)
 			{
-				dsendf("vp %d\n", PG_BLANK);
-				printf("mspertick() = %d\n", mspertick());
-				printf("mspercycle() = %d\n", mspercycle());
-
-				printf(">>>>>>>>>>STAT_RWRD_CHK>>>>>NOT YET>>>>>NOT YET>>>>>>>>>>\n");
-				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
-				nexttick 2000;
-				TRL_RUNNING = 0;
+				spawnwait PROC_RWRD_CHK();
 			}
 			//================= State = STAT_ABORT===============
 			if (CURR_STAT == STAT_ABORT)
 			{
 				dsendf("vp %d\n", PG_BLANK);
-				printf("mspertick() = %d\n", mspertick());
-				printf("mspercycle() = %d\n", mspercycle());
+				printf("mspertick() = %1.5d\n", mspertick());
+				printf("mspercycle() = %1.5d\n", mspercycle());
 
-				printf("!!!!!!!!!!STAT_ABORT:!!!!!!!NOT YET!!!!!!! NOT YET!!!!!!!!!!\n");
+				printf("!!!!!!!!!!STAT_ABORT!!!!!!!!!!STAT_ABORT!!!!!!!!!!NOT YET!!!!!!!!!!\n");
 				printf("!!!!!!!!!!GOING TO NEXT TRIAL AFTER 2000 MS!!!!!!!!!!\n");
 				nexttick 2000;
 				TRL_RUNNING = 0;
+			}
+			//================= State = STAT_ITI_CHK===============
+			if (CURR_STAT == STAT_ITI_CHK)
+			{
+				dsendf("vp %d\n", PG_BLANK);
+				printf("mspertick() = %1.5d\n", mspertick());
+				printf("mspercycle() = %1.5d\n", mspercycle());
+
+				printf(">>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>NOT YET>>>>>>>>>>\n");
+				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
+				nexttick 2000;
+				TRL_RUNNING = 0;
+			}
+			//================= State = STAT_TIM_OUT===============
+			if (CURR_STAT == STAT_TIM_OUT)
+			{
+			dsendf("vp %d\n", PG_BLANK);
+			printf("mspertick() = %1.5d\n", mspertick());
+			printf("mspercycle() = %1.5d\n", mspercycle());
+
+			printf("==========STAT_TIM_OUT==========STAT_TIM_OUT==========NOT YET==========\n");
+			printf("==========GOING TO NEXT TRIAL AFTER 2000 MS==========\n");
+			nexttick 2000;
+			TRL_RUNNING = 0;
 			}
 			//================= State = xxxxxx===============
 			if (IS_TARG_ON_FLAG)

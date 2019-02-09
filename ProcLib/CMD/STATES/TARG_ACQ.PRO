@@ -24,51 +24,54 @@ declare PROC_TARG_ACQ();
 
 process PROC_TARG_ACQ()
 {
-    // Target acquired, but not fixated yet or eye still in FixWin
-    if (PROCESS_STATE)
-    {
-        printf("****STAT_TARG_ACQ[%d]: Processing Target acquisition\n", STAT_TARG_ACQ);
-        // Keep independent of previous state times if any.
-        PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
-        STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = MAX_SACCADE_DURATION * TIME_DILATE_FACTOR;
+	// Target acquired, but not fixated yet or eye still in FixWin
+	if (PROCESS_STATE)
+	{
+		printf("****STAT_TARG_ACQ[%d]: Processing Target acquisition\n", STAT_TARG_ACQ);
+		// Keep independent of previous state times if any.
+		PROCESS_STATE  = 0;
+		STAT_STRT_T    = time();
+		STAT_DLTA_T    = 0;
+		STAT_ALLOWED_T = MAX_SACCADE_DURATION * TIME_DILATE_FACTOR;
 
-        TRL_SACC_DURATION = 0;
-				//This is incremented in the CMD_TSK.PRO --> state flow controller
-				//TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
-				TRL_TARG_HOLD_DURATION = 0;
-    }
-    spawnwait CHECK_TARG_VERT_RFRSH();
-    //I_IN_FLIGHT  should be true
-    // Acquire target
-    if (STAT_DLTA_T <= STAT_ALLOWED_T)
-    {
-        TRL_SACC_DURATION = TRL_SACC_DURATION + 1;
-        if (I_TARG)
-        {
-            IS_TARG_ACQUIRED  = 1;						
-            TRL_TARG_ACQ_TIME = time();
-            TRL_DECIDE_TIME   = time();
-            spawn SEND_EVT(AcquireTarget_);
-            spawn SEND_EVT(Decide_);
+		TRL_SACC_DURATION = 0;
+		//This is incremented in the CMD_TSK.PRO --> state flow controller
+		//TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
+		TRL_TARG_HOLD_DURATION = 0;
+	}
+	spawnwait CHECK_TARG_VERT_RFRSH();
+	//I_IN_FLIGHT  should be true
+	// Acquire target
+	if (STAT_DLTA_T <= STAT_ALLOWED_T)
+	{
+		TRL_SACC_DURATION = TRL_SACC_DURATION + 1;
+		if (I_TARG)
+		{
+			IS_TARG_ACQUIRED  = 1;						
+			TRL_TARG_ACQ_TIME = time();
+			TRL_DECIDE_TIME   = time();
+			spawn SEND_EVT(AcquireTarget_);
+			spawn SEND_EVT(Decide_);
+			
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_TONE_CHK;
 
-            printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_)[%d]\n", STAT_TARG_ACQ, STAT_DLTA_T);
-        }
-    }
-    else if (STAT_DLTA_T > STAT_ALLOWED_T)
-    {
-        if (!I_TARG)
-        {
-            TRL_ERROR_SACCADE_TIME = time();
-            spawn SEND_EVT(GoError_);
+			printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_)[%d]\n", STAT_TARG_ACQ, STAT_DLTA_T);
+		}
+	}
+	else if (STAT_DLTA_T > STAT_ALLOWED_T)
+	{
+		if (!I_TARG)
+		{
+			TRL_ERROR_SACCADE_TIME = time();
+			spawn SEND_EVT(GoError_);
 
-            // Error saccade?
-            printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere*)[%d]\n", STAT_TARG_ACQ, STAT_DLTA_T);
+			// Error saccade?
+			printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere*)[%d]\n", STAT_TARG_ACQ, STAT_DLTA_T);
 
-            PROCESS_STATE = 1;
-            CURR_STAT     = STAT_ABORT;
-						printf("**********Compute timeout for aborting****************\n");
-        }
-    }
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_ABORT;
+			printf("**********Compute timeout for aborting****************\n");
+		}
+	}
 } /* PROC_TARG_ACQ */

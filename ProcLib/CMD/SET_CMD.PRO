@@ -111,6 +111,7 @@ declare int TRL_TARG_BRK_FIX_PRE_TONE_TIME;
 declare int TRL_TARG_BRK_FIX_TONE_TIME;
 declare int TRL_TARG_BRK_FIX_PRE_RWRD_TIME;
 declare int TRL_TARG_BRK_FIX_RWRD_TIME;
+declare int TRL_TARG_BRK_FIX_POST_RWRD_TIME;
 
 // Tone and reward times
 declare int TRL_TONE_ON_TIME;
@@ -130,113 +131,114 @@ declare int TRL_TARG_VRT_RFRSH_COUNT;
 
 process SET_CMD_TRL()
 {
-  // setup trial type
-  spawnwait PCK_TRL_TYP();
-  // pick current target location AND SET WINDOWS
-  CURR_TARG_IDX = CURR_TARG_IDX +1;
-  CURR_TARG_IDX = (CURR_TARG_IDX) % N_TARG_POS;
-  //CURR_TARG_IDX = random(N_TARG_POS);
-  // Target stimulus on this trial
-  CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARG_IDX];
-  CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARG_IDX];
-  CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-  // Zero is black.  see SET_CLRS.pro
-  CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+	// setup trial type
+	spawnwait PCK_TRL_TYP();
+	// pick current target location AND SET WINDOWS
+	CURR_TARG_IDX = CURR_TARG_IDX +1;
+	CURR_TARG_IDX = (CURR_TARG_IDX) % N_TARG_POS;
+	//CURR_TARG_IDX = random(N_TARG_POS);
+	// Target stimulus on this trial
+	CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARG_IDX];
+	CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARG_IDX];
+	CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+	// Zero is black.  see SET_CLRS.pro
+	CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
 
-  spawnwait SET_WINS();
+	spawnwait SET_WINS();
 
-  // Update graph object for Target
-  spawnwait GRAF_UPD8_FIX();
-  spawnwait GRAF_UPD8_TARG();
-  // Show the windows - without the fixspot or target to cue user
+	// Update graph object for Target
+	spawnwait GRAF_UPD8_FIX();
+	spawnwait GRAF_UPD8_TARG();
+	// Show the windows - without the fixspot or target to cue user
 
-  printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n",TRIAL_TYPE,CURR_TARG_IDX, CURR_TARG_ANGLE);
+	printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n",TRIAL_TYPE,CURR_TARG_IDX, CURR_TARG_ANGLE);
 
-  // Setup CMD PAGES
-  printf("Calling CMD-PGS\n");
-  spawnwait CMD_PGS();
+	// Setup CMD PAGES
+	printf("Calling CMD-PGS\n");
+	spawnwait CMD_PGS();
 
-  // Set up any timing jitters etc
-  FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1]-MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
+	// Set up any timing jitters etc
+	FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1]-MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
 
-  RWRD_DURATION = BASE_RWRD_DURATION;
+	RWRD_DURATION = BASE_RWRD_DURATION;
 
-  MIN_TARG_HOLD_TIME = USE_TONE_AND_REWRD_FOR_MIN_THT*(TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION) + BASE_TARG_HOLD_TIME;
+	MIN_TARG_HOLD_TIME = USE_TONE_AND_REWRD_FOR_MIN_THT*(TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION) + BASE_TARG_HOLD_TIME;
 
-  printf("MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n",USE_TONE_AND_REWRD_FOR_MIN_THT,
-        TONE_DELAY,TONE_DURATION,RWRD_DELAY,RWRD_DURATION,BASE_TARG_HOLD_TIME,MIN_TARG_HOLD_TIME);
+	printf("MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n",USE_TONE_AND_REWRD_FOR_MIN_THT,
+	TONE_DELAY,TONE_DURATION,RWRD_DELAY,RWRD_DURATION,BASE_TARG_HOLD_TIME,MIN_TARG_HOLD_TIME);
 
-  ITI_TIME = BASE_ITI_TIME;
+	ITI_TIME = BASE_ITI_TIME;
 
-  // TRL_LENGTH_TIME
-  TEMP_TRL_LENGTH_TIME = READY_TIME + ALLOWED_FIX_TIME +MIN_MAX_FIX_HOLD_TIME[1] +MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
-  TEMP_TRL_LENGTH_TIME = TRL_LENGTH_TIME + BASE_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_ITI_TIME;
+	// TRL_LENGTH_TIME
+	TEMP_TRL_LENGTH_TIME = READY_TIME + ALLOWED_FIX_TIME +MIN_MAX_FIX_HOLD_TIME[1] +MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
+	TEMP_TRL_LENGTH_TIME = TRL_LENGTH_TIME + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
+	TEMP_TRL_LENGTH_TIME = TRL_LENGTH_TIME + BASE_ITI_TIME;
 
-  if (TRL_LENGTH_TIME < TEMP_TRL_LENGTH_TIME)
-  {
-    // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
-    // so adjust all times?
-    printf("******Computed trial length time exceeds fixed trial length time specified******\n");
-    //dshow Main_menu;
-  }
+	if (TEMP_TRL_LENGTH_TIME > TRL_LENGTH_TIME)
+	{
+		// error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
+		// so adjust all times?
+		printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n",TEMP_TRL_LENGTH_TIME,TRL_LENGTH_TIME);
+		//dshow Main_menu;
+	}
 
 } /* SETC_TRL */
 
 
 process PCK_TRL_TYP()
 {
-  declare float trlType;
+	declare float trlType;
 
-  trlType = (1.0 + random(9999))/100.0;
-  if (trlType <= GO_WEIGHT)
-  {
-    TRIAL_TYPE = TRIAL_TYPE_GO;
-  }
-  else
-  {
-    TRIAL_TYPE = TRIAL_TYPE_STOP;
-  }
+	trlType = (1.0 + random(9999))/100.0;
+	if (trlType <= GO_WEIGHT)
+	{
+		TRIAL_TYPE = TRIAL_TYPE_GO;
+	}
+	else
+	{
+		TRIAL_TYPE = TRIAL_TYPE_STOP;
+	}
 
 }/* PCK_TRL_TYP */
 
 
 process SET_WINS()
 {
-  declare float eccX, eccY;
+	declare float eccX, eccY;
 
-  // Compute fix win size
-  // Fix spot center is at 0,0, so we do not need to compute
-  FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
-  FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
-  FIX_WIN[UP]    = -FIX_WIN_SIZE/2;
-  FIX_WIN[DOWN]  = FIX_WIN_SIZE/2;
-  // Larger fix win - For inaccurate eye position
-  FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE/2;
-  FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE/2;
-  FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
-  FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
-  // Compute TARG_WIN and TARG_WIN_LARGE
-  eccX            = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-  eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-  TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
-  TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
-  TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
-  TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE/2;
-  // Larger target window - For inaccurate eye position
-  TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
-  TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
-  TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
-  TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
-  // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
-  eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-  eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-  TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
-  TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
-  TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
-  TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE/2;
-  // Larget ANTI target window - For inaccurate Eye position
-  TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
-  TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
-  TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
-  TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+	// Compute fix win size
+	// Fix spot center is at 0,0, so we do not need to compute
+	FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
+	FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
+	FIX_WIN[UP]    = -FIX_WIN_SIZE/2;
+	FIX_WIN[DOWN]  = FIX_WIN_SIZE/2;
+	// Larger fix win - For inaccurate eye position
+	FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE/2;
+	FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE/2;
+	FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
+	FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
+	// Compute TARG_WIN and TARG_WIN_LARGE
+	eccX            = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+	eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+	TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
+	TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
+	TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
+	TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE/2;
+	// Larger target window - For inaccurate eye position
+	TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+	TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+	TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+	TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+	// Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
+	eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+	eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+	TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
+	TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
+	TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
+	TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE/2;
+	// Larget ANTI target window - For inaccurate Eye position
+	TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+	TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+	TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+	TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
 } /* SET_WINS */

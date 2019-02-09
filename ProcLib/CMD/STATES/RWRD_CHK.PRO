@@ -1,0 +1,107 @@
+//==========================================================================
+// RWRD_CHK.PRO
+//   Description: Process Rewarde state after Tone is delivered
+//                Gaze is in TARG_WIN only if MIN_TARG_HOLD_TIME > 
+//                TONE_DELAY + TONE_DURATION.
+// Gaze Check:
+// Fixspot is OFF Target is ON:
+// Check: 
+//   case 0: MIN_TARG_HOLD_TIME <= RWRD_DELAY
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_ABORT
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
+//   case 1: MIN_TARG_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
+//                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered), goto STAT_ITI_CHK
+//                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) compute TIMEOUT_TIME --> goto STAT_TIM_OUT
+//   case 2: MIN_TARG_HOLD_TIME > RWRD_DELAY + RWRD_DURATION
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered), goto STAT_ITI_CHK
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_TIM_OUT
+//
+//   All Global variables and the following state variables are available to monitor state progress
+//                1. PROCESS_STATE : Setup state processing, will be done once per call
+//                1. CURR_STAT :
+//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
+//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+//                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
+//                5. STAT_ALLOWED_T : Max time for staying in this state
+//                5. STAT_I_MOVE_DURATION : If saccade occurs, it must complete in this time
+//
+//   NOTE:
+//
+//   Author: chenchal.subraveti@vanderbilt.edu
+//   Date: 2019-02-09
+//==========================================================================
+//  Revision History:
+
+declare PROC_RWRD_CHK();
+
+
+process PROC_RWRD_CHK()
+{
+	// Target acquired, but not fixated yet or eye still in FixWin
+	if (PROCESS_STATE)
+	{
+		printf("****STAT_RWRD_CHK[%d]: Processing Tone times\n", STAT_RWRD_CHK);
+		// Keep independent of previous state times if any.
+		PROCESS_STATE = 0;
+		STAT_STRT_T   = time();
+		STAT_DLTA_T   = 0;
+
+		STAT_ALLOWED_T = RWRD_DELAY * TIME_DILATE_FACTOR;
+
+		STAT_I_MOVE_DURATION = RWRD_DURATION;
+		// This is incremented in the CMD_TSK.PRO --> state flow controller
+		TRL_TARG_HOLD_DURATION = 0;
+	}
+	spawnwait CHECK_TARG_VERT_RFRSH();
+	
+	if (STAT_DLTA_T <= STAT_ALLOWED_T)
+	{
+		if(!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		{
+			TRL_TARG_BRK_FIX_PRE_RWRD_TIME = time();
+			spawn SEND_EVT(TargBrkFixPreRwrd_);
+			printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_ABORT;
+			printf("**********Compute timeout for aborting****************\n");
+		}
+	}
+	else if (STAT_DLTA_T <= STAT_ALLOWED_T + STAT_I_MOVE_DURATION)
+	{		
+		if (!TRL_RWRD_ON_TIME)
+		{
+			TRL_RWRD_ON_TIME = time();
+			spawn JUICE(JUICE_CHANNEL, RWRD_DURATION);
+			spawn SEND_EVT(RewardOn_);
+		}	
+		else if (!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		{
+			TRL_TARG_BRK_FIX_RWRD_TIME = time();
+			spawn SEND_EVT(TargBrkFixRwrd_);
+			printf("****STAT_RWRD_CHK[%d]: ERR (*During Reward*Broke Target Fixation*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_TIM_OUT;
+			printf("**********Compute timeout for aborting****************\n");
+		}			
+	}
+	else // Juice delived but MIN_TARG_HOLD_TIME may be beyond juice delivery
+	{
+		if(!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		{
+			TRL_TARG_BRK_FIX_POST_RWRD_TIME = time();
+			spawn SEND_EVT(TargBrkFixPostRwrd_);
+			printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_TIM_OUT;
+			printf("**********Compute timeout for aborting****************\n");			
+		}
+		else
+		{
+		TRL_TONE_OFF_TIME = time();
+		spawn SEND_EVT(ToneOff_);
+		printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_HOLD_TIM*Target Fixated*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
+		PROCESS_STATE = 1;
+		CURR_STAT     = STAT_ITI_CHK;		
+		}		
+	}		
+} /* PROC_RWRD_CHK */

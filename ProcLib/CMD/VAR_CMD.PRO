@@ -33,7 +33,7 @@ declare float        IGNORE_WEIGHT = 40.0;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 2;
+declare int TIME_DILATE_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
@@ -46,7 +46,7 @@ declare int FIX_HOLD_TIME;
 // maximum time after fixation before target presentation
 //declare int MAX_HOLD_TIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_MAX_SACCADE_TIME[2] = {500, 700};
+declare int MIN_MAX_SACCADE_TIME[2] = {300, 800};
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
@@ -56,7 +56,7 @@ declare int BASE_TARG_HOLD_TIME = 100;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGET_HOLD_TIME
 // if = 0, then MIN_TARGET_HOLD_TIME = BASE_TARG_HOLD_TIME
 // if = 1, then MIN_TARGET_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
-declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
+declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 1;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int MIN_TARG_HOLD_TIME;
@@ -84,7 +84,7 @@ declare int   CANCEL_ALERT = 0;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
-declare int   TRL_LENGTH_TIME = 5000;
+declare int   TRL_LENGTH_TIME = 6000;
 declare int TEMP_TRL_LENGTH_TIME;
 // timeout time for punishment computed
 declare int TIMEOUT_TIME;

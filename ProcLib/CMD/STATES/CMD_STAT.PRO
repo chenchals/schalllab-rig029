@@ -59,18 +59,34 @@ declare constant int STAT_TARG_ON = 4;
 declare constant int STAT_TARG_ACQ = 5;
 
 // Fixspot is OFF Target is ON:
-// Check: case: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
-//         if gaze in TARG_WIN until TONE_DELAY expires: Play (SUCCESS) TONE, goto STAT_RWRD_CHK
-//         if gaze out of TARG_WIN before TONE_DELAY expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_ABORT
-//        case: MIN_TARG_HOLD_TIME < TONE_DELAY
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time,
-//                if gaze in TARG_WIN until TONE_DURATION --> goto STAT_RWRD_CHK
-//                if gaze not in TARG_WIN during TONE_DURATION --> compute TIMEOUT_TIME --> goto STAT_ABORT
+// Check: 
+//   case 0: MIN_TARG_HOLD_TIME <= TONE_DELAY
 //         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_ABORT
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
+//   case 1: MIN_TARG_HOLD_TIME <= TONE_DELAY + TONE_DURATION
+//         if gaze in TARG_WIN until RWRD_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
+//         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_ABORT
+//   case 2: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
+//         Goto next state (reward already delivered), goto STAT_RWRD_CHK
 declare constant int STAT_TONE_CHK = 6;
 
-//
+// Fixspot is OFF Target is ON:
+// Check: 
+//   case 0: MIN_TARG_HOLD_TIME <= RWRD_DELAY
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_ABORT
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
+//   case 1: MIN_TARG_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
+//                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered), goto STAT_ITI_CHK
+//                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) compute TIMEOUT_TIME --> goto STAT_TIM_OUT
+//   case 2: MIN_TARG_HOLD_TIME > RWRD_DELAY + RWRD_DURATION
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered), goto STAT_ITI_CHK
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_TIM_OUT
 declare constant int STAT_RWRD_CHK = 7;
 
 //
 declare constant int STAT_ABORT = 8;
+
+//
+declare constant int STAT_TIM_OUT = 9;
+//
+declare constant int STAT_ITI_CHK = 10;

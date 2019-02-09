@@ -68,9 +68,12 @@ declare constant TargBrkFixPreTone_ = 2402;
 declare constant TargBrkFixTone_    = 2404;
 declare constant TargBrkFixPreRwrd_ = 2406;
 declare constant TargBrkFixRwrd_    = 2408;
+declare constant TargBrkFixPostRwrd_= 2410;
 //==================================================
 declare constant ToneOn_          = 2412;
-declare constant ToneOff_          = 2414;
+declare constant ToneOff_         = 2414;
+declare constant RewardOn_        = 2416;
+declare constant RewardOff_       = 2418;
 
 
 
