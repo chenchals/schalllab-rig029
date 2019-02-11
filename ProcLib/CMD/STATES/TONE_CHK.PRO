@@ -1,6 +1,6 @@
 //==========================================================================
 // TONE_ST.PRO
-//   Description: Process Tone state after Target is acquired
+//   Description: Process Tone state after Target is acquired. Eye is already in Target window
 //                Gaze is in TARG_WIN. Check gaze until TONE_DELAY + TONE_DURATION expires,
 //                play TONE depending on gaze and MIN_TARG_HOLD_TIME
 // Gaze check:
@@ -33,10 +33,9 @@
 
 declare PROC_TONE_CHK();
 
-
 process PROC_TONE_CHK()
 {
-	// Target acquired, but not fixated yet or eye still in FixWin
+	// Target acquired, but not fixated yet or gaze still in FixWin
 	if (PROCESS_STATE)
 	{
 		printf("****STAT_TONE_CHK[%d]: Processing Tone times\n", STAT_TONE_CHK);
@@ -44,51 +43,61 @@ process PROC_TONE_CHK()
 		PROCESS_STATE = 0;
 		STAT_STRT_T   = time();
 		STAT_DLTA_T   = 0;
-
-
+		// Give tone after this time, unless Abort
 		STAT_ALLOWED_T = TONE_DELAY * TIME_DILATE_FACTOR;
+		// Tone already given, during tone check gaze
+		STAT_I_MOVE_DURATION = TONE_DURATION * TIME_DILATE_FACTOR;
 
-		STAT_I_MOVE_DURATION = TONE_DURATION;
-		// This is incremented in the CMD_TSK.PRO --> state flow controller
-		TRL_TARG_HOLD_DURATION = 0;
+		TRL_TARG_HOLD_DURATION = 1;// as target was already acquired in previous state
+		TEMP_MIN_THT = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
+		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();
-	
+	if(IS_TARG_ACQUIRED && I_TARG)
+	{
+		TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
+	}
+	// Eye is already on Target
 	if (STAT_DLTA_T <= STAT_ALLOWED_T)
 	{
-		if(!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		if(TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
 		{
-			TRL_TARG_BRK_FIX_PRE_TONE_TIME = time();
-			spawn SEND_EVT(TargBrkFixPreTone_);
-			printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]\n", STAT_TONE_CHK, STAT_DLTA_T);
-			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_ABORT;
-			printf("**********Compute timeout for aborting****************\n");
+			if(!I_TARG)
+			{
+				TRL_TARG_BRK_FIX_PRE_TONE_TIME = time();
+				spawn SEND_EVT(TargBrkFixPreTone_);
+				printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY)\n", STAT_TONE_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,STAT_ALLOWED_T);
+				PROCESS_STATE = 1;
+				CURR_STAT     = STAT_ABORT;
+				printf("**********Compute timeout for aborting****************\n");
+			}
 		}
 	}
-	else if (STAT_DLTA_T <= STAT_ALLOWED_T + STAT_I_MOVE_DURATION)
+	else if (STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
 	{		
+		// Give tone, if entered this condition
 		if (!TRL_TONE_ON_TIME)
 		{
 			TRL_TONE_ON_TIME = time();
 			spawn TONE(SUCCESS_TONE_SML_REWARD, TONE_DURATION);
 			spawn SEND_EVT(ToneOn_);
 		}	
-		else if (!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		if (TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
 		{
-			TRL_TARG_BRK_FIX_TONE_TIME = time();
-			spawn SEND_EVT(TargBrkFixTone_);
-
-			printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]\n", STAT_TONE_CHK, STAT_DLTA_T);
-
-			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_ABORT;
-			printf("**********Compute timeout for aborting****************\n");
+			if(!I_TARG)
+			{
+				TRL_TARG_BRK_FIX_TONE_TIME = time();
+				spawn SEND_EVT(TargBrkFixTone_);
+				printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
+				PROCESS_STATE = 1;
+				CURR_STAT     = STAT_ABORT;
+				printf("**********Compute timeout for aborting****************\n");
+			}
 		}			
 	}
-	else
+	else // eye in Target win until TEMP_MIN_THT, or TEMP_MIN_THT is greater than TONE_DELAY+TONE_DURATION
 	{
-		printf("****STAT_TONE_CHK[%d]: OK (*Tone*Target Fixated*)[%d]\n", STAT_TONE_CHK, STAT_DLTA_T);
+		printf("****STAT_TONE_CHK[%d]: OK (*Tone*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_RWRD_CHK;					
 	}		

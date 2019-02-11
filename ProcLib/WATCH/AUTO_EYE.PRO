@@ -70,7 +70,7 @@ process AUTO_EYE()
 		{
 			spawnwait AUTO_EYE_FIX_ON();
 		}
-		else if (CURR_STAT == STAT_FIXATE)
+		else if (CURR_STAT == STAT_FIX_HOLD)
 		{
 			spawnwait AUTO_EYE_FIXATE();
 		}

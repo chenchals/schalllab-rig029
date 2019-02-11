@@ -32,12 +32,15 @@ declare GRAF_UPD8_EYE(float currEyeX, float currEyeY);
 declare GRAF_UPD8_FIX();
 declare GRAF_UPD8_TARG();
 
+// only fis/target windows
 declare GRAF_SHOW_FIX_WIN();
-declare GRAF_SHOW_FIX(int showHide);
-declare GRAF_SHOW_TARG(int showHide);
+declare GRAF_SHOW_TARG_WIN();
+// fixsopt/target and related windows
 declare GRAF_HIDE_FIX_TARG();
 declare GRAF_SHOW_FIX_TARG();
-
+// only fixspot or target
+declare GRAF_SHOW_FIX(int showHide);
+declare GRAF_SHOW_TARG(int showHide);
 
 process GRAPHS()
 {
@@ -136,19 +139,28 @@ process GRAF_UPD8_TARG()
 
 process GRAF_HIDE_FIX_TARG()
 {
-  spawn GRAF_SHOW_FIX(GRAF_HIDE);
-  spawn GRAF_SHOW_TARG(GRAF_HIDE);
+    oSetAttribute(OBJ_FIX, aINVISIBLE);
+	oSetAttribute(OBJ_FIX_WIN, aINVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_L, aINVISIBLE);
+	
+    oSetAttribute(OBJ_TARG, aINVISIBLE);
+	oSetAttribute(OBJ_TARG_WIN, aINVISIBLE);
+    oSetAttribute(OBJ_TARG_WIN_L, aINVISIBLE);
 }
 
 process GRAF_SHOW_FIX_TARG()
 {
-  spawn GRAF_SHOW_FIX(GRAF_SHOW);
-  spawn GRAF_SHOW_TARG(GRAF_SHOW);
-}
+    oSetAttribute(OBJ_FIX, aVISIBLE);
+	oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
+	
+    oSetAttribute(OBJ_TARG, aVISIBLE);
+	oSetAttribute(OBJ_TARG_WIN, aVISIBLE);
+    oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);}
 
 process GRAF_SHOW_FIX_WIN()
 {
-	  oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+	oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
 }
 

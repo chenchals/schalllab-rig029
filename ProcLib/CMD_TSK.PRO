@@ -87,6 +87,8 @@ process IDLE() enabled
 		printf("Done Setting TRIAL variables\n");
 
 		PROCESS_STATE            = 1;
+		// put all TRL_vars initialization in SET_CMD
+		TRL_TARG_ON_DURATION     = 0;
 		TRL_CUM_TIME             = 0;
 		TRL_FIX_VRT_RFRSH_COUNT  = 0;
 		TRL_TARG_VRT_RFRSH_COUNT = 0;
@@ -148,8 +150,8 @@ process IDLE() enabled
 			{
 				spawnwait PROC_FIX_ON();
 			}
-			//================= State = STAT_FIXATE===============
-			if (CURR_STAT == STAT_FIXATE)
+			//================= State = STAT_FIX_HOLD===============
+			if (CURR_STAT == STAT_FIX_HOLD)
 			{
 				spawnwait PROC_FIX_HOLD();
 			}
@@ -177,9 +179,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_ABORT)
 			{
 				dsendf("vp %d\n", PG_BLANK);
-				printf("mspertick() = %1.5d\n", mspertick());
-				printf("mspercycle() = %1.5d\n", mspercycle());
-
+				spawn GRAF_HIDE_FIX_TARG();
 				printf("!!!!!!!!!!STAT_ABORT!!!!!!!!!!STAT_ABORT!!!!!!!!!!NOT YET!!!!!!!!!!\n");
 				printf("!!!!!!!!!!GOING TO NEXT TRIAL AFTER 2000 MS!!!!!!!!!!\n");
 				nexttick 2000;
@@ -189,9 +189,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_ITI_CHK)
 			{
 				dsendf("vp %d\n", PG_BLANK);
-				printf("mspertick() = %1.5d\n", mspertick());
-				printf("mspercycle() = %1.5d\n", mspercycle());
-
+				spawn GRAF_HIDE_FIX_TARG();
 				printf(">>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>NOT YET>>>>>>>>>>\n");
 				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
 				nexttick 2000;
@@ -201,9 +199,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_TIM_OUT)
 			{
 			dsendf("vp %d\n", PG_BLANK);
-			printf("mspertick() = %1.5d\n", mspertick());
-			printf("mspercycle() = %1.5d\n", mspercycle());
-
+			spawn GRAF_HIDE_FIX_TARG();
 			printf("==========STAT_TIM_OUT==========STAT_TIM_OUT==========NOT YET==========\n");
 			printf("==========GOING TO NEXT TRIAL AFTER 2000 MS==========\n");
 			nexttick 2000;
@@ -213,10 +209,6 @@ process IDLE() enabled
 			if (IS_TARG_ON_FLAG)
 			{
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
-			}
-			if(IS_TARG_ACQUIRED && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
-			{
-				TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
 			TRL_CUM_TIME = TRL_CUM_TIME + 1;

@@ -37,36 +37,43 @@ declare PROC_RWRD_CHK();
 
 process PROC_RWRD_CHK()
 {
-	// Target acquired, but not fixated yet or eye still in FixWin
+	// Target acquired, but not fixated yet or gaze still in FixWin
 	if (PROCESS_STATE)
 	{
-		printf("****STAT_RWRD_CHK[%d]: Processing Tone times\n", STAT_RWRD_CHK);
+		printf("****STAT_RWRD_CHK[%d]: Processing Reward times\n", STAT_RWRD_CHK);
 		// Keep independent of previous state times if any.
 		PROCESS_STATE = 0;
 		STAT_STRT_T   = time();
 		STAT_DLTA_T   = 0;
-
+		// Give reward after this time, unless Abort
 		STAT_ALLOWED_T = RWRD_DELAY * TIME_DILATE_FACTOR;
-
-		STAT_I_MOVE_DURATION = RWRD_DURATION;
+		// Reward already given, during reward duration check gaze
+		STAT_I_MOVE_DURATION = RWRD_DURATION * TIME_DILATE_FACTOR;
 		// This is incremented in the CMD_TSK.PRO --> state flow controller
-		TRL_TARG_HOLD_DURATION = 0;
+		TEMP_MIN_THT = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
+		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;       
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();
-	
+	if(IS_TARG_ACQUIRED && I_TARG)
+	{
+		TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
+	}	
 	if (STAT_DLTA_T <= STAT_ALLOWED_T)
 	{
-		if(!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		if(TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
 		{
-			TRL_TARG_BRK_FIX_PRE_RWRD_TIME = time();
-			spawn SEND_EVT(TargBrkFixPreRwrd_);
-			printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
-			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_ABORT;
-			printf("**********Compute timeout for aborting****************\n");
+			if(!I_TARG)
+			{
+				TRL_TARG_BRK_FIX_PRE_RWRD_TIME = time();
+				spawn SEND_EVT(TargBrkFixPreRwrd_);
+				printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY)\n", STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,STAT_ALLOWED_T);
+				PROCESS_STATE = 1;
+				CURR_STAT     = STAT_ABORT;
+				printf("**********Compute timeout for aborting****************\n");
+			}
 		}
 	}
-	else if (STAT_DLTA_T <= STAT_ALLOWED_T + STAT_I_MOVE_DURATION)
+	else if (STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
 	{		
 		if (!TRL_RWRD_ON_TIME)
 		{
@@ -74,23 +81,26 @@ process PROC_RWRD_CHK()
 			spawn JUICE(JUICE_CHANNEL, RWRD_DURATION);
 			spawn SEND_EVT(RewardOn_);
 		}	
-		else if (!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		else if (TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
 		{
-			TRL_TARG_BRK_FIX_RWRD_TIME = time();
-			spawn SEND_EVT(TargBrkFixRwrd_);
-			printf("****STAT_RWRD_CHK[%d]: ERR (*During Reward*Broke Target Fixation*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
-			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_TIM_OUT;
-			printf("**********Compute timeout for aborting****************\n");
+			if(!I_TARG)
+			{
+				TRL_TARG_BRK_FIX_RWRD_TIME = time();
+				spawn SEND_EVT(TargBrkFixRwrd_);
+				printf("****STAT_RWRD_CHK[%d]: ERR (*During Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
+				PROCESS_STATE = 1;
+				CURR_STAT     = STAT_TIM_OUT;
+				printf("**********Compute timeout for aborting****************\n");
+			}
 		}			
 	}
 	else // Juice delived but MIN_TARG_HOLD_TIME may be beyond juice delivery
 	{
-		if(!I_TARG && TRL_TARG_HOLD_DURATION <= MIN_TARG_HOLD_TIME)
+		if(!I_TARG && TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
 		{
 			TRL_TARG_BRK_FIX_POST_RWRD_TIME = time();
 			spawn SEND_EVT(TargBrkFixPostRwrd_);
-			printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
+			printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_TIM_OUT;
 			printf("**********Compute timeout for aborting****************\n");			
@@ -99,7 +109,7 @@ process PROC_RWRD_CHK()
 		{
 		TRL_TONE_OFF_TIME = time();
 		spawn SEND_EVT(ToneOff_);
-		printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_HOLD_TIM*Target Fixated*)[%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION);
+		printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_HOLD_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_ITI_CHK;		
 		}		

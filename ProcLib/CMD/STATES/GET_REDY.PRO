@@ -34,7 +34,7 @@ process PROC_GET_REDY()
 
         TRL_NUMBER = TRL_NUMBER + 1;
         PROCESS_STATE  = 0;
-        STAT_STRT_T    = TRL_GET_READY_TIME;
+        STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
     }

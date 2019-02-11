@@ -178,15 +178,15 @@ process IDLE() enabled
 					printf("****STAT_FIX_ON[%d]: OK (Fixation acquired); Within: ALLOWED_FIX_TIME\n", STAT_FIX_ON);
 
 					PROCESS_STATE = 1;
-					CURR_STAT     = STAT_FIXATE;
+					CURR_STAT     = STAT_FIX_HOLD;
 				}
 			}
-			//================= State = STAT_FIXATE===============
-			if (CURR_STAT == STAT_FIXATE)
+			//================= State = STAT_FIX_HOLD===============
+			if (CURR_STAT == STAT_FIX_HOLD)
 			{
 				if (PROCESS_STATE)
 				{
-					printf("****STAT_FIXATE[%d]: OK (Check for hold fixation)\n", STAT_FIXATE);
+					printf("****STAT_FIX_HOLD[%d]: OK (Check for hold fixation)\n", STAT_FIX_HOLD);
 					spawn UPD8_MSG();
 
 					// actually TRL_FIX_ACQ_TIME, however the below is practically
@@ -202,7 +202,7 @@ process IDLE() enabled
 					TRL_BREAK_FIX_TIME = time();
 					spawn SEND_EVT(BreakFix_);
 
-					printf("****STAT_FIXATE[%d]:ERR (Broke fixation); Within: FIX_HOLD_TIME\n", STAT_FIXATE);
+					printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation); Within: FIX_HOLD_TIME\n", STAT_FIX_HOLD);
 					spawn UPD8_MSG();
 
 					//?send event abort_?
@@ -214,7 +214,7 @@ process IDLE() enabled
 					TRL_FIXATED_TIME = time();
 					spawn SEND_EVT(Fixate_);
 
-					printf("****STAT_FIXATE[%d]: OK (Fixated); Expired:FIX_HOLD_TIME\n", STAT_FIXATE);
+					printf("****STAT_FIX_HOLD[%d]: OK (Fixated); Expired:FIX_HOLD_TIME\n", STAT_FIX_HOLD);
 					spawn UPD8_MSG();
 
 					PROCESS_STATE = 1;

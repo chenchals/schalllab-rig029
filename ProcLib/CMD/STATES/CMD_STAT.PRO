@@ -47,7 +47,7 @@ declare constant int STAT_FIX_ON = 2;
 
 // Fixspot is ON: Waiting for subject to stay on fixspot
 // Check: Gaze within FIX_WIN until FIX_HOLD_TIME expires
-declare constant int STAT_FIXATE = 3;
+declare constant int STAT_FIX_HOLD = 3;
 
 // Fixspot is OFF Target is ON:
 // Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade

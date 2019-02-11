@@ -60,7 +60,7 @@ process PROC_TARG_ON()
 		printf("****STAT_TARG_ON[%d]: Sending Event FixSpotOff_[STAT_DLTA_T]\n", STAT_TARG_ON,STAT_DLTA_T);
 		spawn SEND_EVT(FixSpotOff_);
 	}
-
+	// Before MIN_SACCADE_TIME
 	if (!I_FIX && STAT_DLTA_T <= STAT_I_MOVE_DURATION)
 	{
 		I_IN_FLIGHT        = 1;

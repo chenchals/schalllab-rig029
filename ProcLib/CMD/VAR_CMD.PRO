@@ -29,15 +29,18 @@ declare constant int TRIAL_TYPE_STOP   = 1;
 declare float        GO_WEIGHT     = 30.0;
 declare float        STOP_WEIGHT   = 30.0;
 declare float        IGNORE_WEIGHT = 40.0;
+// temporary globals to be used in state processing
+declare int TEMP_MIN_THT;
+declare int TEMP_DELY_PLUS_DURATION;
 
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
 declare int TIME_DILATE_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
-declare int READY_TIME = 1000;
+declare int READY_TIME = 2000;
 // subject has this long to acquire fixation before a new trial is initiated
-declare int ALLOWED_FIX_TIME = 1000;
+declare int ALLOWED_FIX_TIME = 3000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation

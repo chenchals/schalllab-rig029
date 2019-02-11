@@ -24,7 +24,7 @@ process PROC_FIX_HOLD()
 {
 	if (PROCESS_STATE)
 	{
-		printf("****STAT_FIXATE[%d]: Processing hold fixation\n", STAT_FIXATE);
+		printf("****STAT_FIX_HOLD[%d]: Processing hold fixation\n", STAT_FIX_HOLD);
 		// actually TRL_FIX_ACQ_TIME, however the below is practically
 		//same and it keeps this state independent of previous state
 		PROCESS_STATE  = 0;
@@ -37,7 +37,7 @@ process PROC_FIX_HOLD()
 	{
 		TRL_BREAK_FIX_TIME = time();
 		spawn SEND_EVT(BreakFix_);
-		printf("****STAT_FIXATE[%d]:ERR (Broke fixation)[%d]\n", STAT_FIXATE,STAT_DLTA_T);
+		printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]\n", STAT_FIX_HOLD,STAT_DLTA_T);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_ABORT;
 		printf("**********Compute timeout for aborting****************\n");
@@ -46,7 +46,7 @@ process PROC_FIX_HOLD()
 	{
 		TRL_FIXATED_TIME = time();
 		spawn SEND_EVT(Fixate_);
-		printf("****STAT_FIXATE[%d]: OK (Fixated)[%d]\n", STAT_FIXATE,STAT_DLTA_T);
+		printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]\n", STAT_FIX_HOLD,STAT_DLTA_T);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_TARG_ON;
 	}

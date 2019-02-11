@@ -35,7 +35,7 @@ process PROC_FIX_ON()
 		spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
 		PROCESS_STATE  = 0;
-		STAT_STRT_T    = TRL_START_TIME;
+		STAT_STRT_T    = time();
 		STAT_DLTA_T    = 0;
 		STAT_ALLOWED_T = ALLOWED_FIX_TIME * TIME_DILATE_FACTOR;
 	}
@@ -51,7 +51,7 @@ process PROC_FIX_ON()
 			printf("****STAT_FIX_ON[%d]:Sending event FixSpotOn_[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
 		}
 	}
-	if (!I_FIX && STAT_DLTA_T >= STAT_ALLOWED_T)
+	if (!I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 	{
 		printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
 		spawn SEND_EVT(FixNotAcquired_);
@@ -65,6 +65,6 @@ process PROC_FIX_ON()
 		spawn SEND_EVT(AcquireFix_);
 		printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
 		PROCESS_STATE = 1;
-		CURR_STAT     = STAT_FIXATE;
+		CURR_STAT     = STAT_FIX_HOLD;
 	}
 } /* PROC_FIX_ON */

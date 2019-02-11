@@ -83,7 +83,7 @@ process IDLE() enabled
         // Tone?
         // punish time...
       }
-      //================= State = STAT_FIXATE===============
+      //================= State = STAT_FIX_HOLD===============
       if (trlRunning)
       {
         // TRL_FIX_ACQ_TIME = time();

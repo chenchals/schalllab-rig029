@@ -56,7 +56,7 @@ process PROC_TARG_ACQ()
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_TONE_CHK;
 
-			printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_)[%d]\n", STAT_TARG_ACQ, STAT_DLTA_T);
+			printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_ in)[%d]/[%d](Max_Sac_duration)\n", STAT_TARG_ACQ,TRL_SACC_DURATION,STAT_ALLOWED_T);
 		}
 	}
 	else if (STAT_DLTA_T > STAT_ALLOWED_T)
@@ -67,7 +67,7 @@ process PROC_TARG_ACQ()
 			spawn SEND_EVT(GoError_);
 
 			// Error saccade?
-			printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere*)[%d]\n", STAT_TARG_ACQ, STAT_DLTA_T);
+			printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](Max_Sac_duration)\n", STAT_TARG_ACQ,TRL_SACC_DURATION,STAT_ALLOWED_T);
 
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_ABORT;
