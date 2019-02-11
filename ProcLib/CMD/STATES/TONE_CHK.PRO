@@ -92,7 +92,7 @@ process PROC_TONE_CHK()
         {
             if (!I_TARG)
             {
-                TRL_TARG_BRK_FIX_TONE_TIME = time();
+                TRL_TARG_HOLD_BRK_TONE_TIME = time();
                 spawn SEND_EVT(TargHoldBrkTone_);
                 spawn SEND_EVT(GoError_);
 

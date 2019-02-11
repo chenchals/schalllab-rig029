@@ -27,13 +27,6 @@ process PROC_TARG_ON()
 {
     if (PROCESS_STATE)
     {
-        I_IN_FLIGHT              = 0;
-        TARG_VR_COUNT_TIME       = 0;
-        TRL_TARG_VRT_RFRSH_COUNT = 0;
-        TRL_TARG_ON_DURATION     = 0;
-        IS_TARG_ON_FLAG          = 0;
-        IS_TARG_ACQUIRED         = 0;
-        TRL_ERLY_SACC_TIME       = 0;
         TRL_PRE_TARG_ON_TIME     = time();
         spawn SEND_EVT(TargetPre_);
 

@@ -42,7 +42,7 @@ process PROC_FIX_HOLD()
     {
         if (!I_FIX)
         {
-            TRL_BRK_FIX_HOLD_TIME = time();
+            TRL_TARG_HOLD_BRK_TIME = time();
             spawn SEND_EVT(BreakFix_);
 
             TRL_ABORT_TIME = time();

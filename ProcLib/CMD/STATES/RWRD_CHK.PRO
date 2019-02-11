@@ -65,7 +65,7 @@ process PROC_RWRD_CHK()
         {
             if (!I_TARG)
             {
-                TRL_TARG_BRK_FIX_PRE_RWRD_TIME = time();
+                TRL_TARG_HOLD_BRK_PRE_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPreRwrd_);
                 spawn SEND_EVT(GoError_);
 
@@ -90,7 +90,7 @@ process PROC_RWRD_CHK()
         {
             if (!I_TARG)
             {
-                TRL_TARG_BRK_FIX_RWRD_TIME = time();
+                TRL_TARG_HOLD_BRK_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkRwrd_);
                 spawn SEND_EVT(GoError_);
 
@@ -114,7 +114,7 @@ process PROC_RWRD_CHK()
         {
             if (!I_TARG)
             {
-                TRL_TARG_BRK_FIX_POST_RWRD_TIME = time();
+                TRL_TARG_HOLD_BRK_POST_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPostRwrd_);
                 spawn SEND_EVT(GoError_);
 
@@ -126,7 +126,7 @@ process PROC_RWRD_CHK()
             else
             {
                 spawn SEND_EVT(GoCorrect_);
-
+				
                 printf("****STAT_RWRD_CHK[%d]: OK sent Event: GoCorrect_[%d]\n", STAT_RWRD_CHK, GoCorrect_);
                 printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_HOLD_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;

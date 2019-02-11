@@ -26,10 +26,10 @@ process CHECK_TARG_VERT_RFRSH()
             TRL_IS_TARG_ON_FLAG      = 1;
             TRL_TARG_VRT_RFRSH_COUNT = 1;
         }
-        else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
+        else if ((STAT_DLTA_T - TRL_TARG_VR_COUNT_TIME) > trigWidth)
         {
             TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
         }
-        TARG_VR_COUNT_TIME = STAT_DLTA_T;
+        TRL_TARG_VR_COUNT_TIME = STAT_DLTA_T;
     }
 } /* CHECK_TARG_VERT_RFRSH */
