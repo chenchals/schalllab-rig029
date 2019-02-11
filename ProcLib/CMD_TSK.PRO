@@ -92,6 +92,8 @@ process IDLE() enabled
 		TRL_CUM_TIME             = 0;
 		TRL_FIX_VRT_RFRSH_COUNT  = 0;
 		TRL_TARG_VRT_RFRSH_COUNT = 0;
+		TRL_TONE_ON_TIME		= 0;
+		TRL_RWRD_ON_TIME     =0;
 		TRL_RUNNING              = 1;
 		printf("Trial running....\n");
 		spawn SEND_EVT(TaskStart_);

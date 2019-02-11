@@ -36,7 +36,7 @@ declare int TEMP_DELY_PLUS_DURATION;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 1;
+declare int TIME_DILATE_FACTOR = 3;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 2000;
 // subject has this long to acquire fixation before a new trial is initiated
@@ -49,7 +49,7 @@ declare int FIX_HOLD_TIME;
 // maximum time after fixation before target presentation
 //declare int MAX_HOLD_TIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_MAX_SACCADE_TIME[2] = {300, 800};
+declare int MIN_MAX_SACCADE_TIME[2] = {100, 800};
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
@@ -102,7 +102,7 @@ declare int   NOGO_SOA;
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int   TONE_DELAY = 600;
 // how long should the error and success tones be presented?
-declare int   TONE_DURATION = 50;
+declare int   TONE_DURATION = 30;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
 declare int   RWRD_DELAY = 600;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
