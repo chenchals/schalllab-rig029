@@ -66,7 +66,7 @@ process PROC_TARG_ON()
 		I_IN_FLIGHT        = 1;
 		TRL_ERLY_SACC_TIME = time();
 		spawn SEND_EVT(EarlySaccade_);
-		printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]\n", STAT_TARG_ON, STAT_DLTA_T);
+		printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T,STAT_I_MOVE_DURATION);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_ABORT;
 		printf("**********Compute timeout for aborting****************\n");
@@ -76,14 +76,14 @@ process PROC_TARG_ON()
 		I_IN_FLIGHT       = 1;
 		TRL_SACC_TIME = time();
 		spawn SEND_EVT(Saccade_);
-		printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]\n", STAT_TARG_ON, STAT_DLTA_T);
+		printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]/([%d],[%d]) (MIN_MAX_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T,STAT_I_MOVE_DURATION,STAT_ALLOWED_T);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_TARG_ACQ;
 	}
 	else if (I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 	{
 		I_IN_FLIGHT       = 0;
-		printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]\n", STAT_TARG_ON, STAT_DLTA_T);
+		printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]/[%d] (MAX_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T,STAT_ALLOWED_T);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_ABORT;
 		printf("**********Compute timeout for aborting****************\n");

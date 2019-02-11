@@ -30,7 +30,7 @@ process PROC_GET_REDY()
         printf("****STAT_GET_READY[%d]: Waiting for Eye to be outside FIX_WIN_WIDE\n", STAT_GET_READY);
         TRL_GET_READY_TIME = time();
         spawn SEND_EVT(TrialGetReady_);
-        spawn GRAF_SHOW_FIX_WIN();
+        spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
         TRL_NUMBER = TRL_NUMBER + 1;
         PROCESS_STATE  = 0;

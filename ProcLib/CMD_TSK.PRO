@@ -97,7 +97,7 @@ process IDLE() enabled
 		spawn SEND_EVT(TaskStart_);
 
 		spawn SEND_EVT(CmanHeader_);
-		spawn GRAF_HIDE_FIX_TARG();
+		//spawn GRAF_HIDE_FIX_TARG();
 
 		printf("Sending BLANK page\n");
 		dsendf("vp %d\n", PG_BLANK);
@@ -179,7 +179,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_ABORT)
 			{
 				dsendf("vp %d\n", PG_BLANK);
-				spawn GRAF_HIDE_FIX_TARG();
+				spawnwait GRAF_HIDE_FIX_TARG();
 				printf("!!!!!!!!!!STAT_ABORT!!!!!!!!!!STAT_ABORT!!!!!!!!!!NOT YET!!!!!!!!!!\n");
 				printf("!!!!!!!!!!GOING TO NEXT TRIAL AFTER 2000 MS!!!!!!!!!!\n");
 				nexttick 2000;
@@ -189,7 +189,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_ITI_CHK)
 			{
 				dsendf("vp %d\n", PG_BLANK);
-				spawn GRAF_HIDE_FIX_TARG();
+				spawnwait GRAF_HIDE_FIX_TARG();
 				printf(">>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>NOT YET>>>>>>>>>>\n");
 				printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
 				nexttick 2000;
@@ -199,7 +199,7 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_TIM_OUT)
 			{
 			dsendf("vp %d\n", PG_BLANK);
-			spawn GRAF_HIDE_FIX_TARG();
+			spawnwait GRAF_HIDE_FIX_TARG();
 			printf("==========STAT_TIM_OUT==========STAT_TIM_OUT==========NOT YET==========\n");
 			printf("==========GOING TO NEXT TRIAL AFTER 2000 MS==========\n");
 			nexttick 2000;

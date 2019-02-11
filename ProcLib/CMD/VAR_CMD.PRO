@@ -120,9 +120,9 @@ declare float MED_PUNISH_WEIGHT = 0.2;
 declare float BIG_PUNISH_WEIGHT = 0.3;
 
 // Positive secondary reinforcer in Hz
-declare int SUCCESS_TONE_BIG_REWARD = 100;
-declare int SUCCESS_TONE_MED_REWARD = 200;
-declare int SUCCESS_TONE_SML_REWARD = 400;
+declare int SUCCESS_TONE_BIG_REWARD = 300;
+declare int SUCCESS_TONE_MED_REWARD = 400;
+declare int SUCCESS_TONE_SML_REWARD = 500;
 // Negative secondary reinforcer timeout (short, medium, long)
 declare int FAILURE_TONE_SML_TIMEOUT = 800;
 declare int FAILURE_TONE_MED_TIMEOUT = 1600;

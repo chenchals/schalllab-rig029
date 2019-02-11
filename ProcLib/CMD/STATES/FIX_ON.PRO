@@ -53,7 +53,7 @@ process PROC_FIX_ON()
 	}
 	if (!I_FIX && STAT_DLTA_T > STAT_ALLOWED_T)
 	{
-		printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
+		printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON,STAT_DLTA_T,STAT_ALLOWED_T);
 		spawn SEND_EVT(FixNotAcquired_);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_ABORT;
@@ -63,7 +63,7 @@ process PROC_FIX_ON()
 	{
 		TRL_FIX_ACQ_TIME = time();
 		spawn SEND_EVT(AcquireFix_);
-		printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]\n", STAT_FIX_ON,STAT_DLTA_T);
+		printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON,STAT_DLTA_T,STAT_ALLOWED_T);
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_FIX_HOLD;
 	}

@@ -96,14 +96,17 @@ process PROC_RWRD_CHK()
 	}
 	else // Juice delived but MIN_TARG_HOLD_TIME may be beyond juice delivery
 	{
-		if(!I_TARG && TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
+		if(TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
 		{
-			TRL_TARG_BRK_FIX_POST_RWRD_TIME = time();
-			spawn SEND_EVT(TargBrkFixPostRwrd_);
-			printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
-			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_TIM_OUT;
-			printf("**********Compute timeout for aborting****************\n");			
+			if(!I_TARG)
+			{
+				TRL_TARG_BRK_FIX_POST_RWRD_TIME = time();
+				spawn SEND_EVT(TargBrkFixPostRwrd_);
+				printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION);
+				PROCESS_STATE = 1;
+				CURR_STAT     = STAT_TIM_OUT;
+				printf("**********Compute timeout for aborting****************\n");		
+			}			
 		}
 		else
 		{

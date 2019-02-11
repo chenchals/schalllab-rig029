@@ -175,10 +175,16 @@ process GRAF_SHOW_FIX(int showHide)
   if (showHide == GRAF_SHOW)
   {
     oSetAttribute(OBJ_FIX, aVISIBLE);
+	oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
+	
   }
   else
   {
     oSetAttribute(OBJ_FIX, aINVISIBLE);
+	//fix win still visible
+	oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
   }
 }
 
@@ -188,9 +194,14 @@ process GRAF_SHOW_TARG(int showHide)
   if (showHide == GRAF_SHOW)
   {
     oSetAttribute(OBJ_TARG, aVISIBLE);
+	oSetAttribute(OBJ_TARG_WIN, aVISIBLE);
+	oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);
   }
   else
   {
     oSetAttribute(OBJ_TARG, aINVISIBLE);
+	// targ_win still visible
+	oSetAttribute(OBJ_TARG_WIN, aVISIBLE);
+	oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);
   }
 }
