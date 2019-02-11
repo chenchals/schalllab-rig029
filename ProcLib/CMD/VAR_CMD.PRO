@@ -23,15 +23,15 @@ declare int TRIALS_PER_BLOCK = 30;
 
 //===========Trial types and distributions==================
 declare int          TRIAL_TYPE;
-declare constant int TRIAL_TYPE_GO     = 0;
-declare constant int TRIAL_TYPE_STOP   = 1;
+declare constant int TRIAL_TYPE_GO   = 0;
+declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
 declare float        GO_WEIGHT     = 30.0;
 declare float        STOP_WEIGHT   = 30.0;
 declare float        IGNORE_WEIGHT = 40.0;
 // temporary globals to be used in state processing
-declare int TEMP_MIN_THT;
-declare int TEMP_DELY_PLUS_DURATION;
+declare int          TEMP_MIN_THT;
+declare int          TEMP_DELY_PLUS_DURATION;
 
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
@@ -44,12 +44,12 @@ declare int ALLOWED_FIX_TIME = 3000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
-declare int MIN_MAX_FIX_HOLD_TIME[2] = {500, 1000};
+declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
 declare int FIX_HOLD_TIME;
 // maximum time after fixation before target presentation
 //declare int MAX_HOLD_TIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_MAX_SACCADE_TIME[2] = {100, 800};
+declare int MIN_MAX_SACCADE_TIME[2] = { 100, 800 };
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
@@ -62,7 +62,7 @@ declare int BASE_TARG_HOLD_TIME = 100;
 declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 1;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int MIN_TARG_HOLD_TIME;
+declare int   MIN_TARG_HOLD_TIME;
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 20;
 // number of *non-zero* stop signal delays
@@ -72,7 +72,7 @@ declare int   MAX_SSD;
 // shortest SSD (in number of screen refreshes)
 declare int   MIN_SSD;
 // SSD for current trial (in number of screen refreshes)
-declare int CURR_SSD;
+declare int   CURR_SSD;
 // for training to cancel consistently
 declare int   SSD_FLOOR = 0;
 declare int   SSD_CEIL  = 0;
@@ -88,14 +88,14 @@ declare int   CANCEL_ALERT = 0;
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
 declare int   TRL_LENGTH_TIME = 6000;
-declare int TEMP_TRL_LENGTH_TIME;
+declare int   TEMP_TRL_LENGTH_TIME;
 // timeout time for punishment computed
-declare int TIMEOUT_TIME;
+declare int   TIMEOUT_TIME;
 // Extra punish time
 declare int   XTRA_TIMEOUT_IN_TRIAL_LENGTHS = 4;
 // how long between trials (only works if Fixed_trl_length == 0)
 declare int   BASE_ITI_TIME = 800;
-declare int   ITI_TIME = BASE_ITI_TIME;
+declare int   ITI_TIME      = BASE_ITI_TIME;
 declare int   NOGO_SOA;
 
 //===========================Reward and punishment======================
@@ -107,7 +107,7 @@ declare int   TONE_DURATION = 30;
 declare int   RWRD_DELAY = 600;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 declare int   BASE_RWRD_DURATION = 20;
-declare int RWRD_DURATION;
+declare int   RWRD_DURATION;
 // time out for messing up
 declare int   BASE_PUNISH_TIME = 2000;
 // Reward weights

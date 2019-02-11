@@ -28,7 +28,7 @@ declare constant Stimulation_  = 666;
 declare constant EndStim_      = 667;
 declare constant StimFailed_   = 668;
 declare constant Error_tone    = 776;
-declare constant RWRD_tone   = 777;
+declare constant RWRD_tone     = 777;
 declare constant Error_sacc    = 887;
 declare constant Correct_sacc  = 888;
 declare constant VSyncRefresh_ = 999;
@@ -55,7 +55,7 @@ declare constant Tone_          = 2001;
 declare constant PunishEnd_     = 2002;
 declare constant ITIStart_      = 2124;
 declare constant ITIEnd_        = 2125;
-declare constant ExtraRWRD_   = 2127;
+declare constant ExtraRWRD_     = 2127;
 declare constant FixSpotOff_    = 2300;
 declare constant FixSpotOn_     = 2301;
 //Note that this is followed by a 1 or a 2 if MultElectrodeStimFlag is set depending on the stim channel???
@@ -63,17 +63,17 @@ declare constant ZeroEyePosition_ = 2302;
 declare constant PlacOn_          = 2320;
 //===================================================
 // Break target fixation before MIN_TARG_HOLD_TIME
-declare constant TargBrkFix_        = 2400;
-declare constant TargBrkFixPreTone_ = 2402;
-declare constant TargBrkFixTone_    = 2404;
-declare constant TargBrkFixPreRwrd_ = 2406;
-declare constant TargBrkFixRwrd_    = 2408;
-declare constant TargBrkFixPostRwrd_= 2410;
+declare constant TargHoldBrk_         = 2400;
+declare constant TargHoldBrkPreTone_  = 2402;
+declare constant TargHoldBrkTone_     = 2404;
+declare constant TargHoldBrkPreRwrd_  = 2406;
+declare constant TargHoldBrkRwrd_     = 2408;
+declare constant TargHoldBrkPostRwrd_ = 2410;
 //==================================================
-declare constant ToneOn_          = 2412;
-declare constant ToneOff_         = 2414;
-declare constant RewardOn_        = 2416;
-declare constant RewardOff_       = 2418;
+declare constant ToneOn_    = 2412;
+declare constant ToneOff_   = 2414;
+declare constant RewardOn_  = 2416;
+declare constant RewardOff_ = 2418;
 
 
 
@@ -89,17 +89,17 @@ declare constant StopOn_     = 2654;
 declare constant MouthBegin_ = 2655;
 declare constant MouthEnd_   = 2656;
 
-declare constant FixNotAcquired_ = 2657;
-declare constant AcquireFix_     = 2658;
-declare constant Fixate_         = 2659;
-declare constant BreakFix_       = 2660;
+declare constant AcquireFixError_ = 2657;
+declare constant AcquireFix_      = 2658;
+declare constant Fixate_          = 2659;
+declare constant BreakFix_        = 2660;
 
-declare constant CueOn_             = 2661;
-declare constant AcquireTarget_     = 2670;
-declare constant AcquireTargetSlow_ = 2671;
+declare constant CueOn_              = 2661;
+declare constant AcquireTarget_      = 2670;
+declare constant AcquireTargetError_ = 2671;
 
 
-declare constant RWRD_           = 2727;
+declare constant RWRD_             = 2727;
 declare constant FixError_         = 2750;
 declare constant GoSaccade_        = 2751;
 declare constant GoError_          = 2752;
@@ -123,13 +123,13 @@ declare constant Neg2Reinforcement_ = 2773;
 declare constant Feedback_    = 2774;
 declare constant ReturnToFix_ = 2775;
 
-declare constant JuiceStart_    = 2776;
-declare constant JuiceEnd_      = 2777;
+declare constant JuiceStart_  = 2776;
+declare constant JuiceEnd_    = 2777;
 declare constant SoundOnRWRD_ = 2778;
 declare constant SoundNoRWRD_ = 2779;
-declare constant Saccade_       = 2810;
-declare constant Decide_        = 2811;
-declare constant StimHelp_      = 2820;
+declare constant Saccade_     = 2810;
+declare constant Decide_      = 2811;
+declare constant StimHelp_    = 2820;
 //Note followed by another TTL == 2820 + trials[1] (looks like it classifies trial type)
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
 declare constant RewardSize_ = 2927;

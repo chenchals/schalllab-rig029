@@ -22,7 +22,6 @@ process JUICE(int channel, int duration)
     declare int channelClose = 0;
 
     spawn SEND_EVT(JuiceStart_);
-
     mio_dig_set(channel, channelOpen);
     wait(duration);
     mio_dig_set(channel, channelClose);

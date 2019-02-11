@@ -13,6 +13,7 @@
 
 declare CHECK_TARG_VERT_RFRSH();
 
+
 // For counting Target vertical refresh for both GO and STOP trials
 process CHECK_TARG_VERT_RFRSH()
 {
@@ -22,14 +23,12 @@ process CHECK_TARG_VERT_RFRSH()
     {
         if (TRL_TARG_VRT_RFRSH_COUNT == 0)
         {
-            IS_TARG_ON_FLAG          = 1;
+            TRL_IS_TARG_ON_FLAG      = 1;
             TRL_TARG_VRT_RFRSH_COUNT = 1;
-            //printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
         }
         else if ((STAT_DLTA_T - TARG_VR_COUNT_TIME) > trigWidth)
         {
             TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
-            //printf("TRL_TARG_VRT_RFRSH_COUNT [%d], TRL_TARG_ON_DURATION[%d]\n", TRL_TARG_VRT_RFRSH_COUNT, TRL_TARG_ON_DURATION);
         }
         TARG_VR_COUNT_TIME = STAT_DLTA_T;
     }

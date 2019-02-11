@@ -43,22 +43,22 @@ declare SET_DEFAULT_STIM_VARS();
 
 process SET_DEFAULT_STIM_VARS()
 {
-	declare int   tempCounter;
-	declare float targEccX, targEccY;
+    declare int   tempCounter;
+    declare float targEccX, targEccY;
 
-	N_TARG_POS  = MAX_TARG_POS;
-	tempCounter = 0;
+    N_TARG_POS  = MAX_TARG_POS;
+    tempCounter = 0;
 
-	// Default Target angle
-	while (tempCounter < N_TARG_POS)
-	{
-		// Default all target sizes to same
-		TARG_SIZE_ARRY[tempCounter] = 1.0;
-		// Default all eccentricities to be same
-		TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
-		// clockwise: 45, 90, 135, ...
-		TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0 / N_TARG_POS);
-		tempCounter = tempCounter + 1;
-		nexttick;
-	}
+    // Default Target angle
+    while (tempCounter < N_TARG_POS)
+    {
+        // Default all target sizes to same
+        TARG_SIZE_ARRY[tempCounter] = 1.0;
+        // Default all eccentricities to be same
+        TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
+        // clockwise: 45, 90, 135, ...
+        TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0 / N_TARG_POS);
+        tempCounter                  = tempCounter + 1;
+        nexttick;
+    }
 } /* SET_DEFAULT_STIM_VARS */

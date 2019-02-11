@@ -27,13 +27,13 @@ declare SET_MONK(int monkId);
 
 process SET_MONK(int monkId)
 {
-  MONK_ID = monkId;
-  if (MONK_ID == AUTO_ID)
-  {
-    spawnwait AUTO();
-  }
-  else if (MONK_ID == JOULE_ID)
-  {
-    spawnwait JOULE();
-  }
+    MONK_ID = monkId;
+    if (MONK_ID == AUTO_ID)
+    {
+        spawnwait AUTO();
+    }
+    else if (MONK_ID == JOULE_ID)
+    {
+        spawnwait JOULE();
+    }
 }

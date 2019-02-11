@@ -27,10 +27,10 @@ declare SET_RIG(int id);
 
 process SET_RIG(int id)
 {
-  RIG_ID = id;
-  if (RIG_ID == RIG_029_ID)
-  {
-    spawnwait RIG_029();
-  }
-  spawnwait SET_SCRN();
+    RIG_ID = id;
+    if (RIG_ID == RIG_029_ID)
+    {
+        spawnwait RIG_029();
+    }
+    spawnwait SET_SCRN();
 }

@@ -22,35 +22,43 @@
 
 declare PROC_GET_REDY();
 
+
 process PROC_GET_REDY()
 {
     if (PROCESS_STATE)
     {
         printf("****STAT_GET_READY[%d]: Processing Get ready\n", STAT_GET_READY);
         printf("****STAT_GET_READY[%d]: Waiting for Eye to be outside FIX_WIN_WIDE\n", STAT_GET_READY);
-        TRL_GET_READY_TIME = time();
+        TRL_GET_READY_TIME     = time();
+        TRL_GET_READY_DURATION = 0;
         spawn SEND_EVT(TrialGetReady_);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
-        TRL_NUMBER = TRL_NUMBER + 1;
+        TRL_NUMBER     = TRL_NUMBER + 1;
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
     }
-    if (STAT_DLTA_T < STAT_ALLOWED_T && (I_FIX || I_FIX_WIDE))
-    {
-        STAT_DLTA_T = 0;
-    }
-    else if ((!I_FIX || !I_FIX_WIDE) && STAT_DLTA_T >= STAT_ALLOWED_T)
-    {
-        if (!TRL_READY_TIME)
-        {
-            TRL_READY_TIME = time();
-            spawn SEND_EVT(TrialReady_);
-        }
-        printf("****STAT_GET_READY[%d]: OK (Ready)[%d]\n", STAT_GET_READY,STAT_DLTA_T);
 
+    TRL_GET_READY_DURATION = TRL_GET_READY_DURATION + 1;
+    if (STAT_DLTA_T <= STAT_ALLOWED_T)
+    {
+        if (I_FIX || I_FIX_WIDE)
+        {
+            printf("****STAT_GET_READY[%d]: ERR (Not Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
+            printf("****STAT_GET_READY[%d]: ERR (*Resetting TRL_GET_READY_DURATION*)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
+            TRL_GET_READY_DURATION = 0;
+            STAT_DLTA_T            = 0;
+        }
+    }
+    else
+    {
+        TRL_READY_TIME = time();
+        spawn SEND_EVT(TrialReady_);
+
+        printf("****STAT_GET_READY[%d]: OK sent Event: TrialReady_[%d]\n", STAT_GET_READY, TrialReady_);
+        printf("****STAT_GET_READY[%d]: OK (Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FIX_ON;
     }

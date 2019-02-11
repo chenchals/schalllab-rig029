@@ -34,8 +34,8 @@ declare QUE_TTL();
 
 process SEND_EVT(int eventCode)
 {
-  EVENT_FIFO[CURR_EVENT_FIFO_IDX] = eventCode;
-  CURR_EVENT_FIFO_IDX             = (CURR_EVENT_FIFO_IDX + 1) % N_EVENT_FIFO;
+    EVENT_FIFO[CURR_EVENT_FIFO_IDX] = eventCode;
+    CURR_EVENT_FIFO_IDX             = (CURR_EVENT_FIFO_IDX + 1) % N_EVENT_FIFO;
 }
 
 //==== Comments form QUE_TTL.PRO=============================
@@ -66,55 +66,55 @@ process SEND_EVT(int eventCode)
 
 process QUE_TTL()
 {
-  // Max number of events to send during 1 process cycle
-  declare int events_per_cycle = 10;
-  // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
-  // then there are no more events  to send in EVENT_FIFO buffer
-  declare int event_idx;
-  // Number of events which have been sent during *one* process cycle
-  declare int n_events_sent;
+    // Max number of events to send during 1 process cycle
+    declare int events_per_cycle = 10;
+    // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
+    // then there are no more events  to send in EVENT_FIFO buffer
+    declare int event_idx;
+    // Number of events which have been sent during *one* process cycle
+    declare int n_events_sent;
 
-  while (1)
-  {
-    n_events_sent = 0;
-    while (  n_events_sent < events_per_cycle
-          && event_idx != CURR_EVENT_FIFO_IDX)
+    while (1)
     {
-      spawnwait SEND_TTL(EVENT_FIFO[event_idx]);
+        n_events_sent = 0;
+        while (  n_events_sent < events_per_cycle
+              && event_idx != CURR_EVENT_FIFO_IDX)
+        {
+            spawnwait SEND_TTL(EVENT_FIFO[event_idx]);
 
-      event_idx     = (event_idx + 1) % N_EVENT_FIFO;
-      n_events_sent = n_events_sent + 1;
+            event_idx     = (event_idx + 1) % N_EVENT_FIFO;
+            n_events_sent = n_events_sent + 1;
+        }
+        // wait one process cycle
+        nexttick;
+        // Note that we may wait on process cycle because we are..
+        // ...just waiting on data to be added to the Event_fifo, or...
+        // ...we may wait because we have too many events for a...
+        // ...single cycle.
     }
-    // wait one process cycle
-    nexttick;
-    // Note that we may wait on process cycle because we are..
-    // ...just waiting on data to be added to the Event_fifo, or...
-    // ...we may wait because we have too many events for a...
-    // ...single cycle.
-  }
 }
 
 
 process SEND_TTL(int value)
 {
-  declare int output = 1;
+    declare int output = 1;
 
-  // set ports A, B, and C to send strobes (output)
-  dioSetMode(output, PORTA | PORTB | PORTC);
-  // Clear ports before sending
-  //dioSetA(output, ~0xFF);
-  //dioSetB(output, ~0xFF);
-  
-  //spawnwait WAIT_MU(50);
-  // load the low 8 bits on port A
-  dioSetA(output, value & 0xFF);
-  // load the high 8 bits on port B
-  dioSetB(output, (value >> 8) & 0xFF);
-  //wait 200 micro seconds to avoid losing events
-  spawnwait WAIT_MU(200);
+    // set ports A, B, and C to send strobes (output)
+    dioSetMode(output, PORTA | PORTB | PORTC);
+    // Clear ports before sending
+    //dioSetA(output, ~0xFF);
+    //dioSetB(output, ~0xFF);
 
-  // Clear ports after sending
-  dioSetA(output, ~0xFF);
-  dioSetB(output, ~0xFF);
-  //spawnwait WAIT_MU(50);
+    //spawnwait WAIT_MU(50);
+    // load the low 8 bits on port A
+    dioSetA(output, value & 0xFF);
+    // load the high 8 bits on port B
+    dioSetB(output, (value >> 8) & 0xFF);
+    //wait 200 micro seconds to avoid losing events
+    spawnwait WAIT_MU(200);
+
+    // Clear ports after sending
+    dioSetA(output, ~0xFF);
+    dioSetB(output, ~0xFF);
+    //spawnwait WAIT_MU(50);
 }

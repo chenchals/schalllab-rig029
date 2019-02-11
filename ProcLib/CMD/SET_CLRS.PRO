@@ -37,38 +37,38 @@ declare constant int CLR_IDX_TARG_1      = 1;
 
 process SET_CLRS()
 {
-  declare int varTemp;
+    declare int varTemp;
 
-  FIX_COLOR[R_IDX] = RED_VAL - WR_OFF;
-  FIX_COLOR[G_IDX] = GREEN_VAL - WG_OFF;
-  FIX_COLOR[B_IDX] = BLUE_VAL - WB_OFF;
-  spawnwait SET_CLR(CLR_IDX_FIX, FIX_COLOR[R_IDX], FIX_COLOR[G_IDX], FIX_COLOR[B_IDX]);
+    FIX_COLOR[R_IDX] = RED_VAL - WR_OFF;
+    FIX_COLOR[G_IDX] = GREEN_VAL - WG_OFF;
+    FIX_COLOR[B_IDX] = BLUE_VAL - WB_OFF;
+    spawnwait SET_CLR(CLR_IDX_FIX, FIX_COLOR[R_IDX], FIX_COLOR[G_IDX], FIX_COLOR[B_IDX]);
 
-  STOP_SIGNAL_COLOR[R_IDX] = 17;
-  STOP_SIGNAL_COLOR[G_IDX] = 13;
-  STOP_SIGNAL_COLOR[B_IDX] = 14;
-  spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, STOP_SIGNAL_COLOR[R_IDX], STOP_SIGNAL_COLOR[G_IDX], STOP_SIGNAL_COLOR[B_IDX]);
+    STOP_SIGNAL_COLOR[R_IDX] = 17;
+    STOP_SIGNAL_COLOR[G_IDX] = 13;
+    STOP_SIGNAL_COLOR[B_IDX] = 14;
+    spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, STOP_SIGNAL_COLOR[R_IDX], STOP_SIGNAL_COLOR[G_IDX], STOP_SIGNAL_COLOR[B_IDX]);
 
-  IGNORE_SIGNAL_COLOR[R_IDX] = 41;
-  IGNORE_SIGNAL_COLOR[G_IDX] = 42;
-  IGNORE_SIGNAL_COLOR[B_IDX] = 43;
-  spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, IGNORE_SIGNAL_COLOR[R_IDX], IGNORE_SIGNAL_COLOR[G_IDX], IGNORE_SIGNAL_COLOR[B_IDX]);
+    IGNORE_SIGNAL_COLOR[R_IDX] = 41;
+    IGNORE_SIGNAL_COLOR[G_IDX] = 42;
+    IGNORE_SIGNAL_COLOR[B_IDX] = 43;
+    spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, IGNORE_SIGNAL_COLOR[R_IDX], IGNORE_SIGNAL_COLOR[G_IDX], IGNORE_SIGNAL_COLOR[B_IDX]);
 
-  spawnwait SET_CLR(CLR_IDX_PTOTODIODE, 255, 255, 255);
+    spawnwait SET_CLR(CLR_IDX_PTOTODIODE, 255, 255, 255);
 
-  // define Target colors
-  COLOR_ARRY[0, R_IDX] = 35;
-  COLOR_ARRY[0, G_IDX] = 33;
-  COLOR_ARRY[0, B_IDX] = 27;
-  N_COLORS             = N_COLORS + 1;
-  // All target position colors are same see original DEFAULT.PRO
-  //CLR_IDX_TARG_1: 35, 33, 27
-  spawnwait SET_CLR(CLR_IDX_TARG_1, COLOR_ARRY[0, R_IDX], COLOR_ARRY[0, G_IDX], COLOR_ARRY[0, B_IDX]);
+    // define Target colors
+    COLOR_ARRY[0, R_IDX] = 35;
+    COLOR_ARRY[0, G_IDX] = 33;
+    COLOR_ARRY[0, B_IDX] = 27;
+    N_COLORS             = N_COLORS + 1;
+    // All target position colors are same see original DEFAULT.PRO
+    //CLR_IDX_TARG_1: 35, 33, 27
+    spawnwait SET_CLR(CLR_IDX_TARG_1, COLOR_ARRY[0, R_IDX], COLOR_ARRY[0, G_IDX], COLOR_ARRY[0, B_IDX]);
 }
 
 
 process SET_CLR(int colorIndex, int color_r, int color_g, int color_b)
 {
-  // Set current hardware palette color index to defined user choice
-  dsendf("cm %d %d %d %d;\n", colorIndex, color_r, color_g, color_b);
+    // Set current hardware palette color index to defined user choice
+    dsendf("cm %d %d %d %d;\n", colorIndex, color_r, color_g, color_b);
 }

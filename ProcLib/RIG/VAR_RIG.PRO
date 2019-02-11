@@ -28,17 +28,17 @@ declare float DEG_2_PIX_X;
 declare float DEG_2_PIX_Y;
 
 //==========================================================================
-declare int   RED_VAL;
-declare int   GREEN_VAL;
-declare int   BLUE_VAL;
-declare int   YR_OFF;
-declare int   MR_OFF;
-declare int   MB_OFF;
-declare int   CG_OFF;
-declare int   CB_OFF;
-declare int   WR_OFF;
-declare int   WG_OFF;
-declare int   WB_OFF; // DATA ACQUISITION PARAMS
+declare int RED_VAL;
+declare int GREEN_VAL;
+declare int BLUE_VAL;
+declare int YR_OFF;
+declare int MR_OFF;
+declare int MB_OFF;
+declare int CG_OFF;
+declare int CB_OFF;
+declare int WR_OFF;
+declare int WG_OFF;
+declare int WB_OFF;   // DATA ACQUISITION PARAMS
 //==========================================================================
 // Eye x scaling factor to convert eye trace voltage to degrees declare float EYE_X_GAIN;//5.1;//9.74; //50; //3.492;
 // Eye y scaling factor to convert eye trace voltage to degrees
