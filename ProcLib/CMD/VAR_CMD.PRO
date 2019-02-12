@@ -36,7 +36,7 @@ declare int          TEMP_DELY_PLUS_DURATION;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 3;
+declare int TIME_DILATE_FACTOR = 2;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 2000;
 // subject has this long to acquire fixation before a new trial is initiated

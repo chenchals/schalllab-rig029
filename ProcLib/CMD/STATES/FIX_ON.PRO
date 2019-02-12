@@ -32,7 +32,6 @@ process PROC_FIX_ON()
         dsendf("vp %d\n", PG_FIXATION_PD);
         // show for only 1 screen refresh
         dsendf("vw 1\n");
-        spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
@@ -43,17 +42,18 @@ process PROC_FIX_ON()
     if (PD_TRIG_L)
     {
         TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-        if (TRL_FIX_VRT_RFRSH_COUNT == 1 && !TRL_FIX_ON_TIME)
+        if (TRL_FIX_VRT_RFRSH_COUNT == 1)
         {
             TRL_FIX_ON_TIME = time();
             spawn SEND_EVT(FixSpotOn_);
+			spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
             dsendf("vp %d\n", PG_FIXATION);
             printf("****STAT_FIX_ON[%d]: OK sent Event: FixSpotOn_[%d]\n", STAT_FIX_ON, FixSpotOn_);
         }
     }
     // There is about 13 ms to complete drawing the screen, so eye can still be out
-    if (STAT_DLTA_T <= STAT_ALLOWED_T)
+    if (STAT_DLTA_T > ceil(REFRESH_RATE) &&  STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         if (I_FIX)
         {
@@ -67,7 +67,7 @@ process PROC_FIX_ON()
             CURR_STAT     = STAT_FIX_HOLD;
         }
     }
-    else
+    else if (STAT_DLTA_T > STAT_ALLOWED_T)
     {
         if (!I_FIX)
         {

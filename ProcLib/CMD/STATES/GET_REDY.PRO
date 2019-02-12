@@ -46,8 +46,8 @@ process PROC_GET_REDY()
     {
         if (I_FIX || I_FIX_WIDE)
         {
-            printf("****STAT_GET_READY[%d]: ERR (Not Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
-            printf("****STAT_GET_READY[%d]: ERR (*Resetting TRL_GET_READY_DURATION*)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
+            //printf("****STAT_GET_READY[%d]: ERR (Not Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
+            //printf("****STAT_GET_READY[%d]: ERR (*Resetting TRL_GET_READY_DURATION*)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
             TRL_GET_READY_DURATION = 0;
             STAT_DLTA_T            = 0;
         }

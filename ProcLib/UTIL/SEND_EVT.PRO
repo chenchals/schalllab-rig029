@@ -27,6 +27,15 @@ declare int          CURR_EVENT_FIFO_IDX = 0;
 declare int constant N_EVENT_FIFO        = 1000;
 declare int          EVENT_FIFO[N_EVENT_FIFO];
 
+// Max number of events to send during 1 process cycle
+declare int events_per_cycle = 5;
+// current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
+// then there are no more events  to send in EVENT_FIFO buffer
+declare int event_idx;
+// Number of events which have been sent during *one* process cycle
+declare int n_events_sent;
+
+
 declare SEND_EVT(int eventCode);
 declare SEND_TTL(int value);
 declare QUE_TTL();
@@ -66,20 +75,16 @@ process SEND_EVT(int eventCode)
 
 process QUE_TTL()
 {
-    // Max number of events to send during 1 process cycle
-    declare int events_per_cycle = 10;
-    // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
-    // then there are no more events  to send in EVENT_FIFO buffer
-    declare int event_idx;
-    // Number of events which have been sent during *one* process cycle
-    declare int n_events_sent;
-
     while (1)
     {
-        n_events_sent = 0;
+		if (n_events_sent >= events_per_cycle)
+		{
+			n_events_sent = 0;
+		}
         while (  n_events_sent < events_per_cycle
               && event_idx != CURR_EVENT_FIFO_IDX)
         {
+			printf("Sending TTL for %d\n",EVENT_FIFO[event_idx]);
             spawnwait SEND_TTL(EVENT_FIFO[event_idx]);
 
             event_idx     = (event_idx + 1) % N_EVENT_FIFO;

@@ -83,7 +83,7 @@ process IDLE() enabled
     while (1)
     {
         //===============For each Trial=====================
-        printf("Setting TRIAL variables\n");
+        printf("=============Setting TRIAL variables\n==================");
         spawnwait SET_CMD_TRL();
 
         printf("Done Setting TRIAL variables\n");
