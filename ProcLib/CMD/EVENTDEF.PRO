@@ -63,7 +63,7 @@ declare constant ZeroEyePosition_ = 2302;
 declare constant PlacOn_          = 2320;
 //===================================================
 // Break target fixation before MIN_TARG_HOLD_TIME
-declare constant TargHoldBrk_         = 2400;
+declare constant TargHoldMinTHT_      = 2400;
 declare constant TargHoldBrkPreTone_  = 2402;
 declare constant TargHoldBrkTone_     = 2404;
 declare constant TargHoldBrkPreRwrd_  = 2406;

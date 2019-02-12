@@ -111,7 +111,7 @@ declare int TRL_TARG_ACQ_TIME;
 declare int TRL_TARG_HOLD_DURATION;
 
 // target fixation broken or not
-declare int TRL_TARG_HOLD_MIN_THT_TIME
+declare int TRL_TARG_HOLD_MIN_THT_TIME;
 declare int TRL_TARG_HOLD_BRK_TIME;
 declare int TRL_TARG_HOLD_BRK_PRE_TONE_TIME;
 declare int TRL_TARG_HOLD_BRK_TONE_TIME;
