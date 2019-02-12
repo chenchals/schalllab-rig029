@@ -22,7 +22,9 @@ process BITSWEEP() enabled
   declare int waitTime = 400;
   declare int sentTime;
   declare int bitValue;
-
+  
+  spawn QUE_TTL();
+ 
   thisBit = 0;
   while(1)
   {
