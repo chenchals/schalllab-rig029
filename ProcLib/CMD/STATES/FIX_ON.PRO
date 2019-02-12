@@ -57,6 +57,7 @@ process PROC_FIX_ON()
     {
         if (I_FIX)
         {
+            TRL_IS_FIX_ACQUIRED = 1;
             TRL_FIX_ACQ_TIME = time();
             spawn SEND_EVT(AcquireFix_);
 
@@ -70,6 +71,8 @@ process PROC_FIX_ON()
     {
         if (!I_FIX)
         {
+            TRL_IS_FIX_ACQUIRED = 0;
+            TRL_FIX_ACQ_ERROR_TIME = time();
             spawn SEND_EVT(AcquireFixError_);
 
             printf("****STAT_FIX_ON[%d]: ERR sent Event: AcquireFixError_[%d]\n", STAT_FIX_ON, AcquireFixError_);

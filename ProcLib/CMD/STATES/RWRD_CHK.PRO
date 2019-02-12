@@ -59,6 +59,12 @@ process PROC_RWRD_CHK()
     {
         TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
     }
+    if (TRL_TARG_HOLD_DURATION >= TEMP_MIN_THT)
+    {
+      TRL_TARG_HOLD_MIN_THT_TIME = time();
+      spawn SEND_EVT(TargHoldMinTHT_);
+      printf("****STAT_RWRD_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldMinTHT_);
+    }
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         if (TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
@@ -67,9 +73,9 @@ process PROC_RWRD_CHK()
             {
                 TRL_TARG_HOLD_BRK_PRE_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPreRwrd_);
-                spawn SEND_EVT(GoError_);
+                //spawn SEND_EVT(GoError_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPreRwrd_[%d], GoError_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPreRwrd_, GoError_);
+                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPreRwrd_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPreRwrd_);
                 printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_ABORT;
@@ -92,9 +98,9 @@ process PROC_RWRD_CHK()
             {
                 TRL_TARG_HOLD_BRK_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkRwrd_);
-                spawn SEND_EVT(GoError_);
+                //spawn SEND_EVT(GoError_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkRwrd_[%d], GoError_[%d]\n", STAT_RWRD_CHK, TargHoldBrkRwrd_, GoError_);
+                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkRwrd_[%d][%d]\n", STAT_RWRD_CHK, TargHoldBrkRwrd_);
                 printf("****STAT_RWRD_CHK[%d]: ERR (*During Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_ABORT;
@@ -116,9 +122,9 @@ process PROC_RWRD_CHK()
             {
                 TRL_TARG_HOLD_BRK_POST_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPostRwrd_);
-                spawn SEND_EVT(GoError_);
+                //spawn SEND_EVT(GoError_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPostRwrd_[%d], GoError_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPostRwrd_, GoError_);
+                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPostRwrd_[%d], GoError_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPostRwrd_);
                 printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_ABORT;
@@ -126,7 +132,7 @@ process PROC_RWRD_CHK()
             else
             {
                 spawn SEND_EVT(GoCorrect_);
-				
+
                 printf("****STAT_RWRD_CHK[%d]: OK sent Event: GoCorrect_[%d]\n", STAT_RWRD_CHK, GoCorrect_);
                 printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_HOLD_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;

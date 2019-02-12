@@ -66,10 +66,10 @@ process PROC_TARG_ACQ()
             TRL_IS_TARG_ACQUIRED    = 0;
             TRL_TARG_ACQ_ERROR_TIME = time();
             spawn SEND_EVT(AcquireTargetError_);
-            spawn SEND_EVT(GoError_);
+            //spawn SEND_EVT(GoError_);
 
             // Error saccade?
-            printf("****STAT_TARG_ACQ[%d]: ERR sent Event: AcquireTargetError_[%d], GoError_[%d]\n", STAT_TARG_ACQ, AcquireTargetError_, GoError_);
+            printf("****STAT_TARG_ACQ[%d]: ERR sent Event: AcquireTargetError_[%d]\n", STAT_TARG_ACQ, AcquireTargetError_);
             printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](Max_Sac_duration)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;

@@ -89,9 +89,11 @@ process PROC_TARG_ON()
         if (I_FIX)
         {
             TRL_I_IN_FLIGHT = 0;
-            spawn SEND_EVT(GoError_);
+            TRL_NO_SACC_TIME = time();
+            spawn SEND_EVT(NoSaccade_);
+            //spawn SEND_EVT(GoError_);
 
-            printf("****STAT_TARG_ON[%d]: ERR sent Event: GoError_[%d]\n", STAT_TARG_ON, GoError_);
+            printf("****STAT_TARG_ON[%d]: ERR sent Event: NoSaccade_[%d]\n", STAT_TARG_ON, NoSaccade_);
             printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]/[%d] (MAX_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_ABORT;

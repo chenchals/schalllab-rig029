@@ -57,6 +57,7 @@ declare int TRL_TARG_VR_COUNT_TIME;
 // =0 when blank page for GO trial?
 declare int TRL_IS_TARG_ON_FLAG;
 declare int TRL_IS_TARG_ACQUIRED;
+declare int TRL_IS_FIX_ACQUIRED;
 declare int TRL_I_IN_FLIGHT;
 
 // Trial Timees
@@ -73,14 +74,16 @@ declare int TRL_READY_TIME;
 declare int TRL_GET_READY_DURATION;
 // time fixspot was first ON
 declare int TRL_FIX_ON_TIME;
-// eye on fixspot
+// gaze on fixspot
 declare int TRL_FIX_ACQ_TIME;
+// gaze NOT on fixspot
+declare int TRL_FIX_ACQ_ERROR_TIME;
 // fixation achieved gaze in FIX_WIN for FIX_HOLD_TIME
 declare int TRL_FIXATED_TIME;
 // how long gaze was in fix window
 declare int TRL_FIX_HOLD_DURATION;
 // when was gaze broken before TARG_ON
-declare int TRL_FIX_BRK_HOLD_TIME;
+declare int TRL_FIX_HOLD_BRK_TIME;
 
 // when command sent to vdosync
 declare int TRL_PRE_TARG_ON_TIME;
@@ -97,7 +100,7 @@ declare int TRL_ERLY_SACC_TIME;
 // saccade left Fix window after MAX saccade time
 declare int TRL_LATE_SACC_TIME;
 // should make a saccade, but eye still in Fix window
-declare int TRL_NO_SACCADE_TIME;
+declare int TRL_NO_SACC_TIME;
 // saccade left Fix window, but eye not in Target window
 declare int TRL_TARG_ACQ_ERROR_TIME;
 // saccade dutation
@@ -107,7 +110,8 @@ declare int TRL_TARG_ACQ_TIME;
 // target was fixated for this amount of time
 declare int TRL_TARG_HOLD_DURATION;
 
-// target fixation broken
+// target fixation broken or not
+declare int TRL_TARG_HOLD_MIN_THT_TIME
 declare int TRL_TARG_HOLD_BRK_TIME;
 declare int TRL_TARG_HOLD_BRK_PRE_TONE_TIME;
 declare int TRL_TARG_HOLD_BRK_TONE_TIME;
@@ -256,6 +260,7 @@ process INIT_TRL_VARS()
     TRL_TARG_VR_COUNT_TIME           = 0;
     TRL_IS_TARG_ON_FLAG              = 0;
     TRL_IS_TARG_ACQUIRED             = 0;
+    TRL_IS_FIX_ACQUIRED              = 0;
     TRL_I_IN_FLIGHT                  = 0;
     TRL_CUM_TIME                     = 0;
     TRL_START_TIME                   = 0;
@@ -265,9 +270,10 @@ process INIT_TRL_VARS()
     TRL_GET_READY_DURATION           = 0;
     TRL_FIX_ON_TIME                  = 0;
     TRL_FIX_ACQ_TIME                 = 0;
+    TRL_FIX_ACQ_ERROR_TIME           = 0;
     TRL_FIXATED_TIME                 = 0;
     TRL_FIX_HOLD_DURATION            = 0;
-    TRL_FIX_BRK_HOLD_TIME            = 0;
+    TRL_FIX_HOLD_BRK_TIME            = 0;
     TRL_PRE_TARG_ON_TIME             = 0;
     TRL_TARG_ON_TIME                 = 0;
     TRL_TARG_ON_DURATION             = 0;
@@ -275,10 +281,11 @@ process INIT_TRL_VARS()
     TRL_SACC_TIME                    = 0;
     TRL_ERLY_SACC_TIME               = 0;
     TRL_LATE_SACC_TIME               = 0;
-    TRL_NO_SACCADE_TIME              = 0;
+    TRL_NO_SACC_TIME                 = 0;
     TRL_TARG_ACQ_ERROR_TIME          = 0;
     TRL_SACC_DURATION                = 0;
     TRL_TARG_ACQ_TIME                = 0;
+    TRL_TARG_HOLD_MIN_THT_TIME       = 0;
     TRL_TARG_HOLD_DURATION           = 0;
     TRL_TARG_HOLD_BRK_TIME           = 0;
     TRL_TARG_HOLD_BRK_PRE_TONE_TIME  = 0;

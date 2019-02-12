@@ -99,7 +99,7 @@ declare constant AcquireTarget_      = 2670;
 declare constant AcquireTargetError_ = 2671;
 
 
-declare constant RWRD_             = 2727;
+declare constant Reward_           = 2727;
 declare constant FixError_         = 2750;
 declare constant GoSaccade_        = 2751;
 declare constant GoError_          = 2752;
@@ -111,31 +111,25 @@ declare constant CatchCorrect_     = 2757;
 declare constant CatchIncorrectG_  = 2758;
 declare constant CatchIncorrectNG_ = 2759;
 
-declare constant EarlySaccade_ = 2761;
-declare constant LateSaccade_  = 2762;
+declare constant EarlySaccade_ = 2760;
+declare constant Saccade_      = 2762;
+declare constant LateSaccade_  = 2764;
+declare constant NoSaccade_    = 2766;
 declare constant FixWindow_    = 2770;
 declare constant TargetWindow_ = 2771;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
-declare constant Staircase_ = 2772;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
-declare constant Neg2Reinforcement_ = 2773;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
-declare constant Feedback_    = 2774;
-declare constant ReturnToFix_ = 2775;
 
-declare constant JuiceStart_  = 2776;
-declare constant JuiceEnd_    = 2777;
-declare constant SoundOnRWRD_ = 2778;
-declare constant SoundNoRWRD_ = 2779;
-declare constant Saccade_     = 2810;
-declare constant Decide_      = 2811;
-declare constant StimHelp_    = 2820;
-//Note followed by another TTL == 2820 + trials[1] (looks like it classifies trial type)
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
-declare constant RewardSize_ = 2927;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
-declare constant TrialInBlock = 2928;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
+declare constant Staircase_         = 2772;
+declare constant Neg2Reinforcement_ = 2773;
+declare constant Feedback_          = 2774;
+declare constant ReturnToFix_       = 2775;
+
+declare constant JuiceStart_     = 2776;
+declare constant JuiceEnd_       = 2777;
+declare constant SoundOnRWRD_    = 2778;
+declare constant SoundNoRWRD_    = 2779;
+declare constant Decide_         = 2811;
+declare constant RewardSize_     = 2927;
+declare constant TrialInBlock    = 2928;
 declare constant SendPenatrInfo_ = 2929;
 
 declare constant PDTriggerLeft_  = 2990;
@@ -144,3 +138,5 @@ declare constant StartInfos_     = 2998;
 declare constant EndInfos_       = 2999;
 declare constant InfosZero       = 3000;
 // declare hide constant SendStimInfo_  = 7000;
+//declare constant StimHelp_    = 2820;
+//Note followed by another TTL == 2820 + trials[1] (looks like it classifies trial type)

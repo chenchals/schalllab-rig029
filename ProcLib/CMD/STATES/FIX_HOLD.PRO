@@ -42,7 +42,7 @@ process PROC_FIX_HOLD()
     {
         if (!I_FIX)
         {
-            TRL_TARG_HOLD_BRK_TIME = time();
+            TRL_FIX_HOLD_BRK_TIME = time();
             spawn SEND_EVT(BreakFix_);
 
             TRL_ABORT_TIME = time();
@@ -61,7 +61,7 @@ process PROC_FIX_HOLD()
             TRL_FIXATED_TIME = time();
             spawn SEND_EVT(Fixate_);
 
-            printf("****STAT_FIX_HOLD[%d]: ERR sent Event: Fixate_[%d], Abort_[%d]\n", STAT_FIX_HOLD, Fixate_);
+            printf("****STAT_FIX_HOLD[%d]: OK sent Event: Fixate_[%d], Abort_[%d]\n", STAT_FIX_HOLD, Fixate_);
             printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (FIX_HOLD_TIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TARG_ON;

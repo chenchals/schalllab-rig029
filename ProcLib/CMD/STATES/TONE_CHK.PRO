@@ -55,9 +55,15 @@ process PROC_TONE_CHK()
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (TRL_IS_TARG_ACQUIRED && I_TARG)
+    if (TRL_IS_TARG_ACQUIRED && I_TARG && TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
     {
         TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
+    }
+    if (TRL_TARG_HOLD_DURATION >= TEMP_MIN_THT)
+    {
+      TRL_TARG_HOLD_MIN_THT_TIME = time();
+      spawn SEND_EVT(TargHoldMinTHT_);
+      printf("****STAT_RWRD_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldMinTHT_);
     }
     // Eye is already on Target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -68,9 +74,9 @@ process PROC_TONE_CHK()
             {
                 TRL_TARG_HOLD_BRK_PRE_TONE_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPreTone_);
-                spawn SEND_EVT(GoError_);
+                //spawn SEND_EVT(GoError_);
 
-                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkPreTone_[%d], GoError_[%d]\n", STAT_TONE_CHK, TargHoldBrkPreTone_, GoError_);
+                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkPreTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkPreTone_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_ABORT;
@@ -94,9 +100,9 @@ process PROC_TONE_CHK()
             {
                 TRL_TARG_HOLD_BRK_TONE_TIME = time();
                 spawn SEND_EVT(TargHoldBrkTone_);
-                spawn SEND_EVT(GoError_);
+                //spawn SEND_EVT(GoError_);
 
-                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkTone_[%d], GoError_[%d]\n", STAT_TONE_CHK, TargHoldBrkTone_, GoError_);
+                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkTone_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_ABORT;
