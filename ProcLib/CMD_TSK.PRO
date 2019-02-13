@@ -174,13 +174,13 @@ process IDLE() enabled
             {
                 spawnwait PROC_RWRD_CHK();
             }
-            //================= State = STAT_ABORT===============
-            if (CURR_STAT == STAT_ABORT)
+            //================= State = STAT_OUTCOME===============
+            if (CURR_STAT == STAT_OUTCOME)
             {
                 dsendf("vp %d\n", PG_BLANK);
                 spawnwait GRAF_HIDE_FIX_TARG();
 
-                printf("!!!!!!!!!!STAT_ABORT!!!!!!!!!!STAT_ABORT!!!!!!!!!!NOT YET!!!!!!!!!!\n");
+                printf("!!!!!!!!!!STAT_OUTCOME!!!!!!!!!!STAT_OUTCOME!!!!!!!!!!NOT YET!!!!!!!!!!\n");
                 printf("!!!!!!!!!!GOING TO NEXT TRIAL AFTER 2000 MS!!!!!!!!!!\n");
                 nexttick 2000;
                 TRL_RUNNING = 0;

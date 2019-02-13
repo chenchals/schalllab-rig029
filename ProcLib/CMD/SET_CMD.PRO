@@ -62,6 +62,11 @@ declare int TRL_I_IN_FLIGHT;
 
 // Trial Timees
 declare int TRL_CUM_TIME;
+// Computed Trial length using max times as defined in VAR_CMD
+// This variable is used for every trial to determine:
+// if IS_TRL_LENGTH_FIXED = 1 then ITI =  TRL_DURATION - TRL_CUM_TIME
+// if IS_TRL_LENGTH_FIXED = 0 then ITI = BASE_ITI_TIME
+declare int TRL_DURATION;
 // time trial started
 declare int TRL_START_TIME;
 // time trial ended same as Eot_?
@@ -180,15 +185,17 @@ process SET_CMD_TRL()
     ITI_TIME = BASE_ITI_TIME;
 
     // TRL_LENGTH_TIME
-    TEMP_TRL_LENGTH_TIME = READY_TIME + ALLOWED_FIX_TIME + MIN_MAX_FIX_HOLD_TIME[1] + MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
-    TEMP_TRL_LENGTH_TIME = TRL_LENGTH_TIME + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
-    TEMP_TRL_LENGTH_TIME = TRL_LENGTH_TIME + BASE_ITI_TIME;
+    TRL_DURATION = READY_TIME + ALLOWED_FIX_TIME + MIN_MAX_FIX_HOLD_TIME[1] + MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
+    TRL_DURATION = TRL_LENGTH_TIME + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
+    TRL_DURATION = TRL_LENGTH_TIME + BASE_ITI_TIME;
 
-    if (TEMP_TRL_LENGTH_TIME > TRL_LENGTH_TIME)
+    if (TRL_DURATION > TRL_LENGTH_TIME && IS_TRL_LENGTH_FIXED)
     {
         // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
-        // so adjust all times?
-        printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TEMP_TRL_LENGTH_TIME, TRL_LENGTH_TIME);
+        // TRL_DURATION adjusted to 
+        printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TRL_DURATION, TRL_LENGTH_TIME);
+        printf("******IS_TRL_LENGTH_FIXED [%d]******\n",IS_TRL_LENGTH_FIXED);
+        printf("******Using TRL_DURATION of [%d] ms. Used for computing ITI if IS_TRL_LENGTH_FIXED = 1******\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
         //dshow Main_menu;
     }
 } /* SETC_TRL */

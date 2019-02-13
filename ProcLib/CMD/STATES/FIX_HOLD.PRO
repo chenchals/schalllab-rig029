@@ -51,7 +51,7 @@ process PROC_FIX_HOLD()
             printf("****STAT_FIX_HOLD[%d]: ERR sent Event: BreakFix_[%d], Abort_[%d]\n", STAT_FIX_HOLD, BreakFix_, Abort_);
             printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (FIX_HOLD_TIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_ABORT;
+            CURR_STAT     = STAT_OUTCOME;
         }
     }
     else

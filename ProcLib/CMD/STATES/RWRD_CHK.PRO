@@ -7,7 +7,7 @@
 // Fixspot is OFF Target is ON:
 // Check:
 //   case 0: MIN_TARG_HOLD_TIME <= RWRD_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_ABORT
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_OUTCOME
 //         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
 //   case 1: MIN_TARG_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
 //                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered), goto STAT_ITI_CHK
@@ -78,7 +78,7 @@ process PROC_RWRD_CHK()
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPreRwrd_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPreRwrd_);
                 printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_ABORT;
+                CURR_STAT     = STAT_OUTCOME;
             }
         }
     }
@@ -103,7 +103,7 @@ process PROC_RWRD_CHK()
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkRwrd_[%d][%d]\n", STAT_RWRD_CHK, TargHoldBrkRwrd_);
                 printf("****STAT_RWRD_CHK[%d]: ERR (*During Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_ABORT;
+                CURR_STAT     = STAT_OUTCOME;
             }
         }
     }
@@ -124,19 +124,17 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(TargHoldBrkPostRwrd_);
                 //spawn SEND_EVT(GoError_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPostRwrd_[%d], GoError_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPostRwrd_);
+                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPostRwrd_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPostRwrd_);
                 printf("****STAT_RWRD_CHK[%d]: ERR (*After Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_ABORT;
+                CURR_STAT     = STAT_OUTCOME;
             }
             else
             {
-                spawn SEND_EVT(GoCorrect_);
-
-                printf("****STAT_RWRD_CHK[%d]: OK sent Event: GoCorrect_[%d]\n", STAT_RWRD_CHK, GoCorrect_);
+                //spawn SEND_EVT(GoCorrect_);
                 printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_HOLD_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION)\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_ITI_CHK;
+                CURR_STAT     = STAT_OUTCOME;
             }
         }
     }

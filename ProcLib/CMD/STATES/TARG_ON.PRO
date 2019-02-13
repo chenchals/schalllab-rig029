@@ -66,7 +66,7 @@ process PROC_TARG_ON()
             printf("****STAT_TARG_ON[%d]: ERR sent Event: EarlySaccade_[%d]\n", STAT_TARG_ON, EarlySaccade_);
             printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_MOVE_DURATION);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_ABORT;
+            CURR_STAT     = STAT_OUTCOME;
             printf("**********Compute timeout for aborting****************\n");
         }
     }
@@ -96,7 +96,7 @@ process PROC_TARG_ON()
             printf("****STAT_TARG_ON[%d]: ERR sent Event: NoSaccade_[%d]\n", STAT_TARG_ON, NoSaccade_);
             printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]/[%d] (MAX_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_ABORT;
+            CURR_STAT     = STAT_OUTCOME;
         }
     }
 } /* PROC_TARG_ON */

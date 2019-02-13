@@ -73,7 +73,7 @@ process PROC_TARG_ACQ()
             printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](Max_Sac_duration)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_ABORT;
+            CURR_STAT     = STAT_OUTCOME;
             printf("**********Compute timeout for aborting****************\n");
         }
     }

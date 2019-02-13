@@ -88,7 +88,6 @@ declare int   CANCEL_ALERT = 0;
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
 declare int   TRL_LENGTH_TIME = 6000;
-declare int   TEMP_TRL_LENGTH_TIME;
 // timeout time for punishment computed
 declare int   TIMEOUT_TIME;
 // Extra punish time

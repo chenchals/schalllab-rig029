@@ -7,11 +7,11 @@
 // Fixspot is OFF Target is ON:
 // Check:
 //   case 0: MIN_TARG_HOLD_TIME <= TONE_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_ABORT
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
 //         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
 //   case 1: MIN_TARG_HOLD_TIME <= TONE_DELAY + TONE_DURATION
 //         if gaze in TARG_WIN until RWRD_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
-//         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_ABORT
+//         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
 //   case 2: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
 //         Goto next state (reward already delivered), goto STAT_RWRD_CHK
 //
@@ -79,7 +79,7 @@ process PROC_TONE_CHK()
                 printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkPreTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkPreTone_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_ABORT;
+                CURR_STAT     = STAT_OUTCOME;
             }
         }
     }
@@ -105,7 +105,7 @@ process PROC_TONE_CHK()
                 printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkTone_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_ABORT;
+                CURR_STAT     = STAT_OUTCOME;
             }
         }
     }

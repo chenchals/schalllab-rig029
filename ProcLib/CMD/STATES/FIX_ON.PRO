@@ -78,7 +78,7 @@ process PROC_FIX_ON()
             printf("****STAT_FIX_ON[%d]: ERR sent Event: AcquireFixError_[%d]\n", STAT_FIX_ON, AcquireFixError_);
             printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_ABORT;
+            CURR_STAT     = STAT_OUTCOME;
         }
     }
 } /* PROC_FIX_ON */
