@@ -31,9 +31,17 @@ process PROC_ITI_CHK()
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = BASE_ITI_TIME * TIME_DILATE_FACTOR;
         dsendf("vp %d\n", PG_BLANK);
 
+        // assume IS_TRL_LENGTH_FIXED = 1;
+        printf("****STAT_ITI_CHK[%d]: IS_TRL_LENGTH_FIXED [%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED);
+        STAT_ALLOWED_T = ((TRL_DURATION - TRL_CUM_TIME) + BASE_ITI_TIME);
+        if (!IS_TRL_LENGTH_FIXED)
+        {
+          STAT_ALLOWED_T = BASE_ITI_TIME ;
+        }
+        // add any remaining time from tone/reward
+        TRL_PUNISH_DURATION = STAT_ALLOWED_T + TRL_PUNISH_DURATION;
         spawn SEND_EVT(ITIStart_);
 
         printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIStart_[%d]\n", STAT_ITI_CHK, ITIStart_);
@@ -50,15 +58,16 @@ process PROC_ITI_CHK()
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
       printf("****STAT_ITI_CHK[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_ITI_CHK);
-      /*
+
        if(TIMEOUT_DURATION)
        {
          spawn SEND_EVT(PunishStart_);
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
+         spawn SEND_EVT(PunishTone_);
+         printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishTone_[%d]\n", STAT_ITI_CHK, PunishTone_);
 
-         //spawn TONE()
+         spawn TONE(PUNISH_TONE,TRL_PUNISH_DURATION);
        }
-       */
     }
     else
     {

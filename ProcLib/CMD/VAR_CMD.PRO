@@ -140,6 +140,7 @@ declare int SUCCESS_TONE_BIG_REWARD = 300;
 declare int SUCCESS_TONE_MED_REWARD = 400;
 declare int SUCCESS_TONE_SML_REWARD = 500;
 // Negative secondary reinforcer timeout (short, medium, long)
+declate int PUNISH_TONE = FAILURE_TONE_MED_TIMEOUT;
 declare int FAILURE_TONE_SML_TIMEOUT = 800;
 declare int FAILURE_TONE_MED_TIMEOUT = 1600;
 declare int FAILURE_TONE_BIG_TIMEOUT = 3200;

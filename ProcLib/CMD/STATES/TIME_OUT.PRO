@@ -31,7 +31,7 @@ process PROC_TIMEOUT_CHK()
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = TIMEOUT_DURATION * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T = TIMEOUT_DURATION;
         dsendf("vp %d\n", PG_BLANK);
 
         printf("****STAT_TIM_OUT[%d]: OK sent Event: ITIStart_[%d]\n", STAT_TIM_OUT );

@@ -58,6 +58,7 @@ declare constant ITIStart_    = 2124;
 declare constant ITIEnd_      = 2126;
 declare constant PunishStart_ = 2130;
 declare constant PunishEnd_   = 2132;
+declare constant PunishTone_  = 2134;
 declare constant ExtraRWRD_   = 2140;
 
 // Codes 2300-2399

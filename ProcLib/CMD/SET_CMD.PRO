@@ -9,37 +9,37 @@
 //  Revision History:
 
 // Load all constants and related gobal vars
-#include C:/TEMPO/ProcLib/CONSTNTS.PRO
+#include C: / TEMPO / ProcLib / CONSTNTS.PRO
 // CMD Vars only...?
-#include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
+#include C: / TEMPO / ProcLib / CMD / VAR_CMD.PRO
 // State defs
-#include C:/TEMPO/ProcLib/CMD/STATES/CMD_STAT.PRO
+#include C: / TEMPO / ProcLib / CMD / STATES / CMD_STAT.PRO
 // Rig specific vars for colors, mainly
-#include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
+#include C: / TEMPO / ProcLib / RIG / VAR_RIG.PRO
 // Stimulus Variables: fixation, target, photodiode
-#include C:/TEMPO/ProcLib/CMD/VAR_STIM.PRO
+#include C: / TEMPO / ProcLib / CMD / VAR_STIM.PRO
 // Set palatte colors and color indices
-#include C:/TEMPO/ProcLib/CMD/SET_CLRS.PRO
+#include C: / TEMPO / ProcLib / CMD / SET_CLRS.PRO
 // Setup GRAPHS - referenced by _PGS
-#include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
+#include C: / TEMPO / ProcLib / GRAFS / GRAPHS.PRO
 // set pages to load CMD_PGS.PRO?
-#include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
+#include C: / TEMPO / ProcLib / CMD / CMD_PGS.PRO
 // Setup event defs so events can be sent
-#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
+#include C: / TEMPO / ProcLib / CMD / EVENTDEF.PRO
 
 //=====Now do monk specific========
 // Load all constants and related gobal vars
-#include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
+#include C: / TEMPO / ProcLib / RIG / SET_RIG.PRO
 // Set monk
-#include C:/TEMPO/ProcLib/MONK/SET_MONK.PRO
+#include C: / TEMPO / ProcLib / MONK / SET_MONK.PRO
 
 //========other utils=============
 // Send event processes
-#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
+#include C: / TEMPO / ProcLib / UTIL / SEND_EVT.PRO
 // Set up watches
-#include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
+#include C: / TEMPO / ProcLib / WATCH / WTCH_EYE.PRO
 // Set up watches
-#include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
+#include C: / TEMPO / ProcLib / WATCH / WTCH_PD.PRO
 
 declare SET_CMD_TRL();
 declare SET_WINS();
@@ -59,7 +59,12 @@ declare int TRL_IS_TARG_ON_FLAG;
 declare int TRL_IS_TARG_ACQUIRED;
 declare int TRL_IS_FIX_ACQUIRED;
 declare int TRL_I_IN_FLIGHT;
+
+
 declare int TRL_IS_STOP_SIGNAL_ON;
+declare int TRL_STOP_SIGNAL_DELAY;
+declare int TRL_IS_NON_CANCELLED;
+declare int TRL_IS_CANCELLED;
 
 // Trial Timees
 declare int TRL_CUM_TIME;
@@ -146,9 +151,22 @@ declare int TRL_TARG_VRT_RFRSH_COUNT;
 
 process SET_CMD_TRL()
 {
-  spawnwait INIT_TRL_VARS();
+    spawnwait INIT_TRL_VARS();
+
     // setup trial type
     spawnwait PCK_TRL_TYP();
+
+    if (TRIAL_TYPE == TRIAL_TYPE_STOP)
+    {
+        // must get from SSD_ARRY; use staircasing....
+        printf("**********Using RANDOM CHOICE OF SSD from SSD_ARRY*************\n");
+        TRL_STOP_SIGNAL_DELAY = SSD_ARRY[random(N_SSD_MAX)];
+        printf("**********TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]\n", TRL_STOP_SIGNAL_DELAY);
+    }
+    else
+    {
+        TRL_STOP_SIGNAL_DELAY = 0;
+    }
 
     // pick current target location AND SET WINDOWS
     CURR_TARG_IDX = CURR_TARG_IDX + 1;
@@ -197,7 +215,7 @@ process SET_CMD_TRL()
         // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
         // TRL_DURATION adjusted to
         printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TRL_DURATION, TRL_LENGTH_TIME);
-        printf("******IS_TRL_LENGTH_FIXED [%d]******\n",IS_TRL_LENGTH_FIXED);
+        printf("******IS_TRL_LENGTH_FIXED [%d]******\n", IS_TRL_LENGTH_FIXED);
         printf("******Using TRL_DURATION of [%d] ms. Used for computing ITI if IS_TRL_LENGTH_FIXED = 1******\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
         //dshow Main_menu;
     }
@@ -208,7 +226,7 @@ process PCK_TRL_TYP()
 {
     declare float trlType;
 
-    trlType = (1.0 + random(9999))/100.0;
+    trlType = (1.0 + random(9999)) / 100.0;
     if (trlType <= GO_WEIGHT)
     {
         TRIAL_TYPE = TRIAL_TYPE_GO;
@@ -226,39 +244,39 @@ process SET_WINS()
 
     // Compute fix win size
     // Fix spot center is at 0,0, so we do not need to compute
-    FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
-    FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
-    FIX_WIN[UP]    = -FIX_WIN_SIZE/2;
-    FIX_WIN[DOWN]  = FIX_WIN_SIZE/2;
+    FIX_WIN[LEFT]  = -FIX_WIN_SIZE / 2;
+    FIX_WIN[RIGHT] = FIX_WIN_SIZE / 2;
+    FIX_WIN[UP]    = -FIX_WIN_SIZE / 2;
+    FIX_WIN[DOWN]  = FIX_WIN_SIZE / 2;
     // Larger fix win - For inaccurate eye position
-    FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE/2;
-    FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE/2;
-    FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
-    FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
+    FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE / 2;
+    FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE / 2;
+    FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE / 2;
+    FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE / 2;
     // Compute TARG_WIN and TARG_WIN_LARGE
     eccX            = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
     eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-    TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
-    TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
-    TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
-    TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE/2;
+    TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE / 2;
+    TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE / 2;
+    TARG_WIN[UP]    = eccY - TARG_WIN_SIZE / 2;
+    TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE / 2;
     // Larger target window - For inaccurate eye position
-    TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
-    TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
-    TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
-    TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE / 2;
     // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
     eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
     eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-    TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
-    TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
-    TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
-    TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE/2;
+    TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE / 2;
+    TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE / 2;
+    TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE / 2;
+    TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE / 2;
     // Larget ANTI target window - For inaccurate Eye position
-    TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
-    TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
-    TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
-    TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE / 2;
 } /* SET_WINS */
 
 
@@ -272,6 +290,10 @@ process INIT_TRL_VARS()
     TRL_IS_TARG_ACQUIRED             = 0;
     TRL_IS_FIX_ACQUIRED              = 0;
     TRL_I_IN_FLIGHT                  = 0;
+    TRL_IS_STOP_SIGNAL_ON            = 0;
+    TRL_STOP_SIGNAL_DELAY            = 0;
+    TRL_IS_NON_CANCELLED             = 0;
+    TRL_IS_CANCELLED                 = 0;
     TRL_CUM_TIME                     = 0;
     TRL_START_TIME                   = 0;
     TRL_END_TIME                     = 0;
