@@ -118,4 +118,4 @@ declare constant int STAT_OUTCOME = 8;
 //
 declare constant int STAT_ITI_CHK = 9;
 //
-declare constant int STAT_TIMEOUT = 10;
+declare constant int STAT_TIM_OUT = 10;

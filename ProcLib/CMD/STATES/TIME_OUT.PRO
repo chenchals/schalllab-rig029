@@ -34,7 +34,7 @@ process PROC_TIMEOUT_CHK()
         STAT_ALLOWED_T = TIMEOUT_DURATION * TIME_DILATE_FACTOR;
         dsendf("vp %d\n", PG_BLANK);
 
-        printf("****STAT_TIM_OUT[%d]: OK sent Event: ITIStart_[%d]\n", STAT_TIM_OUT, );
+        printf("****STAT_TIM_OUT[%d]: OK sent Event: ITIStart_[%d]\n", STAT_TIM_OUT );
 
         TRL_IS_TARG_ON_FLAG = 0;
     }

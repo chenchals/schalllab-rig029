@@ -67,7 +67,7 @@ declare constant TargetPre_       = 2310;
 declare constant Target_          = 2320;
 declare constant TargetOff_       = 2330;
 declare constant StopSignal_      = 2340;
-eclare constant  ZeroEyePosition_ = 2395;
+declare constant  ZeroEyePosition_ = 2395;
 
 // Codes 2400-2699
 declare constant AcquireFix_          = 2400;
