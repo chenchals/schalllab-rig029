@@ -52,13 +52,13 @@ declare constant TrialStart_    = 1620;
 declare constant Eot_           = 1622;
 
 // Coded from 2000-2299
-declare constant Tone_      = 2000;
-declare constant Reward_    = 2010;
-declare constant ITIStart_  = 2124;
-declare constant ITIEnd_    = 2126;
-declare constant PunishEnd_ = 2130;
-declare constant PunishEnd_ = 2132;
-declare constant ExtraRWRD_ = 2140;
+declare constant Tone_        = 2000;
+declare constant Reward_      = 2010;
+declare constant ITIStart_    = 2124;
+declare constant ITIEnd_      = 2126;
+declare constant PunishStart_ = 2130;
+declare constant PunishEnd_   = 2132;
+declare constant ExtraRWRD_   = 2140;
 
 // Codes 2300-2399
 declare constant FixSpotOn_       = 2300;

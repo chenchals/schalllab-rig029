@@ -88,16 +88,33 @@ declare int   CANCEL_ALERT = 0;
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1) must figure out max time for this variable and include it in comments
 declare int   TRL_LENGTH_TIME = 6000;
-// timeout time for punishment computed
-declare int   TIMEOUT_TIME;
-// Extra punish time
-declare int   XTRA_TIMEOUT_IN_TRIAL_LENGTHS = 4;
 // how long between trials (only works if Fixed_trl_length == 0)
 declare int   BASE_ITI_TIME = 800;
 declare int   ITI_TIME      = BASE_ITI_TIME;
-declare int   NOGO_SOA;
+
 
 //===========================Reward and punishment======================
+// timeout time for punishment computed
+declare int TIMEOUT_DURATION;
+// See ProcLib/DOC/CmdOutcomes.xlsx
+// Extra punish time for diferent outcomes in number of Trial lengths
+// The value must be an integer
+// TIMEOUT_TIME = TRL_DURATION (see SET_CMD.PRO) * XTRA_TIMEOUT
+// GoTrial = TIMEOUT_xxx[0]
+// NoGoTrial_No_StopSignal = TIMEOUT_xxx[1]
+// NoGoTrial_StopSignal = TIMEOUT_xxx[2]
+declare int TIMEOUT_FIX_ACQ_ERROR[3]           = { 1, 1, 1 };
+declare int TIMEOUT_FIX_HOLD_BRK[3]            = { 2, 2, 2 };
+declare int TIMEOUT_ERLY_SACC[3]               = { 2, 2, 2 };
+declare int TIMEOUT_NO_SACC[3]                 = { 2, 2, 2 };
+declare int TIMEOUT_TARG_ACQ_ERROR[3]          = { 2, 2, 2 };
+declare int TIMEOUT_TARG_HOLD_BRK_PRE_TONE[3]  = { 2, 2, 2 };
+declare int TIMEOUT_TARG_HOLD_BRK_TONE[3]      = { 2, 2, 2 };
+declare int TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[3]  = { 2, 2, 2 };
+declare int TIMEOUT_TARG_HOLD_BRK_POST_RWRD[3] = { 2, 2, 2 };
+// Only valid for NoGo Trial, the 0 index is not used for GoTrial
+// Gaze *in* targ_win for the duration of min Targ. hold time
+declare int TIMEOUT_TARG_HOLD_MIN_THT[3]       = { 0, 2, 2 };
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int   TONE_DELAY = 600;
 // how long should the error and success tones be presented?

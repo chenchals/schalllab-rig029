@@ -83,9 +83,9 @@ declare constant int STAT_TONE_CHK = 6;
 //         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_OUTCOME
 declare constant int STAT_RWRD_CHK = 7;
 
-//
+// See CmdOutcomes.xls file in DOC folder
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| DEF_TRL_TIME_VAR	                            | TRL_TIME_VAR_not_0	             | EVENT_SENT	          | OUTCOME_GO_TRIAL  |	OUTCOME_NOGO_TRIAL_NO_SS | 	OUTCOME_NOGO_TRIAL_SS |
+//| DEF_TRL_TIME_VAR	                            | TRL_TIME_VAR_not_0	             | EVENT_SENT	          | OUTCOME_GO_TRIAL  |	OUTCOME_NOGO_TRIAL_NO_SS |  OUTCOME_NOGO_TRIAL_SS |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in Fix win before allowed time       |	TRL_FIX_ACQ_ERROR_TIME	         | AcquireFixError_	    | OutcomeFixError_	| OutcomeFixError_	       | OutcomeFixError_       |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|

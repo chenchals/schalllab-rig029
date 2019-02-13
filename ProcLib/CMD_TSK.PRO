@@ -24,8 +24,9 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ACQ.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TONE_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/RWRD_CHK.PRO
-
-
+#include C:/TEMPO/ProcLib/CMD/STATES/OUTCOME.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/ITI_CHK.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
 //==========================================================================
 
 declare IDLE();
@@ -177,35 +178,17 @@ process IDLE() enabled
             //================= State = STAT_OUTCOME===============
             if (CURR_STAT == STAT_OUTCOME)
             {
-                dsendf("vp %d\n", PG_BLANK);
-                spawnwait GRAF_HIDE_FIX_TARG();
-
-                printf("!!!!!!!!!!STAT_OUTCOME!!!!!!!!!!STAT_OUTCOME!!!!!!!!!!NOT YET!!!!!!!!!!\n");
-                printf("!!!!!!!!!!GOING TO NEXT TRIAL AFTER 2000 MS!!!!!!!!!!\n");
-                nexttick 2000;
-                TRL_RUNNING = 0;
+                spawnwait PROC_TRL_OUTCOME();
             }
             //================= State = STAT_ITI_CHK===============
             if (CURR_STAT == STAT_ITI_CHK)
             {
-                dsendf("vp %d\n", PG_BLANK);
-                spawnwait GRAF_HIDE_FIX_TARG();
-
-                printf(">>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>STAT_ITI_CHK>>>>>>>>>>NOT YET>>>>>>>>>>\n");
-                printf(">>>>>>>>>>GOING TO NEXT TRIAL AFTER 2000 MS>>>>>>>>>>\n");
-                nexttick 2000;
-                TRL_RUNNING = 0;
+              spawnwait PROC_ITI_CHK();
             }
             //================= State = STAT_TIM_OUT===============
             if (CURR_STAT == STAT_TIM_OUT)
             {
-                dsendf("vp %d\n", PG_BLANK);
-                spawnwait GRAF_HIDE_FIX_TARG();
-
-                printf("==========STAT_TIM_OUT==========STAT_TIM_OUT==========NOT YET==========\n");
-                printf("==========GOING TO NEXT TRIAL AFTER 2000 MS==========\n");
-                nexttick 2000;
-                TRL_RUNNING = 0;
+              spawnwait PROC_TIMEOUT_CHK();
             }
             //================= State = xxxxxx===============
             if (TRL_IS_TARG_ON_FLAG)

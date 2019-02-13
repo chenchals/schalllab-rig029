@@ -59,6 +59,7 @@ declare int TRL_IS_TARG_ON_FLAG;
 declare int TRL_IS_TARG_ACQUIRED;
 declare int TRL_IS_FIX_ACQUIRED;
 declare int TRL_I_IN_FLIGHT;
+declare int TRL_IS_STOP_SIGNAL_ON;
 
 // Trial Timees
 declare int TRL_CUM_TIME;
@@ -114,6 +115,8 @@ declare int TRL_SACC_DURATION;
 declare int TRL_TARG_ACQ_TIME;
 // target was fixated for this amount of time
 declare int TRL_TARG_HOLD_DURATION;
+// Punishment DURATION
+declare int TRL_PUNISH_DURATION;
 
 // target fixation broken or not
 declare int TRL_TARG_HOLD_MIN_THT_TIME;
@@ -192,7 +195,7 @@ process SET_CMD_TRL()
     if (TRL_DURATION > TRL_LENGTH_TIME && IS_TRL_LENGTH_FIXED)
     {
         // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
-        // TRL_DURATION adjusted to 
+        // TRL_DURATION adjusted to
         printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TRL_DURATION, TRL_LENGTH_TIME);
         printf("******IS_TRL_LENGTH_FIXED [%d]******\n",IS_TRL_LENGTH_FIXED);
         printf("******Using TRL_DURATION of [%d] ms. Used for computing ITI if IS_TRL_LENGTH_FIXED = 1******\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
@@ -294,6 +297,7 @@ process INIT_TRL_VARS()
     TRL_TARG_ACQ_TIME                = 0;
     TRL_TARG_HOLD_MIN_THT_TIME       = 0;
     TRL_TARG_HOLD_DURATION           = 0;
+    TRL_PUNISH_DURATION              = 0;
     TRL_TARG_HOLD_BRK_TIME           = 0;
     TRL_TARG_HOLD_BRK_PRE_TONE_TIME  = 0;
     TRL_TARG_HOLD_BRK_TONE_TIME      = 0;
