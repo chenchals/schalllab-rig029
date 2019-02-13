@@ -22,17 +22,7 @@
 //      PDTriggerLeft_  = 2990 and
 //      PDTriggerRight_ = 2991
 //
-
-declare constant ShamStim_     = 665;
-declare constant Stimulation_  = 666;
-declare constant EndStim_      = 667;
-declare constant StimFailed_   = 668;
-declare constant Error_tone    = 776;
-declare constant RWRD_tone     = 777;
-declare constant Error_sacc    = 887;
-declare constant Correct_sacc  = 888;
-declare constant VSyncRefresh_ = 999;
-
+// Codes from 1500 - 1520
 declare constant Identify_Room_ = 1500;
 declare constant CmanHeader_    = 1501;
 declare constant MemHeader_     = 1502;
@@ -42,101 +32,82 @@ declare constant SearchHeader_  = 1507;
 declare constant CaptureHeader_ = 1508;
 declare constant AntiHeader_    = 1509;
 
+// Codes from 1550-1599
+declare constant OutcomeFixError_       = 1550;
+declare constant OutcomeFixBreak_       = 1552;
+declare constant OutcomeGoCorrect_      = 1560;
+declare constant OutcomeGoError_        = 1562;
+declare constant OutcomeNoGoCorrect_    = 1570;
+declare constant OutcomeNoGoWrong_      = 1572;
+declare constant OutcomeNoGoWrongEarly_ = 1574;
+declare constant OutcomeNoGoError_      = 1574;
+declare constant OutcomeNoGoErrorEarly_ = 1576;
 
-declare constant TaskStart_ = 1600;
-declare constant TaskEnd_   = 1601;
+// Codes from 1600-1999
+declare constant TaskStart_     = 1600;
+declare constant TaskEnd_       = 1602;
+declare constant TrialGetReady_ = 1610;
+declare constant TrialReady_    = 1612;
+declare constant TrialStart_    = 1620;
+declare constant Eot_           = 1622;
 
+// Coded from 2000-2299
+declare constant Tone_      = 2000;
+declare constant Reward_    = 2010;
+declare constant ITIStart_  = 2124;
+declare constant ITIEnd_    = 2126;
+declare constant PunishEnd_ = 2130;
+declare constant PunishEnd_ = 2132;
+declare constant ExtraRWRD_ = 2140;
 
-declare constant TrialGetReady_ = 1664;
-declare constant TrialReady_    = 1665;
-declare constant TrialStart_    = 1666;
-declare constant Eot_           = 1667;
-declare constant Tone_          = 2001;
-declare constant PunishEnd_     = 2002;
-declare constant ITIStart_      = 2124;
-declare constant ITIEnd_        = 2125;
-declare constant ExtraRWRD_     = 2127;
-declare constant FixSpotOff_    = 2300;
-declare constant FixSpotOn_     = 2301;
-//Note that this is followed by a 1 or a 2 if MultElectrodeStimFlag is set depending on the stim channel???
-declare constant ZeroEyePosition_ = 2302;
-declare constant PlacOn_          = 2320;
-//===================================================
-// Break target fixation before MIN_TARG_HOLD_TIME
-declare constant TargHoldMinTHT_      = 2400;
-declare constant TargHoldBrkPreTone_  = 2402;
-declare constant TargHoldBrkTone_     = 2404;
-declare constant TargHoldBrkPreRwrd_  = 2406;
-declare constant TargHoldBrkRwrd_     = 2408;
-declare constant TargHoldBrkPostRwrd_ = 2410;
-//==================================================
-declare constant ToneOn_    = 2412;
-declare constant ToneOff_   = 2414;
-declare constant RewardOn_  = 2416;
-declare constant RewardOff_ = 2418;
+// Codes 2300-2399
+declare constant FixSpotOn_       = 2300;
+declare constant FixSpotOff_      = 2302;
+declare constant TargetPre_       = 2310;
+declare constant Target_          = 2320;
+declare constant TargetOff_       = 2330;
+declare constant StopSignal_      = 2340;
+eclare constant  ZeroEyePosition_ = 2395;
 
+// Codes 2400-2699
+declare constant AcquireFix_          = 2400;
+declare constant AcquireFixError_     = 2402;
+declare constant Fixate_              = 2404;
+declare constant BreakFix_            = 2406;
+declare constant AcquireTarget_       = 2420;
+declare constant AcquireTargetError_  = 2422;
+declare constant TargHoldBrkPreTone_  = 2430;
+declare constant TargHoldBrkTone_     = 2432;
+declare constant TargHoldBrkPreRwrd_  = 2434;
+declare constant TargHoldBrkRwrd_     = 2438;
+declare constant TargHoldBrkPostRwrd_ = 2440;
+declare constant TargHoldMinTHT_      = 2450;
+declare constant Decide_              = 2460;
+declare constant EarlySaccade_        = 2470;
+declare constant Saccade_             = 2472;
+declare constant LateSaccade_         = 2474;
+declare constant NoSaccade_           = 2476;
+declare constant ToneOn_              = 2500;
+declare constant ToneOff_             = 2502;
+declare constant SoundStart_          = 2510;
+declare constant SoundEnd_            = 2512;
+declare constant RewardOn_            = 2520;
+declare constant RewardOff_           = 2522;
+declare constant JuiceStart_          = 2530;
+declare constant JuiceEnd_            = 2532;
+declare constant MouthBegin_          = 2540;
+declare constant MouthEnd_            = 2542;
 
-
-declare constant Correct_ = 2600;
-declare constant Abort_   = 2620;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)???
-declare constant TargetPre_  = 2650;
-declare constant Target_     = 2651;
-declare constant TargetOff_  = 2652;
-declare constant StopSignal_ = 2653;
-// MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)???
-declare constant StopOn_     = 2654;
-declare constant MouthBegin_ = 2655;
-declare constant MouthEnd_   = 2656;
-
-declare constant AcquireFixError_ = 2657;
-declare constant AcquireFix_      = 2658;
-declare constant Fixate_          = 2659;
-declare constant BreakFix_        = 2660;
-
-declare constant CueOn_              = 2661;
-declare constant AcquireTarget_      = 2670;
-declare constant AcquireTargetError_ = 2671;
-
-
-declare constant Reward_           = 2727;
-declare constant FixError_         = 2750;
-declare constant GoSaccade_        = 2751;
-declare constant GoError_          = 2752;
-declare constant NOGOWrong_        = 2753;
-declare constant GoTargFixError_   = 2754;
-declare constant GOCorrect_        = 2755;
-declare constant NOGOCorrect_      = 2756;
-declare constant CatchCorrect_     = 2757;
-declare constant CatchIncorrectG_  = 2758;
-declare constant CatchIncorrectNG_ = 2759;
-
-declare constant EarlySaccade_ = 2760;
-declare constant Saccade_      = 2762;
-declare constant LateSaccade_  = 2764;
-declare constant NoSaccade_    = 2766;
-declare constant FixWindow_    = 2770;
-declare constant TargetWindow_ = 2771;
-
+// Codes 2700-2899
 declare constant Staircase_         = 2772;
 declare constant Neg2Reinforcement_ = 2773;
 declare constant Feedback_          = 2774;
 declare constant ReturnToFix_       = 2775;
 
-declare constant JuiceStart_     = 2776;
-declare constant JuiceEnd_       = 2777;
-declare constant SoundOnRWRD_    = 2778;
-declare constant SoundNoRWRD_    = 2779;
-declare constant Decide_         = 2811;
-declare constant RewardSize_     = 2927;
-declare constant TrialInBlock    = 2928;
-declare constant SendPenatrInfo_ = 2929;
-
+// Codes 2900-3000
+declare constant TrialInBlock    = 2900;
 declare constant PDTriggerLeft_  = 2990;
-declare constant PDTriggerRight_ = 2991;
+declare constant PDTriggerRight_ = 2992;
 declare constant StartInfos_     = 2998;
 declare constant EndInfos_       = 2999;
 declare constant InfosZero       = 3000;
-// declare hide constant SendStimInfo_  = 7000;
-//declare constant StimHelp_    = 2820;
-//Note followed by another TTL == 2820 + trials[1] (looks like it classifies trial type)
