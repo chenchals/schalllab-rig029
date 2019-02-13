@@ -61,6 +61,7 @@ process PROC_RWRD_CHK()
     }
     if (TRL_TARG_HOLD_DURATION >= TEMP_MIN_THT)
     {
+	  TRL_IS_TARG_HOLD_MIN_THT = 1;
       TRL_TARG_HOLD_MIN_THT_TIME = time();
       spawn SEND_EVT(TargHoldMinTHT_);
       printf("****STAT_RWRD_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldMinTHT_);

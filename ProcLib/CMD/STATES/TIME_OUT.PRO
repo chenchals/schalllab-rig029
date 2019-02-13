@@ -47,7 +47,8 @@ process PROC_TIMEOUT_CHK()
     // Acquire target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        printf("****STAT_TIM_OUT[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_TIM_OUT);
+		STAT_DLTA_T = STAT_DLTA_T;
+        //printf("****STAT_TIM_OUT[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_TIM_OUT);
         /*
          * if(TIMEOUT_DURATION)
          * {

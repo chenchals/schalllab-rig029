@@ -201,7 +201,9 @@ process IDLE() enabled
         } /*while(TRL_RUNNING)*/
         nexttick;
     }     /*while(1)*/
-}         /*IDLE()*/
+	nexttick 2000;
+	printf("============================NEXT TRIAL========================\n");
+} /*IDLE()*/
 
 
 process UPD8_MSG()

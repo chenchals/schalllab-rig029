@@ -45,7 +45,7 @@ process PROC_ITI_CHK()
         spawn SEND_EVT(ITIStart_);
 
         printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIStart_[%d]\n", STAT_ITI_CHK, ITIStart_);
-
+         
         TRL_IS_TARG_ON_FLAG = 0;
     }
     if(TIMEOUT_DURATION)
@@ -57,8 +57,6 @@ process PROC_ITI_CHK()
     // Acquire target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-      printf("****STAT_ITI_CHK[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_ITI_CHK);
-
        if(TIMEOUT_DURATION)
        {
          spawn SEND_EVT(PunishStart_);

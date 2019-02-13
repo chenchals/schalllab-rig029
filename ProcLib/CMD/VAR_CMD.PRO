@@ -26,9 +26,9 @@ declare int          TRIAL_TYPE;
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 30.0;
-declare float        STOP_WEIGHT   = 30.0;
-declare float        IGNORE_WEIGHT = 40.0;
+declare float        GO_WEIGHT     = 100.0;
+declare float        STOP_WEIGHT   = 0.0;
+declare float        IGNORE_WEIGHT = 0.0;
 // temporary globals to be used in state processing
 declare int          TEMP_MIN_THT;
 declare int          TEMP_DELY_PLUS_DURATION;
@@ -140,10 +140,10 @@ declare int SUCCESS_TONE_BIG_REWARD = 300;
 declare int SUCCESS_TONE_MED_REWARD = 400;
 declare int SUCCESS_TONE_SML_REWARD = 500;
 // Negative secondary reinforcer timeout (short, medium, long)
-declate int PUNISH_TONE = FAILURE_TONE_MED_TIMEOUT;
 declare int FAILURE_TONE_SML_TIMEOUT = 800;
 declare int FAILURE_TONE_MED_TIMEOUT = 1600;
 declare int FAILURE_TONE_BIG_TIMEOUT = 3200;
+declare int PUNISH_TONE = FAILURE_TONE_MED_TIMEOUT;
 // Exponential juice reward duration by reaction time
 declare int EXP_JUICE_RWRD_TIME = 0;
 
