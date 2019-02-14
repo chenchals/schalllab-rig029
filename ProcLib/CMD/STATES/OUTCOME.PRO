@@ -72,8 +72,7 @@ process PROC_TRL_OUTCOME()
         TIMEOUT_DURATION    = 0;
     }
     // it is big conditional depending on the current trial type and tyep of error
-	if (STAT_DLTA_T <= STAT_ALLOWED_T)
-	{
+
 		if (TRIAL_TYPE == TRIAL_TYPE_GO)
 		{
 			spawnwait PROC_GO_OUTCOMES();
@@ -89,15 +88,16 @@ process PROC_TRL_OUTCOME()
 				spawnwait PROC_NOGO_NO_SS_OUTCOMES();
 			}
 		}
-	}
-	else
-	{
-		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TIMEOUT_DURATION);
-		TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION;
-		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION *TRL_DURATION = [%d] \n", STAT_OUTCOME, TIMEOUT_DURATION);
+		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
+		TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
+		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
 		PROCESS_STATE    = 1;
 		CURR_STAT        = STAT_ITI_CHK;
-	}
+		if(TIMEOUT_DURATION > 0)
+		{
+			TRL_IS_TIMEOUT = 1;
+		}
+
 } /* PROC_OUTCOME */
 
 
@@ -110,70 +110,70 @@ process PROC_GO_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_HOLD_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
     }
-    else if (!TRL_FIX_ACQ_ERROR_TIME)
+    else if (TRL_FIX_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_ACQ_ERROR[0];
         spawn SEND_EVT(OutcomeFixError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; Go Trial; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixError_);
     }
-    else if (!TRL_FIX_HOLD_BRK_TIME)
+    else if (TRL_FIX_HOLD_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_HOLD_BRK[0];
         spawn SEND_EVT(OutcomeFixBreak_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d]; Go Trial; (TRL_FIX_HOLD_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixBreak_);
     }
-    else if (!TRL_ERLY_SACC_TIME)
+    else if (TRL_ERLY_SACC_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_ERLY_SACC_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_NO_SACC_TIME)
+    else if (TRL_NO_SACC_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_NO_SACC[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_NO_SACC_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_TARG_ACQ_ERROR_TIME)
+    else if (TRL_TARG_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_PRE_TONE_TIME)
+    else if (TRL_TARG_HOLD_BRK_PRE_TONE_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_TONE[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_HOLD_BRK_PRE_TONE_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_TONE_TIME)
+    else if (TRL_TARG_HOLD_BRK_TONE_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_TONE[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_HOLD_BRK_TONE_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_PRE_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_PRE_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_HOLD_BRK_PRE_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[0];
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_HOLD_BRK_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_POST_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_POST_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_POST_RWRD[0];
         spawn SEND_EVT(OutcomeGoError_);
@@ -192,70 +192,70 @@ process PROC_NOGO_NO_SS_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoWrongEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_HOLD_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoWrongEarly_);
     }
-    else if (!TRL_FIX_ACQ_ERROR_TIME)
+    else if (TRL_FIX_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_ACQ_ERROR[1];
         spawn SEND_EVT(OutcomeFixError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; STOP Trial; No Stop Signal; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixError_);
     }
-    else if (!TRL_FIX_HOLD_BRK_TIME)
+    else if (TRL_FIX_HOLD_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_HOLD_BRK[1];
         spawn SEND_EVT(OutcomeFixBreak_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d];  No Stop Signal; (TRL_FIX_HOLD_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixBreak_);
     }
-    else if (!TRL_ERLY_SACC_TIME)
+    else if (TRL_ERLY_SACC_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_ERLY_SACC_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-    //else if (!TRL_NO_SACC_TIME)
+    //else if (TRL_NO_SACC_TIME)
     //{//process for GO, NOGO_NO_SS, NOGO_SS
     //    TIMEOUT_DURATION = TIMEOUT_NO_SACC[1];
     //    spawn SEND_EVT(OutcomeNoGoErrorEarly_);
     //
     //    printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_NO_SACC_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     //}
-    else if (!TRL_TARG_ACQ_ERROR_TIME)
+    else if (TRL_TARG_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-    else if (!TRL_TARG_HOLD_BRK_PRE_TONE_TIME)
+    else if (TRL_TARG_HOLD_BRK_PRE_TONE_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_TONE[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_HOLD_BRK_PRE_TONE_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-    else if (!TRL_TARG_HOLD_BRK_TONE_TIME)
+    else if (TRL_TARG_HOLD_BRK_TONE_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_TONE[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_HOLD_BRK_TONE_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-    else if (!TRL_TARG_HOLD_BRK_PRE_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_PRE_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_HOLD_BRK_PRE_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-    else if (!TRL_TARG_HOLD_BRK_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_HOLD_BRK_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-    else if (!TRL_TARG_HOLD_BRK_POST_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_POST_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_POST_RWRD[1];
         spawn SEND_EVT(OutcomeNoGoErrorEarly_);
@@ -274,70 +274,70 @@ process PROC_NOGO_SS_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoWrong_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_HOLD_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoWrong_);
     }
-    else if (!TRL_FIX_ACQ_ERROR_TIME)
+    else if (TRL_FIX_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_ACQ_ERROR[2];
         spawn SEND_EVT(OutcomeFixError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; STOP Trial; Stop Signal; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixError_);
     }
-    else if (!TRL_FIX_HOLD_BRK_TIME)
+    else if (TRL_FIX_HOLD_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_HOLD_BRK[2];
         spawn SEND_EVT(OutcomeFixBreak_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d];  STOP Trial; Stop Signal; (TRL_FIX_HOLD_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixBreak_);
     }
-    else if (!TRL_ERLY_SACC_TIME)
+    else if (TRL_ERLY_SACC_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[2];
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_ERLY_SACC_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-    //else if (!TRL_NO_SACC_TIME)
+    //else if (TRL_NO_SACC_TIME)
     //{//process for GO, NOGO_NO_SS, NOGO_SS
     //    TIMEOUT_DURATION = TIMEOUT_NO_SACC[2];
     //    spawn SEND_EVT(OutcomeNoGoError_);
     //
     //    printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; No Stop Signal; (TRL_NO_SACC_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     //}
-    else if (!TRL_TARG_ACQ_ERROR_TIME)
+    else if (TRL_TARG_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[2];
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_PRE_TONE_TIME)
+    else if (TRL_TARG_HOLD_BRK_PRE_TONE_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_TONE[2];
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_HOLD_BRK_PRE_TONE_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_TONE_TIME)
+    else if (TRL_TARG_HOLD_BRK_TONE_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_TONE[2];
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_HOLD_BRK_TONE_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_PRE_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_PRE_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[2];
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_HOLD_BRK_PRE_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[2];
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_HOLD_BRK_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-    else if (!TRL_TARG_HOLD_BRK_POST_RWRD_TIME)
+    else if (TRL_TARG_HOLD_BRK_POST_RWRD_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_TARG_HOLD_BRK_POST_RWRD[2];
         spawn SEND_EVT(OutcomeNoGoError_);

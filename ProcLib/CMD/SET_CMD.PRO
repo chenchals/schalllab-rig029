@@ -63,6 +63,7 @@ declare int TRL_I_IN_FLIGHT;
 declare int TRL_IS_TARG_HOLD_MIN_THT;
 
 declare int TRL_IS_STOP_SIGNAL_ON;
+declare int TRL_IS_TIMEOUT;
 declare int TRL_STOP_SIGNAL_DELAY;
 declare int TRL_IS_NON_CANCELLED;
 declare int TRL_IS_CANCELLED;
@@ -122,7 +123,9 @@ declare int TRL_TARG_ACQ_TIME;
 // target was fixated for this amount of time
 declare int TRL_TARG_HOLD_DURATION;
 // Punishment DURATION
-declare int TRL_PUNISH_DURATION;
+declare int TRL_TIMEOUT_START_TIME;
+declare int TRL_TIMEOUT_END_TIME;
+declare int TRL_TIMEOUT_DURATION;
 
 // target fixation broken or not
 declare int TRL_TARG_HOLD_MIN_THT_TIME;
@@ -140,7 +143,9 @@ declare int TRL_RWRD_ON_TIME;
 declare int TRL_RWRD_OFF_TIME;
 declare int TRL_XTRA_RWRD_ON_TIME;
 declare int TRL_XTRA_RWRD_OFF_TIME;
-
+declare int TRL_ITI_START_TIME;
+declare int TRL_ITI_END_TIME;
+declare int TRL_ITI_DURATION;
 
 // any break fixations?
 declare int TRL_ABORT_TIME;
@@ -293,6 +298,7 @@ process INIT_TRL_VARS()
     TRL_I_IN_FLIGHT                  = 0;
 	TRL_IS_TARG_HOLD_MIN_THT         = 0;
     TRL_IS_STOP_SIGNAL_ON            = 0;
+	TRL_IS_TIMEOUT                   = 0;
     TRL_STOP_SIGNAL_DELAY            = 0;
     TRL_IS_NON_CANCELLED             = 0;
     TRL_IS_CANCELLED                 = 0;
@@ -321,7 +327,9 @@ process INIT_TRL_VARS()
     TRL_TARG_ACQ_TIME                = 0;
     TRL_TARG_HOLD_MIN_THT_TIME       = 0;
     TRL_TARG_HOLD_DURATION           = 0;
-    TRL_PUNISH_DURATION              = 0;
+    TRL_TIMEOUT_START_TIME           = 0;
+    TRL_TIMEOUT_END_TIME             = 0;
+    TRL_TIMEOUT_DURATION             = 0;
     TRL_TARG_HOLD_BRK_TIME           = 0;
     TRL_TARG_HOLD_BRK_PRE_TONE_TIME  = 0;
     TRL_TARG_HOLD_BRK_TONE_TIME      = 0;
@@ -334,7 +342,10 @@ process INIT_TRL_VARS()
     TRL_RWRD_OFF_TIME                = 0;
     TRL_XTRA_RWRD_ON_TIME            = 0;
     TRL_XTRA_RWRD_OFF_TIME           = 0;
-    TRL_ABORT_TIME                   = 0;
+    TRL_ITI_START_TIME               = 0;
+    TRL_ITI_END_TIME                 = 0;
+    TRL_ITI_DURATION                 = 0;
+	TRL_ABORT_TIME                   = 0;
     TRL_FIX_VRT_RFRSH_COUNT          = 0;
     TRL_TARG_VRT_RFRSH_COUNT         = 0;
 } /* INIT_TRL_VARS */

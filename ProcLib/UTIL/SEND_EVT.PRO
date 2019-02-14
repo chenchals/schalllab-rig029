@@ -84,7 +84,6 @@ process QUE_TTL()
         while (  n_events_sent < events_per_cycle
               && event_idx != CURR_EVENT_FIFO_IDX)
         {
-			printf("Sending TTL for %d\n",EVENT_FIFO[event_idx]);
             spawnwait SEND_TTL(EVENT_FIFO[event_idx]);
 
             event_idx     = (event_idx + 1) % N_EVENT_FIFO;

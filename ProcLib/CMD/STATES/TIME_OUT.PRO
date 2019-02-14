@@ -24,50 +24,39 @@ declare PROC_TIMEOUT_CHK();
 
 process PROC_TIMEOUT_CHK()
 {
-    if (PROCESS_STATE)
-    {
-        printf("****STAT_TIM_OUT[%d]: Processing Inter trial interval\n", STAT_TIM_OUT);
-        // Keep independent of previous state times if any.
-        PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
-        STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = TIMEOUT_DURATION;
-        dsendf("vp %d\n", PG_BLANK);
+	if (PROCESS_STATE)
+	{
+		printf("****STAT_TIM_OUT[%d]: Processing Timeout interval\n", STAT_TIM_OUT);
+		// Keep independent of previous state times if any.
+		PROCESS_STATE  = 0;
+		STAT_STRT_T    = time();
+		STAT_DLTA_T    = 0;
+		STAT_ALLOWED_T = TIMEOUT_DURATION;
+		if(TRL_IS_TARG_ON_FLAG)
+		{
+			dsendf("vp %d\n", PG_BLANK);
+			TRL_IS_TARG_ON_FLAG = 0;
+		}
+	}
+	if(TRL_IS_TIMEOUT)
+	{
+		TRL_TIMEOUT_DURATION =   TRL_TIMEOUT_DURATION + 1;
+	}
 
-        printf("****STAT_TIM_OUT[%d]: OK sent Event: ITIStart_[%d]\n", STAT_TIM_OUT );
+	if (STAT_DLTA_T >= STAT_ALLOWED_T)
+	{
+		if(!TRL_TIMEOUT_END_TIME)
+		{
+			TRL_TIMEOUT_END_TIME = time();
+			spawn SEND_EVT(PunishEnd_);
+			printf("****STAT_TIM_OUT[%d]: ERR sent Event: PunishEnd_[%d]\n", STAT_TIM_OUT, PunishEnd_); 		
+			spawn SEND_EVT(TaskEnd_);
 
-        TRL_IS_TARG_ON_FLAG = 0;
-    }
-    if (TIMEOUT_DURATION)
-    {
-        TRL_PUNISH_DURATION = TRL_PUNISH_DURATION + 1;
-    }
+			printf("****STAT_TIM_OUT[%d]: ERR sent Event: TaskEnd_[%d]\n", STAT_TIM_OUT, TaskEnd_);
 
-    //TRL_I_IN_FLIGHT  should be true
-    // Acquire target
-    if (STAT_DLTA_T <= STAT_ALLOWED_T)
-    {
-		STAT_DLTA_T = STAT_DLTA_T;
-        //printf("****STAT_TIM_OUT[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_TIM_OUT);
-        /*
-         * if(TIMEOUT_DURATION)
-         * {
-         * spawn SEND_EVT(PunishStart_);
-         * printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
-         *
-         * //spawn TONE()
-         * }
-         */
-    }
-    else
-    {
-        printf("****STAT_ITI_CHK[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_TIM_OUT);
-        spawn SEND_EVT(TaskEnd_);
-
-        printf("****STAT_TIM_OUT[%d]: OK sent Event: TaskEnd_[%d]>>>>>>> Not Yet>>>>>>>>>\n", STAT_TIM_OUT, TaskEnd_);
-
-        PROCESS_STATE = 1;
-        CURR_STAT     = STAT_IDLE;
-        TRL_RUNNING = 0;
-    }
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_IDLE;
+			TRL_RUNNING = 0;
+		}
+	}
 }/*PROC_TIMEOUT_CHK*/

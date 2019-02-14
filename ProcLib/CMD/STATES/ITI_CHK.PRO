@@ -32,48 +32,65 @@ process PROC_ITI_CHK()
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         dsendf("vp %d\n", PG_BLANK);
+        TRL_IS_TARG_ON_FLAG = 0;
 
         // assume IS_TRL_LENGTH_FIXED = 1;
         printf("****STAT_ITI_CHK[%d]: IS_TRL_LENGTH_FIXED [%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED);
-        STAT_ALLOWED_T = ((TRL_DURATION - TRL_CUM_TIME) + BASE_ITI_TIME);
+        TRL_ITI_DURATION = ((TRL_DURATION + BASE_ITI_TIME) * TIME_DILATE_FACTOR) - (time()-TRL_START_TIME);
         if (!IS_TRL_LENGTH_FIXED)
         {
-          STAT_ALLOWED_T = BASE_ITI_TIME ;
+          TRL_ITI_DURATION = BASE_ITI_TIME * TIME_DILATE_FACTOR ;
         }
         // add any remaining time from tone/reward
-        TRL_PUNISH_DURATION = STAT_ALLOWED_T + TRL_PUNISH_DURATION;
-        spawn SEND_EVT(ITIStart_);
-
-        printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIStart_[%d]\n", STAT_ITI_CHK, ITIStart_);
-         
-        TRL_IS_TARG_ON_FLAG = 0;
+		if (TRL_IS_TIMEOUT)
+		{
+			TONE_DURATION = TIMEOUT_DURATION + TRL_ITI_DURATION;
+		}
+		STAT_ALLOWED_T = TRL_ITI_DURATION;
+        printf("****STAT_ITI_CHK[%d]: OK TRL_ITI_DURATION[%d]\n", STAT_ITI_CHK, TRL_ITI_DURATION);
+        
     }
-    if(TIMEOUT_DURATION)
+    if(TRL_IS_TIMEOUT)
     {
-      TRL_PUNISH_DURATION =   TRL_PUNISH_DURATION + 1;
+      TRL_TIMEOUT_DURATION =   TRL_TIMEOUT_DURATION + 1;
     }
 
-    //TRL_I_IN_FLIGHT  should be true
-    // Acquire target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-       if(TIMEOUT_DURATION)
+       if(TRL_IS_TIMEOUT && !TRL_TIMEOUT_START_TIME)
        {
+		 TRL_TIMEOUT_START_TIME = time();
          spawn SEND_EVT(PunishStart_);
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
          spawn SEND_EVT(PunishTone_);
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishTone_[%d]\n", STAT_ITI_CHK, PunishTone_);
-
-         spawn TONE(PUNISH_TONE,TRL_PUNISH_DURATION);
+         spawn TONE(PUNISH_TONE,TONE_DURATION);
        }
+	   else if(!TRL_IS_TIMEOUT && !TRL_ITI_START_TIME)
+	   {
+		   TRL_ITI_START_TIME = time();
+           spawn SEND_EVT(ITIStart_);
+           printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIStart_[%d]\n", STAT_ITI_CHK, ITIStart_);		   
+	   }
     }
     else
     {
-        printf("****STAT_ITI_CHK[%d]: Processing Inter trial interval >>>>>>> Not Yet>>>>>>>>>\n", STAT_ITI_CHK);
-        spawn SEND_EVT(ITIEnd_);
-        printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIEnd_[%d]\n", STAT_ITI_CHK, ITIEnd_);
+		if(TRL_IS_TIMEOUT)
+		{
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_TIM_OUT;	
+		}
+		else if(!TRL_IS_TIMEOUT && !TRL_ITI_END_TIME)
+		{
+			TRL_ITI_END_TIME = time();
+			spawn SEND_EVT(ITIEnd_);
+			printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIEnd_[%d]\n", STAT_ITI_CHK, ITIEnd_);
+			spawn SEND_EVT(TaskEnd_);
+			printf("****STAT_ITI_CHK[%d]: OK sent Event: TaskEnd_[%d]\n", STAT_ITI_CHK, TaskEnd_);
 
-        PROCESS_STATE = 1;
-        CURR_STAT     = STAT_TIM_OUT;
+			PROCESS_STATE = 0;
+			CURR_STAT     = STAT_IDLE;
+			TRL_RUNNING = 0;
+		}
     }
 } /* PROC_ITI_CHK */
