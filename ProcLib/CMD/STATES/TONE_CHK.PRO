@@ -69,9 +69,9 @@ process PROC_TONE_CHK()
     // Eye is already on Target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        if (TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
-        {
-            if (!I_TARG)
+		if (!I_TARG)
+		{
+			if(TEMP_MIN_THT > STAT_ALLOWED_T)
             {
                 TRL_TARG_HOLD_BRK_PRE_TONE_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPreTone_);
@@ -82,6 +82,17 @@ process PROC_TONE_CHK()
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
+			else
+			{
+                TRL_TARG_HOLD_BRK_MIN_THT_TIME = time();
+                spawn SEND_EVT(TargHoldBrkMinTHT_);
+                //spawn SEND_EVT(GoError_);
+                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_TONE_CHK, TargHoldBrkMinTHT_);
+                printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
+                PROCESS_STATE = 1;
+                CURR_STAT     = STAT_OUTCOME;
+				
+			}
         }
     }
     else if (STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)

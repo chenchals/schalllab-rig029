@@ -66,7 +66,8 @@ process PROC_ITI_CHK()
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
          spawn SEND_EVT(PunishTone_);
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishTone_[%d]\n", STAT_ITI_CHK, PunishTone_);
-         spawn TONE(TRL_TONE_FREQ,TRL_TONE_DURATION);
+         //spawn TONE(TRL_TONE_FREQ,TRL_TONE_DURATION);
+		 spawn PLAY_WHITE_NOISE(TRL_TONE_DURATION);
        }
 	   else if(!TRL_IS_TIMEOUT && !TRL_ITI_START_TIME)
 	   {

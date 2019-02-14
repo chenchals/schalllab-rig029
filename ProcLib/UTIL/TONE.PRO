@@ -25,7 +25,7 @@
 
 
 declare TONE(int frequency, int duration);
-
+declare PLAY_WHITE_NOISE(int duration);
 
 process TONE(int frequency, int duration)
 {
@@ -35,4 +35,27 @@ process TONE(int frequency, int duration)
     mio_fout(internalClock / frequency);
     wait(duration);
     mio_fout(0);
+}
+
+
+process PLAY_WHITE_NOISE(int duration)
+{
+    // Play random 50-20050 Hz each for varying duration
+    declare int runDuration;
+    declare int delta;
+    declare int freq;
+
+    while (runDuration < duration)
+    {
+        delta = random(5) + 1;
+        freq  = random(20000) + 50;
+        if ((runDuration + delta) > duration)
+        {
+            delta = runDuration + delta - duration;
+        }
+        spawnwait TONE(freq, delta);
+
+        runDuration = runDuration + delta;
+        nexttick;
+    }
 }

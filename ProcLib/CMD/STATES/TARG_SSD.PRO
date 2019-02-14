@@ -124,8 +124,8 @@ process PROC_TARG_SSD()
             dsendf("vp %d\n", PG_SIGNAL_PD);
             // show for only 1 screen refresh
             dsendf("vw 1\n");
-            printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; Sent PG_SIGNAL_PD \n", STAT_TARG_SSD_);
-            printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; Sent PG_SIGNAL_PD \n", STAT_TARG_SSD_);
+            printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; Sent PG_SIGNAL_PD \n", STAT_TARG_SSD);
+            printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; Sent PG_SIGNAL_PD \n", STAT_TARG_SSD);
         }
         if (TRL_IS_STOP_SIGNAL_ON)
         {

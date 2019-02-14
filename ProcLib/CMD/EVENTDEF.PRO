@@ -83,6 +83,7 @@ declare constant TargHoldBrkPreRwrd_  = 2434;
 declare constant TargHoldBrkRwrd_     = 2438;
 declare constant TargHoldBrkPostRwrd_ = 2440;
 declare constant TargHoldMinTHT_      = 2450;
+declare constant TargHoldBrkMinTHT_   = 2452;
 declare constant Decide_              = 2460;
 declare constant EarlySaccade_        = 2470;
 declare constant Saccade_             = 2472;

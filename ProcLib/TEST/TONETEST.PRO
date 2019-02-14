@@ -9,15 +9,14 @@
 //       Adapted from BITSWEEP.PRO
 //
 
-#include C: / TEMPO / ProcLib / UTIL / SEND_EVT.PRO
-#include C: / TEMPO / ProcLib / UTIL / TONE.PRO
+#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
+#include C:/TEMPO/ProcLib/UTIL/TONE.PRO
 
 declare TONETEST();
 declare PLAY_HP();
-declare PLAY_WHITE_NOISE(int duration);
 
 declare int playHp         = 0;
-declare int playWhiteNoise = 0;
+declare int playWhiteNoise = 1;
 
 
 process TONETEST() enabled
@@ -42,30 +41,6 @@ process TONETEST() enabled
       spawnwait PLAY_WHITE_NOISE(10000);
     }
 } /* TONETEST */
-
-
-process PLAY_WHITE_NOISE(int duration)
-{
-    // Play random 50-20050 Hz each for varying duration
-    declare int runDuration;
-    declare int delta;
-    declare int freq;
-
-    while (runDuration < duration)
-    {
-        delta = random(10) + 1;
-        freq  = random(20000) + 50;
-        if ((runDuration + delta) > duration)
-        {
-            delta = runDuration + delta - duration;
-        }
-        spawnwait TONE(freq, delta);
-
-        runDuration = runDuration + delta;
-        nexttick;
-    }
-}
-
 
 // Play Harry Potter Theme Song:-)
 // Check the file: https://www.instructables.com/id/Arduino-Harry-Potter-Theme-Song/

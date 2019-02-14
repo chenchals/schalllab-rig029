@@ -137,7 +137,8 @@ declare int TRL_TARG_HOLD_BRK_TONE_TIME;
 declare int TRL_TARG_HOLD_BRK_PRE_RWRD_TIME;
 declare int TRL_TARG_HOLD_BRK_RWRD_TIME;
 declare int TRL_TARG_HOLD_BRK_POST_RWRD_TIME;
-
+declare int TRL_TARG_HOLD_BRK_MIN_THT_TIME;
+                
 // Tone and reward times
 declare int TRL_TONE_FREQ;
 declare int TRL_TONE_DURATION;
@@ -359,6 +360,7 @@ process INIT_TRL_VARS()
     TRL_TARG_HOLD_BRK_PRE_RWRD_TIME  = 0;
     TRL_TARG_HOLD_BRK_RWRD_TIME      = 0;
     TRL_TARG_HOLD_BRK_POST_RWRD_TIME = 0;
+	TRL_TARG_HOLD_BRK_MIN_THT_TIME   = 0;
     TRL_TONE_FREQ                    = 0;
     TRL_TONE_DURATION                = 0;
     TRL_TONE_ON_TIME                 = 0;

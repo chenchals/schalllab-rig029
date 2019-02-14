@@ -26,8 +26,8 @@ declare int          TRIAL_TYPE;
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 100.0;
-declare float        STOP_WEIGHT   = 0.0;
+declare float        GO_WEIGHT     = 0.0;
+declare float        STOP_WEIGHT   = 100.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // temporary globals to be used in state processing
 declare int          TEMP_MIN_THT;
@@ -55,11 +55,11 @@ declare int MIN_MAX_SACCADE_TIME[2] = { 100, 800 };
 // once the eyes leave fixation they must be in the target before this time is up
 declare int MAX_SACCADE_DURATION = 100;
 // Base Minimum time subject should hold gaze on TARGET
-declare int BASE_TARG_HOLD_TIME = 100;
+declare int BASE_TARG_HOLD_TIME = 2000;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGET_HOLD_TIME
 // if = 0, then MIN_TARGET_HOLD_TIME = BASE_TARG_HOLD_TIME
 // if = 1, then MIN_TARGET_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
-declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 1;
+declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int   MIN_TARG_HOLD_TIME;
@@ -105,25 +105,25 @@ declare int TIMEOUT_TONE;
 // NoGoTrial_No_StopSignal = TIMEOUT_xxx[1]
 // NoGoTrial_StopSignal = TIMEOUT_xxx[2]
 declare int TIMEOUT_FIX_ACQ_ERROR[3]           = { 1, 1, 1 };
-declare int TIMEOUT_FIX_HOLD_BRK[3]            = { 2, 2, 2 };
-declare int TIMEOUT_ERLY_SACC[3]               = { 2, 2, 2 };
-declare int TIMEOUT_NO_SACC[3]                 = { 2, 2, 2 };
-declare int TIMEOUT_TARG_ACQ_ERROR[3]          = { 2, 2, 2 };
-declare int TIMEOUT_TARG_HOLD_BRK_PRE_TONE[3]  = { 2, 2, 2 };
-declare int TIMEOUT_TARG_HOLD_BRK_TONE[3]      = { 2, 2, 2 };
-declare int TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[3]  = { 2, 2, 2 };
-declare int TIMEOUT_TARG_HOLD_BRK_POST_RWRD[3] = { 2, 2, 2 };
+declare int TIMEOUT_FIX_HOLD_BRK[3]            = { 1, 1, 1 };
+declare int TIMEOUT_ERLY_SACC[3]               = { 1, 1, 1 };
+declare int TIMEOUT_NO_SACC[3]                 = { 1, 1, 1 };
+declare int TIMEOUT_TARG_ACQ_ERROR[3]          = { 1, 1, 1 };
+declare int TIMEOUT_TARG_HOLD_BRK_PRE_TONE[3]  = { 1, 1, 1 };
+declare int TIMEOUT_TARG_HOLD_BRK_TONE[3]      = { 1, 1, 1 };
+declare int TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[3]  = { 1, 1, 1 };
+declare int TIMEOUT_TARG_HOLD_BRK_POST_RWRD[3] = { 1, 1, 1 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 // Gaze *in* targ_win for the duration of min Targ. hold time
 declare int TIMEOUT_TARG_HOLD_MIN_THT[3]       = { 0, 2, 2 };
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 600;
+declare int   TONE_DELAY = 1000;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 30;
+declare int   TONE_DURATION = 50;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 600;
+declare int   RWRD_DELAY = 6000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
