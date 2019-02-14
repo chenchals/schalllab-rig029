@@ -53,6 +53,7 @@ declare constant int STAT_FIX_HOLD = 3;
 // Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
 //        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 declare constant int STAT_TARG_ON = 4;
+declare constant int STAT_TARG_SSD = 40;
 
 // Fixspot is OFF Target is ON:
 // Check: Gaze in TARG_WIN before MAX_SACCADE_DURATION

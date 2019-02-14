@@ -32,8 +32,9 @@ process PROC_ITI_CHK()
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         dsendf("vp %d\n", PG_BLANK);
-        TRL_IS_TARG_ON_FLAG = 0;
+        spawn GRAF_HIDE_FIX_TARG();
 
+        TRL_IS_TARG_ON_FLAG = 0;
         // assume IS_TRL_LENGTH_FIXED = 1;
         printf("****STAT_ITI_CHK[%d]: IS_TRL_LENGTH_FIXED [%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED);
         TRL_ITI_DURATION = ((TRL_DURATION + BASE_ITI_TIME) * TIME_DILATE_FACTOR) - (time()-TRL_START_TIME);
@@ -44,7 +45,8 @@ process PROC_ITI_CHK()
         // add any remaining time from tone/reward
 		if (TRL_IS_TIMEOUT)
 		{
-			TONE_DURATION = TIMEOUT_DURATION + TRL_ITI_DURATION;
+			TRL_TONE_DURATION = TIMEOUT_DURATION + TRL_ITI_DURATION;
+			TRL_TONE_FREQ = TIMEOUT_TONE;
 		}
 		STAT_ALLOWED_T = TRL_ITI_DURATION;
         printf("****STAT_ITI_CHK[%d]: OK TRL_ITI_DURATION[%d]\n", STAT_ITI_CHK, TRL_ITI_DURATION);
@@ -64,7 +66,7 @@ process PROC_ITI_CHK()
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
          spawn SEND_EVT(PunishTone_);
          printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishTone_[%d]\n", STAT_ITI_CHK, PunishTone_);
-         spawn TONE(PUNISH_TONE,TONE_DURATION);
+         spawn TONE(TRL_TONE_FREQ,TRL_TONE_DURATION);
        }
 	   else if(!TRL_IS_TIMEOUT && !TRL_ITI_START_TIME)
 	   {

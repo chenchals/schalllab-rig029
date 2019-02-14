@@ -47,7 +47,7 @@ process PROC_TONE_CHK()
         // Give tone after this time, unless Abort
         STAT_ALLOWED_T = TONE_DELAY * TIME_DILATE_FACTOR;
         // Tone already given, during tone check gaze
-        STAT_I_MOVE_DURATION = TONE_DURATION * TIME_DILATE_FACTOR;
+        STAT_I_MOVE_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
 
         TRL_TARG_HOLD_DURATION  = 1;       // as target was already acquired in previous state
         TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
@@ -90,7 +90,7 @@ process PROC_TONE_CHK()
         if (!TRL_TONE_ON_TIME)
         {
             TRL_TONE_ON_TIME = time();
-            spawn TONE(SUCCESS_TONE_SML_REWARD, TONE_DURATION);
+            spawn TONE(TRL_TONE_FREQ, TRL_TONE_DURATION);
             spawn SEND_EVT(ToneOn_);
 
             printf("****STAT_TARG_ON[%d]: OK sent Event: ToneOn_[%d]\n", STAT_TONE_CHK, ToneOn_);

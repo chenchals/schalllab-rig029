@@ -62,9 +62,11 @@ declare int TRL_I_IN_FLIGHT;
 // gaze fulfilled min_taqrg_hold_time
 declare int TRL_IS_TARG_HOLD_MIN_THT;
 
-declare int TRL_IS_STOP_SIGNAL_ON;
 declare int TRL_IS_TIMEOUT;
+declare int TRL_IS_STOP_SIGNAL_ON;
+declare int TRL_STOP_SIGNAL_TIME;
 declare int TRL_STOP_SIGNAL_DELAY;
+declare int TRL_STOP_SIGNAL_DURATION;
 declare int TRL_IS_NON_CANCELLED;
 declare int TRL_IS_CANCELLED;
 
@@ -137,8 +139,11 @@ declare int TRL_TARG_HOLD_BRK_RWRD_TIME;
 declare int TRL_TARG_HOLD_BRK_POST_RWRD_TIME;
 
 // Tone and reward times
+declare int TRL_TONE_FREQ;
+declare int TRL_TONE_DURATION;
 declare int TRL_TONE_ON_TIME;
 declare int TRL_TONE_OFF_TIME;
+declare int TRL_RWRD_DURATION;
 declare int TRL_RWRD_ON_TIME;
 declare int TRL_RWRD_OFF_TIME;
 declare int TRL_XTRA_RWRD_ON_TIME;
@@ -173,6 +178,24 @@ process SET_CMD_TRL()
     {
         TRL_STOP_SIGNAL_DELAY = 0;
     }
+	// Pick reward and tone for successful trials
+	if (TRIAL_TYPE == TRIAL_TYPE_STOP)
+    {
+		// what should be the freq and duartion of tone
+		TRL_TONE_FREQ = SUCCESS_TONE_MED_REWARD;
+		TRL_TONE_DURATION = TONE_DURATION;
+		
+		TRL_RWRD_DURATION = RWRD_DURATION;
+	}
+	else
+	{
+		// what should be the freq and duartion of tone
+		TRL_TONE_FREQ = SUCCESS_TONE_BIG_REWARD;
+		TRL_TONE_DURATION = TONE_DURATION;	
+		
+		TRL_RWRD_DURATION = RWRD_DURATION * 2;
+	}
+	
 
     // pick current target location AND SET WINDOWS
     CURR_TARG_IDX = CURR_TARG_IDX + 1;
@@ -201,8 +224,6 @@ process SET_CMD_TRL()
 
     // Set up any timing jitters etc
     FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
-
-    RWRD_DURATION = BASE_RWRD_DURATION;
 
     MIN_TARG_HOLD_TIME = USE_TONE_AND_REWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
 
@@ -297,9 +318,11 @@ process INIT_TRL_VARS()
     TRL_IS_FIX_ACQUIRED              = 0;
     TRL_I_IN_FLIGHT                  = 0;
 	TRL_IS_TARG_HOLD_MIN_THT         = 0;
-    TRL_IS_STOP_SIGNAL_ON            = 0;
 	TRL_IS_TIMEOUT                   = 0;
+    TRL_IS_STOP_SIGNAL_ON            = 0;
+    TRL_STOP_SIGNAL_TIME             = 0;
     TRL_STOP_SIGNAL_DELAY            = 0;
+	TRL_STOP_SIGNAL_DURATION         = 0;
     TRL_IS_NON_CANCELLED             = 0;
     TRL_IS_CANCELLED                 = 0;
     TRL_CUM_TIME                     = 0;
@@ -336,8 +359,11 @@ process INIT_TRL_VARS()
     TRL_TARG_HOLD_BRK_PRE_RWRD_TIME  = 0;
     TRL_TARG_HOLD_BRK_RWRD_TIME      = 0;
     TRL_TARG_HOLD_BRK_POST_RWRD_TIME = 0;
+    TRL_TONE_FREQ                    = 0;
+    TRL_TONE_DURATION                = 0;
     TRL_TONE_ON_TIME                 = 0;
     TRL_TONE_OFF_TIME                = 0;
+    TRL_RWRD_DURATION                = 0;
     TRL_RWRD_ON_TIME                 = 0;
     TRL_RWRD_OFF_TIME                = 0;
     TRL_XTRA_RWRD_ON_TIME            = 0;

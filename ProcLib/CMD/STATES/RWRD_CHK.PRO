@@ -48,7 +48,7 @@ process PROC_RWRD_CHK()
         // Give reward after this time, unless Abort
         STAT_ALLOWED_T = RWRD_DELAY * TIME_DILATE_FACTOR;
         // Reward already given, during reward duration check gaze
-        STAT_I_MOVE_DURATION = RWRD_DURATION * TIME_DILATE_FACTOR;
+        STAT_I_MOVE_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
         // This is incremented in the CMD_TSK.PRO --> state flow controller
         TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
@@ -88,7 +88,7 @@ process PROC_RWRD_CHK()
         if (!TRL_RWRD_ON_TIME)
         {
             TRL_RWRD_ON_TIME = time();
-            spawn JUICE(JUICE_CHANNEL, RWRD_DURATION);
+            spawn JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION);
             spawn SEND_EVT(RewardOn_);
 
             printf("****STAT_RWRD_CHK[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_CHK, RewardOn_);

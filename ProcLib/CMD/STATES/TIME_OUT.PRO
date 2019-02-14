@@ -35,6 +35,7 @@ process PROC_TIMEOUT_CHK()
 		if(TRL_IS_TARG_ON_FLAG)
 		{
 			dsendf("vp %d\n", PG_BLANK);
+			spawn GRAF_HIDE_FIX_TARG();
 			TRL_IS_TARG_ON_FLAG = 0;
 		}
 	}

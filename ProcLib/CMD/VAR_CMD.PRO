@@ -96,6 +96,7 @@ declare int   ITI_TIME      = BASE_ITI_TIME;
 //===========================Reward and punishment======================
 // timeout time for punishment computed
 declare int TIMEOUT_DURATION;
+declare int TIMEOUT_TONE;
 // See ProcLib/DOC/CmdOutcomes.xlsx
 // Extra punish time for diferent outcomes in number of Trial lengths
 // The value must be an integer
@@ -118,22 +119,17 @@ declare int TIMEOUT_TARG_HOLD_MIN_THT[3]       = { 0, 2, 2 };
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int   TONE_DELAY = 600;
 // how long should the error and success tones be presented?
+// this will be recomputed during trial
+// Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
 declare int   TONE_DURATION = 30;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
 declare int   RWRD_DELAY = 600;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
-declare int   BASE_RWRD_DURATION = 20;
-declare int   RWRD_DURATION;
+// this will be recomputed during trial
+// Actual used will be TRL_RWRD_DURATION
+declare int   RWRD_DURATION = 20;
 // time out for messing up
 declare int   BASE_PUNISH_TIME = 2000;
-// Reward weights
-declare float BIG_RWRD_WEIGHT = 0.3;
-declare float MED_RWRD_WEIGHT = 0.2;
-declare float SML_RWRD_WEIGHT = 0.1;
-// Punishment weights
-declare float SML_PUNISH_WEIGHT = 0.1;
-declare float MED_PUNISH_WEIGHT = 0.2;
-declare float BIG_PUNISH_WEIGHT = 0.3;
 
 // Positive secondary reinforcer in Hz
 declare int SUCCESS_TONE_BIG_REWARD = 300;
@@ -143,7 +139,7 @@ declare int SUCCESS_TONE_SML_REWARD = 500;
 declare int FAILURE_TONE_SML_TIMEOUT = 800;
 declare int FAILURE_TONE_MED_TIMEOUT = 1600;
 declare int FAILURE_TONE_BIG_TIMEOUT = 3200;
-declare int PUNISH_TONE = FAILURE_TONE_MED_TIMEOUT;
+
 // Exponential juice reward duration by reaction time
 declare int EXP_JUICE_RWRD_TIME = 0;
 

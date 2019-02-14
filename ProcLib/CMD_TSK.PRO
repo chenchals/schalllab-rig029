@@ -21,6 +21,7 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/FIX_HOLD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_VR.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ON.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/TARG_SSD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ACQ.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TONE_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/RWRD_CHK.PRO
@@ -119,7 +120,7 @@ process IDLE() enabled
 				* nexttick 1000;
 				*/
 				printf("Giving JUICE\n");
-				spawnwait JUICE(JUICE_CHANNEL, BASE_RWRD_DURATION + 100);
+				spawnwait JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION + 100);
 
 				nexttick 1000;
 				//nexttick 5000;
@@ -154,7 +155,19 @@ process IDLE() enabled
 			//================= State = STAT_TARG_ON===============
 			if (CURR_STAT == STAT_TARG_ON)
 			{
-				spawnwait PROC_TARG_ON();
+				if(TRIAL_TYPE == TRIAL_TYPE_STOP)
+				{
+					CURR_STAT = PROC_TARG_SSD;
+					spawnwait PROC_TARG_SSD();
+				}
+				else
+				{
+					spawnwait PROC_TARG_ON();
+				}
+			}
+			if (CURR_STAT == STAT_TARG_SSD)
+			{
+				spawnwait PROC_TARG_SSD();
 			}
 			//================= State = STAT_TARG_ACQ===============
 			if (CURR_STAT == STAT_TARG_ACQ)
