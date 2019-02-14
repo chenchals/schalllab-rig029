@@ -9,11 +9,15 @@
 //       Adapted from BITSWEEP.PRO
 //
 
-#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
-#include C:/TEMPO/ProcLib/UTIL/TONE.PRO
+#include C: / TEMPO / ProcLib / UTIL / SEND_EVT.PRO
+#include C: / TEMPO / ProcLib / UTIL / TONE.PRO
 
 declare TONETEST();
 declare PLAY_HP();
+declare PLAY_WHITE_NOISE(int duration);
+
+declare int playHp         = 0;
+declare int playWhiteNoise = 0;
 
 
 process TONETEST() enabled
@@ -21,21 +25,46 @@ process TONETEST() enabled
     declare int freq[10] = { 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000 };
     declare int duration = 50;
     declare int temp     = 0;
-    declare int playHp   = 1;
 
-	temp = 0;
-        while (temp < 10)
-        {
-            spawnwait TONE(freq[temp], duration);
+    temp = 0;
+    while (temp < 10)
+    {
+        spawnwait TONE(freq[temp], duration);
 
-            temp = temp + 1;
-        }
-        if (playHp)
-        {
-            spawnwait PLAY_HP();
-        }
-
+        temp = temp + 1;
+    }
+    if (playHp)
+    {
+        spawnwait PLAY_HP();
+    }
+    if (playWhiteNoise)
+    {
+      spawnwait PLAY_WHITE_NOISE(10000);
+    }
 } /* TONETEST */
+
+
+process PLAY_WHITE_NOISE(int duration)
+{
+    // Play random 50-20050 Hz each for varying duration
+    declare int runDuration;
+    declare int delta;
+    declare int freq;
+
+    while (runDuration < duration)
+    {
+        delta = random(10) + 1;
+        freq  = random(20000) + 50;
+        if ((runDuration + delta) > duration)
+        {
+            delta = runDuration + delta - duration;
+        }
+        spawnwait TONE(freq, delta);
+
+        runDuration = runDuration + delta;
+        nexttick;
+    }
+}
 
 
 // Play Harry Potter Theme Song:-)
@@ -70,19 +99,19 @@ process PLAY_HP()
     declare int   tempo    = 400;
 
 
-    spawnwait TONE(B, Int(tempo*one));
-    spawnwait TONE(E, Int(tempo*one_half));
-    spawnwait TONE(G, Int(tempo*half));
-    spawnwait TONE(F, Int(tempo*one));
-    spawnwait TONE(E, Int(tempo*two));
-    spawnwait TONE(B2, Int(tempo*one));
-    spawnwait TONE(A2, Int(tempo*two_half));
-    spawnwait TONE(Fs, Int(tempo*two_half));
+    spawnwait TONE(B, Int(tempo *one));
+    spawnwait TONE(E, Int(tempo *one_half));
+    spawnwait TONE(G, Int(tempo *half));
+    spawnwait TONE(F, Int(tempo *one));
+    spawnwait TONE(E, Int(tempo *two));
+    spawnwait TONE(B2, Int(tempo *one));
+    spawnwait TONE(A2, Int(tempo *two_half));
+    spawnwait TONE(Fs, Int(tempo *two_half));
 
-    spawnwait TONE(E, Int(tempo*one_half));
-    spawnwait TONE(G, Int(tempo*half));
-    spawnwait TONE(F, Int(tempo*one));
-    spawnwait TONE(Ds, Int(tempo*two));
-    spawnwait TONE(F, Int(tempo*one));
-    spawnwait TONE(B, Int(tempo*two_half));
+    spawnwait TONE(E, Int(tempo *one_half));
+    spawnwait TONE(G, Int(tempo *half));
+    spawnwait TONE(F, Int(tempo *one));
+    spawnwait TONE(Ds, Int(tempo *two));
+    spawnwait TONE(F, Int(tempo *one));
+    spawnwait TONE(B, Int(tempo *two_half));
 } /* PLAY_HP */
