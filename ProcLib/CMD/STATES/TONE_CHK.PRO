@@ -71,7 +71,7 @@ process PROC_TONE_CHK()
 	}
 
 	// Eye is already on Target from TRL_IS_TARG_ACQUIRED
-	
+
 	if(STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
 	{
 		// Tone delay
@@ -88,7 +88,7 @@ process PROC_TONE_CHK()
 				PROCESS_STATE = 1;
 				CURR_STAT     = STAT_OUTCOME;
 			}
-			else if (!I_TARG && TEMP_MIN_THT > STAT_ALLOWED_T)
+			if (!I_TARG && TEMP_MIN_THT > STAT_ALLOWED_T)
 			{
 				TRL_TARG_BRK_PRE_TONE_TIME = time();
 				spawn SEND_EVT(TargHoldBrkPreTone_);
@@ -102,6 +102,7 @@ process PROC_TONE_CHK()
 		// Tone duration
 		else if (STAT_DLTA_T > STAT_ALLOWED_T)
 		{
+			printf("..");
 			// Give tone, if entered this condition
 			if (!TRL_TONE_ON_TIME)
 			{
@@ -122,7 +123,7 @@ process PROC_TONE_CHK()
 				PROCESS_STATE = 1;
 				CURR_STAT     = STAT_OUTCOME;
 			}
-			else if (!I_TARG && TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION)
+			if (!I_TARG && TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION)
 			{
 				TRL_TARG_BRK_TONE_TIME = time();
 				spawn SEND_EVT(TargHoldBrkTone_);
@@ -135,6 +136,7 @@ process PROC_TONE_CHK()
 	}
 	else         // eye in Target win until TEMP_MIN_THT, or TEMP_MIN_THT is greater than TONE_DELAY+TONE_DURATION
 	{
+		printf("\n");
 		TRL_TONE_OFF_TIME = time();
 		spawn SEND_EVT(ToneOff_);
 
