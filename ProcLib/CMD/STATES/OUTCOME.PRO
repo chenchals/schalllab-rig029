@@ -4,15 +4,15 @@
 //
 // See CmdOutcomes.xls file in DOC folder
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| DEF_TRL_TIME_VAR	                            | TRL_TIME_VAR_not_0	             | EVENT_SENT	          | OUTCOME_GO_TRIAL  |	OUTCOME_NOGO_TRIAL_NO_SS |  OUTCOME_NOGO_TRIAL_SS |
+//| DEF_TRL_TIME_VAR	                          | TRL_TIME_VAR_not_0	             | EVENT_SENT	        | OUTCOME_GO_TRIAL  | OUTCOME_NOGO_TRIAL_NO_SS |  OUTCOME_NOGO_TRIAL_SS |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in Fix win before allowed time       |	TRL_FIX_ACQ_ERROR_TIME	         | AcquireFixError_	    | OutcomeFixError_	| OutcomeFixError_	       | OutcomeFixError_       |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win for fix hold time	        | TRL_FIX_BRK_TIME	           | BreakFix_	          | OutcomeFixBreak_	| OutcomeFixBreak_	       | OutcomeFixBreak_       |
+//| Gaze not in Fix win for fix hold time	      | TRL_FIX_BRK_TIME	             | BreakFix_	        | OutcomeFixBreak_	| OutcomeFixBreak_	       | OutcomeFixBreak_       |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze out of Fix win before Min sac time	      | TRL_ERLY_SACC_TIME	             | EarlySaccade_	      | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze out of Fix win before Min sac time	      | TRL_ERLY_SACC_TIME	             | EarlySaccade_	    | OutcomeGoError_	| OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in Fix win after Max sac time	          | TRL_NO_SACC_TIME	               | NoSaccade_	          | OutcomeGoError_	  | *trial still evolving*	 | *trial still evolving* |
+//| Gaze in Fix win after Max sac time	          | TRL_NO_SACC_TIME	             | NoSaccade_	        | OutcomeGoError_	| *trial still evolving*   | *trial still evolving* |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in Targ win before max sac duration	| TRL_TARG_ACQ_ERROR_TIME	         | AcquireTargetError_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
@@ -112,6 +112,13 @@ process PROC_GO_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
     }
+	else if (!TRL_IS_TARG_MIN_THT)
+	{
+        TIMEOUT_DURATION = TIMEOUT_TARG_BRK_MIN_THT[0];
+        spawn SEND_EVT(OutcomeGoError_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TIMEOUT_TARG_BRK_MIN_THT - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);		
+	}
     else if (TRL_FIX_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_ACQ_ERROR[0];

@@ -48,10 +48,10 @@ process PROC_TARG_ON()
     if (TRL_TARG_VRT_RFRSH_COUNT == 1 && !TRL_TARG_ON_TIME)
     {
         TRL_TARG_ON_TIME = time();
-        printf("****STAT_TARG_ON[%d]: Sending Event Target_[%d]\n", STAT_TARG_ON, TRL_TARG_ON_TIME);
         spawn SEND_EVT(Target_);
+        printf("****STAT_TARG_ON[%d]: Sending Event Target_[%d]\n", STAT_TARG_ON, Target_);
 
-        printf("****STAT_TARG_ON[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_ON, TRL_TARG_ON_TIME);
+        printf("****STAT_TARG_ON[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_ON, FixSpotOff_);
         spawn SEND_EVT(FixSpotOff_);
     }
     // Before MIN_SACCADE_TIME

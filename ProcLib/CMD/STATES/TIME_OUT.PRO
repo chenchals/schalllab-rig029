@@ -32,6 +32,7 @@ process PROC_TIMEOUT_CHK()
 		STAT_STRT_T    = time();
 		STAT_DLTA_T    = 0;
 		STAT_ALLOWED_T = TIMEOUT_DURATION;
+		printf("Checking if TRL_IS_TARG_ON_FLAG...\n");
 		if(TRL_IS_TARG_ON_FLAG)
 		{
 			dsendf("vp %d\n", PG_BLANK);
@@ -39,6 +40,7 @@ process PROC_TIMEOUT_CHK()
 			TRL_IS_TARG_ON_FLAG = 0;
 		}
 	}
+
 	if(TRL_IS_TIMEOUT)
 	{
 		TRL_TIMEOUT_DURATION =   TRL_TIMEOUT_DURATION + 1;
@@ -46,18 +48,16 @@ process PROC_TIMEOUT_CHK()
 
 	if (STAT_DLTA_T >= STAT_ALLOWED_T)
 	{
+
 		if(!TRL_TIMEOUT_END_TIME)
 		{
 			TRL_TIMEOUT_END_TIME = time();
 			spawn SEND_EVT(PunishEnd_);
 			printf("****STAT_TIM_OUT[%d]: ERR sent Event: PunishEnd_[%d]\n", STAT_TIM_OUT, PunishEnd_); 		
-			spawn SEND_EVT(TaskEnd_);
-
-			printf("****STAT_TIM_OUT[%d]: ERR sent Event: TaskEnd_[%d]\n", STAT_TIM_OUT, TaskEnd_);
-
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_IDLE;
 			TRL_RUNNING = 0;
 		}
+		printf(":-)\n");
 	}
 }/*PROC_TIMEOUT_CHK*/

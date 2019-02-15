@@ -199,15 +199,24 @@ process IDLE() enabled
 			{
 				spawnwait PROC_TIMEOUT_CHK();
 			}
+			if(CURR_STAT == STAT_IDLE)
+			{
+				// should be always true...?
+				//&& TRL_RUNNING == 0
+				spawn SEND_EVT(TaskEnd_);
+				printf("****CMD_TSK: OK (Ending Trial) sent Event: TaskEnd_[%d]\n", TaskEnd_);
+				printf("****CMD_TSK: OK (Ending Trial) TRL_CUM_TIME[%d]\n", TRL_CUM_TIME);
+			}
 			//================= State = xxxxxx===============
 			if (TRL_IS_TARG_ON_FLAG)
 			{
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
-			TRL_CUM_TIME = TRL_CUM_TIME + 1;
+			TRL_CUM_TIME = TRL_CUM_TIME + 1;			
 			nexttick;
 		} /*while(TRL_RUNNING)*/
+		
 		nexttick;
 		printf("============================NEXT TRIAL========================\n");
 	}     /*while(1)*/

@@ -15,7 +15,7 @@
 declare TONETEST();
 declare PLAY_HP();
 
-declare int playHp         = 0;
+declare int playHp         = 1;
 declare int playWhiteNoise = 1;
 
 
@@ -38,7 +38,7 @@ process TONETEST() enabled
     }
     if (playWhiteNoise)
     {
-      spawnwait PLAY_WHITE_NOISE(10000);
+      spawnwait PLAY_WHITE_NOISE(2000);
     }
 } /* TONETEST */
 

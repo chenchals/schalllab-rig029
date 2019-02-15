@@ -45,7 +45,7 @@ process PLAY_WHITE_NOISE(int duration)
     declare int delta;
     declare int freq;
 
-    while (runDuration < duration)
+    while (runDuration <= duration)
     {
         delta = random(5) + 1;
         freq  = random(20000) + 50;
@@ -53,9 +53,9 @@ process PLAY_WHITE_NOISE(int duration)
         {
             delta = runDuration + delta - duration;
         }
-        spawnwait TONE(freq, delta);
+        spawn TONE(freq, delta);
 
         runDuration = runDuration + delta;
-        nexttick;
+        nexttick delta;
     }
 }
