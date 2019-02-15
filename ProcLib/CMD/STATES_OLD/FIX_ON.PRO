@@ -52,7 +52,6 @@ process PROC_FIX_ON()
             printf("****STAT_FIX_ON[%d]: OK sent Event: FixSpotOn_[%d]\n", STAT_FIX_ON, FixSpotOn_);
         }
     }
-
     // There is about 13 ms to complete drawing the screen, so eye can still be out
     if (STAT_DLTA_T > ceil(REFRESH_RATE) &&  STAT_DLTA_T <= STAT_ALLOWED_T)
     {

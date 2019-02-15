@@ -34,7 +34,10 @@ process PROC_FIX_HOLD()
         // already acquired fixation in FIX_ON state
         TRL_FIX_HOLD_DURATION = 1;
     }
-
+    if (I_FIX)
+    {
+        TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
+    }
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         if (!I_FIX)
@@ -46,10 +49,6 @@ process PROC_FIX_HOLD()
             printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
-        }
-        else if (I_FIX)
-        {
-            TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
         }
     }
     else
