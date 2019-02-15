@@ -9,10 +9,10 @@
 //==========================================================================
 //  Revision History:
 //  002: 2019-02-08 chenchal subraveti
-//       Compute MIN_TARG_HOLD_TIME using USE_TONE_AND_REWRD_FOR_MIN_THT
-//       if 0: then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
-//       if 1: then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+BASE_TARG_HOLD_TIME
-//       MIN_TARG_HOLD_TIME:
+//       Compute MIN_TARGTIME using USE_TONE_AND_REWRD_FOR_MIN_THT
+//       if 0: then MIN_TARGTIME = BASE_TARGTIME
+//       if 1: then MIN_TARGTIME = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+BASE_TARGTIME
+//       MIN_TARGTIME:
 //       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE / JUICE given
 //       if gaze ob target ==> NO TIMEOUT_TIME
 //
@@ -45,9 +45,9 @@ declare int ALLOWED_FIX_TIME = 3000;
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
 declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
-declare int FIX_HOLD_TIME;
+declare int FIXTIME;
 // maximum time after fixation before target presentation
-//declare int MAX_HOLD_TIME = 1000;
+//declare int MAXTIME = 1000;
 // for training subjects to slow down if necessary
 declare int MIN_MAX_SACCADE_TIME[2] = { 100, 800 };
 // subject has this long to saccade to the target
@@ -55,14 +55,14 @@ declare int MIN_MAX_SACCADE_TIME[2] = { 100, 800 };
 // once the eyes leave fixation they must be in the target before this time is up
 declare int MAX_SACCADE_DURATION = 100;
 // Base Minimum time subject should hold gaze on TARGET
-declare int BASE_TARG_HOLD_TIME = 2000;
-// Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGET_HOLD_TIME
-// if = 0, then MIN_TARGET_HOLD_TIME = BASE_TARG_HOLD_TIME
-// if = 1, then MIN_TARGET_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
+declare int BASE_TARGTIME = 2000;
+// Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
+// if = 0, then MIN_TARGETTIME = BASE_TARGTIME
+// if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARGTIME
 declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int   MIN_TARG_HOLD_TIME;
+declare int   MIN_TARGTIME;
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 20;
 // number of *non-zero* stop signal delays
@@ -105,17 +105,17 @@ declare int TIMEOUT_TONE;
 // NoGoTrial_No_StopSignal = TIMEOUT_xxx[1]
 // NoGoTrial_StopSignal = TIMEOUT_xxx[2]
 declare int TIMEOUT_FIX_ACQ_ERROR[3]           = { 1, 1, 1 };
-declare int TIMEOUT_FIX_HOLD_BRK[3]            = { 1, 1, 1 };
+declare int TIMEOUT_FIXBRK[3]            = { 1, 1, 1 };
 declare int TIMEOUT_ERLY_SACC[3]               = { 1, 1, 1 };
 declare int TIMEOUT_NO_SACC[3]                 = { 1, 1, 1 };
 declare int TIMEOUT_TARG_ACQ_ERROR[3]          = { 1, 1, 1 };
-declare int TIMEOUT_TARG_HOLD_BRK_PRE_TONE[3]  = { 1, 1, 1 };
-declare int TIMEOUT_TARG_HOLD_BRK_TONE[3]      = { 1, 1, 1 };
-declare int TIMEOUT_TARG_HOLD_BRK_PRE_RWRD[3]  = { 1, 1, 1 };
-declare int TIMEOUT_TARG_HOLD_BRK_POST_RWRD[3] = { 1, 1, 1 };
+declare int TIMEOUT_TARG_BRK_PRE_TONE[3]  = { 1, 1, 1 };
+declare int TIMEOUT_TARG_BRK_TONE[3]      = { 1, 1, 1 };
+declare int TIMEOUT_TARG_BRK_PRE_RWRD[3]  = { 1, 1, 1 };
+declare int TIMEOUT_TARG_BRK_POST_RWRD[3] = { 1, 1, 1 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 // Gaze *in* targ_win for the duration of min Targ. hold time
-declare int TIMEOUT_TARG_HOLD_MIN_THT[3]       = { 0, 2, 2 };
+declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 2, 2 };
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int   TONE_DELAY = 1000;
 // how long should the error and success tones be presented?

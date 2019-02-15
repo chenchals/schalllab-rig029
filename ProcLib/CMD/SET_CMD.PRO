@@ -60,7 +60,7 @@ declare int TRL_IS_TARG_ACQUIRED;
 declare int TRL_IS_FIX_ACQUIRED;
 declare int TRL_I_IN_FLIGHT;
 // gaze fulfilled min_taqrg_hold_time
-declare int TRL_IS_TARG_HOLD_MIN_THT;
+declare int TRL_IS_TARG_MIN_THT;
 
 declare int TRL_IS_TIMEOUT;
 declare int TRL_IS_STOP_SIGNAL_ON;
@@ -93,12 +93,12 @@ declare int TRL_FIX_ON_TIME;
 declare int TRL_FIX_ACQ_TIME;
 // gaze NOT on fixspot
 declare int TRL_FIX_ACQ_ERROR_TIME;
-// fixation achieved gaze in FIX_WIN for FIX_HOLD_TIME
+// fixation achieved gaze in FIX_WIN for FIXTIME
 declare int TRL_FIXATED_TIME;
 // how long gaze was in fix window
 declare int TRL_FIX_HOLD_DURATION;
 // when was gaze broken before TARG_ON
-declare int TRL_FIX_HOLD_BRK_TIME;
+declare int TRL_FIX_BRK_TIME;
 
 // when command sent to vdosync
 declare int TRL_PRE_TARG_ON_TIME;
@@ -130,14 +130,14 @@ declare int TRL_TIMEOUT_END_TIME;
 declare int TRL_TIMEOUT_DURATION;
 
 // target fixation broken or not
-declare int TRL_TARG_HOLD_MIN_THT_TIME;
-declare int TRL_TARG_HOLD_BRK_TIME;
-declare int TRL_TARG_HOLD_BRK_PRE_TONE_TIME;
-declare int TRL_TARG_HOLD_BRK_TONE_TIME;
-declare int TRL_TARG_HOLD_BRK_PRE_RWRD_TIME;
-declare int TRL_TARG_HOLD_BRK_RWRD_TIME;
-declare int TRL_TARG_HOLD_BRK_POST_RWRD_TIME;
-declare int TRL_TARG_HOLD_BRK_MIN_THT_TIME;
+declare int TRL_TARG_MIN_THT_TIME;
+declare int TRL_TARG_BRK_TIME;
+declare int TRL_TARG_BRK_PRE_TONE_TIME;
+declare int TRL_TARG_BRK_TONE_TIME;
+declare int TRL_TARG_BRK_PRE_RWRD_TIME;
+declare int TRL_TARG_BRK_RWRD_TIME;
+declare int TRL_TARG_BRK_POST_RWRD_TIME;
+declare int TRL_TARG_BRK_MIN_THT_TIME;
                 
 // Tone and reward times
 declare int TRL_TONE_FREQ;
@@ -224,18 +224,18 @@ process SET_CMD_TRL()
     spawnwait CMD_PGS();
 
     // Set up any timing jitters etc
-    FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
+    FIXTIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
 
-    MIN_TARG_HOLD_TIME = USE_TONE_AND_REWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
+    MIN_TARGTIME = USE_TONE_AND_REWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARGTIME;
 
-    printf("MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n", USE_TONE_AND_REWRD_FOR_MIN_THT,
-           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARG_HOLD_TIME, MIN_TARG_HOLD_TIME);
+    printf("MIN_TARGTIME = %d*(%d+%d+%d+%d) + %d = %d\n", USE_TONE_AND_REWRD_FOR_MIN_THT,
+           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARGTIME, MIN_TARGTIME);
 
     ITI_TIME = BASE_ITI_TIME;
 
     // TRL_LENGTH_TIME
     TRL_DURATION = READY_TIME + ALLOWED_FIX_TIME + MIN_MAX_FIX_HOLD_TIME[1] + MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
-    TRL_DURATION = TRL_LENGTH_TIME + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
+    TRL_DURATION = TRL_LENGTH_TIME + MIN_TARGTIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
     TRL_DURATION = TRL_LENGTH_TIME + BASE_ITI_TIME;
 
     if (TRL_DURATION > TRL_LENGTH_TIME && IS_TRL_LENGTH_FIXED)
@@ -318,7 +318,7 @@ process INIT_TRL_VARS()
     TRL_IS_TARG_ACQUIRED             = 0;
     TRL_IS_FIX_ACQUIRED              = 0;
     TRL_I_IN_FLIGHT                  = 0;
-	TRL_IS_TARG_HOLD_MIN_THT         = 0;
+	TRL_IS_TARG_MIN_THT         = 0;
 	TRL_IS_TIMEOUT                   = 0;
     TRL_IS_STOP_SIGNAL_ON            = 0;
     TRL_STOP_SIGNAL_TIME             = 0;
@@ -337,7 +337,7 @@ process INIT_TRL_VARS()
     TRL_FIX_ACQ_ERROR_TIME           = 0;
     TRL_FIXATED_TIME                 = 0;
     TRL_FIX_HOLD_DURATION            = 0;
-    TRL_FIX_HOLD_BRK_TIME            = 0;
+    TRL_FIX_BRK_TIME            = 0;
     TRL_PRE_TARG_ON_TIME             = 0;
     TRL_TARG_ON_TIME                 = 0;
     TRL_TARG_ON_DURATION             = 0;
@@ -349,18 +349,18 @@ process INIT_TRL_VARS()
     TRL_TARG_ACQ_ERROR_TIME          = 0;
     TRL_SACC_DURATION                = 0;
     TRL_TARG_ACQ_TIME                = 0;
-    TRL_TARG_HOLD_MIN_THT_TIME       = 0;
+    TRL_TARG_MIN_THT_TIME       = 0;
     TRL_TARG_HOLD_DURATION           = 0;
     TRL_TIMEOUT_START_TIME           = 0;
     TRL_TIMEOUT_END_TIME             = 0;
     TRL_TIMEOUT_DURATION             = 0;
-    TRL_TARG_HOLD_BRK_TIME           = 0;
-    TRL_TARG_HOLD_BRK_PRE_TONE_TIME  = 0;
-    TRL_TARG_HOLD_BRK_TONE_TIME      = 0;
-    TRL_TARG_HOLD_BRK_PRE_RWRD_TIME  = 0;
-    TRL_TARG_HOLD_BRK_RWRD_TIME      = 0;
-    TRL_TARG_HOLD_BRK_POST_RWRD_TIME = 0;
-	TRL_TARG_HOLD_BRK_MIN_THT_TIME   = 0;
+    TRL_TARG_BRK_TIME           = 0;
+    TRL_TARG_BRK_PRE_TONE_TIME  = 0;
+    TRL_TARG_BRK_TONE_TIME      = 0;
+    TRL_TARG_BRK_PRE_RWRD_TIME  = 0;
+    TRL_TARG_BRK_RWRD_TIME      = 0;
+    TRL_TARG_BRK_POST_RWRD_TIME = 0;
+	TRL_TARG_BRK_MIN_THT_TIME   = 0;
     TRL_TONE_FREQ                    = 0;
     TRL_TONE_DURATION                = 0;
     TRL_TONE_ON_TIME                 = 0;

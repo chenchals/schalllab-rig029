@@ -46,7 +46,7 @@ declare constant int STAT_GET_READY = 1;
 declare constant int STAT_FIX_ON = 2;
 
 // Fixspot is ON: Waiting for subject to stay on fixspot
-// Check: Gaze within FIX_WIN until FIX_HOLD_TIME expires
+// Check: Gaze within FIX_WIN until FIXTIME expires
 declare constant int STAT_FIX_HOLD = 3;
 
 // Fixspot is OFF Target is ON:
@@ -61,27 +61,27 @@ declare constant int STAT_TARG_ACQ = 5;
 
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: MIN_TARG_HOLD_TIME <= TONE_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
-//   case 1: MIN_TARG_HOLD_TIME <= TONE_DELAY + TONE_DURATION
+//   case 0: MIN_TARGTIME <= TONE_DELAY
+//         if gaze out of TARG_WIN before MIN_TARGTIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in TARG_WIN until MIN_TARGTIME expires: Play (SUCCESS) TONE at TONE_DELAY time
+//   case 1: MIN_TARGTIME <= TONE_DELAY + TONE_DURATION
 //         if gaze in TARG_WIN until RWRD_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
 //         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
-//   case 2: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
+//   case 2: MIN_TARGTIME > TONE_DELAY + TONE_DURATION
 //         Goto next state (reward already delivered), goto STAT_RWRD_CHK
 declare constant int STAT_TONE_CHK = 6;
 
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: MIN_TARG_HOLD_TIME <= RWRD_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_OUTCOME
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
-//   case 1: MIN_TARG_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
+//   case 0: MIN_TARGTIME <= RWRD_DELAY
+//         if gaze out of TARG_WIN before MIN_TARGTIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in TARG_WIN until MIN_TARGTIME expires: Deliver reward at RWRD_DELAY time
+//   case 1: MIN_TARGTIME <= RWRD_DELAY + RWRD_DURATION
 //                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered), goto STAT_OUTCOME
 //                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) compute TIMEOUT_TIME --> goto STAT_OUTCOME
-//   case 2: MIN_TARG_HOLD_TIME > RWRD_DELAY + RWRD_DURATION
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered), goto STAT_OUTCOME
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_OUTCOME
+//   case 2: MIN_TARGTIME > RWRD_DELAY + RWRD_DURATION
+//         if gaze in TARG_WIN until MIN_TARGTIME expires: (reward already delivered), goto STAT_OUTCOME
+//         if gaze out of TARG_WIN before MIN_TARGTIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_OUTCOME
 declare constant int STAT_RWRD_CHK = 7;
 
 // See CmdOutcomes.xls file in DOC folder
@@ -90,7 +90,7 @@ declare constant int STAT_RWRD_CHK = 7;
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in Fix win before allowed time       |	TRL_FIX_ACQ_ERROR_TIME	         | AcquireFixError_	    | OutcomeFixError_	| OutcomeFixError_	       | OutcomeFixError_       |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win for fix hold time	        | TRL_FIX_HOLD_BRK_TIME	           | BreakFix_	          | OutcomeFixBreak_	| OutcomeFixBreak_	       | OutcomeFixBreak_       |
+//| Gaze not in Fix win for fix hold time	        | TRL_FIX_BRK_TIME	           | BreakFix_	          | OutcomeFixBreak_	| OutcomeFixBreak_	       | OutcomeFixBreak_       |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze out of Fix win before Min sac time	      | TRL_ERLY_SACC_TIME	             | EarlySaccade_	      | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
@@ -98,19 +98,19 @@ declare constant int STAT_RWRD_CHK = 7;
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in Targ win before max sac duration	| TRL_TARG_ACQ_ERROR_TIME	         | AcquireTargetError_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone delay	      | TRL_TARG_HOLD_BRK_PRE_TONE_TIME  | TargHoldBrkPreTone_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during tone delay	      | TRL_TARG_BRK_PRE_TONE_TIME  | TargHoldBrkPreTone_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone duration	    | TRL_TARG_HOLD_BRK_TONE_TIME	     | TargHoldBrkTone_     | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during tone duration	    | TRL_TARG_BRK_TONE_TIME	     | TargHoldBrkTone_     | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward delay	    | TRL_TARG_HOLD_BRK_PRE_RWRD_TIME	 | TargHoldBrkPreRwrd_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during reward delay	    | TRL_TARG_BRK_PRE_RWRD_TIME	 | TargHoldBrkPreRwrd_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward duration	  | TRL_TARG_HOLD_BRK_RWRD_TIME	     | TargHoldBrkRwrd_     | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during reward duration	  | TRL_TARG_BRK_RWRD_TIME	     | TargHoldBrkRwrd_     | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in targ win after reward duration    |                                  |                      |                   |                          |                        |
-//| min target hold time is greater than          | TRL_TARG_HOLD_BRK_POST_RWRD_TIME | TargHoldBrkPostRwrd_ | OutcomeGoError_   | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| min target hold time is greater than          | TRL_TARG_BRK_POST_RWRD_TIME | TargHoldBrkPostRwrd_ | OutcomeGoError_   | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
 //| tone + reward times.	                        |                                  |                      |                   |                          |                        |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in targ win for min target hold time	    | TRL_TARG_HOLD_MIN_THT_TIME	     | TargHoldMinTHT_      | OutcomeGoCorrect_ | OutcomeNoGoWrongEarly_	 | OutcomeNoGoWrong_      |
+//| Gaze in targ win for min target hold time	    | TRL_TARG_MIN_THT_TIME	     | TargHoldMinTHT_      | OutcomeGoCorrect_ | OutcomeNoGoWrongEarly_	 | OutcomeNoGoWrong_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 
 

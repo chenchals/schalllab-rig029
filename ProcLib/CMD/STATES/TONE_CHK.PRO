@@ -2,17 +2,17 @@
 // TONE_ST.PRO
 //   Description: Process Tone state after Target is acquired. Eye is already in Target window
 //                Gaze is in TARG_WIN. Check gaze until TONE_DELAY + TONE_DURATION expires,
-//                play TONE depending on gaze and MIN_TARG_HOLD_TIME
+//                play TONE depending on gaze and MIN_TARGTIME
 // Gaze check:
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: MIN_TARG_HOLD_TIME <= TONE_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
-//   case 1: MIN_TARG_HOLD_TIME <= TONE_DELAY + TONE_DURATION
+//   case 0: MIN_TARGTIME <= TONE_DELAY
+//         if gaze out of TARG_WIN before MIN_TARGTIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in TARG_WIN until MIN_TARGTIME expires: Play (SUCCESS) TONE at TONE_DELAY time
+//   case 1: MIN_TARGTIME <= TONE_DELAY + TONE_DURATION
 //         if gaze in TARG_WIN until RWRD_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
 //         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
-//   case 2: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
+//   case 2: MIN_TARGTIME > TONE_DELAY + TONE_DURATION
 //         Goto next state (reward already delivered), goto STAT_RWRD_CHK
 //
 //   All Global variables and the following state variables are available to monitor state progress
@@ -50,7 +50,7 @@ process PROC_TONE_CHK()
         STAT_I_MOVE_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
 
         TRL_TARG_HOLD_DURATION  = 1;       // as target was already acquired in previous state
-        TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
+        TEMP_MIN_THT            = MIN_TARGTIME * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
@@ -61,8 +61,8 @@ process PROC_TONE_CHK()
     }
     if (TRL_TARG_HOLD_DURATION >= TEMP_MIN_THT)
     {
-	  TRL_IS_TARG_HOLD_MIN_THT = 1;
-      TRL_TARG_HOLD_MIN_THT_TIME = time();
+	  TRL_IS_TARG_MIN_THT = 1;
+      TRL_TARG_MIN_THT_TIME = time();
       spawn SEND_EVT(TargHoldMinTHT_);
       printf("****STAT_RWRD_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldMinTHT_);
     }
@@ -73,9 +73,8 @@ process PROC_TONE_CHK()
 		{
 			if(TEMP_MIN_THT > STAT_ALLOWED_T)
             {
-                TRL_TARG_HOLD_BRK_PRE_TONE_TIME = time();
+                TRL_TARG_BRK_PRE_TONE_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPreTone_);
-                //spawn SEND_EVT(GoError_);
 
                 printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkPreTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkPreTone_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
@@ -84,14 +83,13 @@ process PROC_TONE_CHK()
             }
 			else
 			{
-                TRL_TARG_HOLD_BRK_MIN_THT_TIME = time();
+                TRL_TARG_BRK_MIN_THT_TIME = time();
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
                 //spawn SEND_EVT(GoError_);
                 printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_TONE_CHK, TargHoldBrkMinTHT_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_OUTCOME;
-				
+                CURR_STAT     = STAT_OUTCOME;				
 			}
         }
     }
@@ -106,20 +104,31 @@ process PROC_TONE_CHK()
 
             printf("****STAT_TARG_ON[%d]: OK sent Event: ToneOn_[%d]\n", STAT_TONE_CHK, ToneOn_);
         }
-        if (TRL_TARG_HOLD_DURATION <= TEMP_MIN_THT)
-        {
-            if (!I_TARG)
+		if (!I_TARG)
+		{
+			if(TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION)
             {
-                TRL_TARG_HOLD_BRK_TONE_TIME = time();
-                spawn SEND_EVT(TargHoldBrkTone_);
-                //spawn SEND_EVT(GoError_);
+			TRL_TARG_BRK_TONE_TIME = time();
+			spawn SEND_EVT(TargHoldBrkTone_);
+			//spawn SEND_EVT(GoError_);
 
-                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkTone_);
-                printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
+			printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkTone_);
+			printf("****STAT_TONE_CHK[%d]: ERR (*During Tone*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_OUTCOME;
+			}
+			else
+			{
+                TRL_TARG_BRK_MIN_THT_TIME = time();
+                spawn SEND_EVT(TargHoldBrkMinTHT_);
+                //spawn SEND_EVT(GoError_);
+                printf("****STAT_TARG_ON[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_TONE_CHK, TargHoldBrkMinTHT_);
+                printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TONE_DELAY+TONE_DURATION)\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_OUTCOME;
-            }
-        }
+                CURR_STAT     = STAT_OUTCOME;				
+			}
+		}
+        
     }
     else     // eye in Target win until TEMP_MIN_THT, or TEMP_MIN_THT is greater than TONE_DELAY+TONE_DURATION
     {
