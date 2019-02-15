@@ -110,7 +110,7 @@ declare int TIMEOUT_TARG_BRK_POST_RWRD[3] = { 1, 1, 1 };
 declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 2, 2 };
 
 // Base Minimum time subject should hold gaze on TARGET
-declare int BASE_TARGTIME = 1000;
+declare int BASE_TARGTIME = 2005;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
 // if = 0, then MIN_TARGETTIME = BASE_TARGTIME
 // if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARGTIME
@@ -119,11 +119,11 @@ declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int   MIN_TARGTIME;
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 3000;
+declare int   TONE_DELAY = 2000;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 50;
+declare int   TONE_DURATION = 2000;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
 declare int   RWRD_DELAY = 6000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)

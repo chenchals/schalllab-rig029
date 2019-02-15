@@ -72,7 +72,8 @@ process PROC_ITI_CHK()
 			spawn SEND_EVT(PunishStart_);
 			printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
 
-			spawn PLAY_WHITE_NOISE(TRL_TONE_DURATION);
+			//spawn PLAY_WHITE_NOISE(TRL_TONE_DURATION);
+			spawn TONE(400,TRL_TONE_DURATION);
 		}
 	}
 	else
