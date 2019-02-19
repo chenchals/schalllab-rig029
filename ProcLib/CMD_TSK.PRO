@@ -32,10 +32,11 @@
 declare IDLE();
 declare UPD8_MSG();
 declare int TEST = 100;
+declare int SHOW_PAGES = 0;
 
 process IDLE() enabled
 {
-	declare int tempTrlNumber;
+	declare int tempCount;
 
 	spawn CLEAR_VDO();
 
@@ -77,28 +78,42 @@ process IDLE() enabled
 
 	printf("Sending RIG_ID\n");
 	spawn SEND_EVT(RIG_ID);
-
 	while (1)
 	{
 		//===============For each Trial=====================
 		printf("=============Setting TRIAL variables\n==================");
 		spawnwait SET_CMD_TRL();
-
 		printf("Done Setting TRIAL variables\n");
+        if (SHOW_PAGES)
+		{
+			TRL_RUNNING = 0;
+			printf("Showing Virtual Pages for COUNTERMANDING TASK\n");
+			tempCount = 0;
+			while (tempCount <= PG_MAX_PAGE_IDX)
+			{
+				dsendf("vp %d\n", tempCount);
+				tempCount = tempCount + 1;
+				nexttick 1000;
+			}
+			dsendf("vp %d\n", 0);
+			printf("****Done showing Virtual Pages for COUNTERMANDING TASK\n\n");
+		}
+		else
+		{
+			PROCESS_STATE = 1;
+			TRL_RUNNING   = 1;
+			printf("Trial running....\n");
+			spawn SEND_EVT(TaskStart_);
 
-		PROCESS_STATE = 1;
-		TRL_RUNNING              = 1;
-		printf("Trial running....\n");
-		spawn SEND_EVT(TaskStart_);
+			spawn SEND_EVT(CmanHeader_);
 
-		spawn SEND_EVT(CmanHeader_);
+			//spawn GRAF_HIDE_FIX_TARG();
 
-		//spawn GRAF_HIDE_FIX_TARG();
-
-		printf("Sending BLANK page\n");
-		dsendf("vp %d\n", PG_BLANK);
-		CURR_STAT   = STAT_GET_READY;
-		STAT_DLTA_T = 0;
+			printf("Sending BLANK page\n");
+			dsendf("vp %d\n", PG_BLANK);
+			CURR_STAT   = STAT_GET_READY;
+			STAT_DLTA_T = 0;
+		}
 		//CURR_STAT=STAT_TEST;
 		while (TRL_RUNNING)
 		{

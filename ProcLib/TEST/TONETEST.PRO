@@ -15,8 +15,8 @@
 declare TONETEST();
 declare PLAY_HP();
 
-declare int playHp         = 1;
-declare int playWhiteNoise = 1;
+declare int playHp         = 0;
+declare int playWhiteNoise = 0;
 
 
 process TONETEST() enabled
@@ -24,7 +24,9 @@ process TONETEST() enabled
     declare int freq[10] = { 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000 };
     declare int duration = 50;
     declare int temp     = 0;
-
+	// set tone to off
+	mio_fout(0);
+	
     temp = 0;
     while (temp < 10)
     {

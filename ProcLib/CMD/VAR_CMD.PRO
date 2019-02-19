@@ -9,10 +9,10 @@
 //==========================================================================
 //  Revision History:
 //  002: 2019-02-08 chenchal subraveti
-//       Compute MIN_TARGTIME using USE_TONE_AND_REWRD_FOR_MIN_THT
-//       if 0: then MIN_TARGTIME = BASE_TARGTIME
-//       if 1: then MIN_TARGTIME = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+BASE_TARGTIME
-//       MIN_TARGTIME:
+//       Compute MIN_TARG_HOLD_TIME using USE_TONE_AND_REWRD_FOR_MIN_THT
+//       if 0: then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
+//       if 1: then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+BASE_TARG_HOLD_TIME
+//       MIN_TARG_HOLD_TIME:
 //       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE / JUICE given
 //       if gaze ob target ==> NO TIMEOUT_TIME
 //
@@ -107,17 +107,17 @@ declare int TIMEOUT_TARG_BRK_PRE_RWRD[3]  = { 1, 1, 1 };
 declare int TIMEOUT_TARG_BRK_POST_RWRD[3] = { 1, 1, 1 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 // Gaze *in* targ_win for the duration of min Targ. hold time
-declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 2, 2 };
+declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 1, 1 };
 
 // Base Minimum time subject should hold gaze on TARGET
-declare int BASE_TARGTIME = 2005;
+declare int BASE_TARG_HOLD_TIME = 2100;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
-// if = 0, then MIN_TARGETTIME = BASE_TARGTIME
-// if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARGTIME
+// if = 0, then MIN_TARGETTIME = BASE_TARG_HOLD_TIME
+// if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
 declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int   MIN_TARGTIME;
+declare int   MIN_TARG_HOLD_TIME;
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int   TONE_DELAY = 2000;
 // how long should the error and success tones be presented?

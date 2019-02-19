@@ -27,6 +27,8 @@ declare SET_RIG(int id);
 
 process SET_RIG(int id)
 {
+	// clear tone buffer if any
+	mio_fout(0);
     RIG_ID = id;
     if (RIG_ID == RIG_029_ID)
     {

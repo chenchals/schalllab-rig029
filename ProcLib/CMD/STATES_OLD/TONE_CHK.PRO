@@ -2,17 +2,17 @@
 // TONE_ST.PRO
 //   Description: Process Tone state after Target is acquired. Eye is already in Target window
 //                Gaze is in TARG_WIN. Check gaze until TONE_DELAY + TONE_DURATION expires,
-//                play TONE depending on gaze and MIN_TARGTIME
+//                play TONE depending on gaze and MIN_TARG_HOLD_TIME
 // Gaze check:
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: MIN_TARGTIME <= TONE_DELAY
-//         if gaze out of TARG_WIN before MIN_TARGTIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
-//         if gaze in TARG_WIN until MIN_TARGTIME expires: Play (SUCCESS) TONE at TONE_DELAY time
-//   case 1: MIN_TARGTIME <= TONE_DELAY + TONE_DURATION
+//   case 0: MIN_TARG_HOLD_TIME <= TONE_DELAY
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
+//   case 1: MIN_TARG_HOLD_TIME <= TONE_DELAY + TONE_DURATION
 //         if gaze in TARG_WIN until RWRD_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
 //         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
-//   case 2: MIN_TARGTIME > TONE_DELAY + TONE_DURATION
+//   case 2: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
 //         Goto next state (reward already delivered), goto STAT_RWRD_CHK
 //
 //   All Global variables and the following state variables are available to monitor state progress
@@ -50,7 +50,7 @@ process PROC_TONE_CHK()
 		STAT_I_MOVE_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
 
 		TRL_TARG_HOLD_DURATION  = 1;       // as target was already acquired in previous state
-		TEMP_MIN_THT            = MIN_TARGTIME * TIME_DILATE_FACTOR;
+		TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
 		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();

@@ -105,14 +105,7 @@ process PROC_TRL_OUTCOME()
 
 process PROC_GO_OUTCOMES()
 {
-    if (TRL_IS_TARG_MIN_THT)
-    {//process for GO, NOGO_NO_SS, NOGO_SS
-        TIMEOUT_DURATION = 0;
-        spawn SEND_EVT(OutcomeGoCorrect_);
-
-        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
-    }
-	else if (!TRL_IS_TARG_MIN_THT)
+	if (!TRL_IS_TARG_MIN_THT)
 	{
         TIMEOUT_DURATION = TIMEOUT_TARG_BRK_MIN_THT[0];
         spawn SEND_EVT(OutcomeGoError_);
@@ -188,6 +181,13 @@ process PROC_GO_OUTCOMES()
         spawn SEND_EVT(OutcomeGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
+    }
+	else if (TRL_IS_TARG_MIN_THT)
+    {//process for GO, NOGO_NO_SS, NOGO_SS
+        TIMEOUT_DURATION = 0;
+        spawn SEND_EVT(OutcomeGoCorrect_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
     }
 } /* PROC_GO_OUTCOMES */
 

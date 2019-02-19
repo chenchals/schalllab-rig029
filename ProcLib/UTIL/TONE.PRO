@@ -33,7 +33,8 @@ process TONE(int frequency, int duration)
     declare int internalClock = 10000000;
 
     mio_fout(internalClock / frequency);
-    wait(duration);
+    //wait(duration);
+	nexttick duration;
     mio_fout(0);
 }
 

@@ -46,7 +46,7 @@ process PROC_FIX_ON()
         {
             TRL_FIX_ON_TIME = time();
             spawn SEND_EVT(FixSpotOn_);
-			      spawn GRAF_SHOW_FIX(GRAF_SHOW);
+			spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
             dsendf("vp %d\n", PG_FIXATION);
             printf("****STAT_FIX_ON[%d]: OK sent Event: FixSpotOn_[%d]\n", STAT_FIX_ON, FixSpotOn_);

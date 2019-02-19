@@ -48,16 +48,13 @@ process PROC_TIMEOUT_CHK()
 
 	if (STAT_DLTA_T >= STAT_ALLOWED_T)
 	{
-
-		if(!TRL_TIMEOUT_END_TIME)
-		{
-			TRL_TIMEOUT_END_TIME = time();
-			spawn SEND_EVT(PunishEnd_);
-			printf("****STAT_TIM_OUT[%d]: ERR sent Event: PunishEnd_[%d]\n", STAT_TIM_OUT, PunishEnd_); 		
-			PROCESS_STATE = 1;
-			CURR_STAT     = STAT_IDLE;
-			TRL_RUNNING = 0;
-		}
+		TRL_TIMEOUT_END_TIME = time();
+		spawn SEND_EVT(PunishEnd_);
+		printf("****STAT_TIM_OUT[%d]: ERR sent Event: PunishEnd_[%d]\n", STAT_TIM_OUT, PunishEnd_); 		
+		printf("****STAT_TIM_OUT[%d]: ERR  TRL_TIMEOUT_DURATION[%d] / TRL_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_TIMEOUT_DURATION, TRL_TONE_DURATION); 		
+		PROCESS_STATE = 1;
+		CURR_STAT     = STAT_IDLE;
+		TRL_RUNNING = 0;
 		printf(":-)\n");
 	}
 }/*PROC_TIMEOUT_CHK*/

@@ -1,20 +1,20 @@
 //==========================================================================
 // RWRD_CHK.PRO
 //   Description: Process Rewarde state after Tone is delivered
-//                Gaze is in TARG_WIN only if MIN_TARGTIME >
+//                Gaze is in TARG_WIN only if MIN_TARG_HOLD_TIME >
 //                TONE_DELAY + TONE_DURATION.
 // Gaze Check:
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: MIN_TARGTIME <= RWRD_DELAY
-//         if gaze out of TARG_WIN before MIN_TARGTIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_OUTCOME
-//         if gaze in TARG_WIN until MIN_TARGTIME expires: Deliver reward at RWRD_DELAY time
-//   case 1: MIN_TARGTIME <= RWRD_DELAY + RWRD_DURATION
+//   case 0: MIN_TARG_HOLD_TIME <= RWRD_DELAY
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
+//   case 1: MIN_TARG_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
 //                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered), goto STAT_OUTCOME
 //                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) compute TIMEOUT_TIME --> goto STAT_TIM_OUT
-//   case 2: MIN_TARGTIME > RWRD_DELAY + RWRD_DURATION
-//         if gaze in TARG_WIN until MIN_TARGTIME expires: (reward already delivered), goto STAT_OUTCOME
-//         if gaze out of TARG_WIN before MIN_TARGTIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_TIM_OUT
+//   case 2: MIN_TARG_HOLD_TIME > RWRD_DELAY + RWRD_DURATION
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered), goto STAT_OUTCOME
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_TIM_OUT
 //
 //   All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
@@ -50,7 +50,7 @@ process PROC_RWRD_CHK()
 		// Reward already given, during reward duration check gaze
 		STAT_I_MOVE_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
 		// This is incremented in the CMD_TSK.PRO --> state flow controller
-		TEMP_MIN_THT            = MIN_TARGTIME * TIME_DILATE_FACTOR;
+		TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
 		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();

@@ -20,6 +20,7 @@ declare int PG_TARGET_PD   = 3;
 declare int PG_TARGET      = 4;
 declare int PG_SIGNAL_PD   = 5;
 declare int PG_SIGNAL      = 6;
+declare int PG_MAX_PAGE_IDX = 6;
 
 declare CMD_PGS();
 
