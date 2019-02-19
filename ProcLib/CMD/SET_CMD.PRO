@@ -233,18 +233,18 @@ process SET_CMD_TRL()
 
     ITI_TIME = BASE_ITI_TIME;
 
-    // TRL_LENGTH_TIME
-    TRL_DURATION = READY_TIME + ALLOWED_FIX_TIME + MIN_MAX_FIX_HOLD_TIME[1] + MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
-    TRL_DURATION = TRL_LENGTH_TIME + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
-    TRL_DURATION = TRL_LENGTH_TIME + BASE_ITI_TIME;
+    // TRL_DURATION is computed from FIX_SPOT_ON time = TRL_START_TIME, using all max times
+    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
+    TRL_DURATION = TRL_DURATION + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
+    TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
 
     if (TRL_DURATION > TRL_LENGTH_TIME && IS_TRL_LENGTH_FIXED)
     {
         // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
         // TRL_DURATION adjusted to
-        printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TRL_DURATION, TRL_LENGTH_TIME);
         printf("******IS_TRL_LENGTH_FIXED [%d]******\n", IS_TRL_LENGTH_FIXED);
-        printf("******Using TRL_DURATION of [%d] ms. Used for computing ITI if IS_TRL_LENGTH_FIXED = 1******\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
+        printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TRL_DURATION, TRL_LENGTH_TIME);
+        printf("******Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)******\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
         //dshow Main_menu;
     }
 } /* SETC_TRL */

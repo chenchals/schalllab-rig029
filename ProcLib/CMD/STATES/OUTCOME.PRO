@@ -70,6 +70,9 @@ process PROC_TRL_OUTCOME()
         TRL_IS_TARG_ON_FLAG = 0;
         
         TIMEOUT_DURATION    = 0;
+		// set this as default and change to 			
+		// TRL_IS_TIMEOUT = 0; when not error
+		TRL_IS_TIMEOUT = 1;
     }
     // it is big conditional depending on the current trial type and tyep of error
 
@@ -91,10 +94,6 @@ process PROC_TRL_OUTCOME()
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
 		TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
-		if(TIMEOUT_DURATION > 0)
-		{
-			TRL_IS_TIMEOUT = 1;
-		}
 		// determine this in the other procs:PROC_GO_OUTCOMES
 		TIMEOUT_TONE = FAILURE_TONE_SML_TIMEOUT;
 		PROCESS_STATE    = 1;
@@ -185,8 +184,8 @@ process PROC_GO_OUTCOMES()
 	else if (TRL_IS_TARG_MIN_THT)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = 0;
+	    TRL_IS_TIMEOUT = 0;
         spawn SEND_EVT(OutcomeGoCorrect_);
-
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
     }
 } /* PROC_GO_OUTCOMES */

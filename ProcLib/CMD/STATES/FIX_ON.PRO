@@ -26,8 +26,6 @@ process PROC_FIX_ON()
     {
         printf("****STAT_FIX_ON[%d]: Processing Fixspot On\n", STAT_FIX_ON);
         TRL_FIX_VRT_RFRSH_COUNT = 0;
-        TRL_START_TIME          = time();
-        spawn SEND_EVT(TrialStart_);
 
         dsendf("vp %d\n", PG_FIXATION_PD);
         // show for only 1 screen refresh
@@ -61,8 +59,9 @@ process PROC_FIX_ON()
             TRL_IS_FIX_ACQUIRED = 1;
             TRL_FIX_ACQ_TIME = time();
             spawn SEND_EVT(AcquireFix_);
-
-            printf("****STAT_FIX_ON[%d]: OK sent Event: AcquireFix_[%d]\n", STAT_FIX_ON, AcquireFix_);
+			TRL_START_TIME   = time();
+			spawn SEND_EVT(TrialStart_);
+            printf("****STAT_FIX_ON[%d]: OK sent Event: AcquireFix_[%d], TrialStart_[%d]\n", STAT_FIX_ON, AcquireFix_,TrialStart_);
             printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_FIX_HOLD;
@@ -78,8 +77,13 @@ process PROC_FIX_ON()
 
             printf("****STAT_FIX_ON[%d]: ERR sent Event: AcquireFixError_[%d]\n", STAT_FIX_ON, AcquireFixError_);
             printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
+			
+			// Show blank page for about 3 secs.....No timeout or any tone
+			dsendf("vp %d\n", PG_BLANK);
+			spawn GRAF_HIDE_FIX_TARG();
+			wait(3000);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_OUTCOME;
+            CURR_STAT     = STAT_IDLE;
         }
     }
 } /* PROC_FIX_ON */

@@ -40,7 +40,7 @@ declare int TIME_DILATE_FACTOR = 2;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 2000;
 // subject has this long to acquire fixation before a new trial is initiated
-declare int ALLOWED_FIX_TIME = 3000;
+declare int ALLOWED_FIX_TIME = 2000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
@@ -95,22 +95,23 @@ declare int TIMEOUT_TONE;
 // GoTrial = TIMEOUT_xxx[0]
 // NoGoTrial_No_StopSignal = TIMEOUT_xxx[1]
 // NoGoTrial_StopSignal = TIMEOUT_xxx[2]
-declare int TIMEOUT_FIX_ACQ_ERROR[3]      = { 1, 1, 1 };
-declare int TIMEOUT_FIXBRK[3]             = { 1, 1, 1 };
-declare int TIMEOUT_ERLY_SACC[3]          = { 1, 1, 1 };
-declare int TIMEOUT_NO_SACC[3]            = { 1, 1, 1 };
-declare int TIMEOUT_TARG_ACQ_ERROR[3]     = { 1, 1, 1 };
-declare int TIMEOUT_TARG_BRK_MIN_THT[3]   = { 1, 1, 1 };  
-declare int TIMEOUT_TARG_BRK_PRE_TONE[3]  = { 1, 1, 1 };
-declare int TIMEOUT_TARG_BRK_TONE[3]      = { 1, 1, 1 };
-declare int TIMEOUT_TARG_BRK_PRE_RWRD[3]  = { 1, 1, 1 };
-declare int TIMEOUT_TARG_BRK_POST_RWRD[3] = { 1, 1, 1 };
+declare int TIMEOUT_FIX_ACQ_ERROR[3]      = { 0, 0, 0 };
+declare int TIMEOUT_FIXBRK[3]             = { 0, 0, 0 };
+declare int TIMEOUT_ERLY_SACC[3]          = { 0, 0, 0 };
+declare int TIMEOUT_NO_SACC[3]            = { 0, 0, 0 };
+declare int TIMEOUT_TARG_ACQ_ERROR[3]     = { 0, 0, 0 };
+declare int TIMEOUT_TARG_BRK_MIN_THT[3]   = { 0, 0, 0 };  
+declare int TIMEOUT_TARG_BRK_PRE_TONE[3]  = { 0, 0, 0 };
+declare int TIMEOUT_TARG_BRK_TONE[3]      = { 0, 0, 0 };
+declare int TIMEOUT_TARG_BRK_PRE_RWRD[3]  = { 0, 0, 0 };
+declare int TIMEOUT_TARG_BRK_POST_RWRD[3] = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 // Gaze *in* targ_win for the duration of min Targ. hold time
-declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 1, 1 };
+declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 0, 0 };
 
 // Base Minimum time subject should hold gaze on TARGET
-declare int BASE_TARG_HOLD_TIME = 2100;
+// 
+declare int BASE_TARG_HOLD_TIME = 1000;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
 // if = 0, then MIN_TARGETTIME = BASE_TARG_HOLD_TIME
 // if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
@@ -119,13 +120,13 @@ declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int   MIN_TARG_HOLD_TIME;
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 2000;
+declare int   TONE_DELAY = 500;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 2000;
+declare int   TONE_DURATION = 3000;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 6000;
+declare int   RWRD_DELAY = 1000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
