@@ -113,7 +113,7 @@ declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 0, 0 };
 
 // Base Minimum time subject should hold gaze on TARGET
 // 
-declare int BASE_TARG_HOLD_TIME = 2500;
+declare int BASE_TARG_HOLD_TIME = 2000;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
 // if = 0, then MIN_TARGETTIME = BASE_TARG_HOLD_TIME
 // if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
@@ -122,17 +122,17 @@ declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int   MIN_TARG_HOLD_TIME;
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 800;
+declare int   TONE_DELAY = 1000;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 50;
+declare int   TONE_DURATION = 1000;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 800;
+declare int   RWRD_DELAY = 2000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
-declare int   RWRD_DURATION = 50;
+declare int   RWRD_DURATION = 1000;
 // Positive secondary reinforcer in Hz
 declare int SUCCESS_TONE_BIG_REWARD = 300;
 declare int SUCCESS_TONE_MED_REWARD = 400;
