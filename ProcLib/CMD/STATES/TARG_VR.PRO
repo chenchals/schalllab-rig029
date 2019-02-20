@@ -17,9 +17,15 @@ declare CHECK_TARG_VERT_RFRSH();
 // For counting Target vertical refresh for both GO and STOP trials
 process CHECK_TARG_VERT_RFRSH()
 {
-    declare int trigWidth = 3;
 
-    if (PD_TRIG_L)
+	declare int trigWidth = 3;
+
+	if(PD_TRIG_R && !TRL_IS_STOP_SIGNAL_ON)
+	{
+		TRL_IS_STOP_SIGNAL_ON = 1;
+	}
+	
+    if (PD_TRIG_L || PD_TRIG_R)
     {
         if (TRL_TARG_VRT_RFRSH_COUNT == 0)
         {

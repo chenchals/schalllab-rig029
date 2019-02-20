@@ -40,37 +40,38 @@ process PROC_TARG_SSD()
         STAT_STRT_T   = TRL_PRE_TARG_ON_TIME;
         STAT_DLTA_T   = 0;
         //STAT_ALLOWED_T       = MIN_MAX_SACCADE_TIME[1] * TIME_DILATE_FACTOR;
-        STAT_ALLOWED_T = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE) * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR);
     }
 
     spawnwait CHECK_TARG_VERT_RFRSH();
+	if(!TRL_IS_STOP_SIGNAL_ON && TRL_TARG_VRT_RFRSH_COUNT > 0)
+	{
+		TRL_STOP_SIGNAL_DURATION = TRL_STOP_SIGNAL_DURATION + 1;
+	}
+	if (TRL_TARG_VRT_RFRSH_COUNT == 1 && !TRL_TARG_ON_TIME)
+	{
+		TRL_TARG_ON_TIME = time();
+		printf("****STAT_TARG_SSD[%d]: Sending Event Target_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
+		spawn SEND_EVT(Target_);
 
-    TRL_STOP_SIGNAL_DURATION = TRL_STOP_SIGNAL_DURATION + 1;
+		printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
+		spawn SEND_EVT(FixSpotOff_);
+	}
+	if (!TRL_STOP_SIGNAL_TIME && TRL_IS_STOP_SIGNAL_ON)
+	{
+		TRL_TARG_SSD_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT;
+		TRL_STOP_SIGNAL_TIME = time();
+		spawn SEND_EVT(StopSignal_);
+		spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
-    if (TRL_TARG_VRT_RFRSH_COUNT == 1 && !TRL_TARG_ON_TIME)
-    {
-        TRL_TARG_ON_TIME = time();
-        printf("****STAT_TARG_SSD[%d]: Sending Event Target_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
-        spawn SEND_EVT(Target_);
-
-        printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
-        spawn SEND_EVT(FixSpotOff_);
-    }
-
-
-    if (PD_TRIG_R)
-    {
-        if (!TRL_IS_STOP_SIGNAL_ON == 1)
-        {
-            TRL_IS_STOP_SIGNAL_ON = 1;
-            dsendf("vp %d\n", PG_SIGNAL);
-            TRL_STOP_SIGNAL_TIME = time();
-            spawn SEND_EVT(StopSignal_);
-            spawn GRAF_SHOW_FIX(GRAF_SHOW);
-
-            printf("****STAT_FIX_ON[%d]: OK sent Event: StopSignal_[%d]\n", STAT_FIX_ON, StopSignal_);
-        }
-    }
+		printf("****STAT_FIX_ON[%d]: OK sent Event: StopSignal_[%d]\n", STAT_FIX_ON, StopSignal_);
+	}
+	
+	
+	
+	
+	
+	
 
     // Before MIN_SACCADE_TIME
     if (STAT_DLTA_T <= MIN_MAX_SACCADE_TIME[0] * TIME_DILATE_FACTOR)

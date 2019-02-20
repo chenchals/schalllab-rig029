@@ -138,7 +138,7 @@ declare int TRL_TARG_BRK_PRE_RWRD_TIME;
 declare int TRL_TARG_BRK_RWRD_TIME;
 declare int TRL_TARG_BRK_POST_RWRD_TIME;
 declare int TRL_TARG_BRK_MIN_THT_TIME;
-                
+
 // Tone and reward times
 declare int TRL_TONE_FREQ;
 declare int TRL_TONE_DURATION;
@@ -155,10 +155,10 @@ declare int TRL_ITI_DURATION;
 
 // any break fixations?
 declare int TRL_ABORT_TIME;
-// number of vertical refreshs FIXSPOT with PD was on
-declare int TRL_FIX_VRT_RFRSH_COUNT;
 // number of vertical refreshs TARGET with PD was on
 declare int TRL_TARG_VRT_RFRSH_COUNT;
+// number of vertical refreshs TARGET with PD was on when stop-signal page was shown
+declare int TRL_TARG_SSD_VRT_RFRSH_COUNT;
 
 
 process SET_CMD_TRL()
@@ -179,24 +179,24 @@ process SET_CMD_TRL()
     {
         TRL_STOP_SIGNAL_DELAY = 0;
     }
-	// Pick reward and tone for successful trials
-	if (TRIAL_TYPE == TRIAL_TYPE_STOP)
+    // Pick reward and tone for successful trials
+    if (TRIAL_TYPE == TRIAL_TYPE_STOP)
     {
-		// what should be the freq and duartion of tone
-		TRL_TONE_FREQ = SUCCESS_TONE_MED_REWARD;
-		TRL_TONE_DURATION = TONE_DURATION;
-		
-		TRL_RWRD_DURATION = RWRD_DURATION;
-	}
-	else
-	{
-		// what should be the freq and duartion of tone
-		TRL_TONE_FREQ = SUCCESS_TONE_BIG_REWARD;
-		TRL_TONE_DURATION = TONE_DURATION;	
-		
-		TRL_RWRD_DURATION = RWRD_DURATION * 2;
-	}
-	
+        // what should be the freq and duartion of tone
+        TRL_TONE_FREQ     = SUCCESS_TONE_MED_REWARD;
+        TRL_TONE_DURATION = TONE_DURATION;
+
+        TRL_RWRD_DURATION = RWRD_DURATION;
+    }
+    else
+    {
+        // what should be the freq and duartion of tone
+        TRL_TONE_FREQ     = SUCCESS_TONE_BIG_REWARD;
+        TRL_TONE_DURATION = TONE_DURATION;
+
+        TRL_RWRD_DURATION = RWRD_DURATION * 2;
+    }
+
 
     // pick current target location AND SET WINDOWS
     CURR_TARG_IDX = CURR_TARG_IDX + 1;
@@ -311,69 +311,70 @@ process SET_WINS()
 process INIT_TRL_VARS()
 {
     // do not init TRL_NUMBER
-    PROCESS_STATE                    = 0;
-    TRL_RUNNING                      = 0;
-    TRL_TARG_VR_COUNT_TIME           = 0;
-    TRL_IS_TARG_ON_FLAG              = 0;
-    TRL_IS_TARG_ACQUIRED             = 0;
-    TRL_IS_FIX_ACQUIRED              = 0;
-    TRL_I_IN_FLIGHT                  = 0;
-	TRL_IS_TARG_MIN_THT         = 0;
-	TRL_IS_TIMEOUT                   = 0;
-    TRL_IS_STOP_SIGNAL_ON            = 0;
-    TRL_STOP_SIGNAL_TIME             = 0;
-    TRL_STOP_SIGNAL_DELAY            = 0;
-	TRL_STOP_SIGNAL_DURATION         = 0;
-    TRL_IS_NON_CANCELLED             = 0;
-    TRL_IS_CANCELLED                 = 0;
-    TRL_CUM_TIME                     = 0;
-    TRL_START_TIME                   = 0;
-    TRL_END_TIME                     = 0;
-    TRL_GET_READY_TIME               = 0;
-    TRL_READY_TIME                   = 0;
-    TRL_GET_READY_DURATION           = 0;
-    TRL_FIX_ON_TIME                  = 0;
-    TRL_FIX_ACQ_TIME                 = 0;
-    TRL_FIX_ACQ_ERROR_TIME           = 0;
-    TRL_FIXATED_TIME                 = 0;
-    TRL_FIX_HOLD_DURATION            = 0;
-    TRL_FIX_BRK_TIME            = 0;
-    TRL_PRE_TARG_ON_TIME             = 0;
-    TRL_TARG_ON_TIME                 = 0;
-    TRL_TARG_ON_DURATION             = 0;
-    TRL_DECIDE_TIME                  = 0;
-    TRL_SACC_TIME                    = 0;
-    TRL_ERLY_SACC_TIME               = 0;
-    TRL_LATE_SACC_TIME               = 0;
-    TRL_NO_SACC_TIME                 = 0;
-    TRL_TARG_ACQ_ERROR_TIME          = 0;
-    TRL_SACC_DURATION                = 0;
-    TRL_TARG_ACQ_TIME                = 0;
-    TRL_TARG_MIN_THT_TIME       = 0;
-    TRL_TARG_HOLD_DURATION           = 0;
-    TRL_TIMEOUT_START_TIME           = 0;
-    TRL_TIMEOUT_END_TIME             = 0;
-    TRL_TIMEOUT_DURATION             = 0;
-    TRL_TARG_BRK_TIME           = 0;
-    TRL_TARG_BRK_PRE_TONE_TIME  = 0;
-    TRL_TARG_BRK_TONE_TIME      = 0;
-    TRL_TARG_BRK_PRE_RWRD_TIME  = 0;
-    TRL_TARG_BRK_RWRD_TIME      = 0;
-    TRL_TARG_BRK_POST_RWRD_TIME = 0;
-	TRL_TARG_BRK_MIN_THT_TIME   = 0;
-    TRL_TONE_FREQ                    = 0;
-    TRL_TONE_DURATION                = 0;
-    TRL_TONE_ON_TIME                 = 0;
-    TRL_TONE_OFF_TIME                = 0;
-    TRL_RWRD_DURATION                = 0;
-    TRL_RWRD_ON_TIME                 = 0;
-    TRL_RWRD_OFF_TIME                = 0;
-    TRL_XTRA_RWRD_ON_TIME            = 0;
-    TRL_XTRA_RWRD_OFF_TIME           = 0;
-    TRL_ITI_START_TIME               = 0;
-    TRL_ITI_END_TIME                 = 0;
-    TRL_ITI_DURATION                 = 0;
-	TRL_ABORT_TIME                   = 0;
-    TRL_FIX_VRT_RFRSH_COUNT          = 0;
-    TRL_TARG_VRT_RFRSH_COUNT         = 0;
+    PROCESS_STATE                = 0;
+    TRL_RUNNING                  = 0;
+    TRL_TARG_VR_COUNT_TIME       = 0;
+    TRL_IS_TARG_ON_FLAG          = 0;
+    TRL_IS_TARG_ACQUIRED         = 0;
+    TRL_IS_FIX_ACQUIRED          = 0;
+    TRL_I_IN_FLIGHT              = 0;
+    TRL_IS_TARG_MIN_THT          = 0;
+    TRL_IS_TIMEOUT               = 0;
+    TRL_IS_STOP_SIGNAL_ON        = 0;
+    TRL_STOP_SIGNAL_TIME         = 0;
+    TRL_STOP_SIGNAL_DELAY        = 0;
+    TRL_STOP_SIGNAL_DURATION     = 0;
+    TRL_IS_NON_CANCELLED         = 0;
+    TRL_IS_CANCELLED             = 0;
+    TRL_CUM_TIME                 = 0;
+    TRL_START_TIME               = 0;
+    TRL_END_TIME                 = 0;
+    TRL_GET_READY_TIME           = 0;
+    TRL_READY_TIME               = 0;
+    TRL_GET_READY_DURATION       = 0;
+    TRL_FIX_ON_TIME              = 0;
+    TRL_FIX_ACQ_TIME             = 0;
+    TRL_FIX_ACQ_ERROR_TIME       = 0;
+    TRL_FIXATED_TIME             = 0;
+    TRL_FIX_HOLD_DURATION        = 0;
+    TRL_FIX_BRK_TIME             = 0;
+    TRL_PRE_TARG_ON_TIME         = 0;
+    TRL_TARG_ON_TIME             = 0;
+    TRL_TARG_ON_DURATION         = 0;
+    TRL_DECIDE_TIME              = 0;
+    TRL_SACC_TIME                = 0;
+    TRL_ERLY_SACC_TIME           = 0;
+    TRL_LATE_SACC_TIME           = 0;
+    TRL_NO_SACC_TIME             = 0;
+    TRL_TARG_ACQ_ERROR_TIME      = 0;
+    TRL_SACC_DURATION            = 0;
+    TRL_TARG_ACQ_TIME            = 0;
+    TRL_TARG_MIN_THT_TIME        = 0;
+    TRL_TARG_HOLD_DURATION       = 0;
+    TRL_TIMEOUT_START_TIME       = 0;
+    TRL_TIMEOUT_END_TIME         = 0;
+    TRL_TIMEOUT_DURATION         = 0;
+    TRL_TARG_BRK_TIME            = 0;
+    TRL_TARG_BRK_PRE_TONE_TIME   = 0;
+    TRL_TARG_BRK_TONE_TIME       = 0;
+    TRL_TARG_BRK_PRE_RWRD_TIME   = 0;
+    TRL_TARG_BRK_RWRD_TIME       = 0;
+    TRL_TARG_BRK_POST_RWRD_TIME  = 0;
+    TRL_TARG_BRK_MIN_THT_TIME    = 0;
+    TRL_TONE_FREQ                = 0;
+    TRL_TONE_DURATION            = 0;
+    TRL_TONE_ON_TIME             = 0;
+    TRL_TONE_OFF_TIME            = 0;
+    TRL_RWRD_DURATION            = 0;
+    TRL_RWRD_ON_TIME             = 0;
+    TRL_RWRD_OFF_TIME            = 0;
+    TRL_XTRA_RWRD_ON_TIME        = 0;
+    TRL_XTRA_RWRD_OFF_TIME       = 0;
+    TRL_ITI_START_TIME           = 0;
+    TRL_ITI_END_TIME             = 0;
+    TRL_ITI_DURATION             = 0;
+    TRL_ABORT_TIME               = 0;
+    TRL_FIX_VRT_RFRSH_COUNT      = 0;
+    TRL_TARG_VRT_RFRSH_COUNT     = 0;
+    TRL_TARG_SSD_VRT_RFRSH_COUNT = 0;
 } /* INIT_TRL_VARS */
