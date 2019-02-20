@@ -3,10 +3,11 @@
 //   Description: Determine trial outcome and appropriate EXTRA_TIMEOUT_DURATION in ms
 //
 // See CmdOutcomes.xls file in DOC folder
+// AcquireFixError_ does not result in timeout.  This outcome is sent in STATES/FIX_ON.PRO
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| DEF_TRL_TIME_VAR	                          | TRL_TIME_VAR_not_0	             | EVENT_SENT	        | OUTCOME_GO_TRIAL  | OUTCOME_NOGO_TRIAL_NO_SS |  OUTCOME_NOGO_TRIAL_SS |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win before allowed time       |	TRL_FIX_ACQ_ERROR_TIME	         | AcquireFixError_	    | OutcomeFixError_	| OutcomeFixError_	       | OutcomeFixError_       |
+//| Gaze not in Fix win before allowed time       |	TRL_FIX_ACQ_ERROR_TIME	         | *AcquireFixError_	| *OutcomeFixError_	| *OutcomeFixError_	       | *OutcomeFixError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in Fix win for fix hold time	      | TRL_FIX_BRK_TIME	             | BreakFix_	        | OutcomeFixBreak_	| OutcomeFixBreak_	       | OutcomeFixBreak_       |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
@@ -14,21 +15,21 @@
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze in Fix win after Max sac time	          | TRL_NO_SACC_TIME	             | NoSaccade_	        | OutcomeGoError_	| *trial still evolving*   | *trial still evolving* |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Targ win before max sac duration	| TRL_TARG_ACQ_ERROR_TIME	         | AcquireTargetError_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in Targ win before max sac duration  | TRL_TARG_ACQ_ERROR_TIME	         | AcquireTargetError_  | OutcomeGoError_	| OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone delay	      | TRL_TARG_BRK_PRE_TONE_TIME  | TargHoldBrkPreTone_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during tone delay	      | TRL_TARG_BRK_PRE_TONE_TIME       | TargHoldBrkPreTone_  | OutcomeGoError_	| OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone duration	    | TRL_TARG_BRK_TONE_TIME	     | TargHoldBrkTone_     | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during tone duration	  | TRL_TARG_BRK_TONE_TIME	         | TargHoldBrkTone_     | OutcomeGoError_	| OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward delay	    | TRL_TARG_BRK_PRE_RWRD_TIME	 | TargHoldBrkPreRwrd_  | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during reward delay	    | TRL_TARG_BRK_PRE_RWRD_TIME	 | TargHoldBrkPreRwrd_  | OutcomeGoError_	| OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward duration	  | TRL_TARG_BRK_RWRD_TIME	     | TargHoldBrkRwrd_     | OutcomeGoError_	  | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
+//| Gaze not in targ win during reward duration	  | TRL_TARG_BRK_RWRD_TIME	         | TargHoldBrkRwrd_     | OutcomeGoError_	| OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //| Gaze not in targ win after reward duration    |                                  |                      |                   |                          |                        |
-//| min target hold time is greater than          | TRL_TARG_BRK_POST_RWRD_TIME | TargHoldBrkPostRwrd_ | OutcomeGoError_   | OutcomeNoGoErrorEarly_	 | OutcomeNoGoError_      |
-//| tone + reward times.	                        |                                  |                      |                   |                          |                        |
+//| min target hold time is greater than          | TRL_TARG_BRK_POST_RWRD_TIME      | TargHoldBrkPostRwrd_ | OutcomeGoError_   | OutcomeNoGoErrorEarly_   | OutcomeNoGoError_      |
+//| tone + reward times.	                      |                                  |                      |                   |                          |                        |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in targ win for min target hold time	    | TRL_TARG_MIN_THT_TIME	     | TargHoldMinTHT_      | OutcomeGoCorrect_ | OutcomeNoGoWrongEarly_	 | OutcomeNoGoWrong_      |
+//| Gaze in targ win for min target hold time	  | TRL_TARG_MIN_THT_TIME	         | TargHoldMinTHT_      | OutcomeGoCorrect_ | OutcomeNoGoWrongEarly_   | OutcomeNoGoWrong_      |
 //|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
 //
 //                All Global variables and the following state variables are available to monitor state progress
@@ -111,13 +112,6 @@ process PROC_GO_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TIMEOUT_TARG_BRK_MIN_THT - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);		
 	}
-    else if (TRL_FIX_ACQ_ERROR_TIME)
-    {//process for GO, NOGO_NO_SS, NOGO_SS
-        TIMEOUT_DURATION = TIMEOUT_FIX_ACQ_ERROR[0];
-        spawn SEND_EVT(OutcomeFixError_);
-
-        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; Go Trial; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixError_);
-    }
     else if (TRL_FIX_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIXBRK[0];

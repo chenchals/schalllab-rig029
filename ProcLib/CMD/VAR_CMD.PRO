@@ -41,6 +41,8 @@ declare int TIME_DILATE_FACTOR = 2;
 declare int READY_TIME = 2000;
 // subject has this long to acquire fixation before a new trial is initiated
 declare int ALLOWED_FIX_TIME = 2000;
+// subject did not acquire fixation, show blank screen and wait before next trial
+declare int FIX_NOT_ACQ_WAIT_TIME = 3000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
@@ -111,7 +113,7 @@ declare int TIMEOUT_TARG_MIN_THT[3]       = { 0, 0, 0 };
 
 // Base Minimum time subject should hold gaze on TARGET
 // 
-declare int BASE_TARG_HOLD_TIME = 1000;
+declare int BASE_TARG_HOLD_TIME = 2500;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
 // if = 0, then MIN_TARGETTIME = BASE_TARG_HOLD_TIME
 // if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
@@ -120,20 +122,17 @@ declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int   MIN_TARG_HOLD_TIME;
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 500;
+declare int   TONE_DELAY = 800;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 3000;
+declare int   TONE_DURATION = 50;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 1000;
+declare int   RWRD_DELAY = 800;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
-declare int   RWRD_DURATION = 20;
-// time out for messing up
-declare int   BASE_PUNISH_TIME = 2000;
-
+declare int   RWRD_DURATION = 50;
 // Positive secondary reinforcer in Hz
 declare int SUCCESS_TONE_BIG_REWARD = 300;
 declare int SUCCESS_TONE_MED_REWARD = 400;

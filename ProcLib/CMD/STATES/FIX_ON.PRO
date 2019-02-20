@@ -81,9 +81,13 @@ process PROC_FIX_ON()
 			// Show blank page for about 3 secs.....No timeout or any tone
 			dsendf("vp %d\n", PG_BLANK);
 			spawn GRAF_HIDE_FIX_TARG();
-			wait(3000);
-            PROCESS_STATE = 1;
-            CURR_STAT     = STAT_IDLE;
+			
+			spawn SEND_EVT(OutcomeFixError_);
+			printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; Go Trial; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixError_);
+            wait(FIX_NOT_ACQ_WAIT_TIME);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_IDLE;
+			TRL_RUNNING = 0;
         }
     }
 } /* PROC_FIX_ON */
