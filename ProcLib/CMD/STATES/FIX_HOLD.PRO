@@ -22,47 +22,43 @@
 
 process PROC_FIX_HOLD()
 {
-    if (PROCESS_STATE)
-    {
-        printf("****STAT_FIX_HOLD[%d]: Processing hold fixation\n", STAT_FIX_HOLD);
-        // actually TRL_FIX_ACQ_TIME, however the below is practically
-        //same and it keeps this state independent of previous state
-        PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
-        STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = FIXTIME * TIME_DILATE_FACTOR;
-        // already acquired fixation in FIX_ON state
-        TRL_FIX_HOLD_DURATION = 1;
-    }
+	if (PROCESS_STATE)
+	{
+		printf("****STAT_FIX_HOLD[%d]: Processing hold fixation\n", STAT_FIX_HOLD);
+		// actually TRL_FIX_ACQ_TIME, however the below is practically
+		//same and it keeps this state independent of previous state
+		PROCESS_STATE  = 0;
+		STAT_STRT_T    = time();
+		STAT_DLTA_T    = 0;
+		STAT_ALLOWED_T = FIXTIME * TIME_DILATE_FACTOR;
+	}
 
-    if (STAT_DLTA_T <= STAT_ALLOWED_T)
-    {
-        if (!I_FIX)
-        {
-            TRL_FIX_BRK_TIME = time();
-            spawn SEND_EVT(BreakFix_);
+	TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
 
-            printf("****STAT_FIX_HOLD[%d]: ERR sent Event: BreakFix_[%d]\n", STAT_FIX_HOLD, BreakFix_);
-            printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
-            PROCESS_STATE = 1;
-            CURR_STAT     = STAT_OUTCOME;
-        }
-        else if (I_FIX)
-        {
-            TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
-        }
-    }
-    else
-    {
-        if (I_FIX)
-        {
-            TRL_FIXATED_TIME = time();
-            spawn SEND_EVT(Fixate_);
+	if (STAT_DLTA_T <= STAT_ALLOWED_T)
+	{
+		if (!I_FIX )
+		{
+			TRL_FIX_BRK_TIME = time();
+			spawn SEND_EVT(BreakFix_);
 
-            printf("****STAT_FIX_HOLD[%d]: OK sent Event: Fixate_[%d], Abort_[%d]\n", STAT_FIX_HOLD, Fixate_);
-            printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
-            PROCESS_STATE = 1;
-            CURR_STAT     = STAT_TARG_ON;
-        }
-    }
+			printf("****STAT_FIX_HOLD[%d]: ERR sent Event: BreakFix_[%d]\n", STAT_FIX_HOLD, BreakFix_);
+			printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_OUTCOME;
+		}
+	}
+	else
+	{
+		if (I_FIX)
+		{
+			TRL_FIXATED_TIME = time();
+			spawn SEND_EVT(Fixate_);
+
+			printf("****STAT_FIX_HOLD[%d]: OK sent Event: Fixate_[%d], Abort_[%d]\n", STAT_FIX_HOLD, Fixate_);
+			printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
+			PROCESS_STATE = 1;
+			CURR_STAT     = STAT_TARG_ON;
+		}
+	}
 } /* PROC_FIX_HOLD */

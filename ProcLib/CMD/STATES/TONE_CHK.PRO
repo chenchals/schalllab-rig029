@@ -33,7 +33,7 @@
 
 declare PROC_TONE_CHK();
 
-
+declare int TEMP_TONE_DURATION;
 process PROC_TONE_CHK()
 {
 	// Target acquired, but not fixated yet or gaze still in FixWin
@@ -47,11 +47,11 @@ process PROC_TONE_CHK()
 		// Give tone after this time, unless Abort
 		STAT_ALLOWED_T = TONE_DELAY * TIME_DILATE_FACTOR;
 		// Tone already given, during tone check gaze
-		STAT_I_MOVE_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
+		TEMP_TONE_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
 
 		TRL_TARG_HOLD_DURATION  = 1;               // as target was already acquired in previous state
 		TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
-		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
+		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_TONE_DURATION;
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -105,7 +105,7 @@ process PROC_TONE_CHK()
 		if (!TRL_TONE_ON_TIME)
 		{
 			TRL_TONE_ON_TIME = time();
-			spawn TONE(TRL_TONE_FREQ, TRL_TONE_DURATION);
+			spawn TONE(TRL_TONE_FREQ, TEMP_TONE_DURATION);
 			spawn SEND_EVT(ToneOn_);
 
 			printf("****STAT_TONE_CHK[%d]: OK sent Event: ToneOn_[%d]\n", STAT_TONE_CHK, ToneOn_);

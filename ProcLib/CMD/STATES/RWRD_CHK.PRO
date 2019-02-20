@@ -34,7 +34,7 @@
 
 declare PROC_RWRD_CHK();
 
-
+declare int TEMP_RWRD_DURATION;
 process PROC_RWRD_CHK()
 {
 	// Target acquired, but not fixated yet or gaze still in FixWin
@@ -48,7 +48,7 @@ process PROC_RWRD_CHK()
 		// Give reward after this time, unless Abort
 		STAT_ALLOWED_T = RWRD_DELAY * TIME_DILATE_FACTOR;
 		// Reward already given, during reward duration check gaze
-		STAT_I_MOVE_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
+		TEMP_RWRD_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
 		// This is incremented in the CMD_TSK.PRO --> state flow controller
 		TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
 		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
@@ -102,7 +102,7 @@ process PROC_RWRD_CHK()
 		if (!TRL_RWRD_ON_TIME)
 		{
 			TRL_RWRD_ON_TIME = time();
-			spawn JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION);
+			spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
 			spawn SEND_EVT(RewardOn_);
 			printf("****STAT_RWRD_CHK[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_CHK, RewardOn_);
 		}
@@ -143,7 +143,8 @@ process PROC_RWRD_CHK()
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_OUTCOME;			
 		}
-		else if(TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION && !TRL_IS_TARG_MIN_THT)
+		
+		if(STAT_DLTA_T <= TEMP_MIN_THT  && TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION && !TRL_IS_TARG_MIN_THT)
 		{
 			if(!I_TARG)
 			{

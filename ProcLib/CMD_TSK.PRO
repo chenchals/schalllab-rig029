@@ -72,7 +72,6 @@ process IDLE() enabled
 	printf("Setting WTCH_SCHMITT\n");
 	spawn WTCH_SCHMITT();
 
-	CURR_STAT  = STAT_IDLE;
 	printf("Sending Identify_Room_\n");
 	spawn SEND_EVT(Identify_Room_);
 
@@ -134,10 +133,10 @@ process IDLE() enabled
 				* spawnwait TONESWEP();
 				* nexttick 1000;
 				*/
-				printf("Giving JUICE\n");
-				spawnwait JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION + 100);
+				//printf("Giving JUICE\n");
+				//spawnwait JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION + 100);
 
-				nexttick 1000;
+				//nexttick 1000;
 				//nexttick 5000;
 				//CURR_STAT = STAT_GET_READY;
 				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
@@ -147,6 +146,13 @@ process IDLE() enabled
 				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
 				//nexttick 5000;
 				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
+				
+				dsendf("vp %d\n",PG_TARGET_PD);
+				nexttick 64;
+				dsendf("vp %d\n",PG_SIGNAL_PD);
+				dsendf("vw 1\n");
+				nexttick 4;
+				dsendf("vp %d\n",PG_BLANK);
 
 				TRL_RUNNING = 0;
 				nexttick 1000;

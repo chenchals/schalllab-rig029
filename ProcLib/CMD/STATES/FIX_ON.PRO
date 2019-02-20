@@ -63,7 +63,7 @@ process PROC_FIX_ON()
 			spawn SEND_EVT(TrialStart_);
             printf("****STAT_FIX_ON[%d]: OK sent Event: AcquireFix_[%d], TrialStart_[%d]\n", STAT_FIX_ON, AcquireFix_,TrialStart_);
             printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
-            PROCESS_STATE = 1;
+			PROCESS_STATE = 1;
             CURR_STAT     = STAT_FIX_HOLD;
         }
     }

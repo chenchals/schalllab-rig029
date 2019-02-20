@@ -155,6 +155,8 @@ declare int TRL_ITI_DURATION;
 
 // any break fixations?
 declare int TRL_ABORT_TIME;
+// number of vertical refreshs FIX with PD was on
+declare int TRL_FIX_VRT_RFRSH_COUNT;
 // number of vertical refreshs TARGET with PD was on
 declare int TRL_TARG_VRT_RFRSH_COUNT;
 // number of vertical refreshs TARGET with PD was on when stop-signal page was shown
@@ -172,7 +174,7 @@ process SET_CMD_TRL()
     {
         // must get from SSD_ARRY; use staircasing....
         printf("**********Using RANDOM CHOICE OF SSD from SSD_ARRY*************\n");
-        TRL_STOP_SIGNAL_DELAY = SSD_ARRY[random(N_SSD_MAX)];
+        TRL_STOP_SIGNAL_DELAY = 10; //SSD_ARRY[random(N_SSD_MAX)];
         printf("**********TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]\n", TRL_STOP_SIGNAL_DELAY);
     }
     else
