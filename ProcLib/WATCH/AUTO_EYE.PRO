@@ -154,7 +154,7 @@ process AUTO_EYE_TARG_ON()
     }
     else if (DO_SACC == 1)     // early saccade
     {
-        if (STAT_DLTA_T <= round(STAT_I_MOVE_DURATION * fracTime))
+        if (STAT_DLTA_T <= round(STAT_I_DURATION * fracTime))
         {
             // hold fix
             spawnwait AUTO_EYE_POS_FIX();
@@ -192,7 +192,7 @@ process AUTO_EYE_TARG_ACQ()
     else if (DO_TARG_ACQ == 1)
     {
         fracTime = 0.5;
-        if (STAT_DLTA_T < round(STAT_I_MOVE_DURATION * fracTime))
+        if (STAT_DLTA_T < round(STAT_I_DURATION * fracTime))
         {
             spawnwait AUTO_EYE_POS_FIX();
         }
@@ -204,7 +204,7 @@ process AUTO_EYE_TARG_ACQ()
     else if (DO_TARG_ACQ == 2)     // elsewhere
     {
         fracTime = 0.5;
-        if (STAT_DLTA_T < round(STAT_I_MOVE_DURATION * fracTime))
+        if (STAT_DLTA_T < round(STAT_I_DURATION * fracTime))
         {
             spawnwait AUTO_EYE_POS_FIX();
         }
@@ -225,7 +225,7 @@ process AUTO_EYE_POS_ACQ_TARG()
     }
     else if (DO_TARG_ACQ == 1)
     {
-        if (STAT_DLTA_T < random(round(STAT_I_MOVE_DURATION * 0.8)) + 5)
+        if (STAT_DLTA_T < random(round(STAT_I_DURATION * 0.8)) + 5)
         {
             spawnwait AUTO_EYE_POS_FIX_WIDE();
         }

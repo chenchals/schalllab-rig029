@@ -11,7 +11,7 @@
 //                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
-//                5. STAT_I_MOVE_DURATION : If saccade occurs, it must complete in this time
+//                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
 //   NOTE:
 //
@@ -38,7 +38,7 @@ process PROC_TARG_ON()
         PROCESS_STATE        = 0;
         STAT_STRT_T          = TRL_PRE_TARG_ON_TIME;
         STAT_DLTA_T          = 0;
-        STAT_I_MOVE_DURATION = MIN_SACC_TIME * TIME_DILATE_FACTOR;
+        STAT_I_DURATION = MIN_SACC_TIME * TIME_DILATE_FACTOR;
         STAT_ALLOWED_T       = MAX_SACC_TIME * TIME_DILATE_FACTOR;
     }
 
@@ -54,7 +54,7 @@ process PROC_TARG_ON()
         spawn SEND_EVT(FixSpotOff_);
     }
     // Before MIN_SACCADE_TIME
-    if (STAT_DLTA_T <= STAT_I_MOVE_DURATION)
+    if (STAT_DLTA_T <= STAT_I_DURATION)
     {
         if (!I_FIX)
         {
@@ -63,7 +63,7 @@ process PROC_TARG_ON()
             spawn SEND_EVT(EarlySaccade_);
 
             printf("****STAT_TARG_ON[%d]: ERR sent Event: EarlySaccade_[%d]\n", STAT_TARG_ON, EarlySaccade_);
-            printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_MOVE_DURATION);
+            printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
             printf("**********Compute timeout for aborting****************\n");
@@ -78,7 +78,7 @@ process PROC_TARG_ON()
             spawn SEND_EVT(Saccade_);
 
             printf("****STAT_TARG_ON[%d]: OK sent Event: Saccade_[%d]\n", STAT_TARG_ON, Saccade_);
-            printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]/([%d],[%d]) (MAX_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_MOVE_DURATION, STAT_ALLOWED_T);
+            printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]/([%d],[%d]) (MAX_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TARG_ACQ;
         }

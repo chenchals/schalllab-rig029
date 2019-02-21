@@ -23,7 +23,7 @@
 //                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
-//                5. STAT_I_MOVE_DURATION : If saccade occurs, it must complete in this time
+//                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
 //   NOTE:
 //
@@ -51,7 +51,7 @@ process PROC_RWRD_CHK()
 		TEMP_RWRD_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
 		// This is incremented in the CMD_TSK.PRO --> state flow controller
 		TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
-		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
+		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_DURATION;
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();
 

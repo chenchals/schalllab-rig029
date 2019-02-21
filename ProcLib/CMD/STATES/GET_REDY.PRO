@@ -11,7 +11,7 @@
 //                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
-//                5. STAT_I_MOVE_DURATION : If saccade occurs, it must complete in this time
+//                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
 //   NOTE:
 //

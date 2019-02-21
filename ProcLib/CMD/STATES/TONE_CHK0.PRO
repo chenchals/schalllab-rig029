@@ -22,7 +22,7 @@
 //                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
-//                5. STAT_I_MOVE_DURATION : If saccade occurs, it must complete in this time
+//                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
 //   NOTE:
 //
@@ -47,11 +47,11 @@ process PROC_TONE_CHK()
 		// Give tone after this time, unless Abort
 		STAT_ALLOWED_T = TONE_DELAY * TIME_DILATE_FACTOR;
 		// Tone already given, during tone check gaze
-		STAT_I_MOVE_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
+		STAT_I_DURATION = TRL_TONE_DURATION * TIME_DILATE_FACTOR;
 
 		TRL_TARG_HOLD_DURATION  = 1;       // as target was already acquired in previous state
 		TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
-		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_MOVE_DURATION;
+		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_DURATION;
 	}
 	spawnwait CHECK_TARG_VERT_RFRSH();
 
