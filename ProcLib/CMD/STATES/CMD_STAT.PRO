@@ -28,7 +28,9 @@ declare int STAT_STRT_T;
 declare int STAT_STP_T;
 declare int STAT_DLTA_T;
 declare int STAT_ALLOWED_T;
+// for gating the eye pos by time
 declare int STAT_I_DURATION;
+declare int STAT_I_DURATION2;
 
 
 //

@@ -28,18 +28,18 @@ process PROC_TARG_ON()
     if (PROCESS_STATE)
     {
         printf("****STAT_TARG_ON[%d]: Processing Target On\n", STAT_TARG_ON);
-        TRL_PRE_TARG_ON_TIME     = time();
+        TRL_PRE_TARG_ON_TIME = time();
         spawn SEND_EVT(TargetPre_);
 
         dsendf("vp %d\n", PG_TARGET_PD);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
         spawn GRAF_SHOW_TARG(GRAF_SHOW);
 
-        PROCESS_STATE        = 0;
-        STAT_STRT_T          = TRL_PRE_TARG_ON_TIME;
-        STAT_DLTA_T          = 0;
+        PROCESS_STATE   = 0;
+        STAT_STRT_T     = TRL_PRE_TARG_ON_TIME;
+        STAT_DLTA_T     = 0;
         STAT_I_DURATION = MIN_SACC_TIME * TIME_DILATE_FACTOR;
-        STAT_ALLOWED_T       = MAX_SACC_TIME * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T  = MAX_SACC_TIME * TIME_DILATE_FACTOR;
     }
 
     spawnwait CHECK_TARG_VERT_RFRSH();
@@ -48,6 +48,7 @@ process PROC_TARG_ON()
     {
         TRL_TARG_ON_TIME = time();
         spawn SEND_EVT(Target_);
+
         printf("****STAT_TARG_ON[%d]: Sending Event Target_[%d]\n", STAT_TARG_ON, Target_);
 
         printf("****STAT_TARG_ON[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_ON, FixSpotOff_);
@@ -66,7 +67,6 @@ process PROC_TARG_ON()
             printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
-            printf("**********Compute timeout for aborting****************\n");
         }
     }
     else if (STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -87,9 +87,10 @@ process PROC_TARG_ON()
     {
         if (I_FIX)
         {
-            TRL_I_IN_FLIGHT = 0;
+            TRL_I_IN_FLIGHT  = 0;
             TRL_NO_SACC_TIME = time();
             spawn SEND_EVT(NoSaccade_);
+
             //spawn SEND_EVT(GoError_);
 
             printf("****STAT_TARG_ON[%d]: ERR sent Event: NoSaccade_[%d]\n", STAT_TARG_ON, NoSaccade_);

@@ -23,9 +23,9 @@ process CHECK_TARG_VERT_RFRSH()
 	if(PD_TRIG_R && !TRL_IS_STOP_SIGNAL_ON)
 	{
 		TRL_IS_STOP_SIGNAL_ON = 1;
-		printf("****TARG_VR.PRO: TRL_IS_STOP_SIGNAL_ON[%d]\n",TRL_IS_STOP_SIGNAL_ON);
+		printf("****TARG_VR.PRO: TRL_IS_STOP_SIGNAL_ON = [%d]\n",TRL_IS_STOP_SIGNAL_ON);
 	}
-	
+
     if (PD_TRIG_L || PD_TRIG_R)
     {
         if (TRL_TARG_VRT_RFRSH_COUNT == 0)

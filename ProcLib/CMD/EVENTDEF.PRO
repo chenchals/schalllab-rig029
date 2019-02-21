@@ -71,12 +71,14 @@ declare constant StopSignal_      = 2340;
 declare constant ZeroEyePosition_ = 2395;
 
 // Codes 2400-2699
-declare constant AcquireFix_          = 2400;
-declare constant AcquireFixError_     = 2402;
-declare constant Fixate_              = 2404;
-declare constant BreakFix_            = 2406;
-declare constant AcquireTarget_       = 2420;
-declare constant AcquireTargetError_  = 2422;
+declare constant AcquireFix_         = 2400;
+declare constant AcquireFixError_    = 2402;
+declare constant Fixate_             = 2404;
+declare constant BreakFix_           = 2406;
+declare constant ReturnToFix_        = 2410;
+declare constant AcquireTarget_      = 2420;
+declare constant AcquireTargetError_ = 2422;
+// For GO trials 2430-2460, cf. STOP trials 2630-2660
 declare constant TargHoldBrkPreTone_  = 2430;
 declare constant TargHoldBrkTone_     = 2432;
 declare constant TargHoldBrkPreRwrd_  = 2434;
@@ -85,26 +87,39 @@ declare constant TargHoldBrkPostRwrd_ = 2440;
 declare constant TargHoldMinTHT_      = 2450;
 declare constant TargHoldBrkMinTHT_   = 2452;
 declare constant Decide_              = 2460;
-declare constant EarlySaccade_        = 2470;
-declare constant Saccade_             = 2472;
-declare constant LateSaccade_         = 2474;
-declare constant NoSaccade_           = 2476;
-declare constant ToneOn_              = 2500;
-declare constant ToneOff_             = 2502;
-declare constant SoundStart_          = 2510;
-declare constant SoundEnd_            = 2512;
-declare constant RewardOn_            = 2520;
-declare constant RewardOff_           = 2522;
-declare constant JuiceStart_          = 2530;
-declare constant JuiceEnd_            = 2532;
-declare constant MouthBegin_          = 2540;
-declare constant MouthEnd_            = 2542;
+// Saccade reward and reinforcement
+declare constant EarlySaccade_ = 2500;
+declare constant Saccade_      = 2502;
+declare constant LateSaccade_  = 2504;
+declare constant NoSaccade_    = 2506;
+declare constant ToneOn_       = 2510;
+declare constant ToneOff_      = 2512;
+declare constant SoundStart_   = 2520;
+declare constant SoundEnd_     = 2522;
+declare constant RewardOn_     = 2530;
+declare constant RewardOff_    = 2532;
+declare constant JuiceStart_   = 2540;
+declare constant JuiceEnd_     = 2542;
+declare constant MouthBegin_   = 2550;
+declare constant MouthEnd_     = 2552;
+// For STOP trials 2620-2660, cf. GO trials 2430-2460
+// after TARG_ON
+declare constant NoGoEarlySaccade_   = 2600;
+declare constant NoGoSaccade_        = 2602;
+declare constant NoGoLateSaccade_    = 2604;
+declare constant FixHoldBrkPreTone_  = 2630;
+declare constant FixHoldBrkTone_     = 2632;
+declare constant FixHoldBrkPreRwrd_  = 2634;
+declare constant FixHoldBrkRwrd_     = 2638;
+declare constant FixHoldBrkPostRwrd_ = 2640;
+declare constant FixHoldMinSSHT_     = 2650;
+declare constant FixHoldBrkMinSSHT_  = 2652;
+declare constant Cancel_             = 2660;
 
 // Codes 2700-2899
-declare constant Staircase_         = 2772;
-declare constant Neg2Reinforcement_ = 2773;
-declare constant Feedback_          = 2774;
-declare constant ReturnToFix_       = 2775;
+declare constant Staircase_         = 2700;
+declare constant Neg2Reinforcement_ = 2710;
+declare constant Feedback_          = 2720;
 
 // Codes 2900-3000
 declare constant TrialInBlock    = 2900;

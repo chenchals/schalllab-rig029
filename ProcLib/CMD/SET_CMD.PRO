@@ -157,10 +157,22 @@ declare int TRL_TARG_BRK_PRE_RWRD_TIME;
 declare int TRL_TARG_BRK_RWRD_TIME;
 declare int TRL_TARG_BRK_POST_RWRD_TIME;
 declare int TRL_TARG_BRK_MIN_THT_TIME;
-
 // Stop signal task
-declare int TRL_FIX_HOLD_MIN_SSHT_TIME;
+// saccde left Fix window between MIN_MAX saccade time
+declare int TRL_NOGO_SACC_TIME;
+// saccade left Fix window before MIN saccade time
+declare int TRL_NOGO_ERLY_SACC_TIME;
+// saccade left Fix window after MAX saccade time
+declare int TRL_NOGO_LATE_SACC_TIME;
 
+declare int TRL_FIX_HOLD_MIN_SSHT_TIME;
+declare int TRL_FIX_BRK_PRE_TONE_TIME;
+declare int TRL_FIX_BRK_TONE_TIME;
+declare int TRL_FIX_BRK_PRE_RWRD_TIME;
+declare int TRL_FIX_BRK_RWRD_TIME;
+declare int TRL_FIX_BRK_POST_RWRD_TIME;
+declare int TRL_FIX_BRK_MIN_SSHT_TIME;
+declare int TRL_CANCEL_TIME;
 // Tone and reward times
 declare int TRL_TONE_FREQ;
 declare int TRL_TONE_DURATION;
@@ -260,68 +272,73 @@ process SET_CMD_TRL()
 
 process COMPUTE_TRL_DURATION()
 {
-  declate int tempVar;
-  // TRL_DURATION is computed *after* Fixation is acquired, using all max times
-  // same for GO/STOP
-  TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MAX_SACC_TIME + MAX_SACC_DURATION;
-  TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
-  // Add max ssd delay and cancel time
-  TRL_DURATION = ceil(MAX_SSD * REFRESH_RATE) + FIX_HOLD_FOR_CANCEL;
+    declate int tempVar;
 
-  // now check for the longest time of the following
-  tempVar = TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
-  if(MIN_TARG_HOLD_TIME > tempVar)
-  {
-    tempVar = MIN_TARG_HOLD_TIME;
-  }
-  if(MIN_STOP_SIGNAL_HOLD_TIME > tempVar)
-  {
-    tempVar = MIN_STOP_SIGNAL_HOLD_TIME;
-  }
-  TRL_DURATION = TRL_DURATION + tempVar;
+    // TRL_DURATION is computed *after* Fixation is acquired, using all max times
+    // same for GO/STOP
+    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MAX_SACC_TIME + MAX_SACC_DURATION;
+    TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
+    // Add max ssd delay and cancel time
+    TRL_DURATION = ceil(MAX_SSD * REFRESH_RATE) + FIX_HOLD_FOR_CANCEL;
 
-  if (IS_TRL_LENGTH_FIXED)
-  {
-      if (TRL_DURATION > FIXED_TRL_LENGTH_TIME)
-      {
-          // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
-          // TRL_DURATION adjusted to
-          printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n")
-          printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
-          printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
-          printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
-      }
-      else
-      {
-          TRL_DURATION = FIXED_TRL_LENGTH_TIME;
-      }
-  }
+    // now check for the longest time of the following
+    tempVar = TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
+    if (MIN_TARG_HOLD_TIME > tempVar)
+    {
+        tempVar = MIN_TARG_HOLD_TIME;
+    }
+    if (MIN_STOP_SIGNAL_HOLD_TIME > tempVar)
+    {
+        tempVar = MIN_STOP_SIGNAL_HOLD_TIME;
+    }
+    TRL_DURATION = TRL_DURATION + tempVar;
+
+    if (IS_TRL_LENGTH_FIXED)
+    {
+        if (TRL_DURATION > FIXED_TRL_LENGTH_TIME)
+        {
+            // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
+            // TRL_DURATION adjusted to
+            printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n")
+            printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
+            printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
+            printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
+        }
+        else
+        {
+            TRL_DURATION = FIXED_TRL_LENGTH_TIME;
+        }
+    }
 }
+
 
 process SET_CANCEL_TIME()
 {
-  declare int tempVar;
-  spawnwait SET_MIN_MAX_SSD();
-  // shorted cancel time relative to Target on is
-  // must be greater than MAX_SACC_TIME
-  //declare int SSD_CANCEL_TIME = 1500;
-  //declare int FIX_HOLD_FOR_CANCEL;
-  printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
-  printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
-  tempVar = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME;
-  if (tempVar < MAX_SACC_TIME)
-  {
-    printf("**********CANCEL_TIME CHANGE ALERT********************\n")
-    printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME[%d]****\n", tempVar, MAX_SACC_TIME );
-    FIX_HOLD_FOR_CANCEL = MAX_SACC_TIME - ceil(MIN_SSD * REFRESH_RATE);
-    printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
-  }
-  else
-  {
-    FIX_HOLD_FOR_CANCEL = SSD_CANCEL_TIME;
-    printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
-  }
+    declare int tempVar;
+
+    spawnwait SET_MIN_MAX_SSD();
+
+    // shorted cancel time relative to Target on is
+    // must be greater than MAX_SACC_TIME
+    //declare int SSD_CANCEL_TIME = 1500;
+    //declare int FIX_HOLD_FOR_CANCEL;
+    printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
+    printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
+    tempVar = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME;
+    if (tempVar < MAX_SACC_TIME)
+    {
+        printf("**********CANCEL_TIME CHANGE ALERT********************\n")
+        printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME[%d]****\n", tempVar, MAX_SACC_TIME);
+        FIX_HOLD_FOR_CANCEL = MAX_SACC_TIME - ceil(MIN_SSD * REFRESH_RATE);
+        printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
+    }
+    else
+    {
+        FIX_HOLD_FOR_CANCEL = SSD_CANCEL_TIME;
+        printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
+    }
 }
+
 
 // set FIX_HOLD_FOR_CANCEL from SSD_CANCEL_TIME
 process SET_MIN_MAX_SSD()
@@ -350,6 +367,7 @@ process SET_MIN_MAX_SSD()
         tempCount = tempCount + 1;
     }
 }
+
 
 process COMPUTE_MIN_SSHT()
 {
@@ -490,6 +508,7 @@ process INIT_TRL_VARS()
     TRL_IS_NON_CANCELLED         = 0;
     TRL_IS_CANCELLED             = 0;
     TRL_CUM_TIME                 = 0;
+    TRL_DURATION                 = 0;
     TRL_START_TIME               = 0;
     TRL_END_TIME                 = 0;
     TRL_GET_READY_TIME           = 0;
@@ -513,11 +532,11 @@ process INIT_TRL_VARS()
     TRL_TARG_ACQ_ERROR_TIME      = 0;
     TRL_SACC_DURATION            = 0;
     TRL_TARG_ACQ_TIME            = 0;
-    TRL_TARG_MIN_THT_TIME        = 0;
     TRL_TARG_HOLD_DURATION       = 0;
     TRL_TIMEOUT_START_TIME       = 0;
     TRL_TIMEOUT_END_TIME         = 0;
     TRL_TIMEOUT_DURATION         = 0;
+    TRL_TARG_MIN_THT_TIME        = 0;
     TRL_TARG_BRK_TIME            = 0;
     TRL_TARG_BRK_PRE_TONE_TIME   = 0;
     TRL_TARG_BRK_TONE_TIME       = 0;
@@ -525,6 +544,17 @@ process INIT_TRL_VARS()
     TRL_TARG_BRK_RWRD_TIME       = 0;
     TRL_TARG_BRK_POST_RWRD_TIME  = 0;
     TRL_TARG_BRK_MIN_THT_TIME    = 0;
+    TRL_NOGO_SACC_TIME           = 0;
+    TRL_NOGO_ERLY_SACC_TIME      = 0;
+    TRL_NOGO_LATE_SACC_TIME      = 0;
+    TRL_FIX_HOLD_MIN_SSHT_TIME   = 0;
+    TRL_FIX_BRK_PRE_TONE_TIME    = 0;
+    TRL_FIX_BRK_TONE_TIME        = 0;
+    TRL_FIX_BRK_PRE_RWRD_TIME    = 0;
+    TRL_FIX_BRK_RWRD_TIME        = 0;
+    TRL_FIX_BRK_POST_RWRD_TIME   = 0;
+    TRL_FIX_BRK_MIN_SSHT_TIME    = 0;
+    TRL_CANCEL_TIME              = 0;
     TRL_TONE_FREQ                = 0;
     TRL_TONE_DURATION            = 0;
     TRL_TONE_ON_TIME             = 0;
@@ -537,8 +567,9 @@ process INIT_TRL_VARS()
     TRL_ITI_START_TIME           = 0;
     TRL_ITI_END_TIME             = 0;
     TRL_ITI_DURATION             = 0;
+    TRL_REACTION_TIME            = 0;
     TRL_ABORT_TIME               = 0;
     TRL_FIX_VRT_RFRSH_COUNT      = 0;
     TRL_TARG_VRT_RFRSH_COUNT     = 0;
     TRL_TARG_SSD_VRT_RFRSH_COUNT = 0;
-} /* INIT_TRL_VARS */
+}   /* INIT_TRL_VARS */
