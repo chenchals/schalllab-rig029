@@ -27,14 +27,13 @@ process PROC_TARG_ON()
 {
     if (PROCESS_STATE)
     {
+        printf("****STAT_TARG_ON[%d]: Processing Target On\n", STAT_TARG_ON);
         TRL_PRE_TARG_ON_TIME     = time();
         spawn SEND_EVT(TargetPre_);
 
         dsendf("vp %d\n", PG_TARGET_PD);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
         spawn GRAF_SHOW_TARG(GRAF_SHOW);
-
-        printf("****STAT_TARG_ON[%d]: Processing Target On\n", STAT_TARG_ON);
 
         PROCESS_STATE        = 0;
         STAT_STRT_T          = TRL_PRE_TARG_ON_TIME;

@@ -42,11 +42,28 @@
 #include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
 
 declare SET_CMD_TRL();
-declare SET_WINS();
-declare PCK_TRL_TYP();
 declare INIT_TRL_VARS();
+declare PCK_TRL_TYP();
+declare COMPUTE_FIX_HOLD();
+declare SET_TARGET();
+declare SET_WINS();
+declare PICK_TRL_SSD();
+
+// min stop signal hold time
+declare COMPUTE_MIN_SSHT();
+
+// set FIX_HOLD_FOR_CANCEL from SSD_CANCEL_TIME
+declare SET_MIN_MAX_SSD();
+declare SET_CANCEL_TIME();
+
+// min target hold time
+declare COMPUTE_MIN_THT();
+
+// Compute the max. trial duration
+process COMPUTE_TRL_DURATION()
 
 declare int TRL_NUMBER = 0;
+
 // A temporary state acitivity
 declare int PROCESS_STATE;
 declare int TRL_RUNNING;
@@ -141,6 +158,9 @@ declare int TRL_TARG_BRK_RWRD_TIME;
 declare int TRL_TARG_BRK_POST_RWRD_TIME;
 declare int TRL_TARG_BRK_MIN_THT_TIME;
 
+// Stop signal task
+declare int TRL_FIX_HOLD_MIN_SSHT_TIME;
+
 // Tone and reward times
 declare int TRL_TONE_FREQ;
 declare int TRL_TONE_DURATION;
@@ -154,7 +174,8 @@ declare int TRL_XTRA_RWRD_OFF_TIME;
 declare int TRL_ITI_START_TIME;
 declare int TRL_ITI_END_TIME;
 declare int TRL_ITI_DURATION;
-
+// TRL_TARG_ACQ_TIME - TRL_SACC_TIME (When subject made a saccade to target)
+declare int TRL_REACTION_TIME;
 // any break fixations?
 declare int TRL_ABORT_TIME;
 // number of vertical refreshs FIX with PD was on
@@ -163,49 +184,224 @@ declare int TRL_FIX_VRT_RFRSH_COUNT;
 declare int TRL_TARG_VRT_RFRSH_COUNT;
 // number of vertical refreshs TARGET with PD was on when stop-signal page was shown
 declare int TRL_TARG_SSD_VRT_RFRSH_COUNT;
+// Other variables for session
+declare int PREV_TRL_TYPE;
+declare int PREV_TRL_IS_CANCEL;
+// Trial counts for session
+declare int SESS_N_GO_TRLS;
+declare int SESS_N_GO_CORRECT_TRLS;
+declare int SESS_N_STOP_TRLS;
+declare int SESS_N_STOP_CANCEL_TRLS;
+declare int SESS_N_STOP_NON_CANCEL_TRLS;
 
 
 process SET_CMD_TRL()
 {
+    declare int tempCount;
+
+    // Initialize all trial variables
     spawnwait INIT_TRL_VARS();
 
-    // setup trial type
+    // Setup trial type
     spawnwait PCK_TRL_TYP();
+
+    // Compute TRL_FIX_HOLD_TIME;
+    spawnwait COMPUTE_FIX_HOLD();
+
+    // Setup TARGET
+    spawnwait SET_TARGET();
+
+    // Update graph object for Target
+    // Show the windows - without the fixspot or target to cue user
+    spawnwait GRAF_UPD8_FIX();
+    spawnwait GRAF_UPD8_TARG();
 
     if (TRIAL_TYPE == TRIAL_TYPE_STOP)
     {
-        // must get from SSD_ARRY; use staircasing....
-        printf("**********Using RANDOM CHOICE OF SSD from SSD_ARRY*************\n");
-        TRL_STOP_SIGNAL_DELAY = 10; //SSD_ARRY[random(N_SSD_MAX)];
-        printf("**********TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]\n", TRL_STOP_SIGNAL_DELAY);
-    }
-    else
-    {
-        TRL_STOP_SIGNAL_DELAY = 0;
-    }
-    // Pick reward and tone for successful trials
-    if (TRIAL_TYPE == TRIAL_TYPE_STOP)
-    {
+        spawnwait PICK_TRL_SSD();
+        spawnwait SET_CANCEL_TIME();
+
+        // Compute MIN_STOP_SIGNAL_HOLD_TIME
+        spawnwait COMPUTE_MIN_SSHT();
+
         // what should be the freq and duartion of tone
         TRL_TONE_FREQ     = SUCCESS_TONE_MED_REWARD;
         TRL_TONE_DURATION = TONE_DURATION;
-
         TRL_RWRD_DURATION = RWRD_DURATION;
     }
     else
     {
+        SESS_N_GO_TRLS        = SESS_N_GO_TRLS + 1;
+        TRL_STOP_SIGNAL_DELAY = 0;
+
         // what should be the freq and duartion of tone
         TRL_TONE_FREQ     = SUCCESS_TONE_BIG_REWARD;
         TRL_TONE_DURATION = TONE_DURATION;
-
-        TRL_RWRD_DURATION = RWRD_DURATION * 2;
+        TRL_RWRD_DURATION = RWRD_DURATION;
     }
+    // Compute this for both STOP and GO trials
+    // Compute MIN_TARG_HOLD_TIME
+    spawnwait COMPUTE_MIN_THT();
+
+    // Setup CMD PAGES
+    printf("Calling CMD-PGS\n");
+    spawnwait CMD_PGS();
+
+    // compute trial duration (mainly for fixed trial length)
 
 
+
+
+
+
+    printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n", TRIAL_TYPE, CURR_TARG_IDX, CURR_TARG_ANGLE);
+} /* SET_CMD_TRL */
+
+
+process COMPUTE_TRL_DURATION()
+{
+  declate int tempVar;
+  // TRL_DURATION is computed *after* Fixation is acquired, using all max times
+  // same for GO/STOP
+  TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MAX_SACC_TIME + MAX_SACC_DURATION;
+  TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
+  // Add max ssd delay and cancel time
+  TRL_DURATION = ceil(MAX_SSD * REFRESH_RATE) + FIX_HOLD_FOR_CANCEL;
+
+  // now check for the longest time of the following
+  tempVar = TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
+  if(MIN_TARG_HOLD_TIME > tempVar)
+  {
+    tempVar = MIN_TARG_HOLD_TIME;
+  }
+  if(MIN_STOP_SIGNAL_HOLD_TIME > tempVar)
+  {
+    tempVar = MIN_STOP_SIGNAL_HOLD_TIME;
+  }
+  TRL_DURATION = TRL_DURATION + tempVar;
+
+  if (IS_TRL_LENGTH_FIXED)
+  {
+      if (TRL_DURATION > FIXED_TRL_LENGTH_TIME)
+      {
+          // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
+          // TRL_DURATION adjusted to
+          printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n")
+          printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
+          printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
+          printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
+      }
+      else
+      {
+          TRL_DURATION = FIXED_TRL_LENGTH_TIME;
+      }
+  }
+}
+
+process SET_CANCEL_TIME()
+{
+  declare int tempVar;
+  spawnwait SET_MIN_MAX_SSD();
+  // shorted cancel time relative to Target on is
+  // must be greater than MAX_SACC_TIME
+  //declare int SSD_CANCEL_TIME = 1500;
+  //declare int FIX_HOLD_FOR_CANCEL;
+  printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
+  printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
+  tempVar = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME;
+  if (tempVar < MAX_SACC_TIME)
+  {
+    printf("**********CANCEL_TIME CHANGE ALERT********************\n")
+    printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME[%d]****\n", tempVar, MAX_SACC_TIME );
+    FIX_HOLD_FOR_CANCEL = MAX_SACC_TIME - ceil(MIN_SSD * REFRESH_RATE);
+    printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
+  }
+  else
+  {
+    FIX_HOLD_FOR_CANCEL = SSD_CANCEL_TIME;
+    printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
+  }
+}
+
+// set FIX_HOLD_FOR_CANCEL from SSD_CANCEL_TIME
+process SET_MIN_MAX_SSD()
+{
+    declare int tempCount;
+
+    tempCount = 0;
+    MIN_SSD   = SSD_ARRY[tempCount];
+    MAX_SSD   = SSD_ARRY[tempCount];
+    tempCount = 1;
+    N_SSD     = 1;
+    while (tempCount < N_SSD_MAX)
+    {
+        if (SSD_ARRY[tempCount] > 0)
+        {
+            N_SSD = N_SSD + 1;
+            if (SSD_ARRY[tempCount] > MAX_SSD)
+            {
+                MAX_SSD = SSD_ARRY[tempCount];
+            }
+            if (SSD_ARRY[tempCount] < MIN_SSD)
+            {
+                MIN_SSD = SSD_ARRY[tempCount];
+            }
+        }
+        tempCount = tempCount + 1;
+    }
+}
+
+process COMPUTE_MIN_SSHT()
+{
+    MIN_STOP_SIGNAL_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_SSHT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_STOP_SIGNAL_HOLD_TIME;
+    printf("****SET_CMD/COMPUTE_MIN_SSHT: MIN_STOP_SIGNAL_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d****\n", USE_TONE_AND_RWRD_FOR_MIN_SSHT,
+           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_STOP_SIGNAL_HOLD_TIME, MIN_STOP_SIGNAL_HOLD_TIME);
+}/* COMPUTE_MIN_SSHT */
+
+
+process COMPUTE_MIN_THT()
+{
+    MIN_TARG_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
+    printf("****SET_CMD/COMPUTE_MIN_THT: MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d****\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
+           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARG_HOLD_TIME, MIN_TARG_HOLD_TIME);
+}/* COMPUTE_MIN_THT */
+
+
+process PICK_TRL_SSD()
+{
+    SESS_N_STOP_TRLS = SESS_N_STOP_TRLS + 1;
+    tempCount        = 0;
+    N_SSD            = 0;
+    while (tempCount < N_SSD_MAX)
+    {
+        if (SSD_ARRY[tempCount] > 0)
+        {
+            N_SSD = N_SSD + 1;
+        }
+        tempCount = tempCount + 1;
+    }
+    // must get from SSD_ARRY; use staircasing....
+    printf("****SET_CMD/PICK_TRL_SSD: NOT Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
+    TRL_STOP_SIGNAL_DELAY = 10; //SSD_ARRY[random(N_SSD)];
+    printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
+} /* PICK_TRL_SSD */
+
+
+process COMPUTE_FIX_HOLD()
+{
+    // Set up any timing jitters etc
+    TRL_FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
+} /* COMPUTE_FIX_HOLD */
+
+
+process SET_TARGET()
+{
     // pick current target location AND SET WINDOWS
-    CURR_TARG_IDX = CURR_TARG_IDX + 1;
-    CURR_TARG_IDX = (CURR_TARG_IDX) % N_TARG_POS;
-    //CURR_TARG_IDX = random(N_TARG_POS);
+    // sequential...
+    //CURR_TARG_IDX = CURR_TARG_IDX + 1;
+    //CURR_TARG_IDX = (CURR_TARG_IDX) % N_TARG_POS;
+    // random
+    CURR_TARG_IDX = random(N_TARG_POS);
     // Target stimulus on this trial
     CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARG_IDX];
     CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARG_IDX];
@@ -214,60 +410,7 @@ process SET_CMD_TRL()
     CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
 
     spawnwait SET_WINS();
-
-    // Update graph object for Target
-    spawnwait GRAF_UPD8_FIX();
-    spawnwait GRAF_UPD8_TARG();
-
-    // Show the windows - without the fixspot or target to cue user
-
-    printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n", TRIAL_TYPE, CURR_TARG_IDX, CURR_TARG_ANGLE);
-
-    // Setup CMD PAGES
-    printf("Calling CMD-PGS\n");
-    spawnwait CMD_PGS();
-
-    // Set up any timing jitters etc
-    TRL_FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
-
-    MIN_TARG_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
-
-    printf("MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
-           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARG_HOLD_TIME, MIN_TARG_HOLD_TIME);
-
-    ITI_TIME = BASE_ITI_TIME;
-
-    // TRL_DURATION is computed from FIX_SPOT_ON time = TRL_START_TIME, using all max times
-    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MAX_SACC_TIME + MAX_SACC_DURATION;
-    TRL_DURATION = TRL_DURATION + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
-    TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
-
-    if (TRL_DURATION > TRL_LENGTH_TIME && IS_TRL_LENGTH_FIXED)
-    {
-        // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
-        // TRL_DURATION adjusted to
-        printf("******IS_TRL_LENGTH_FIXED [%d]******\n", IS_TRL_LENGTH_FIXED);
-        printf("******Computed trial length time[%d] exceeds fixed trial length time [%d] specified******\n", TRL_DURATION, TRL_LENGTH_TIME);
-        printf("******Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)******\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
-        //dshow Main_menu;
-    }
-} /* SETC_TRL */
-
-
-process PCK_TRL_TYP()
-{
-    declare float trlType;
-
-    trlType = (1.0 + random(9999))/100.0;
-    if (trlType <= GO_WEIGHT)
-    {
-        TRIAL_TYPE = TRIAL_TYPE_GO;
-    }
-    else
-    {
-        TRIAL_TYPE = TRIAL_TYPE_STOP;
-    }
-}/* PCK_TRL_TYP */
+} /* SET_TARGET */
 
 
 process SET_WINS()
@@ -310,6 +453,22 @@ process SET_WINS()
     TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
     TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
 } /* SET_WINS */
+
+
+process PCK_TRL_TYP()
+{
+    declare float trlType;
+
+    trlType = (1.0 + random(9999))/100.0;
+    if (trlType <= GO_WEIGHT)
+    {
+        TRIAL_TYPE = TRIAL_TYPE_GO;
+    }
+    else
+    {
+        TRIAL_TYPE = TRIAL_TYPE_STOP;
+    }
+}/* PCK_TRL_TYP */
 
 
 process INIT_TRL_VARS()

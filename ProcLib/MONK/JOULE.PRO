@@ -19,9 +19,26 @@ process JOULE()
     declare int tempVar = 0;
 
     //SSD list is not set
+    // See VAR_CMD.PRO
+    SSD_ARRY[0] = 4;
+    SSD_ARRY[1] = 6;
+    SSD_ARRY[2] = 8;
+    SSD_ARRY[3] = 10;
+    SSD_ARRY[4] = 12;
+    SSD_ARRY[5] = 14;
+    SSD_ARRY[6] = 16;
+    SSD_ARRY[7] = 18;
+    SSD_ARRY[8] = 20;
+    SSD_ARRY[9] = 24;
+    SSD_ARRY[10] = 28;
+    SSD_ARRY[11] = 32;
+    SSD_ARRY[12] = 36;
+    SSD_ARRY[13] = 40;
+
+    tempVar = 13;
     while (tempVar < N_SSD_MAX)
     {
-        SSD_ARRY[tempVar] = tempVar * 2 + 2;
+        SSD_ARRY[tempVar] = 0;
         tempVar           = tempVar + 1;
     }
     // See CMD_VARS and add those that you want to change.

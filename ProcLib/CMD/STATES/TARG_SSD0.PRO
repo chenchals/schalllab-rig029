@@ -22,11 +22,11 @@
 
 declare PROC_TARG_SSD();
 
+
 process PROC_TARG_SSD()
 {
 	if (PROCESS_STATE)
 	{
-		printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
 		TRL_PRE_TARG_ON_TIME = time();
 		spawn SEND_EVT(TargetPre_);
 
@@ -34,21 +34,20 @@ process PROC_TARG_SSD()
 		spawn GRAF_SHOW_FIX(GRAF_HIDE);
 		spawn GRAF_SHOW_TARG(GRAF_SHOW);
 
+		printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
+		TRL_IS_STOP_SIGNAL_ON = 0;
+
 		PROCESS_STATE = 0;
 		STAT_DLTA_T = 0;
 		STAT_STRT_T   = TRL_PRE_TARG_ON_TIME;
-		STAT_I_MOVE_DURATION = MIN_SACC_TIME * TIME_DILATE_FACTOR;
 		STAT_ALLOWED_T = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR);
-		TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
 	}
 
 	spawnwait CHECK_TARG_VERT_RFRSH();
-	// keep track of stop signal duration in ms
-	if(!TRL_IS_STOP_SIGNAL_ON)
+	if(!TRL_IS_STOP_SIGNAL_ON && TRL_TARG_VRT_RFRSH_COUNT > 0)
 	{
 		TRL_STOP_SIGNAL_DURATION = TRL_STOP_SIGNAL_DURATION + 1;
 	}
-	// keep track of target vertical refresh count
 	if (TRL_TARG_VRT_RFRSH_COUNT == 1 && !TRL_TARG_ON_TIME)
 	{
 		TRL_TARG_ON_TIME = time();
@@ -58,38 +57,15 @@ process PROC_TARG_SSD()
 		printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
 		spawn SEND_EVT(FixSpotOff_);
 	}
-
-	if(STAT_DLTA_T <= STAT_ALLOWED_T) // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
+	if (!TRL_STOP_SIGNAL_TIME && TRL_IS_STOP_SIGNAL_ON)
 	{
-		// till it is time to show stop signal
-		if(!I_FIX)
-		{
-			TRL_I_IN_FLIGHT = 1;
-			
-		}
+		TRL_TARG_SSD_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT;
+		TRL_STOP_SIGNAL_TIME = time();
+		spawn SEND_EVT(StopSignal_);
+		spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
-
+		printf("****STAT_FIX_ON[%d]: OK sent Event: StopSignal_[%d]\n", STAT_FIX_ON, StopSignal_);
 	}
-	else if(STAT_DLTA_T > STAT_ALLOWED_T && STAT_ALLOWED_T <= TEMP_DELY_PLUS_DURATION)
-	{
-		// till it is time to expire Cancel time for tril to be considered successful cancel
-
-	}
-	else if(STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)
-	{
-		// if reached here then it is a successful cancel  trial
-	}
-
-
-
-
-
-
-
-
-
-
-
 
 	if (STAT_DLTA_T <= STAT_ALLOWED_T)
 	{
