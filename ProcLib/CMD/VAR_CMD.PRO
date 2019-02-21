@@ -47,15 +47,13 @@ declare int FIX_NOT_ACQ_WAIT_TIME = 3000;
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
 declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
-declare int FIXTIME;
-// maximum time after fixation before target presentation
-//declare int MAXTIME = 1000;
 // for training subjects to slow down if necessary
-declare int MIN_MAX_SACCADE_TIME[2] = { 100, 800 };
+declare int MIN_SACC_TIME = 100;
+declare int MAX_SACC_TIME = 800;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
-declare int MAX_SACCADE_DURATION = 100;
+declare int MAX_SACC_DURATION = 100;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1)
@@ -63,6 +61,16 @@ declare int   TRL_LENGTH_TIME = 3000;
 // how long between trials (only works if Fixed_trl_length == 0)
 declare int   BASE_ITI_TIME = 800;
 declare int   ITI_TIME      = BASE_ITI_TIME;
+//========== GO TRIAL TARG HOLD TIME ======================
+// Base Minimum time subject should hold gaze on TARGET
+declare int BASE_TARG_HOLD_TIME = 100;
+// Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
+// if = 0, then MIN_TARGETTIME = BASE_TARG_HOLD_TIME
+// if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
+declare int USE_TONE_AND_RWRD_FOR_MIN_THT = 0;
+// after saccade subject must hold gaze on target for this long
+// if not, then TIMEOUT is imposed regardless of TONE or REWARD
+declare int MIN_TARG_HOLD_TIME;
 //========== STOP TASK SPECIFIC =============================
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 20;
@@ -72,18 +80,16 @@ declare float SSD_ARRY[N_SSD_MAX];
 declare int   N_SSD;
 // do we select the next SSD based on a staircasing algorithm?
 declare int   DO_STAIRCASE_NEXT_SSD = 1;
+// for training subjects to slow down if necessary
+declare int SSD_MIN_SACC_TIME = 100;
+// ensure that this falls after SSD and before Cancel time
+declare int SSD_MAX_SACC_TIME = 800;
+// Minimum time *after* stop signal that subject has to fixate
+// in order for trial to be considered as Cancel trial
+// Relative to TRL_STOP_SIGNAL_DELAY
+declare int SSD_MIN_FIX_HOLD_FOR_CANCEL = 1500;
 
-//========== GO TRIAL TARG HOLD TIME ======================
-// Base Minimum time subject should hold gaze on TARGET
-//
-declare int BASE_TARG_HOLD_TIME = 100;
-// Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
-// if = 0, then MIN_TARGETTIME = BASE_TARG_HOLD_TIME
-// if = 1, then MIN_TARGETTIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
-declare int USE_TONE_AND_REWRD_FOR_MIN_THT = 0;
-// after saccade subject must hold gaze on target for this long
-// if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int MIN_TARG_HOLD_TIME;
+
 
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)

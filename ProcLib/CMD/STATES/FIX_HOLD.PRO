@@ -1,7 +1,7 @@
 //==========================================================================
 // FIX_HOLD.PRO
 //   Description: Process Hold fixation State
-//                Eye has to HOLD fixation for FIXTIME.
+//                Eye has to HOLD fixation for TRL_FIX_HOLD_TIME.
 //
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
@@ -30,7 +30,7 @@ process PROC_FIX_HOLD()
 		PROCESS_STATE  = 0;
 		STAT_STRT_T    = time();
 		STAT_DLTA_T    = 0;
-		STAT_ALLOWED_T = FIXTIME * TIME_DILATE_FACTOR;
+		STAT_ALLOWED_T = TRL_FIX_HOLD_TIME * TIME_DILATE_FACTOR;
 	}
 
 	TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
@@ -43,7 +43,7 @@ process PROC_FIX_HOLD()
 			spawn SEND_EVT(BreakFix_);
 
 			printf("****STAT_FIX_HOLD[%d]: ERR sent Event: BreakFix_[%d]\n", STAT_FIX_HOLD, BreakFix_);
-			printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
+			printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (TRL_FIX_HOLD_TIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_OUTCOME;
 		}
@@ -56,7 +56,7 @@ process PROC_FIX_HOLD()
 			spawn SEND_EVT(Fixate_);
 
 			printf("****STAT_FIX_HOLD[%d]: OK sent Event: Fixate_[%d], Abort_[%d]\n", STAT_FIX_HOLD, Fixate_);
-			printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (FIXTIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
+			printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (TRL_FIX_HOLD_TIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_TARG_ON;
 		}

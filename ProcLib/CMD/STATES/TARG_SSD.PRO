@@ -65,7 +65,7 @@ process PROC_TARG_SSD()
 
 		printf("****STAT_FIX_ON[%d]: OK sent Event: StopSignal_[%d]\n", STAT_FIX_ON, StopSignal_);
 	}
-	
+
 	if (STAT_DLTA_T <= STAT_ALLOWED_T)
 	{
 		if (!I_FIX)
@@ -76,7 +76,7 @@ process PROC_TARG_SSD()
 
 			printf("********LATE SACCADE?????********LATE SACCADE?????********LATE SACCADE????? for STOP TRIAL????\n");
 			printf("****STAT_TARG_SSD[%d]: ERR STOP TRIAL; sent Event: Saccade_[%d]\n", STAT_TARG_SSD, Saccade_);
-			printf("****STAT_TARG_SSD[%d]: ERR STOP TRIAL; (Error Saccade in STOP trial)[%d]/([%d],[%d]) (MIN_MAX_SACCADE_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_MOVE_DURATION, STAT_ALLOWED_T);
+			printf("****STAT_TARG_SSD[%d]: ERR STOP TRIAL; (Error Saccade in STOP trial)[%d]/([%d],[%d]) (MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_MOVE_DURATION, STAT_ALLOWED_T);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_TARG_ACQ;
 		}

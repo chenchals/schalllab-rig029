@@ -46,7 +46,7 @@ declare constant int STAT_GET_READY = 1;
 declare constant int STAT_FIX_ON = 2;
 
 // Fixspot is ON: Waiting for subject to stay on fixspot
-// Check: Gaze within FIX_WIN until FIXTIME expires
+// Check: Gaze within FIX_WIN until TRL_FIX_HOLD_TIME expires
 declare constant int STAT_FIX_HOLD = 3;
 
 // Fixspot is OFF Target is ON:
@@ -56,7 +56,7 @@ declare constant int STAT_TARG_ON = 4;
 declare constant int STAT_TARG_SSD = 40;
 
 // Fixspot is OFF Target is ON:
-// Check: Gaze in TARG_WIN before MAX_SACCADE_DURATION
+// Check: Gaze in TARG_WIN before MAX_SACC_DURATION
 declare constant int STAT_TARG_ACQ = 5;
 
 // Fixspot is OFF Target is ON:

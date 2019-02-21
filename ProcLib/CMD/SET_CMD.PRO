@@ -93,6 +93,8 @@ declare int TRL_FIX_ON_TIME;
 declare int TRL_FIX_ACQ_TIME;
 // gaze NOT on fixspot
 declare int TRL_FIX_ACQ_ERROR_TIME;
+// Fix hold time for this trial
+declare int TRL_FIX_HOLD_TIME;
 // fixation achieved gaze in FIX_WIN for FIXTIME
 declare int TRL_FIXATED_TIME;
 // how long gaze was in fix window
@@ -226,17 +228,17 @@ process SET_CMD_TRL()
     spawnwait CMD_PGS();
 
     // Set up any timing jitters etc
-    FIXTIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
+    TRL_FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
 
-    MIN_TARG_HOLD_TIME = USE_TONE_AND_REWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
+    MIN_TARG_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
 
-    printf("MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n", USE_TONE_AND_REWRD_FOR_MIN_THT,
+    printf("MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
            TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARG_HOLD_TIME, MIN_TARG_HOLD_TIME);
 
     ITI_TIME = BASE_ITI_TIME;
 
     // TRL_DURATION is computed from FIX_SPOT_ON time = TRL_START_TIME, using all max times
-    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MIN_MAX_SACCADE_TIME[1] + MAX_SACCADE_DURATION;
+    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MAX_SACC_TIME + MAX_SACC_DURATION;
     TRL_DURATION = TRL_DURATION + MIN_TARG_HOLD_TIME + TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
     TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
 
@@ -337,6 +339,7 @@ process INIT_TRL_VARS()
     TRL_FIX_ON_TIME              = 0;
     TRL_FIX_ACQ_TIME             = 0;
     TRL_FIX_ACQ_ERROR_TIME       = 0;
+    TRL_FIX_HOLD_TIME            = 0;
     TRL_FIXATED_TIME             = 0;
     TRL_FIX_HOLD_DURATION        = 0;
     TRL_FIX_BRK_TIME             = 0;

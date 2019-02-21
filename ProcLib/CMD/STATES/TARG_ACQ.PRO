@@ -32,7 +32,7 @@ process PROC_TARG_ACQ()
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
-        STAT_ALLOWED_T = MAX_SACCADE_DURATION * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T = MAX_SACC_DURATION * TIME_DILATE_FACTOR;
 
         TRL_SACC_DURATION      = 0;
         TRL_TARG_HOLD_DURATION = 0;
@@ -56,7 +56,7 @@ process PROC_TARG_ACQ()
             CURR_STAT     = STAT_TONE_CHK;
 
             printf("****STAT_TARG_ACQ[%d]: OK sent Event: AcquireTarget_[%d], Decide_[%d]\n", STAT_TARG_ACQ, AcquireTarget_, Decide_);
-            printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_ in)[%d]/[%d](Max_Sac_duration)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
+            printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
         }
     }
     else
@@ -70,7 +70,7 @@ process PROC_TARG_ACQ()
 
             // Error saccade?
             printf("****STAT_TARG_ACQ[%d]: ERR sent Event: AcquireTargetError_[%d]\n", STAT_TARG_ACQ, AcquireTargetError_);
-            printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](Max_Sac_duration)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
+            printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
