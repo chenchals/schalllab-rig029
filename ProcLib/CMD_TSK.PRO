@@ -180,7 +180,7 @@ process IDLE() enabled
 			{
 				if(TRIAL_TYPE == TRIAL_TYPE_STOP)
 				{
-					CURR_STAT = PROC_TARG_SSD;
+					CURR_STAT = STAT_TARG_SSD;
 					spawnwait PROC_TARG_SSD();
 				}
 				else

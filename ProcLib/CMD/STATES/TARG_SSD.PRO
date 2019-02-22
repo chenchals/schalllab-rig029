@@ -65,7 +65,6 @@ process PROC_TARG_SSD()
     }
 
     spawnwait CHECK_TARG_VERT_RFRSH();
-
     // keep track of stop signal duration in ms and in vertical refresh count
     if (!TRL_IS_STOP_SIGNAL_ON)
     {
@@ -82,7 +81,6 @@ process PROC_TARG_SSD()
         printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
         spawn SEND_EVT(FixSpotOff_);
     }
-
     if (STAT_DLTA_T <= STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
     {
         // till it is time to show stop signal
@@ -131,6 +129,7 @@ process PROC_TARG_SSD()
             spawnwait SSD_CHECK_SACC();
         }
     }
+
 } /* PROC_TARG_SSD */
 
 

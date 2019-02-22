@@ -119,7 +119,10 @@ process CMD_PGS()
     // draw PG_FIXATION point
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
-    nexttick 5;
+    //printf("drawing left PD\n");
+    // Draw **left** PD marker
+    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
+    nexttick ;
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 0 BLANK (draw last so it is displayed as default))
     //printf("CMD_PGS: page %d PG_BLANK\n", PG_BLANK);

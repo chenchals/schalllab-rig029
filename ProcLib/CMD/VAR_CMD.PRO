@@ -26,8 +26,8 @@ declare int          TRIAL_TYPE;
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 100.0;
-declare float        STOP_WEIGHT   = 0.0;
+declare float        GO_WEIGHT     = 0.0;
+declare float        STOP_WEIGHT   = 100.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // temporary globals to be used in state processing
 declare int          TEMP_MIN_THT;
