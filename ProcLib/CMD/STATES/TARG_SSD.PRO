@@ -103,8 +103,8 @@ process PROC_TARG_SSD()
             printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_,TRL_STOP_SIGNAL_TIME);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
 		}
-        // till Cancel time is expired
-        if (!I_FIX)
+        // till Cancel time is expired and the stop signal is shown
+        if (!I_FIX && TRL_IS_STOP_SIGNAL_ON)
         {
             spawnwait SSD_CHECK_SACC();
         }
@@ -164,6 +164,7 @@ process SSD_CHECK_SACC()
             dsendf("vp %d\n", PG_TARGET_PD);
             spawn GRAF_SHOW_FIX(GRAF_HIDE);
             spawn GRAF_SHOW_TARG(GRAF_SHOW);
+			spawn PRINT_MSG();
         }
         else
         {
@@ -193,8 +194,10 @@ process PRINT_MSG()
 {
     printf("****STAT_TARG_SSD[%d]: STOP TRIAL; TRL_STOP_SIGNAL_DELAY = (TRL_STOP_SIGNAL_DELAY * REFRESH_RATE)\n", STAT_TARG_SSD);
     printf("****STAT_TARG_SSD[%d]: Expected SSD = TRL_STOP_SIGNAL_DELAY[%d, %dms]\n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR, STAT_ALLOWED_T);
-    printf("****STAT_TARG_SSD[%d]: SSD (using Vertical Refresh count) TRL_TARG_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, ceil(TRL_TARG_VRT_RFRSH_COUNT * REFRESH_RATE));
     printf("****STAT_TARG_SSD[%d]: SSD (using nexttick count)  = TRL_STOP_SIGNAL_DURATION[%d, %dms],  \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, TRL_STOP_SIGNAL_DURATION);
     printf("****STAT_TARG_SSD[%d]: SSD (using SSD Vertical Refresh count) TRL_TARG_SSD_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_SSD_VRT_RFRSH_COUNT, ceil(TRL_TARG_SSD_VRT_RFRSH_COUNT * REFRESH_RATE));
-    printf("****STAT_TARG_SSD[%d]: Target ON duration   = TRL_TARG_ON_DURATION [%dms],  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
+    printf("****STAT_TARG_SSD[%d]: SSD + CANCEL TIME [%d + %d] = [%dms] \n", STAT_TARG_SSD, 
+	       ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR),(FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR),TEMP_DELY_PLUS_DURATION );
+	printf("****STAT_TARG_SSD[%d]: Target ON duration   = TRL_TARG_ON_DURATION [%dms],  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
+    printf("****STAT_TARG_SSD[%d]: Target ON duration (using Vertical Refresh count) TRL_TARG_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, ceil(TRL_TARG_VRT_RFRSH_COUNT * REFRESH_RATE));
 }/* PRINT_MSG */

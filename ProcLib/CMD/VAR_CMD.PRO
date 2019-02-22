@@ -67,7 +67,7 @@ declare int BASE_TARG_HOLD_TIME = 100;
 // Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
 // if = 0, then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
 // if = 1, then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
-declare int USE_TONE_AND_RWRD_FOR_MIN_THT = 0;
+declare int USE_TONE_AND_RWRD_FOR_MIN_THT = 1;
 // after saccade subject must hold gaze on target for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int MIN_TARG_HOLD_TIME;
@@ -89,19 +89,19 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 declare int SSD_CANCEL_TIME = 1500;
 declare int FIX_HOLD_FOR_CANCEL;
 // Base Minimum time subject should hold gaze on FIXSPOT *After* TRL_STOP_SIGNAL_DELAY
-declare int BASE_STOP_SIGNAL_HOLD_TIME = 2000;
+declare int BASE_STOP_SIGNAL_HOLD_TIME = 500;
 // after TRL_STOP_SIGNAL_DELAY, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 200;
+declare int   TONE_DELAY = 2000;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
 declare int   TONE_DURATION = 100;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 100;
+declare int   RWRD_DELAY = 2000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
