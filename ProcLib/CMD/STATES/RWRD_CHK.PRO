@@ -108,7 +108,6 @@ process PROC_RWRD_CHK()
             TRL_RWRD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
             spawn SEND_EVT(RewardOn_);
-
             printf("****STAT_RWRD_CHK[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_CHK, RewardOn_);
         }
         if (!I_TARG && !TRL_IS_TARG_MIN_THT)
@@ -117,9 +116,9 @@ process PROC_RWRD_CHK()
             {
                 TRL_TARG_BRK_MIN_THT_TIME = time();
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
-
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--DURING--*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+				printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation*--DURING--*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
+						STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION,STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -129,7 +128,8 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(TargHoldBrkRwrd_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkRwrd_[%d][%d]\n", STAT_RWRD_CHK, TargHoldBrkRwrd_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*During-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*During-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
+				      STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -146,7 +146,8 @@ process PROC_RWRD_CHK()
         }
         if (TRL_IS_TARG_MIN_THT)
         {
-            printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+            printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
+					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
         }
@@ -159,7 +160,8 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--POST--*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--POST--*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
+					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }

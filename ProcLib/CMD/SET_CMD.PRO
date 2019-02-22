@@ -166,7 +166,7 @@ declare int TRL_NOGO_ERLY_SACC_TIME;
 declare int TRL_NOGO_LATE_SACC_TIME;
 // fixspot was fixated for this amount of time *After* Cancel time
 declare int TRL_FIX_HOLD_DURATION;
-declare int TRL_FIX_HOLD_MIN_SSHT_TIME;
+declare int TRL_FIX_MIN_SSHT_TIME;
 declare int TRL_FIX_BRK_PRE_TONE_TIME;
 declare int TRL_FIX_BRK_TONE_TIME;
 declare int TRL_FIX_BRK_PRE_RWRD_TIME;
@@ -548,7 +548,7 @@ process INIT_TRL_VARS()
     TRL_NOGO_ERLY_SACC_TIME      = 0;
     TRL_NOGO_LATE_SACC_TIME      = 0;
     TRL_FIX_HOLD_DURATION        = 0;
-    TRL_FIX_HOLD_MIN_SSHT_TIME   = 0;
+    TRL_FIX_MIN_SSHT_TIME   = 0;
     TRL_FIX_BRK_PRE_TONE_TIME    = 0;
     TRL_FIX_BRK_TONE_TIME        = 0;
     TRL_FIX_BRK_PRE_RWRD_TIME    = 0;
