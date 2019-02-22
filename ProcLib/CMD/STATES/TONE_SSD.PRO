@@ -146,6 +146,6 @@ process PROC_TONE_SSD()
         printf("****STAT_TONE_SSD[%d]: OK sent Event: ToneOff_[%d]\n", STAT_TONE_SSD, ToneOff_);
         printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_MIN_SSHT),[%d](TONE_DELAY+TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;
-        CURR_STAT     = STAT_RWRD_CHK;
+        CURR_STAT     = STAT_RWRD_SSD;
     }
 } /* PROC_TONE_SSD */

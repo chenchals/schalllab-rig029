@@ -146,7 +146,7 @@ process PROC_RWRD_CHK()
         }
         if (TRL_IS_TARG_MIN_THT)
         {
-            printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_TIM*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
+            printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_THT*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
 					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;

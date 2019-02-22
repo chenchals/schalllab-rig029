@@ -75,10 +75,10 @@ process PROC_TARG_SSD()
     if (TRL_TARG_VRT_RFRSH_COUNT == 1 && !TRL_TARG_ON_TIME)
     {
         TRL_TARG_ON_TIME = time();
-        printf("****STAT_TARG_SSD[%d]: Sending Event Target_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
+        printf("****STAT_TARG_SSD[%d]: Sending Event Target_[%d], Time [%d]\n", STAT_TARG_SSD, Target_, TRL_TARG_ON_TIME);
         spawn SEND_EVT(Target_);
 
-        printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_SSD, TRL_TARG_ON_TIME);
+        printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d], Time [%d]\n", STAT_TARG_SSD, FixSpotOff_, TRL_TARG_ON_TIME);
         spawn SEND_EVT(FixSpotOff_);
     }
     if (STAT_DLTA_T <= STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
@@ -89,7 +89,7 @@ process PROC_TARG_SSD()
             spawnwait SSD_CHECK_SACC();
         }
     }
-    else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_ALLOWED_T <= TEMP_DELY_PLUS_DURATION)
+    else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // from SSD till it is time to expire Cancel time for trial to be considered successful cancel
         if (!TRL_STOP_SIGNAL_TIME)
@@ -100,9 +100,9 @@ process PROC_TARG_SSD()
             dsendf("vp %d\n", PG_SIGNAL_PD);
             dsendf("vw 1\n");
             dsendf("vp %d\n", PG_SIGNAL);
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d]\n", STAT_TARG_SSD, StopSignal_);
+            printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_,TRL_STOP_SIGNAL_TIME);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
-        }
+		}
         // till Cancel time is expired
         if (!I_FIX)
         {
@@ -120,12 +120,13 @@ process PROC_TARG_SSD()
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TONE_SSD;
 
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: Cancel_[%d], Decide_[%d]\n", STAT_TARG_SSD, Cancel_);
+            printf("****STAT_TARG_SSD[%d]: OK sent Event: Cancel_[%d],Time [%d]\n", STAT_TARG_SSD, Cancel_,TRL_CANCEL_TIME);
             printf("****STAT_TARG_SSD[%d]: OK (Cancel_ in)[%d]/[%d](TRL_STOP_SIGNAL_DELAY + FIX_HOLD_FOR_CANCEL)\n", STAT_TARG_SSD, STAT_DLTA_T, TEMP_DELY_PLUS_DURATION);
             spawn PRINT_MSG();
         }
         else
         {
+			printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
             spawnwait SSD_CHECK_SACC();
         }
     }

@@ -89,7 +89,7 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 declare int SSD_CANCEL_TIME = 1500;
 declare int FIX_HOLD_FOR_CANCEL;
 // Base Minimum time subject should hold gaze on FIXSPOT *After* TRL_STOP_SIGNAL_DELAY
-declare int BASE_STOP_SIGNAL_HOLD_TIME = 500;
+declare int BASE_STOP_SIGNAL_HOLD_TIME = 2000;
 // after TRL_STOP_SIGNAL_DELAY, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
