@@ -76,7 +76,7 @@ declare int TRL_IS_TARG_ON_FLAG;
 declare int TRL_IS_TARG_ACQUIRED;
 declare int TRL_IS_FIX_ACQUIRED;
 declare int TRL_I_IN_FLIGHT;
-// gaze fulfilled min_taqrg_hold_time
+// gaze fulfilled min_targ_hold_time
 declare int TRL_IS_TARG_MIN_THT;
 
 declare int TRL_IS_TIMEOUT;
@@ -164,7 +164,8 @@ declare int TRL_NOGO_SACC_TIME;
 declare int TRL_NOGO_ERLY_SACC_TIME;
 // saccade left Fix window after MAX saccade time
 declare int TRL_NOGO_LATE_SACC_TIME;
-
+// fixspot was fixated for this amount of time *After* Cancel time
+declare int TRL_FIX_HOLD_DURATION;
 declare int TRL_FIX_HOLD_MIN_SSHT_TIME;
 declare int TRL_FIX_BRK_PRE_TONE_TIME;
 declare int TRL_FIX_BRK_TONE_TIME;
@@ -173,6 +174,8 @@ declare int TRL_FIX_BRK_RWRD_TIME;
 declare int TRL_FIX_BRK_POST_RWRD_TIME;
 declare int TRL_FIX_BRK_MIN_SSHT_TIME;
 declare int TRL_CANCEL_TIME;
+// gaze fulfilled min_stop_signal_hold_time
+declare int TRL_IS_FIX_MIN_SSHT;
 // Tone and reward times
 declare int TRL_TONE_FREQ;
 declare int TRL_TONE_DURATION;
@@ -544,6 +547,7 @@ process INIT_TRL_VARS()
     TRL_NOGO_SACC_TIME           = 0;
     TRL_NOGO_ERLY_SACC_TIME      = 0;
     TRL_NOGO_LATE_SACC_TIME      = 0;
+    TRL_FIX_HOLD_DURATION        = 0;
     TRL_FIX_HOLD_MIN_SSHT_TIME   = 0;
     TRL_FIX_BRK_PRE_TONE_TIME    = 0;
     TRL_FIX_BRK_TONE_TIME        = 0;
@@ -552,6 +556,7 @@ process INIT_TRL_VARS()
     TRL_FIX_BRK_POST_RWRD_TIME   = 0;
     TRL_FIX_BRK_MIN_SSHT_TIME    = 0;
     TRL_CANCEL_TIME              = 0;
+    TRL_IS_FIX_MIN_SSHT          = 0;
     TRL_TONE_FREQ                = 0;
     TRL_TONE_DURATION            = 0;
     TRL_TONE_ON_TIME             = 0;

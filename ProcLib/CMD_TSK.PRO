@@ -24,7 +24,9 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_SSD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ACQ.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TONE_CHK.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/TONE_SSD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/RWRD_CHK.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/RWRD_SSD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/OUTCOME.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/ITI_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
@@ -146,7 +148,7 @@ process IDLE() enabled
 				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
 				//nexttick 5000;
 				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
-				
+
 				dsendf("vp %d\n",PG_TARGET_PD);
 				nexttick 64;
 				dsendf("vp %d\n",PG_SIGNAL_PD);
@@ -205,6 +207,16 @@ process IDLE() enabled
 			{
 				spawnwait PROC_RWRD_CHK();
 			}
+			//================= State = STAT_TONE_SSD===============
+			if (CURR_STAT == STAT_TONE_SSD)
+			{
+				spawnwait PROC_TONE_SSD();
+			}
+			//================= State = STAT_RWRD_SSD===============
+			if (CURR_STAT == STAT_RWRD_SSD)
+			{
+				spawnwait PROC_RWRD_SSD();
+			}
 			//================= State = STAT_OUTCOME===============
 			if (CURR_STAT == STAT_OUTCOME)
 			{
@@ -234,10 +246,10 @@ process IDLE() enabled
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
-			TRL_CUM_TIME = TRL_CUM_TIME + 1;			
+			TRL_CUM_TIME = TRL_CUM_TIME + 1;
 			nexttick;
 		} /*while(TRL_RUNNING)*/
-		
+
 		nexttick;
 		printf("============================NEXT TRIAL========================\n");
 	}     /*while(1)*/

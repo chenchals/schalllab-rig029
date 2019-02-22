@@ -55,7 +55,6 @@ declare constant int STAT_FIX_HOLD = 3;
 // Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
 //        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 declare constant int STAT_TARG_ON = 4;
-declare constant int STAT_TARG_SSD = 40;
 
 // Fixspot is OFF Target is ON:
 // Check: Gaze in TARG_WIN before MAX_SACC_DURATION
@@ -67,23 +66,24 @@ declare constant int STAT_TARG_ACQ = 5;
 //         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
 //         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
 //   case 1: MIN_TARG_HOLD_TIME <= TONE_DELAY + TONE_DURATION
-//         if gaze in TARG_WIN until RWRD_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
-//         if gaze not in TARG_WIN during RWRD_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
+//         if gaze in TARG_WIN until TONE_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_CHK
+//         if gaze not in TARG_WIN during TONE_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
 //   case 2: MIN_TARG_HOLD_TIME > TONE_DELAY + TONE_DURATION
 //         Goto next state (reward already delivered), goto STAT_RWRD_CHK
 declare constant int STAT_TONE_CHK = 6;
 
+// Gaze Check:
 // Fixspot is OFF Target is ON:
 // Check:
 //   case 0: MIN_TARG_HOLD_TIME <= RWRD_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward --> goto STAT_OUTCOME
 //         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
 //   case 1: MIN_TARG_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
-//                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered), goto STAT_OUTCOME
-//                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) compute TIMEOUT_TIME --> goto STAT_OUTCOME
+//                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered) --> goto STAT_OUTCOME
+//                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) --> goto STAT_TIM_OUT
 //   case 2: MIN_TARG_HOLD_TIME > RWRD_DELAY + RWRD_DURATION
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered), goto STAT_OUTCOME
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered), compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered) --> goto STAT_OUTCOME
+//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered) --> goto STAT_TIM_OUT
 declare constant int STAT_RWRD_CHK = 7;
 
 // See CmdOutcomes.xls file in DOC folder
@@ -120,5 +120,49 @@ declare constant int STAT_OUTCOME = 8;
 
 //
 declare constant int STAT_ITI_CHK = 9;
+
 //
 declare constant int STAT_TIM_OUT = 10;
+
+/// Gaze Check:
+// Fixspot is OFF Target is ON:
+// Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
+//        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
+// Check:
+//   case 0: TRL_STOP_SIGNAL_DELAY has not expired
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEarlySaccade_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoSaccade_, goto STAT_TARG_ACQ
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateSaccade_, goto STAT_OUTCOME
+//   case 1: TRL_STOP_SIGNAL_DELAY has expired and FIX_HOLD_FOR_CANCEL has not expired
+//   [Stop Signal ON] show PG_SIGNAL_PD (PD on RIGHT) for 1 screen refresh and switch to PG_SIGNAL(PD on LEFT)
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEarlySaccade_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoSaccade_, goto STAT_TARG_ACQ
+//   [Stop Signal OFF] switch page from PG_SIGNAL to PG_TARGET_PD (do nto show stop signal)
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateSaccade_, goto STAT_OUTCOME
+declare constant int STAT_TARG_SSD = 40;
+
+// Signal is ON Target is ON:
+// Check:
+//   case 0: MIN_STOP_SIGNAL_HOLD_TIME <= TONE_DELAY
+//         if gaze out of FIX_WIN before MIN_STOP_SIGNAL_HOLD_TIME expires: compute (ERROR) TONE, compute TIMEOUT_TIME, goto STAT_OUTCOME
+//         if gaze in FIX_WIN until MIN_STOP_SIGNAL_HOLD_TIME expires: Play (SUCCESS) TONE at TONE_DELAY time
+//   case 1: MIN_STOP_SIGNAL_HOLD_TIME <= TONE_DELAY + TONE_DURATION
+//         if gaze in FIX_WIN until TONE_DURATION --> (SUCCESS-tone alredey delivered), goto STAT_RWRD_SSD
+//         if gaze not in FIX_WIN during TONE_DURATION --> (SUCCESS-tone alredey delivered), compute TIMEOUT_TIME --> goto STAT_OUTCOME
+//   case 2: MIN_STOP_SIGNAL_HOLD_TIME > TONE_DELAY + TONE_DURATION
+//         Goto next state (reward already delivered), goto STAT_RWRD_SSD
+declare constant int STAT_TONE_SSD = 41;
+
+// Gaze Check:
+// Signal is ON Target is ON:
+// Check:
+//   case 0: MIN_STOP_SIGNAL_HOLD_TIME <= RWRD_DELAY
+//         if gaze out of FIX_WIN before MIN_STOP_SIGNAL_HOLD_TIME expires: No Reward --> goto STAT_OUTCOME
+//         if gaze in FIX_WIN until MIN_STOP_SIGNAL_HOLD_TIME expires: Deliver reward at RWRD_DELAY time
+//   case 1: MIN_STOP_SIGNAL_HOLD_TIME <= RWRD_DELAY + RWRD_DURATION
+//                if gaze in FIX_WIN until RWRD_DURATION --> (reward alredey delivered)--> goto STAT_OUTCOME
+//                if gaze not in FIX_WIN during RWRD_DURATION --> (reward already delivered) --> goto STAT_TIM_OUT
+//   case 2: MIN_STOP_SIGNAL_HOLD_TIME > RWRD_DELAY + RWRD_DURATION
+//         if gaze in FIX_WIN until MIN_STOP_SIGNAL_HOLD_TIME expires: (reward already delivered) --> goto STAT_OUTCOME
+//         if gaze out of FIX_WIN before MIN_STOP_SIGNAL_HOLD_TIME expires: (reward already delivered) --> goto STAT_TIM_OUT
+declare constant int STAT_RWRD_SSD = 42;

@@ -1,8 +1,26 @@
 //==========================================================================
 // TARG_SSD.PRO
 //   Description: Process Target On State for STOP Trial
-//                Eye has to HOLD fixation till TRL_STOP_SIGNAL_DELAY, and TRL_IS_STOP_SIGNAL_ON.
-//                If Gaze out of Fix win before time expires, then TRL_IS_NON_CANCELLED
+//                Eye has to HOLD fixation till TRL_STOP_SIGNAL_DELAY + FIX_HOLD_FOR_CANCEL.
+//                After TRL_STOP_SIGNAL_DELAY, PG_SIGNAL_PD is shown (TRL_IS_STOP_SIGNAL_ON =1)
+//                Gaze has to be in FIX_WIN for the whole duration for the successful Cancel trial.
+//                If Gaze out of Fix win before time expires, then subject made a NoGo type Saccade
+//                based on MIN_SACC_TIME and MAX_SACC_TIME
+// Gaze Check:
+// Fixspot is OFF Target is ON:
+// Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
+//        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
+// Check:
+//   case 0: TRL_STOP_SIGNAL_DELAY has not expired
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEarlySaccade_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoSaccade_, goto STAT_TARG_ACQ
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateSaccade_, goto STAT_OUTCOME
+//   case 1: TRL_STOP_SIGNAL_DELAY has expired and FIX_HOLD_FOR_CANCEL has not expired
+//   [Stop Signal ON] show PG_SIGNAL_PD (PD on RIGHT) for 1 screen refresh and switch to PG_SIGNAL(PD on LEFT)
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEarlySaccade_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoSaccade_, goto STAT_TARG_ACQ
+//   [Stop Signal OFF] switch page from PG_SIGNAL to PG_TARGET_PD (do nto show stop signal)
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateSaccade_, goto STAT_OUTCOME
 //
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
@@ -70,7 +88,7 @@ process PROC_TARG_SSD()
         // till it is time to show stop signal
         if (!I_FIX)
         {
-					spawnwait SSD_CHECK_SACC();
+            spawnwait SSD_CHECK_SACC();
         }
     }
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_ALLOWED_T <= TEMP_DELY_PLUS_DURATION)
@@ -87,11 +105,11 @@ process PROC_TARG_SSD()
             printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d]\n", STAT_TARG_SSD, StopSignal_);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
         }
-				// till Cancel time is expired
-				if (!I_FIX)
-				{
-					spawnwait SSD_CHECK_SACC();
-				}
+        // till Cancel time is expired
+        if (!I_FIX)
+        {
+            spawnwait SSD_CHECK_SACC();
+        }
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)
     {
@@ -102,80 +120,18 @@ process PROC_TARG_SSD()
             spawn SEND_EVT(Cancel_);
 
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_TONE_CHK;
+            CURR_STAT     = STAT_TONE_SSD;
 
             printf("****STAT_TARG_SSD[%d]: OK sent Event: Cancel_[%d], Decide_[%d]\n", STAT_TARG_SSD, Cancel_);
             printf("****STAT_TARG_SSD[%d]: OK (Cancel_ in)[%d]/[%d](TRL_STOP_SIGNAL_DELAY + FIX_HOLD_FOR_CANCEL)\n", STAT_TARG_SSD, STAT_DLTA_T, TEMP_DELY_PLUS_DURATION);
             spawn PRINT_MSG();
         }
-				else
-				{
-					spawnwait SSD_CHECK_SACC();
-				}
+        else
+        {
+            spawnwait SSD_CHECK_SACC();
+        }
     }
-/*
- *
- *  if (STAT_DLTA_T <= STAT_ALLOWED_T)
- *  {
- *      if (!I_FIX)
- *      {
- *          TRL_I_IN_FLIGHT = 1;
- *          TRL_SACC_TIME   = time();
- *          spawn SEND_EVT(Saccade_);
- *
- *          printf("********LATE SACCADE?????********LATE SACCADE?????********LATE SACCADE????? for STOP TRIAL????\n");
- *          printf("****STAT_TARG_SSD[%d]: ERR STOP TRIAL; sent Event: Saccade_[%d]\n", STAT_TARG_SSD, Saccade_);
- *          printf("****STAT_TARG_SSD[%d]: ERR STOP TRIAL; (Error Saccade in STOP trial)[%d]/([%d],[%d]) (MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_ALLOWED_T);
- *          PROCESS_STATE = 1;
- *          CURR_STAT     = STAT_TARG_ACQ;
- *      }
- *  }
- *  else
- *  {
- *      if (!TRL_IS_STOP_SIGNAL_ON)
- *      {
- *          printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; STAT_DLTA_T [%d] / TRL_STOP_SIGNAL_DELAY[%d] \n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DELAY);
- *          printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; STAT_DLTA_T [%d] / TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR [%d] \n", STAT_TARG_SSD, STAT_DLTA_T, STAT_ALLOWED_T);
- *          printf("****STAT_TARG_SSD[%d]: Actual Delay   = TRL_TARG_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT);
- *          printf("****STAT_TARG_SSD[%d]: Actual Delay   = TRL_STOP_SIGNAL_DURATION[%d, %dms] \n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DURATION);
- *          printf("****STAT_TARG_SSD[%d]: Actual Delay   = TRL_TARG_ON_DURATION [%dms]  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
- *
- *          dsendf("vp %d\n", PG_SIGNAL_PD);
- *          // show for only 1 screen refresh
- *          //dsendf("vw 1\n");
- *          //dsendf("vp %d\n", PG_SIGNAL);
- *          printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; Sent PG_SIGNAL_PD \n", STAT_TARG_SSD);
- *          printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; Sent PG_SIGNAL_PD \n", STAT_TARG_SSD);
- *      }
- *
- *      if (TRL_IS_STOP_SIGNAL_ON)
- *      {
- *          printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; \n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DELAY, (TRL_STOP_SIGNAL_DELAY * REFRESH_RATE));
- *          printf("****STAT_TARG_SSD[%d]: Expected Delay = TRL_STOP_SIGNAL_DELAY[%d, %dms]\n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DELAY, ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE));
- *          printf("****STAT_TARG_SSD[%d]: Actual Delay   = TRL_TARG_VRT_RFRSH_COUNT[%d, %dms],  \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, ceil(TRL_TARG_VRT_RFRSH_COUNT * REFRESH_RATE));
- *          printf("****STAT_TARG_SSD[%d]: Actual Delay   = TRL_STOP_SIGNAL_DURATION[%d, %dms],  \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, TRL_STOP_SIGNAL_DURATION);
- *          printf("****STAT_TARG_SSD[%d]: Actual Delay   = TRL_TARG_ON_DURATION [%dms],  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
- *          if (I_FIX)
- *          {
- *              TRL_I_IN_FLIGHT  = 0;
- *              TRL_NO_SACC_TIME = time();
- *              spawn SEND_EVT(NoSaccade_);
- *
- *              printf("****STAT_TARG_SSD[%d]: OK STOP TRIAL; sent Event: NoSaccade_[%d]\n", STAT_TARG_SSD, NoSaccade_);
- *              PROCESS_STATE = 1;
- *              CURR_STAT     = STAT_TONE_CHK;
- *          }
- *          else
- *          {
- *              // broke fix...
- *              printf("****STAT_TARG_SSD[%d]:.....ERR STOP TRIAL; Broke fix before tone?.......(((((((NOT YET.... Confused)))))))");
- *              PROCESS_STATE = 1;
- *              CURR_STAT     = STAT_TARG_ACQ;
- *          }
- *      }
- *  }
- */
-} /* PROC_TARG_ON */
+} /* PROC_TARG_SSD */
 
 
 process SSD_CHECK_SACC()
@@ -195,11 +151,24 @@ process SSD_CHECK_SACC()
     }
     else if (STAT_DLTA_T > STAT_I_DURATION && STAT_DLTA_T <= STAT_I_DURATION2)
     {
+        TRL_I_IN_FLIGHT    = 1;
         TRL_NOGO_SACC_TIME = time();
         spawn SEND_EVT(NoGoSaccade_);
 
         printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoSaccade_[%d]\n", STAT_TARG_SSD, NoGoSaccade_);
-        printf("****STAT_TARG_SSD[%d]: ERR (*NoGo Saccade*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+        if (TRL_IS_STOP_SIGNAL_ON)
+        {
+            // Flip page to PG_TARG_PD and continue as a GO trial
+            printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**After SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+            printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**After SSD*). Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
+            dsendf("vp %d\n", PG_TARGET_PD);
+            spawn GRAF_SHOW_FIX(GRAF_HIDE);
+            spawn GRAF_SHOW_TARG(GRAF_SHOW);
+        }
+        else
+        {
+            printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**Before SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+        }
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_TARG_ACQ;
         spawn PRINT_MSG();

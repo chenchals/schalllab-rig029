@@ -3,6 +3,10 @@
 //   Description: Process Target On State
 //                Eye has to HOLD fixation till MIN_SACC_TIME before saccade.
 //                If MAX_SACC_TOME expires, then no saccade
+// Gaze Check:
+// Fixspot is OFF Target is ON:
+// Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
+//        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 //
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call

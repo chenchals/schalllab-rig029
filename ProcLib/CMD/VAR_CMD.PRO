@@ -31,6 +31,7 @@ declare float        STOP_WEIGHT   = 0.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // temporary globals to be used in state processing
 declare int          TEMP_MIN_THT;
+declare int          TEMP_MIN_SSHT;
 declare int          TEMP_DELY_PLUS_DURATION;
 
 //============= Timing variables    ===================
