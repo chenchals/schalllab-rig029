@@ -35,6 +35,8 @@ process PROC_GET_REDY()
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
         TRL_NUMBER     = TRL_NUMBER + 1;
+        printf("****STAT_GET_READY[%d]: TRL_NUMBER[%d]\n", STAT_GET_READY, TRL_NUMBER);
+		
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;

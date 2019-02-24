@@ -37,13 +37,13 @@ declare int          TEMP_DELY_PLUS_DURATION;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 2;
+declare int TIME_DILATE_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
-declare int READY_TIME = 2000;
+declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
-declare int ALLOWED_FIX_TIME = 2000;
+declare int ALLOWED_FIX_TIME = 1000;
 // subject did not acquire fixation, show blank screen and wait before next trial
-declare int FIX_NOT_ACQ_WAIT_TIME = 3000;
+declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
@@ -60,7 +60,7 @@ declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1)
 declare int   FIXED_TRL_LENGTH_TIME = 3000;
 // how long between trials (only works if Fixed_trl_length == 0)
-declare int   BASE_ITI_TIME = 800;
+declare int   BASE_ITI_TIME = 500;
 //========== GO TRIAL TARG HOLD TIME ======================
 // Base Minimum time subject should hold gaze on TARGET
 declare int BASE_TARG_HOLD_TIME = 100;
@@ -73,7 +73,7 @@ declare int USE_TONE_AND_RWRD_FOR_MIN_THT = 1;
 declare int MIN_TARG_HOLD_TIME;
 //========== STOP TASK SPECIFIC =============================
 // maximum number of stop signal delays
-declare int   N_SSD_MAX = 20;
+declare int   N_SSD_MAX = 30;
 // needs to be in refresh rate units
 declare float SSD_ARRY[N_SSD_MAX];
 // number of *non-zero* stop signal delays
@@ -86,7 +86,7 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // Minimum time *after* stop signal that subject has to fixate
 // in order for trial to be considered as Cancel trial
 // Relative to TRL_STOP_SIGNAL_DELAY
-declare int SSD_CANCEL_TIME = 1500;
+declare int SSD_CANCEL_TIME = 1000;
 declare int FIX_HOLD_FOR_CANCEL;
 // Base Minimum time subject should hold gaze on FIXSPOT *After* TRL_STOP_SIGNAL_DELAY
 declare int BASE_STOP_SIGNAL_HOLD_TIME = 500;
@@ -95,17 +95,17 @@ declare int BASE_STOP_SIGNAL_HOLD_TIME = 500;
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 2000;
+declare int   TONE_DELAY = 500;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 100;
+declare int   TONE_DURATION = 50;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 2000;
+declare int   RWRD_DELAY = 500;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
-declare int   RWRD_DURATION = 100;
+declare int   RWRD_DURATION = 50;
 
 //===========================Reward and punishment======================
 // timeout time for punishment computed

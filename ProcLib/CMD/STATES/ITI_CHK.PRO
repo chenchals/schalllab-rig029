@@ -43,9 +43,9 @@ process PROC_ITI_CHK()
 		else
 		{
 			printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_TIME[%d]\n", STAT_ITI_CHK,TRL_CUM_TIME);
-			printf("****STAT_ITI_CHK[%d]: OK; TRL_ITI_DURATION = (TRL_DURATION * TIME_DILATE_FACTOR)  - (time()-TRL_START_TIME)\n");			
-			TRL_ITI_DURATION = (TRL_DURATION * TIME_DILATE_FACTOR)  - ((time()-TRL_START_TIME));			
-			printf("****STAT_ITI_CHK[%d]: OK; TRL_ITI_DURATION [%d] = (%d * %d) - (%d - %d)\n",STAT_ITI_CHK,TRL_ITI_DURATION,TRL_DURATION,TIME_DILATE_FACTOR,time(),TRL_START_TIME);
+			printf("****STAT_ITI_CHK[%d]: OK; TRL_ITI_DURATION = (TRL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_TIME\n");			
+			TRL_ITI_DURATION = (TRL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_TIME;			
+			printf("****STAT_ITI_CHK[%d]: OK; TRL_ITI_DURATION [%d] = (%d * %d) - %d\n",STAT_ITI_CHK,TRL_ITI_DURATION,TRL_DURATION,TIME_DILATE_FACTOR,TRL_CUM_TIME);
 			printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_ITI_DURATION[%d]\n", STAT_ITI_CHK,IS_TRL_LENGTH_FIXED, TRL_ITI_DURATION);
 		}
 		// add any remaining time from tone/reward
@@ -85,13 +85,16 @@ process PROC_ITI_CHK()
 		printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIEnd_[%d]\n", STAT_ITI_CHK, ITIEnd_);
 		PROCESS_STATE = 1;
 		if(TRL_IS_TIMEOUT)
-		{
-			CURR_STAT     = STAT_TIM_OUT;	
+		{	
+			PROCESS_STATE = 1;
+			TRL_RUNNING = 1;
+			CURR_STAT     = STAT_TIM_OUT;
 		}
 		else
 		{
+			PROCESS_STATE = 1;
+			TRL_RUNNING = 1;
 			CURR_STAT     = STAT_IDLE;
-			TRL_RUNNING = 0;
 		}
 	}
 } /* PROC_ITI_CHK */

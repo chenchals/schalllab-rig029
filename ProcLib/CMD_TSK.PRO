@@ -33,6 +33,10 @@
 //==========================================================================
 declare IDLE();
 declare UPD8_MSG();
+declare WRITE_TO_FILE();
+
+declare int WRITE_TO_FILE_FLAG = 1;
+declare int WROTE_HEADER = 0;
 declare int TEST = 100;
 declare int SHOW_PAGES = 0;
 
@@ -234,11 +238,11 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
-				// should be always true...?
-				//&& TRL_RUNNING == 0
 				spawn SEND_EVT(TaskEnd_);
-				printf("****CMD_TSK: OK (Ending Trial) sent Event: TaskEnd_[%d]\n", TaskEnd_);
-				printf("****CMD_TSK: OK (Ending Trial) TRL_CUM_TIME[%d]\n", TRL_CUM_TIME);
+				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
+				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
+				TRL_RUNNING = 0;
+				PROCESS_STATE = 0;
 			}
 			//================= State = xxxxxx===============
 			if (TRL_IS_TARG_ON_FLAG)
@@ -246,12 +250,15 @@ process IDLE() enabled
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
-			TRL_CUM_TIME = TRL_CUM_TIME + 1;
+			if(TRL_START_TIME)
+			{
+				TRL_CUM_TIME = TRL_CUM_TIME + 1;
+			}
 			nexttick;
 		} /*while(TRL_RUNNING)*/
-
-		nexttick;
+		spawnwait WRITE_TO_FILE();
 		printf("============================NEXT TRIAL========================\n");
+		nexttick;
 	}     /*while(1)*/
 } /*IDLE()*/
 
@@ -262,4 +269,18 @@ process UPD8_MSG()
 
 	dummy = 1;
 	printf("TRL_NUM [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
+}
+
+process WRITE_TO_FILE()
+{
+	if(WRITE_TO_FILE_FLAG)
+	{
+		printf("%d,%d,%d,%d,%d,%d\n",TRL_NUMBER,TRL_STOP_SIGNAL_DELAY,TRL_TARG_SSD_VRT_RFRSH_COUNT,TRL_TARG_ON_TIME,TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION);
+		if(!WROTE_HEADER)
+		{
+			writef("stopSig.csv TRL_NUMBER,TRL_STOP_SIGNAL_DELAY,TRL_TARG_SSD_VRT_RFRSH_COUNT,TRL_TARG_ON_TIME,TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION\n");
+			WROTE_HEADER = 1;
+		}
+		writef("stopSig.csv %d,%d,%d,%d,%d,%d\n",TRL_NUMBER,TRL_STOP_SIGNAL_DELAY,TRL_TARG_SSD_VRT_RFRSH_COUNT,TRL_TARG_ON_TIME,TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION);
+	}
 }

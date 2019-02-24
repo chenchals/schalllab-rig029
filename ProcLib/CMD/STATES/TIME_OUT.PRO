@@ -32,7 +32,7 @@ process PROC_TIMEOUT_CHK()
 		STAT_STRT_T    = time();
 		STAT_DLTA_T    = 0;
 		STAT_ALLOWED_T = TIMEOUT_DURATION;
-		printf("Checking if TRL_IS_TARG_ON_FLAG...\n");
+		printf("****STAT_TIM_OUT[%d]: TIMEOUT_DURATION[%d]\n", STAT_TIM_OUT,TIMEOUT_DURATION);
 		if(TRL_IS_TARG_ON_FLAG)
 		{
 			dsendf("vp %d\n", PG_BLANK);
@@ -54,7 +54,7 @@ process PROC_TIMEOUT_CHK()
 		printf("****STAT_TIM_OUT[%d]: ERR  TRL_TIMEOUT_DURATION[%d] / TRL_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_TIMEOUT_DURATION, TRL_TONE_DURATION); 		
 		PROCESS_STATE = 1;
 		CURR_STAT     = STAT_IDLE;
-		TRL_RUNNING = 0;
+		TRL_RUNNING = 1;
 		printf(":-)\n");
 	}
 }/*PROC_TIMEOUT_CHK*/

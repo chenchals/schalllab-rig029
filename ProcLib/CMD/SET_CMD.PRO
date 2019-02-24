@@ -216,28 +216,36 @@ process SET_CMD_TRL()
 
     // Initialize all trial variables
     spawnwait INIT_TRL_VARS();
+	nexttick 5;
 
     // Setup trial type
     spawnwait PCK_TRL_TYP();
+	nexttick 5;
 
     // Compute TRL_FIX_HOLD_TIME;
     spawnwait COMPUTE_FIX_HOLD();
+	nexttick 5;
 
     // Setup TARGET
     spawnwait SET_TARGET();
+	nexttick 5;
 
     // Update graph object for Target
     // Show the windows - without the fixspot or target to cue user
     spawnwait GRAF_UPD8_FIX();
     spawnwait GRAF_UPD8_TARG();
+	nexttick 5;
 
     if (TRIAL_TYPE == TRIAL_TYPE_STOP)
     {
         spawnwait PICK_TRL_SSD();
+		nexttick 5;
         spawnwait SET_CANCEL_TIME();
+		nexttick 5;
 
         // Compute MIN_STOP_SIGNAL_HOLD_TIME
         spawnwait COMPUTE_MIN_SSHT();
+		nexttick 5;
 
         // what should be the freq and duartion of tone
         TRL_TONE_FREQ     = SUCCESS_TONE_MED_REWARD;
@@ -257,13 +265,16 @@ process SET_CMD_TRL()
     // Compute this for both STOP and GO trials
     // Compute MIN_TARG_HOLD_TIME
     spawnwait COMPUTE_MIN_THT();
+	nexttick 5;
 
     // Setup CMD PAGES
     printf("Calling CMD-PGS\n");
     spawnwait CMD_PGS();
+	nexttick 50;
 
     // compute trial duration (mainly for fixed trial length)
 	spawnwait COMPUTE_TRL_DURATION();
+	nexttick 5;
 
     printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n", TRIAL_TYPE, CURR_TARG_IDX, CURR_TARG_ANGLE);
 } /* SET_CMD_TRL */
@@ -275,10 +286,11 @@ process COMPUTE_TRL_DURATION()
 
     // TRL_DURATION is computed *after* Fixation is acquired, using all max times
     // same for GO/STOP
-    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + MAX_SACC_TIME + MAX_SACC_DURATION;
-    TRL_DURATION = TRL_DURATION + BASE_ITI_TIME;
-    // Add max ssd delay and cancel time
-    TRL_DURATION = ceil(MAX_SSD * REFRESH_RATE) + FIX_HOLD_FOR_CANCEL;
+    TRL_DURATION = MIN_MAX_FIX_HOLD_TIME[1] + BASE_ITI_TIME;
+	// Since FIX_HOLD_FOR_CANCEL must be => MAX_SACC_TIME + MAXS_SACC_DURATION
+	TRL_DURATION = TRL_DURATION + FIX_HOLD_FOR_CANCEL;
+    // Add max ssd delay as this will be the longest TRL duration
+    TRL_DURATION = TRL_DURATION + ceil(MAX_SSD * REFRESH_RATE);
 
     // now check for the longest time of the following
     tempVar = TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION;
@@ -324,11 +336,11 @@ process SET_CANCEL_TIME()
     printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
     printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
     tempVar = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME;
-    if (tempVar < MAX_SACC_TIME)
+    if (tempVar < MAX_SACC_TIME + MAX_SACC_TIME)
     {
         printf("**********CANCEL_TIME CHANGE ALERT********************\n");
-        printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME[%d]****\n", tempVar, MAX_SACC_TIME);
-        FIX_HOLD_FOR_CANCEL = MAX_SACC_TIME - ceil(MIN_SSD * REFRESH_RATE);
+        printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME + MAX_SACC_DURATION [%d]****\n", tempVar, MAX_SACC_TIME+MAX_SACC_DURATION);
+        FIX_HOLD_FOR_CANCEL = (MAX_SACC_TIME + MAX_SACC_DURATION) - ceil(MIN_SSD * REFRESH_RATE);
         printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
     }
     else
@@ -365,6 +377,7 @@ process SET_MIN_MAX_SSD()
         }
         tempCount = tempCount + 1;
     }
+    printf("****SET_CMD/SET_MIN_MAX_SSD: MIN_SSD, MAX_SSD[in vert refresh] = [%d, %d]****\n", MIN_SSD, MAX_SSD);	
 }
 
 
@@ -400,7 +413,7 @@ process PICK_TRL_SSD()
     }
     // must get from SSD_ARRY; use staircasing....
     printf("****SET_CMD/PICK_TRL_SSD: NOT Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
-    TRL_STOP_SIGNAL_DELAY = 10; //SSD_ARRY[random(N_SSD)];
+    TRL_STOP_SIGNAL_DELAY = SSD_ARRY[random(N_SSD)];
     printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
 

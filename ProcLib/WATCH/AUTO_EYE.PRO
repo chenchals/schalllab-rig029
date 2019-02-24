@@ -17,6 +17,7 @@ declare AUTO_EYE_FIX_ON();
 declare AUTO_EYE_FIXATE();
 declare AUTO_EYE_TARG_ON();
 declare AUTO_EYE_TARG_ACQ();
+declare AUTO_EYE_TARG_SSD();
 
 // Utils for eye pos
 declare AUTO_EYE_POS_ACQ_TARG();
@@ -36,7 +37,7 @@ declare int   AUTO_TRIG_SACC;
 //0= no saccade
 //1= normal saccade
 //2= early saccade
-declare int DO_SACC = 1;
+declare int DO_SACC = 0;
 
 // 0=stay in FIX (for late saccade)
 // 1=goto Target within SACC_DURATION
@@ -83,6 +84,10 @@ process AUTO_EYE()
         {
             spawnwait AUTO_EYE_TARG_ACQ();
         }
+		else if(CURR_STAT == STAT_TARG_SSD)
+		{
+			spawnwait AUTO_EYE_TARG_SSD();
+		}
         else
         {
             //freeze
@@ -134,7 +139,12 @@ process AUTO_EYE_FIXATE()
         spawnwait AUTO_EYE_POS_FIX_WIDE();
     }
 }
-
+// State TARG_SSD
+process AUTO_EYE_TARG_SSD()
+{
+	// just fixate, no saccade
+	spawnwait AUTO_EYE_POS_FIX();
+}
 
 // State TARG_ON
 process AUTO_EYE_TARG_ON()
