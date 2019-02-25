@@ -60,8 +60,13 @@ process PROC_TARG_SSD()
         STAT_STRT_T             = TRL_PRE_TARG_ON_TIME;
         STAT_I_DURATION         = MIN_SACC_TIME * TIME_DILATE_FACTOR;
         STAT_I_DURATION2        = MAX_SACC_TIME * TIME_DILATE_FACTOR;
-        STAT_ALLOWED_T          = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR);
-        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
+        //STAT_ALLOWED_T          = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR);
+        // in refresh counts
+        STAT_ALLOWED_T          = TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR;
+        TRL_TARG_VRT_RFRSH_COUNT = 0;
+
+        //        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
+        TEMP_DELY_PLUS_DURATION = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR) + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
     }
 
     spawnwait CHECK_TARG_VERT_RFRSH();
@@ -81,7 +86,7 @@ process PROC_TARG_SSD()
         printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d], Time [%d]\n", STAT_TARG_SSD, FixSpotOff_, TRL_TARG_ON_TIME);
         spawn SEND_EVT(FixSpotOff_);
     }
-    if (STAT_DLTA_T <= STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
+    if (TRL_TARG_VRT_RFRSH_COUNT < STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
     {
         // till it is time to show stop signal
         if (!I_FIX)
@@ -89,7 +94,7 @@ process PROC_TARG_SSD()
             spawnwait SSD_CHECK_SACC();
         }
     }
-    else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
+    else if ( TRL_TARG_VRT_RFRSH_COUNT >= STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // from SSD till it is time to expire Cancel time for trial to be considered successful cancel
         if (!TRL_STOP_SIGNAL_TIME)
@@ -102,9 +107,9 @@ process PROC_TARG_SSD()
             dsendf("vp %d\n", PG_SIGNAL);
             printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_,TRL_STOP_SIGNAL_TIME);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
-		}
+		    }
         // till Cancel time is expired and the stop signal is shown
-        if (!I_FIX && TRL_IS_STOP_SIGNAL_ON)
+        if (!I_FIX)
         {
             spawnwait SSD_CHECK_SACC();
         }
@@ -126,7 +131,7 @@ process PROC_TARG_SSD()
         }
         else
         {
-			printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
+			      printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
             spawnwait SSD_CHECK_SACC();
         }
     }
@@ -196,7 +201,7 @@ process PRINT_MSG()
     printf("****STAT_TARG_SSD[%d]: Expected SSD = TRL_STOP_SIGNAL_DELAY[%d, %dms]\n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR, STAT_ALLOWED_T);
     printf("****STAT_TARG_SSD[%d]: SSD (using nexttick count)  = TRL_STOP_SIGNAL_DURATION[%d, %dms],  \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, TRL_STOP_SIGNAL_DURATION);
     printf("****STAT_TARG_SSD[%d]: SSD (using SSD Vertical Refresh count) TRL_TARG_SSD_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_SSD_VRT_RFRSH_COUNT, ceil(TRL_TARG_SSD_VRT_RFRSH_COUNT * REFRESH_RATE));
-    printf("****STAT_TARG_SSD[%d]: SSD + CANCEL TIME [%d + %d] = [%dms] \n", STAT_TARG_SSD, 
+    printf("****STAT_TARG_SSD[%d]: SSD + CANCEL TIME [%d + %d] = [%dms] \n", STAT_TARG_SSD,
 	       ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR),(FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR),TEMP_DELY_PLUS_DURATION );
 	printf("****STAT_TARG_SSD[%d]: Target ON duration   = TRL_TARG_ON_DURATION [%dms],  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
     printf("****STAT_TARG_SSD[%d]: Target ON duration (using Vertical Refresh count) TRL_TARG_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, ceil(TRL_TARG_VRT_RFRSH_COUNT * REFRESH_RATE));
