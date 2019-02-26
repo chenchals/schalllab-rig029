@@ -105,8 +105,9 @@ declare constant MouthEnd_     = 2552;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460
 // after TARG_ON
 declare constant NoGoEarlySaccade_   = 2600;
-declare constant NoGoSaccade_        = 2602;
-declare constant NoGoLateSaccade_    = 2604;
+declare constant NoGoSaccadePreSSD_  = 2602;
+declare constant NoGoSaccadePostSSD_ = 2604;
+declare constant NoGoLateSaccade_    = 2606;
 declare constant FixHoldBrkPreTone_  = 2630;
 declare constant FixHoldBrkTone_     = 2632;
 declare constant FixHoldBrkPreRwrd_  = 2634;

@@ -1,4 +1,4 @@
-fName = 'stopSig_2019_02_24.csv';
+fName = 'stopSig_2019_02_25.csv';
 %ssdTable = csvread(fName,1);
 
 ssdTable = readtable(fName,'ReadVariableNames',true);
@@ -22,11 +22,11 @@ relTimeMsEdges = -100-0.5:100+0.5;
 
     uniqSsd = unique(ssdTable.TRL_STOP_SIGNAL_DELAY);
     ssdByRfrsh = arrayfun(@(x) ssdTable(ssdTable.TRL_STOP_SIGNAL_DELAY == x,:),uniqSsd,'UniformOutput',false);
-    ssdDistFromVRCount = arrayfun(@(x) histcounts(ssdTable{ssdTable.TRL_STOP_SIGNAL_DELAY == x,'ssdTimeFromVRCount'}- x*16.67,relTimeMsEdges),...
+    ssdDistFromVRCount = arrayfun(@(x) histcounts(ssdTable{ssdTable.TRL_STOP_SIGNAL_DELAY == x,'ssdTimeFromVRCount'}- x*refreshRate,relTimeMsEdges),...
        uniqSsd,'UniformOutput',false);
-    ssdDistFromTickCount = arrayfun(@(x) histcounts(ssdTable{ssdTable.TRL_STOP_SIGNAL_DELAY == x,'ssdTimeFromTickCount'}- x*16.67,relTimeMsEdges),...
+    ssdDistFromTickCount = arrayfun(@(x) histcounts(ssdTable{ssdTable.TRL_STOP_SIGNAL_DELAY == x,'ssdTimeFromTickCount'}- x*refreshRate-(refreshRate/2),relTimeMsEdges),...
        uniqSsd,'UniformOutput',false);
-    ssdDistFromTargOnSSOn = arrayfun(@(x) histcounts(ssdTable{ssdTable.TRL_STOP_SIGNAL_DELAY == x,'ssdTimeFromTargOnSSOn'}- x*16.67,relTimeMsEdges),...
+    ssdDistFromTargOnSSOn = arrayfun(@(x) histcounts(ssdTable{ssdTable.TRL_STOP_SIGNAL_DELAY == x,'ssdTimeFromTargOnSSOn'}- x*refreshRate,relTimeMsEdges),...
        uniqSsd,'UniformOutput',false);
 
 figure
@@ -55,7 +55,7 @@ end
 figure;
 subplot(1,3,1)
 ssdTimeFromVRCountCount = ssdTable{:, {'TRL_STOP_SIGNAL_DELAY','ssdTimeFromVRCount'}};
-boxplot(ssdTimeFromVRCountCount(:,2),round(ssdTimeFromVRCountCount(:,1).*16.67))
+boxplot(ssdTimeFromVRCountCount(:,2),round(ssdTimeFromVRCountCount(:,1).*refreshRate))
 set(gca,'XTickLabelRotation',45);
 xlabel('SSD time Expected (ms)');
 ylabel('SSD Time: PD VR Count (ms)');
@@ -65,7 +65,7 @@ grid on
 
 subplot(1,3,2)
 ssdTimeFromTickCount = ssdTable{:, {'TRL_STOP_SIGNAL_DELAY','ssdTimeFromTickCount'}};
-boxplot(ssdTimeFromTickCount(:,2),round(ssdTimeFromTickCount(:,1).*16.67))
+boxplot(ssdTimeFromTickCount(:,2)-refreshRate/2,round(ssdTimeFromTickCount(:,1).*refreshRate))
 set(gca,'XTickLabelRotation',45);
 xlabel('SSD time Expected (ms)');
 ylabel('SSD Time: Tick Count (ms)');
@@ -76,7 +76,7 @@ title('SSD time comaprision');
 
 subplot(1,3,3)
 ssdTimeFromTargOnSSOn = ssdTable{:, {'TRL_STOP_SIGNAL_DELAY','ssdTimeFromTargOnSSOn'}};
-boxplot(ssdTimeFromTargOnSSOn(:,2),round(ssdTimeFromTargOnSSOn(:,1).*16.67))
+boxplot(ssdTimeFromTargOnSSOn(:,2),round(ssdTimeFromTargOnSSOn(:,1).*refreshRate))
 set(gca,'XTickLabelRotation',45);
 xlabel('SSD time Expected (ms)');
 ylabel('SSD Time: StopSignalOnTime - TargOnTime (ms)');
