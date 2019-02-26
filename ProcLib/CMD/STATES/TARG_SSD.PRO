@@ -87,7 +87,7 @@ process PROC_TARG_SSD()
         printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d], Time [%d]\n", STAT_TARG_SSD, FixSpotOff_, TRL_TARG_ON_TIME);
         spawn SEND_EVT(FixSpotOff_);
     }
-    if (TRL_TARG_VRT_RFRSH_COUNT < STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
+    if (TRL_TARG_VRT_RFRSH_COUNT < STAT_ALLOWED_T-1)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
     {
         // till it is time to show stop signal
         if (!I_FIX)
