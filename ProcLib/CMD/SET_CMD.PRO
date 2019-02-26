@@ -425,7 +425,7 @@ process PICK_TRL_SSD()
         tempCount = tempCount + 1;
     }
     // must get from SSD_ARRY; use staircasing....
-    printf("****SET_CMD/PICK_TRL_SSD: NOT Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
+    printf("****SET_CMD/PICK_TRL_SSD: Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
     TRL_STOP_SIGNAL_DELAY = SSD_ARRY[random(N_SSD)];
     printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
