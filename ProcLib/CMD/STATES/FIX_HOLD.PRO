@@ -19,9 +19,14 @@
 //==========================================================================
 //  Revision History:
 
+	declare float tempVRcount;
+	declare int tempFixHoldAdjust;
 
 process PROC_FIX_HOLD()
 {
+	//tempVRcount = 0.0;
+	//tempFixHoldAdjust = 0;
+	
 	if (PROCESS_STATE)
 	{
 		printf("****STAT_FIX_HOLD[%d]: Processing hold fixation\n", STAT_FIX_HOLD);
@@ -30,12 +35,25 @@ process PROC_FIX_HOLD()
 		PROCESS_STATE  = 0;
 		STAT_STRT_T    = time();
 		STAT_DLTA_T    = 0;
+		//STAT_ALLOWED_T = TRL_FIX_HOLD_TIME * TIME_DILATE_FACTOR;
+		// Dynamically adjust TRL_FIX_HOLD_TIME such that the duration from 
+		// TRL_FIX_ON_TIME till the end of TRL_FIX_HOLD_TIME is a multiple of REFRESH_RATE
+		// so that we sync all target presentation to vertical retrace
+		// variable time when fix is acquired and the length of fix hold time
+		tempVRCount = (TRL_FIX_ACQ_TIME - TRL_FIX_ON_TIME + TRL_FIX_HOLD_TIME)*1.0/REFRESH_RATE;
+		tempFixHoldAdjust = round(round(tempVRCount)*REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_FIX_ACQ_TIME - TRL_FIX_HOLD_TIME;
+		printf("*************tempVRCount [%8.4d], tempFixHoldAjust = [%d]\n",tempVRCount,tempFixHoldAdjust);
+		printf("****STAT_FIX_HOLD[%d]: Adjusting TRL_FIX_HOLD_TIME [%d] by [%d] ms\n",STAT_FIX_HOLD,TRL_FIX_HOLD_TIME,tempFixHoldAdjust);
+		//if(!tempFixHoldAdjust)
+		//{
+			TRL_FIX_HOLD_TIME = TRL_FIX_HOLD_TIME + tempFixHoldAdjust;
+		//}
 		STAT_ALLOWED_T = TRL_FIX_HOLD_TIME * TIME_DILATE_FACTOR;
 	}
 
 	TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
 
-	if (STAT_DLTA_T <= STAT_ALLOWED_T)
+	if (STAT_DLTA_T < STAT_ALLOWED_T)
 	{
 		if (!I_FIX )
 		{
