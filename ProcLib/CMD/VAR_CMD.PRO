@@ -119,7 +119,7 @@ declare int TIMEOUT_TONE;
 // NoGoTrial_No_StopSignal = TIMEOUT_xxx[1]
 // NoGoTrial_StopSignal = TIMEOUT_xxx[2]
 declare int TIMEOUT_FIX_ACQ_ERROR[3]      = { 0, 0, 0 };
-declare int TIMEOUT_FIXBRK[3]             = { 0, 0, 0 };
+declare int TIMEOUT_FIX_BRK[3]             = { 0, 0, 0 };
 declare int TIMEOUT_ERLY_SACC[3]          = { 0, 0, 0 };
 declare int TIMEOUT_NO_SACC[3]            = { 0, 0, 0 };
 declare int TIMEOUT_TARG_ACQ_ERROR[3]     = { 0, 0, 0 };

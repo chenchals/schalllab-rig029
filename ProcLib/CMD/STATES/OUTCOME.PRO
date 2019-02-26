@@ -114,7 +114,7 @@ process PROC_GO_OUTCOMES()
 	}
     else if (TRL_FIX_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
-        TIMEOUT_DURATION = TIMEOUT_FIXBRK[0];
+        TIMEOUT_DURATION = TIMEOUT_FIX_BRK[0];
         spawn SEND_EVT(OutcomeFixBreak_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d]; Go Trial; (TRL_FIX_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixBreak_);
@@ -203,7 +203,7 @@ process PROC_NOGO_NO_SS_OUTCOMES()
     }
     else if (TRL_FIX_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
-        TIMEOUT_DURATION = TIMEOUT_FIXBRK[1];
+        TIMEOUT_DURATION = TIMEOUT_FIX_BRK[1];
         spawn SEND_EVT(OutcomeFixBreak_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d];  No Stop Signal; (TRL_FIX_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixBreak_);
@@ -264,19 +264,13 @@ process PROC_NOGO_NO_SS_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
+
 } /* PROC_NOGO_NO_SS_OUTCOMES */
 
 
 process PROC_NOGO_SS_OUTCOMES()
 {
-    if (TRL_IS_TARG_MIN_THT)
-    {//process for GO, NOGO_NO_SS, NOGO_SS
-        TIMEOUT_DURATION = TIMEOUT_TARG_MIN_THT[2];
-        spawn SEND_EVT(OutcomeNoGoWrong_);
-
-        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoWrong_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoWrong_);
-    }
-    else if (TRL_FIX_ACQ_ERROR_TIME)
+    if (TRL_FIX_ACQ_ERROR_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_ACQ_ERROR[2];
         spawn SEND_EVT(OutcomeFixError_);
@@ -285,7 +279,7 @@ process PROC_NOGO_SS_OUTCOMES()
     }
     else if (TRL_FIX_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
-        TIMEOUT_DURATION = TIMEOUT_FIXBRK[2];
+        TIMEOUT_DURATION = TIMEOUT_FIX_BRK[2];
         spawn SEND_EVT(OutcomeFixBreak_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d];  STOP Trial; Stop Signal; (TRL_FIX_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixBreak_);
@@ -345,5 +339,12 @@ process PROC_NOGO_SS_OUTCOMES()
         spawn SEND_EVT(OutcomeNoGoError_);
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
+    }
+	else if (TRL_IS_FIX_MIN_SSHT)
+    {//process for GO, NOGO_NO_SS, NOGO_SS
+        TIMEOUT_DURATION = 0;
+	    TRL_IS_TIMEOUT = 0;
+        spawn SEND_EVT(OutcomeNoGoCorrect_);
+        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoCorrect_ [%d]; Go Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
     }
 } /* PROC_NOGO_SS_OUTCOMES */
