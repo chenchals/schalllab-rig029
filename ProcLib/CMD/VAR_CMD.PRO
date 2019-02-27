@@ -95,13 +95,13 @@ declare int BASE_STOP_SIGNAL_HOLD_TIME = 500;
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 500;
+declare int   TONE_DELAY = 2000;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 50;
+declare int   TONE_DURATION = 1000;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 500;
+declare int   RWRD_DELAY = 2000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
