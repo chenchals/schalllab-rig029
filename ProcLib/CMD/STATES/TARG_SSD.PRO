@@ -98,7 +98,7 @@ process PROC_TARG_SSD()
         printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_, TRL_STOP_SIGNAL_TIME);
     }
 
-    if (TRL_TARG_VRT_RFRSH_COUNT <= STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
+    if (TRL_TARG_VRT_RFRSH_COUNT < STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
     {
         // till it is time to show stop signal
         if (!I_FIX)
@@ -106,7 +106,7 @@ process PROC_TARG_SSD()
             spawnwait SSD_CHECK_SACC();
         }
     }
-    else if (STAT_DLTA_T >= floor(STAT_ALLOWED_T * REFRESH_RATE) && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
+    else if (STAT_DLTA_T > STAT_ALLOWED_T  && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // from SSD till it is time to expire Cancel time for trial to be considered successful cancel
         if (!queuedStopSignalPage)
