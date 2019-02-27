@@ -1,4 +1,4 @@
-fName = 'stopSig_20190227_3_8ms_Lag_fixSS2.csv';
+fName = 'stopSigTry1.csv';
 %ssdTable = csvread(fName,1);
 
 ssdTable = readtable(fName,'ReadVariableNames',true);

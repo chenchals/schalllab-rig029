@@ -213,6 +213,7 @@ process WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, 
 		{
         if (!wroteIHeader)
         {
+            wroteHeader = 1;
             writef("eyeVals.csv iXVolts,iYVolts,iXDeg,iYDeg,iAngle,iEcc\n");
         }
         //printf("EyeVals: %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
