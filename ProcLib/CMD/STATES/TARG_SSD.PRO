@@ -45,6 +45,7 @@ declare SSD_CHECK_SACC();
 
 process PROC_TARG_SSD()
 {
+  declare int queuedStopSignalPage;
     if (PROCESS_STATE)
     {
         printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
@@ -64,6 +65,7 @@ process PROC_TARG_SSD()
         // in refresh counts
         STAT_ALLOWED_T           = TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR;
         TRL_TARG_VRT_RFRSH_COUNT = 0;
+        queuedStopSignalPage = 0;
 
         //        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
         TEMP_DELY_PLUS_DURATION = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR) + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
@@ -74,7 +76,7 @@ process PROC_TARG_SSD()
     // keep track of stop signal duration in ms and in vertical refresh count
     if (!TRL_IS_STOP_SIGNAL_ON && TRL_TARG_VRT_RFRSH_COUNT > 0)
     {
-		TRL_TARG_SSD_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT;
+		    TRL_TARG_SSD_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT;
         TRL_STOP_SIGNAL_DURATION     = TRL_STOP_SIGNAL_DURATION + 1;
     }
 
@@ -88,7 +90,15 @@ process PROC_TARG_SSD()
         printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d], Time [%d]\n", STAT_TARG_SSD, FixSpotOff_, TRL_TARG_ON_TIME);
         spawn SEND_EVT(FixSpotOff_);
     }
-    if (TRL_TARG_VRT_RFRSH_COUNT < STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
+    if (TRL_IS_STOP_SIGNAL_ON && !TRL_STOP_SIGNAL_TIME)
+    {
+        TRL_STOP_SIGNAL_TIME = time();
+        spawn SEND_EVT(StopSignal_);
+        spawn GRAF_SHOW_FIX(GRAF_SHOW);
+        printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_, TRL_STOP_SIGNAL_TIME);
+    }
+
+    if (TRL_TARG_VRT_RFRSH_COUNT <= STAT_ALLOWED_T)    // || TRL_TARG_VRT_RFRSH_COUNT < TRL_STOP_SIGNAL_DELAY)
     {
         // till it is time to show stop signal
         if (!I_FIX)
@@ -96,22 +106,18 @@ process PROC_TARG_SSD()
             spawnwait SSD_CHECK_SACC();
         }
     }
-    else if (TRL_TARG_VRT_RFRSH_COUNT >= STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
+    else if (STAT_DLTA_T >= floor(STAT_ALLOWED_T * REFRESH_RATE) && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // from SSD till it is time to expire Cancel time for trial to be considered successful cancel
-        if (!TRL_STOP_SIGNAL_TIME)
+        if (!queuedStopSignalPage)
         {
-            TRL_STOP_SIGNAL_TIME = time();
-            spawn SEND_EVT(StopSignal_);
-
+            queuedStopSignalPage = 1;
             dsendf("vp %d\n", PG_SIGNAL_PD);
             dsendf("vw 1\n");
             dsendf("vp %d\n", PG_SIGNAL);
-            spawn GRAF_SHOW_FIX(GRAF_SHOW);
-
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_, TRL_STOP_SIGNAL_TIME);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
         }
+
         // till Cancel time is expired and the stop signal is shown
         if (!I_FIX)
         {
