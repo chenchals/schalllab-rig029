@@ -13,15 +13,16 @@
 //
 
 declare WTCH_EYE();
-declare LOCATE_EYE(float iXDeg, float iYDeg);
-declare COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg);
-declare WRITE_I_TO_FILE(int iXVolts, int iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc);
+declare LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg);
+declare COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg);
+declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc);
 
+    declare int   writeIToFile = 1;
+    declare int   wroteIHeader = 0;
 
 process WTCH_EYE()
 {
-    declare int   writeToFile = 1;
-    declare int   wroteHeader = 0;
+
     declare int   xVal, yVal;
     declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
     declare int   lasttime, eyeXpixels, eyeYpixels;
@@ -32,7 +33,6 @@ process WTCH_EYE()
         EYE_Y_VOLTS = atable(EYE_Y_CHANNEL);
         if (MONK_ID == AUTO_ID)
         {
-            //printf("AUTO_EYE_X_DEG [%2.3d], AUTO_EYE_Y_DEG [%2.3d]\n",AUTO_EYE_X_DEG,AUTO_EYE_Y_DEG);
             // Convert to possible voltage value that we would get from atable[EYE_X_CHANNEL]
             EYE_X_VOLTS = (AUTO_EYE_X_DEG + EYE_X_OFFSET) / ((EYE_X_GAIN * MAX_VOLTAGE * 2.0) / ANALOG_UNITS);
             // Convert to possible voltage value that we would get from atable[EYE_Y_CHANNEL]
@@ -49,11 +49,11 @@ process WTCH_EYE()
             CENTER_EYE_NOW = 0;
         }
 
-        spawn GRAF_UPD8_EYE(eyeXdeg, eyeYdeg);
+        spawn GRAF_UPD8_EYE( eyeXdeg, eyeYdeg);
 
         if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
         {
-            spawn LOCATE_EYE(eyeXdeg, eyeYdeg);
+            spawn LOCATE_EYE(EYE_X_VOLTS,EYE_Y_VOLTS,eyeXdeg, eyeYdeg);
 
             // why should this be with screen refresh?
             if (time() > lasttime + 16)
@@ -77,7 +77,7 @@ process WTCH_EYE()
 } /* WATCHEYE */
 
 
-process LOCATE_EYE(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
+process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
 {
     // Sets flags for 6 global variables:
     // I_FIX, I_FIX_WIDE
@@ -164,7 +164,7 @@ process LOCATE_EYE(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
 } /* LOCATE_EYE */
 
 
-process COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
+process COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
 {
     // Write code to do arctan2d
     // see https://en.wikipedia.org/wiki/Atan2 (expression)
@@ -199,23 +199,24 @@ process COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
         CURR_EYE_ANGLE = 9999999;        //undefined;
     }
     CURR_EYE_ECC = sqrt((iYDeg * iYDeg) + (iXDeg * iXDeg));
-    spawn WRITE_I_TO_FILE(iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
+    spawnwait WRITE_I_TO_FILE(iXVolts, iYVolts, iXDeg, iYDeg, CURR_EYE_ANGLE, CURR_EYE_ECC);
 } /* COMPUTE_EYE_POS */
 
 
-process WRITE_I_TO_FILE(int iXVolts, int iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc)
+process WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc)
 {
-    if (DEBUG == 1)
+	declare int tempInterval = 5;
+
+    if (writeIToFile)
     {
-        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
-    }
-    if (WRITE_I_TO_FILE)
-    {
-        if (!wroteHeader)
+		if((time() % tempInterval) == 0)
+		{
+        if (!wroteIHeader)
         {
             writef("eyeVals.csv iXVolts,iYVolts,iXDeg,iYDeg,iAngle,iEcc\n");
         }
-        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
-        writef("eyeVals.csv %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
+        //printf("EyeVals: %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
+        writef("eyeVals.csv %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
+		}
     }
 }
