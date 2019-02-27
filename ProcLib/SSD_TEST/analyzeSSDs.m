@@ -77,7 +77,7 @@ grid on
 
 subplot(1,3,2)
 ssdTimeFromTickCount = ssdTable{:, {'TRL_STOP_SIGNAL_DELAY','ssdTimeFromTickCount'}};
-boxplot(ssdTimeFromTickCount(:,2)-refreshRate/2,round(ssdTimeFromTickCount(:,1).*refreshRate))
+boxplot(ssdTimeFromTickCount(:,2),round(ssdTimeFromTickCount(:,1).*refreshRate))
 set(gca,'XTickLabelRotation',45);
 xlabel('SSD time Expected (ms)');
 ylabel('SSD Time: Tick Count (ms)');
