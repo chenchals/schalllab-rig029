@@ -15,7 +15,7 @@
 declare WTCH_EYE();
 declare LOCATE_EYE(float iXDeg, float iYDeg);
 declare COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg);
-declare WRITE_I_TO_FILE(int iXVolts, int iYVolts, int iPDia, float iXDeg, float iYDeg, float iAngle, float iEcc);
+declare WRITE_I_TO_FILE(int iXVolts, int iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc);
 
 
 process WTCH_EYE()
@@ -160,7 +160,7 @@ process LOCATE_EYE(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
     }
     // We want to pass this, since the Global var
     // could change while coputation is done
-    spawn COMPUTE_EYE_POS(iXVolts, iYVoltsiXDeg, iYDeg);
+    spawn COMPUTE_EYE_POS(iXVolts, iYVolts, iXDeg, iYDeg);
 } /* LOCATE_EYE */
 
 
@@ -199,23 +199,23 @@ process COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
         CURR_EYE_ANGLE = 9999999;        //undefined;
     }
     CURR_EYE_ECC = sqrt((iYDeg * iYDeg) + (iXDeg * iXDeg));
-    spawn WRITE_I_TO_FILE(iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
+    spawn WRITE_I_TO_FILE(iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
 } /* COMPUTE_EYE_POS */
 
 
-process WRITE_I_TO_FILE(int iXVolts, int iYVolts, int iPDia, float iXDeg, float iYDeg, float iAngle, float iEcc)
+process WRITE_I_TO_FILE(int iXVolts, int iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc)
 {
     if (DEBUG == 1)
     {
-        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
+        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
     }
     if (WRITE_I_TO_FILE)
     {
         if (!wroteHeader)
         {
-            writef("eyeVals.csv iXVolts,iYVolts,iPDia,iXDeg,iYDeg,iAngle,iEcc\n");
+            writef("eyeVals.csv iXVolts,iYVolts,iXDeg,iYDeg,iAngle,iEcc\n");
         }
-        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
-        writef("eyeVals.csv %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
+        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
+        writef("eyeVals.csv %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
     }
 }
