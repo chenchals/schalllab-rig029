@@ -24,6 +24,9 @@ process PROC_FIX_HOLD()
 {
 	declare float tempVRcount;
 	declare int tempFixHoldAdjust;
+	// Give enough time for next refresh to occur
+	// so that the queued vdosync commnad 
+	// can execute without wait
 	declare int offsetForVdoSync = 8;
 	
 	if (PROCESS_STATE)
