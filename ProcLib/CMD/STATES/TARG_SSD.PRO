@@ -205,7 +205,7 @@ process SSD_CHECK_SACC()
         printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoLateSaccade_[%d]\n", STAT_TARG_SSD, NoGoLateSaccade_);
         printf("****STAT_TARG_SSD[%d]: ERR (*NoGo Late Saccade*)[%d]/[%d] (MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION2);
         PROCESS_STATE = 1;
-        CURR_STAT     = STAT_OUTCOME;
+        CURR_STAT     = STAT_TARG_ACQ;
         spawn PRINT_MSG();
     }
 }/* SSD_CHECK_SACC */

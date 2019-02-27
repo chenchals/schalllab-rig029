@@ -13,12 +13,15 @@
 //
 
 declare WTCH_EYE();
-declare LOCATE_EYE(float degX, float degY);
-declare COMPUTE_EYE_POS(float currX, float currY);
+declare LOCATE_EYE(float iXDeg, float iYDeg);
+declare COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg);
+declare WRITE_I_TO_FILE(int iXVolts, int iYVolts, int iPDia, float iXDeg, float iYDeg, float iAngle, float iEcc);
 
 
 process WTCH_EYE()
 {
+    declare int   writeToFile = 1;
+    declare int   wroteHeader = 0;
     declare int   xVal, yVal;
     declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
     declare int   lasttime, eyeXpixels, eyeYpixels;
@@ -74,15 +77,15 @@ process WTCH_EYE()
 } /* WATCHEYE */
 
 
-process LOCATE_EYE(float degX, float degY)
+process LOCATE_EYE(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
 {
     // Sets flags for 6 global variables:
     // I_FIX, I_FIX_WIDE
     // I_TARG, I_TARG_WIDE
     // I_TARG_ANTI, I_TARG_ANTI_WIDE
     // Check Eye pos in FIX window area
-    if (  degX >= FIX_WIN[LEFT] && degX <= FIX_WIN[RIGHT]
-       && degY >= FIX_WIN[UP] && degY <= FIX_WIN[DOWN])
+    if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
+       && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
     {
         I_FIX            = 1;
         I_FIX_WIDE       = 0;
@@ -91,8 +94,8 @@ process LOCATE_EYE(float degX, float degY)
         I_TARG_ANTI      = 0;
         I_TARG_ANTI_WIDE = 0;
     }
-    else if (  degX >= FIX_WIN_LARGE[LEFT] && degX <= FIX_WIN_LARGE[RIGHT]
-            && degY >= FIX_WIN_LARGE[UP] && degY <= FIX_WIN_LARGE[DOWN])
+    else if (  iXDeg >= FIX_WIN_LARGE[LEFT] && iXDeg <= FIX_WIN_LARGE[RIGHT]
+            && iYDeg >= FIX_WIN_LARGE[UP] && iYDeg <= FIX_WIN_LARGE[DOWN])
     {
         // INACCURATE Between FIX_WIN_LARGE and FIX_WIN
         I_FIX            = 0;
@@ -102,8 +105,8 @@ process LOCATE_EYE(float degX, float degY)
         I_TARG_ANTI      = 0;
         I_TARG_ANTI_WIDE = 0;
     }
-    else if (  degX >= TARG_WIN[LEFT] && degX <= TARG_WIN[RIGHT]
-            && degY >= TARG_WIN[UP] && degY <= TARG_WIN[DOWN])
+    else if (  iXDeg >= TARG_WIN[LEFT] && iXDeg <= TARG_WIN[RIGHT]
+            && iYDeg >= TARG_WIN[UP] && iYDeg <= TARG_WIN[DOWN])
     {
         // Check Eye pos in TARGET window area
         I_FIX            = 0;
@@ -113,8 +116,8 @@ process LOCATE_EYE(float degX, float degY)
         I_TARG_ANTI      = 0;
         I_TARG_ANTI_WIDE = 0;
     }
-    else if (  degX >= TARG_WIN_LARGE[LEFT] && degX <= TARG_WIN_LARGE[RIGHT]
-            && degY >= TARG_WIN_LARGE[UP] && degY <= TARG_WIN_LARGE[DOWN])
+    else if (  iXDeg >= TARG_WIN_LARGE[LEFT] && iXDeg <= TARG_WIN_LARGE[RIGHT]
+            && iYDeg >= TARG_WIN_LARGE[UP] && iYDeg <= TARG_WIN_LARGE[DOWN])
     {
         // INACCURATE Between TARG_WIN_LARGE and TARG_WIN
         I_FIX            = 0;
@@ -124,8 +127,8 @@ process LOCATE_EYE(float degX, float degY)
         I_TARG_ANTI      = 0;
         I_TARG_ANTI_WIDE = 0;
     }
-    else if (  degX >= TARG_WIN_ANTI[LEFT] && degX <= TARG_WIN_ANTI[RIGHT]
-            && degY >= TARG_WIN_ANTI[UP] && degY <= TARG_WIN_ANTI[DOWN])
+    else if (  iXDeg >= TARG_WIN_ANTI[LEFT] && iXDeg <= TARG_WIN_ANTI[RIGHT]
+            && iYDeg >= TARG_WIN_ANTI[UP] && iYDeg <= TARG_WIN_ANTI[DOWN])
     {
         // Check Eye pos in ANTI - TARGET window area
         I_FIX            = 0;
@@ -135,8 +138,8 @@ process LOCATE_EYE(float degX, float degY)
         I_TARG_ANTI      = 1;
         I_TARG_ANTI_WIDE = 0;
     }
-    else if (  degX >= TARG_WIN_ANTI_LARGE[LEFT] && degX <= TARG_WIN_ANTI_LARGE[RIGHT]
-            && degY >= TARG_WIN_ANTI_LARGE[UP] && degY <= TARG_WIN_ANTI_LARGE[DOWN])
+    else if (  iXDeg >= TARG_WIN_ANTI_LARGE[LEFT] && iXDeg <= TARG_WIN_ANTI_LARGE[RIGHT]
+            && iYDeg >= TARG_WIN_ANTI_LARGE[UP] && iYDeg <= TARG_WIN_ANTI_LARGE[DOWN])
     {
         // INACCURATE Between TARG_WIN_ANTI_LARGE and I_TARG_ANTI_WIDE
         I_FIX            = 0;
@@ -157,51 +160,62 @@ process LOCATE_EYE(float degX, float degY)
     }
     // We want to pass this, since the Global var
     // could change while coputation is done
-    spawn COMPUTE_EYE_POS(degX, degY);
+    spawn COMPUTE_EYE_POS(iXVolts, iYVoltsiXDeg, iYDeg);
 } /* LOCATE_EYE */
 
 
-process COMPUTE_EYE_POS(float currX, float currY)
+process COMPUTE_EYE_POS(int iXVolts, int iYVolts, float iXDeg, float iYDeg)
 {
     // Write code to do arctan2d
     // see https://en.wikipedia.org/wiki/Atan2 (expression)
     declare float atanVal;
 
-    CURR_EYE_X_DEG = currX;
-    CURR_EYE_Y_DEG = currY;
+    CURR_EYE_X_DEG = iXDeg;
+    CURR_EYE_Y_DEG = iYDeg;
 
-    atanVal = atan(currY / currX);
-    if (currX > 0)
+    atanVal = atan(iYDeg / iXDeg);
+    if (iXDeg > 0)
     {
         CURR_EYE_ANGLE = rad2deg(atanVal);
     }
-    else if (currX < 0 && currY >= 0)
+    else if (iXDeg < 0 && iYDeg >= 0)
     {
         CURR_EYE_ANGLE = rad2deg(atanVal + 22 / 7);
     }
-    else if (currX < 0 && currY < 0)
+    else if (iXDeg < 0 && iYDeg < 0)
     {
         CURR_EYE_ANGLE = rad2deg(atanVal - 22 / 7);
     }
-    else if (currX == 0 && currY > 0)
+    else if (iXDeg == 0 && iYDeg > 0)
     {
         CURR_EYE_ANGLE = rad2deg(22 / (7 / 2));
     }
-    else if (currX == 0 && currY < 0)
+    else if (iXDeg == 0 && iYDeg < 0)
     {
         CURR_EYE_ANGLE = rad2deg(-22 / (7 * 2));
     }
-    else if (currX == 0 && currY == 0)
+    else if (iXDeg == 0 && iYDeg == 0)
     {
         CURR_EYE_ANGLE = 9999999;        //undefined;
     }
-    CURR_EYE_ECC = sqrt((currY * currY) + (currX * currX));
-    if (WRITE_FILE == 1)
-    {
-        writef("eyeVals.csv %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
-    }
+    CURR_EYE_ECC = sqrt((iYDeg * iYDeg) + (iXDeg * iXDeg));
+    spawn WRITE_I_TO_FILE(iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
+} /* COMPUTE_EYE_POS */
+
+
+process WRITE_I_TO_FILE(int iXVolts, int iYVolts, int iPDia, float iXDeg, float iYDeg, float iAngle, float iEcc)
+{
     if (DEBUG == 1)
     {
-        printf("EyeVals: %d,%d,%d,%d\n", currX * 10, currY * 10, CURR_EYE_ANGLE * 10, CURR_EYE_ECC * 10);
+        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
     }
-} /* COMPUTE_EYE_POS */
+    if (WRITE_I_TO_FILE)
+    {
+        if (!wroteHeader)
+        {
+            writef("eyeVals.csv iXVolts,iYVolts,iPDia,iXDeg,iYDeg,iAngle,iEcc\n");
+        }
+        printf("EyeVals: %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
+        writef("eyeVals.csv %d,%d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iPDia, iXDeg, iYDeg, iAngle, iEcc);
+    }
+}

@@ -69,49 +69,48 @@ process PROC_TRL_OUTCOME()
         dsendf("vp %d\n", STAT_OUTCOME, TRL_NUMBER, PG_BLANK);
 
         TRL_IS_TARG_ON_FLAG = 0;
-        
-        TIMEOUT_DURATION    = 0;
-		// set this as default and change to 			
-		// TRL_IS_TIMEOUT = 0; when not error
-		TRL_IS_TIMEOUT = 1;
+
+        TIMEOUT_DURATION = 0;
+        // set this as default and change to
+        // TRL_IS_TIMEOUT = 0; when not error
+        TRL_IS_TIMEOUT = 1;
     }
     // it is big conditional depending on the current trial type and tyep of error
 
-		if (TRIAL_TYPE == TRIAL_TYPE_GO)
-		{
-			spawnwait PROC_GO_OUTCOMES();
-		}
-		else if (TRIAL_TYPE == TRIAL_TYPE_STOP)
-		{
-			if (TRL_IS_STOP_SIGNAL_ON)
-			{
-				spawnwait PROC_NOGO_SS_OUTCOMES();
-			}
-			else
-			{
-				spawnwait PROC_NOGO_NO_SS_OUTCOMES();
-			}
-		}
-		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
-		TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
-		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
-		// determine this in the other procs:PROC_GO_OUTCOMES
-		TIMEOUT_TONE = FAILURE_TONE_SML_TIMEOUT;
-		PROCESS_STATE    = 1;
-		CURR_STAT        = STAT_ITI_CHK;
-
+    if (TRIAL_TYPE == TRIAL_TYPE_GO)
+    {
+        spawnwait PROC_GO_OUTCOMES();
+    }
+    else if (TRIAL_TYPE == TRIAL_TYPE_STOP)
+    {
+        if (TRL_IS_STOP_SIGNAL_ON)
+        {
+            spawnwait PROC_NOGO_SS_OUTCOMES();
+        }
+        else
+        {
+            spawnwait PROC_NOGO_NO_SS_OUTCOMES();
+        }
+    }
+    printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
+    TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
+    printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
+    // determine this in the other procs:PROC_GO_OUTCOMES
+    TIMEOUT_TONE  = FAILURE_TONE_SML_TIMEOUT;
+    PROCESS_STATE = 1;
+    CURR_STAT     = STAT_ITI_CHK;
 } /* PROC_OUTCOME */
 
 
 process PROC_GO_OUTCOMES()
 {
-	if (!TRL_IS_TARG_MIN_THT)
-	{
+    if (!TRL_IS_TARG_MIN_THT)
+    {
         TIMEOUT_DURATION = TIMEOUT_TARG_BRK_MIN_THT[0];
         spawn SEND_EVT(OutcomeGoError_);
 
-        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TIMEOUT_TARG_BRK_MIN_THT - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);		
-	}
+        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TIMEOUT_TARG_BRK_MIN_THT - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
+    }
     else if (TRL_FIX_BRK_TIME)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = TIMEOUT_FIX_BRK[0];
@@ -175,11 +174,12 @@ process PROC_GO_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
     }
-	else if (TRL_IS_TARG_MIN_THT)
+    else if (TRL_IS_TARG_MIN_THT)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = 0;
-	    TRL_IS_TIMEOUT = 0;
+        TRL_IS_TIMEOUT   = 0;
         spawn SEND_EVT(OutcomeGoCorrect_);
+
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
     }
 } /* PROC_GO_OUTCOMES */
@@ -264,7 +264,6 @@ process PROC_NOGO_NO_SS_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoErrorEarly_ [%d]; STOP Trial; No Stop Signal; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoErrorEarly_);
     }
-
 } /* PROC_NOGO_NO_SS_OUTCOMES */
 
 
@@ -340,11 +339,12 @@ process PROC_NOGO_SS_OUTCOMES()
 
         printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; Stop Signal; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
     }
-	else if (TRL_IS_FIX_MIN_SSHT)
+    else if (TRL_IS_FIX_MIN_SSHT)
     {//process for GO, NOGO_NO_SS, NOGO_SS
         TIMEOUT_DURATION = 0;
-	    TRL_IS_TIMEOUT = 0;
-        spawn SEND_EVT(OutcomeNoGoCorrect_);
-        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoCorrect_ [%d]; Go Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
+        TRL_IS_TIMEOUT   = 0;
+        spawn SEND_EVT(OutcomeNoGoCancelled_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoCancelled_ [%d]; Go Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoCancelled_);
     }
 } /* PROC_NOGO_SS_OUTCOMES */
