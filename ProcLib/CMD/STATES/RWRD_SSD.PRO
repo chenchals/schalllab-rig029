@@ -85,8 +85,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(FixHoldBrkMinSSHT_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: FixHoldBrkMinSSHT_[%d]\n", STAT_RWRD_SSD, FixHoldBrkMinSSHT_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*Min_SSHT*Broke  Fixation--PRE--*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY), STAT_DLTA_T [%d]\n", 
-					STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*Min_SSHT*Broke  Fixation--PRE--*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY), STAT_DLTA_T [%d]\n",
+                       STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -96,8 +96,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(FixHoldBrkPreRwrd_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: FixHoldBrkPreRwrd_[%d]\n", STAT_RWRD_SSD, FixHoldBrkPreRwrd_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*Pre-Reward*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY), STAT_DLTA_T [%d]\n", 
-					STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*Pre-Reward*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY), STAT_DLTA_T [%d]\n",
+                       STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -118,12 +118,12 @@ process PROC_RWRD_SSD()
         {
             if (TEMP_MIN_SSHT > STAT_ALLOWED_T && TEMP_MIN_SSHT <= TEMP_DELY_PLUS_DURATION)
             {
-				TRL_FIX_BRK_MIN_SSHT_TIME = time();
-				spawn SEND_EVT(FixHoldBrkMinSSHT_);
+                TRL_FIX_BRK_MIN_SSHT_TIME = time();
+                spawn SEND_EVT(FixHoldBrkMinSSHT_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: FixHoldBrkMinSSHT_[%d]\n", STAT_RWRD_SSD, FixHoldBrkMinSSHT_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--DURING--*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
-					STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--DURING--*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n",
+                       STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -133,8 +133,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(FixHoldBrkRwrd_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: FixHoldBrkRwrd_[%d][%d]\n", STAT_RWRD_SSD, FixHoldBrkRwrd_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*During-Reward*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
-					STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*During-Reward*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n",
+                       STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -151,8 +151,8 @@ process PROC_RWRD_SSD()
         }
         if (TRL_IS_FIX_MIN_SSHT)
         {
-            printf("****STAT_RWRD_SSD[%d]: OK (*SUCCESS**MIN_STOP_SIGNAL_HOLD_TIME*Fixspot Fixated*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
-				STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+            printf("****STAT_RWRD_SSD[%d]: OK (*SUCCESS**MIN_STOP_SIGNAL_HOLD_TIME*Fixspot Fixated*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n",
+                   STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
         }
@@ -165,8 +165,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(FixHoldBrkMinSSHT_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: FixHoldBrkMinSSHT_[%d]\n", STAT_RWRD_SSD, FixHoldBrkMinSSHT_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--POST--*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n", 
-					STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--POST--*)[%d]/[%d](TEMP_MIN_SSHT),[%d](RWRD_DELAY+RWRD_DURATION), STAT_DLTA_T [%d]\n",
+                       STAT_RWRD_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
