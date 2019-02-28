@@ -103,7 +103,7 @@ process PROC_RWRD_CHK()
     // Reward duration
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
-        if (!TRL_RWRD_ON_TIME)
+        if (!TRL_RWRD_ON_TIME && TRIAL_TYPE == TRIAL_TYPE_GO)
         {
             TRL_RWRD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);

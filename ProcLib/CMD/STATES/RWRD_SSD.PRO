@@ -53,7 +53,7 @@ process PROC_RWRD_SSD()
         TEMP_RWRD_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
         // This is incremented in the CMD_TSK.PRO --> state flow controller
         TEMP_MIN_SSHT           = MIN_STOP_SIGNAL_HOLD_TIME * TIME_DILATE_FACTOR;
-        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_DURATION;
+        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_RWRD_DURATION;
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -157,7 +157,7 @@ process PROC_RWRD_SSD()
             CURR_STAT     = STAT_OUTCOME;
         }
 
-        if (STAT_DLTA_T <= TEMP_MIN_SSHT && TEMP_MIN_SSHT > TEMP_DELY_PLUS_DURATION && !TRL_IS_FIX_MIN_SSHT)
+        if (STAT_DLTA_T <= TEMP_MIN_SSHT && !TRL_IS_FIX_MIN_SSHT)
         {
             if (!I_FIX)
             {

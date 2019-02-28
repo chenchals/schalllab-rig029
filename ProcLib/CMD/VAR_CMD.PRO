@@ -49,8 +49,8 @@ declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
 declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
 // min-max saccade time is same for Go and STOP trials
-declare int MIN_SACC_TIME = 100;
-declare int MAX_SACC_TIME = 800;
+declare int MIN_SACC_TIME = 500;
+declare int MAX_SACC_TIME = 4000;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
@@ -86,16 +86,16 @@ declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // Minimum time *after* stop signal that subject has to fixate
 // in order for trial to be considered as Cancel trial
 // Relative to TRL_STOP_SIGNAL_DELAY
-declare int SSD_CANCEL_TIME = 1000;
+declare int SSD_CANCEL_TIME = 6000;
 declare int FIX_HOLD_FOR_CANCEL;
 // Base Minimum time subject should hold gaze on FIXSPOT *After* TRL_STOP_SIGNAL_DELAY
-declare int BASE_STOP_SIGNAL_HOLD_TIME = 500;
+declare int BASE_STOP_SIGNAL_HOLD_TIME = 1000;
 // after TRL_STOP_SIGNAL_DELAY, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 2000;
+declare int   TONE_DELAY = 5000;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
@@ -105,7 +105,7 @@ declare int   RWRD_DELAY = 2000;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
-declare int   RWRD_DURATION = 50;
+declare int   RWRD_DURATION = 1000;
 
 //===========================Reward and punishment======================
 // timeout time for punishment computed

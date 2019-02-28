@@ -33,7 +33,7 @@ process JOULE()
     SSD_ARRY[10] = 28;
     SSD_ARRY[11] = 32;
     SSD_ARRY[12] = 36;
-    SSD_ARRY[13] = 40;
+    SSD_ARRY[13] = 150;
 
     tempVar = 13;
     while (tempVar < N_SSD_MAX)
