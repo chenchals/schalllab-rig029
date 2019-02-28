@@ -106,15 +106,15 @@ process PROC_TARG_SSD()
             spawnwait SSD_CHECK_SACC();
         }
     }
-    else if (STAT_DLTA_T > STAT_ALLOWED_T  && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
+    else if (STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // from SSD till it is time to expire Cancel time for trial to be considered successful cancel
         if (!queuedStopSignalPage)
         {
             queuedStopSignalPage = 1;
             dsendf("vp %d\n", PG_SIGNAL_PD);
-            dsendf("vw 1\n");
-            dsendf("vp %d\n", PG_SIGNAL);
+            //dsendf("vw 1\n");
+            //dsendf("vp %d\n", PG_SIGNAL);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
         }
 

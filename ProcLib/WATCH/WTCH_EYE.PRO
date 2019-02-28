@@ -17,7 +17,7 @@ declare LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg);
 declare COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg);
 declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc);
 
-    declare int   writeIToFile = 1;
+    declare int   writeIToFile = 0;
     declare int   wroteIHeader = 0;
 
 process WTCH_EYE()
@@ -213,7 +213,7 @@ process WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, 
 		{
         if (!wroteIHeader)
         {
-            wroteHeader = 1;
+            wroteIHeader = 1;
             writef("eyeVals.csv iXVolts,iYVolts,iXDeg,iYDeg,iAngle,iEcc\n");
         }
         //printf("EyeVals: %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
