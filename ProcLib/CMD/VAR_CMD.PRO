@@ -26,8 +26,8 @@ declare int          TRIAL_TYPE;
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 0.0;
-declare float        STOP_WEIGHT   = 100.0;
+declare float        GO_WEIGHT     = 100.0;
+declare float        STOP_WEIGHT   = 0.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // temporary globals to be used in state processing
 declare int          TEMP_MIN_THT;
@@ -49,12 +49,12 @@ declare int EXPO_JITTER = 1;
 // minimum - maximum time after fixation before target presentation
 declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
 // min-max saccade time is same for Go and STOP trials
-declare int MIN_SACC_TIME = 100;
-declare int MAX_SACC_TIME = 400;
+declare int MIN_SACC_TIME = 300;
+declare int MAX_SACC_TIME = 800;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
-declare int MAX_SACC_DURATION = 100;
+declare int MAX_SACC_DURATION = 500;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int   IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1)

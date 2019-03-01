@@ -84,6 +84,11 @@ declare int TRL_IS_STOP_SIGNAL_ON;
 declare int TRL_STOP_SIGNAL_TIME;
 declare int TRL_STOP_SIGNAL_DELAY;
 declare int TRL_STOP_SIGNAL_DURATION;
+
+declare constant int NOGO_CANCELLED_TRIAL = 1;
+declare constant int NOGO_NON_CANCELLED_TRIAL = 2;
+declare constant int NOGO_ERROR_TRIAL = 3;
+
 declare int TRL_IS_NON_CANCELLED;
 declare int TRL_IS_CANCELLED;
 
@@ -400,7 +405,7 @@ process PICK_TRL_SSD()
     }
     // must get from SSD_ARRY; use staircasing....
     //printf("****SET_CMD/PICK_TRL_SSD: Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
-    TRL_STOP_SIGNAL_DELAY = MAX_SSD; //SSD_ARRY[random(N_SSD)];
+    TRL_STOP_SIGNAL_DELAY = 4; //SSD_ARRY[random(N_SSD)];
     //printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
 

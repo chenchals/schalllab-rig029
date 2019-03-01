@@ -192,11 +192,12 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 	
 	if (TRL_IS_TARG_MIN_THT)
 	{
+		TRL_IS_NON_CANCELLED = 1;
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
 		spawn SEND_EVT(OutcomeNoGoNonCancelled_);
-		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
-		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: **OutcomeNoGoNonCancelled_** [%d]; STOP Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoNonCancelled_);
+		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");		
+		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: **OutcomeNoGoNonCancelled_** [%d]; TRL_STAIRCASE_SSD_FLAG [%d]; STOP Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoNonCancelled_, TRL_STAIRCASE_SSD_FLAG);
 	}
 	else if (TRL_FIX_BRK_TIME)
 	{
@@ -268,11 +269,12 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
 	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n",STAT_OUTCOME,TRL_NUMBER);
 	if (TRL_IS_FIX_MIN_SSHT)
 	{
+		TRL_IS_CANCELLED = 1;
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
 		spawn SEND_EVT(OutcomeNoGoCancelled_);
 		printf("---CANCELLED------CANCELLED------SSD [%d, %dms]------CANCELLED------CANCELLED---\n",TRL_STOP_SIGNAL_DELAY, TRL_STOP_SIGNAL_DURATION);
-		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoCancelled_ [%d]; Go Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoCancelled_);
+		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoCancelled_ [%d]; TRL_STAIRCASE_SSD_FLAG  [%d]; STOP Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoCancelled_,TRL_STAIRCASE_SSD_FLAG);
 	}
 	else if (TRL_FIX_BRK_PRE_TONE_TIME)
 	{

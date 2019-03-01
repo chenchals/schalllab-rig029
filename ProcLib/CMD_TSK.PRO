@@ -35,7 +35,7 @@ declare IDLE();
 declare UPD8_MSG();
 declare WRITE_TO_FILE();
 
-declare int WRITE_TO_FILE_FLAG = 1;
+declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER = 0;
 declare int TEST = 100;
 declare int SHOW_PAGES = 0;

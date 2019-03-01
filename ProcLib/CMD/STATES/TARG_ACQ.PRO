@@ -46,18 +46,26 @@ process PROC_TARG_ACQ()
         TRL_SACC_DURATION = TRL_SACC_DURATION + 1;
         if (I_TARG)
         {
+			
             TRL_IS_TARG_ACQUIRED = 1;
 			TRL_STAIRCASE_SSD_FLAG = 1;
             TRL_TARG_ACQ_TIME    = time();
             TRL_DECIDE_TIME      = time();
             spawn SEND_EVT(AcquireTarget_);
             spawn SEND_EVT(Decide_);
-
-            PROCESS_STATE = 1;
-            CURR_STAT     = STAT_TONE_CHK;
-
             printf("****STAT_TARG_ACQ[%d]: OK sent Event: AcquireTarget_[%d], Decide_[%d]\n", STAT_TARG_ACQ, AcquireTarget_, Decide_);
             printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
+			
+            PROCESS_STATE = 1;
+
+			if( TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME)
+			{
+				CURR_STAT = STAT_OUTCOME;				
+			}
+			else
+			{
+				CURR_STAT = STAT_TONE_CHK;
+			}
         }
     }
     else
