@@ -103,6 +103,7 @@ process PROC_RWRD_CHK()
     // Reward duration
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
+		// DO not give juice for NOGO trial
         if (!TRL_RWRD_ON_TIME && TRIAL_TYPE == TRIAL_TYPE_GO)
         {
             TRL_RWRD_ON_TIME = time();
@@ -110,6 +111,10 @@ process PROC_RWRD_CHK()
             spawn SEND_EVT(RewardOn_);
             printf("****STAT_RWRD_CHK[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_CHK, RewardOn_);
         }
+		else if(!TRL_RWRD_ON_TIME && TRIAL_TYPE == TRIAL_TYPE_STOP)
+		{
+			spawn TONE(1000,TEMP_RWRD_DURATION);
+		}
         if (!I_TARG && !TRL_IS_TARG_MIN_THT)
         {
             if (TEMP_MIN_THT > STAT_ALLOWED_T && TEMP_MIN_THT <= TEMP_DELY_PLUS_DURATION)

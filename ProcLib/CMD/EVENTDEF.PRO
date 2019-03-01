@@ -38,10 +38,9 @@ declare constant OutcomeFixBreak_       = 1552;
 declare constant OutcomeGoCorrect_      = 1560;
 declare constant OutcomeGoError_        = 1562;
 declare constant OutcomeNoGoCancelled_  = 1570;
-declare constant OutcomeNoGoWrong_      = 1572;
-declare constant OutcomeNoGoWrongEarly_ = 1574;
-declare constant OutcomeNoGoError_      = 1574;
-declare constant OutcomeNoGoErrorEarly_ = 1576;
+declare constant OutcomeNoGoError_      = 1572;
+declare constant OutcomeNoGoNonCancelled_  = 1574;
+
 
 // Codes from 1600-1999
 declare constant TaskStart_     = 1600;

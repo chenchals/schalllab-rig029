@@ -135,6 +135,8 @@ declare int TRL_ERLY_SACC_TIME;
 declare int TRL_LATE_SACC_TIME;
 // should make a saccade, but eye still in Fix window
 declare int TRL_NO_SACC_TIME;
+// falg to know if saccade was OK, and it landed on Target regardless on NONCANCELLED outcome
+declare int TRL_STAIRCASE_SSD_FLAG;
 // saccade left Fix window, but eye not in Target window
 declare int TRL_TARG_ACQ_ERROR_TIME;
 // saccade dutation
@@ -254,11 +256,11 @@ process SET_CMD_TRL()
     // Compute MIN_TARG_HOLD_TIME
     spawnwait COMPUTE_MIN_THT();
     // Setup CMD PAGES
-    printf("Calling CMD-PGS\n");
+    //printf("Calling CMD-PGS\n");
     spawnwait CMD_PGS();
     // compute trial duration (mainly for fixed trial length)
     spawnwait COMPUTE_TRL_DURATION();
-    printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n", TRIAL_TYPE, CURR_TARG_IDX, CURR_TARG_ANGLE);
+    //printf("TRIAL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n", TRIAL_TYPE, CURR_TARG_IDX, CURR_TARG_ANGLE);
 } /* SET_CMD_TRL */
 
 
@@ -290,12 +292,13 @@ process COMPUTE_TRL_DURATION()
     {
         if (TRL_DURATION > FIXED_TRL_LENGTH_TIME)
         {
+			TRL_DURATION = TRL_DURATION;
             // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
             // TRL_DURATION adjusted to
-            printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n");
-            printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
-            printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
-            printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
+            //printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n");
+            //printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
+            //printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
+            //printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
         }
         else
         {
@@ -315,20 +318,20 @@ process SET_CANCEL_TIME()
     // must be greater than MAX_SACC_TIME
     //declare int SSD_CANCEL_TIME = 1500;
     //declare int FIX_HOLD_FOR_CANCEL;
-    printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
-    printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
+    //printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
+    //printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
     tempVar = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME;
     if (tempVar < MAX_SACC_TIME + MAX_SACC_DURATION)
     {
-        printf("**********CANCEL_TIME CHANGE ALERT********************\n");
-        printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME + MAX_SACC_DURATION [%d]****\n", tempVar, MAX_SACC_TIME + MAX_SACC_DURATION);
+        //printf("**********CANCEL_TIME CHANGE ALERT********************\n");
+        //printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME + MAX_SACC_DURATION [%d]****\n", tempVar, MAX_SACC_TIME + MAX_SACC_DURATION);
         FIX_HOLD_FOR_CANCEL = (MAX_SACC_TIME + MAX_SACC_DURATION) - ceil(MIN_SSD * REFRESH_RATE);
-        printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
+        //printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
     }
     else
     {
         FIX_HOLD_FOR_CANCEL = SSD_CANCEL_TIME;
-        printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
+        //printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
     }
 }
 
@@ -359,23 +362,23 @@ process SET_MIN_MAX_SSD()
         }
         tempCount = tempCount + 1;
     }
-    printf("****SET_CMD/SET_MIN_MAX_SSD: MIN_SSD, MAX_SSD[in vert refresh] = [%d, %d]****\n", MIN_SSD, MAX_SSD);
+    //printf("****SET_CMD/SET_MIN_MAX_SSD: MIN_SSD, MAX_SSD[in vert refresh] = [%d, %d]****\n", MIN_SSD, MAX_SSD);
 }
 
 
 process COMPUTE_MIN_SSHT()
 {
     MIN_STOP_SIGNAL_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_STOP_SIGNAL_HOLD_TIME;
-    printf("****SET_CMD/COMPUTE_MIN_SSHT: MIN_STOP_SIGNAL_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d****\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
-           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_STOP_SIGNAL_HOLD_TIME, MIN_STOP_SIGNAL_HOLD_TIME);
+    //printf("****SET_CMD/COMPUTE_MIN_SSHT: MIN_STOP_SIGNAL_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d****\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
+    //       TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_STOP_SIGNAL_HOLD_TIME, MIN_STOP_SIGNAL_HOLD_TIME);
 }/* COMPUTE_MIN_SSHT */
 
 
 process COMPUTE_MIN_THT()
 {
     MIN_TARG_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (TONE_DELAY + TONE_DURATION + RWRD_DELAY + RWRD_DURATION) + BASE_TARG_HOLD_TIME;
-    printf("****SET_CMD/COMPUTE_MIN_THT: MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d****\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
-           TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARG_HOLD_TIME, MIN_TARG_HOLD_TIME);
+    //printf("****SET_CMD/COMPUTE_MIN_THT: MIN_TARG_HOLD_TIME = %d*(%d+%d+%d+%d) + %d = %d****\n", USE_TONE_AND_RWRD_FOR_MIN_THT,
+    //       TONE_DELAY, TONE_DURATION, RWRD_DELAY, RWRD_DURATION, BASE_TARG_HOLD_TIME, MIN_TARG_HOLD_TIME);
 }/* COMPUTE_MIN_THT */
 
 
@@ -396,9 +399,9 @@ process PICK_TRL_SSD()
 		nexttick;
     }
     // must get from SSD_ARRY; use staircasing....
-    printf("****SET_CMD/PICK_TRL_SSD: Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
+    //printf("****SET_CMD/PICK_TRL_SSD: Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
     TRL_STOP_SIGNAL_DELAY = MAX_SSD; //SSD_ARRY[random(N_SSD)];
-    printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
+    //printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
 
 
@@ -526,6 +529,7 @@ process INIT_TRL_VARS()
     TRL_ERLY_SACC_TIME           = 0;
     TRL_LATE_SACC_TIME           = 0;
     TRL_NO_SACC_TIME             = 0;
+	TRL_STAIRCASE_SSD_FLAG       = 0;
     TRL_TARG_ACQ_ERROR_TIME      = 0;
     TRL_SACC_DURATION            = 0;
     TRL_TARG_ACQ_TIME            = 0;

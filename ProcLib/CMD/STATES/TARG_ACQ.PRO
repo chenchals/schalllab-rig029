@@ -47,6 +47,7 @@ process PROC_TARG_ACQ()
         if (I_TARG)
         {
             TRL_IS_TARG_ACQUIRED = 1;
+			TRL_STAIRCASE_SSD_FLAG = 1;
             TRL_TARG_ACQ_TIME    = time();
             TRL_DECIDE_TIME      = time();
             spawn SEND_EVT(AcquireTarget_);
@@ -64,6 +65,7 @@ process PROC_TARG_ACQ()
         if (!I_TARG)
         {
             TRL_IS_TARG_ACQUIRED    = 0;
+			TRL_STAIRCASE_SSD_FLAG = 0;
             TRL_TARG_ACQ_ERROR_TIME = time();
             spawn SEND_EVT(AcquireTargetError_);
             //spawn SEND_EVT(GoError_);
