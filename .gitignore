@@ -1,2 +1,5 @@
 *.DS_Store
 ._.gitignore
+~*
+TEST/*.csv
+ProcLib_103/TEST/*.csv

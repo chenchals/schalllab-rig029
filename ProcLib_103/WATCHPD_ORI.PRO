@@ -10,26 +10,22 @@
 //            3. WAIT for nexttick before continuing while(1) loop
 //
 
-#include C:/TEMPO/ProcLib/SEND_EVT.pro
+//#include C:/TEMPO/ProcLib/SEND_EVT.pro
 
 declare WATCHPD(int PhotoD_channel);
 
 process WATCHPD(int PhotoD_channel)
 {
 
-	declare int lastTriggerOn;
-	declare int ip;
-	declare int pdCount;
-	declare float pdSum;
+
 	declare int maxPdVal = -900;
   declare int nextRefreshIn;
 
 	while (1)
 	{
-		declare int pd1 = 0
-		nextRefreshIn = Int(floor(1000.0/Refresh_rate)) + 1;
+		nextRefreshIn = Int(floor(1000.0/Refresh_rate));
 		pdVal = atable(PhotoD_channel);
-
+        writef("PDVals.csv %d,", pdVal);
 		if (pdVal > maxPdVal)
 		{
 			maxPdVal = pdVal;
@@ -38,17 +34,16 @@ process WATCHPD(int PhotoD_channel)
 		if ((pdIsOn == 0) && (pdVal > pdThresh))
 		{
 			pdIsOn = 1;
-			lastTriggerOn = time();
-      spawn SEND_EVT(PDTrigger_);
-			//printf("maxPdVal = %d, pdVal = %d, pdThresh = %d\n", maxPdVal, pdVal, pdThresh);
+			pdTriggerTime = time();
+			spawn SEND_EVT(PDTrigger_);
+			writef("PDVals.csv %d\n", pdTriggerTime);
 		}
 		// Unset pdTrigger flag
-		if ((pdIsOn == 1) && (pdVal < pdThresh) && ((time() - lastTriggerOn) > nextRefreshIn))
+		if ((pdIsOn == 1) && ((time() - pdTriggerTime) > nextRefreshIn))
 		{
 			pdIsOn = 0;
 			maxPdVal = -900;
 		}
-		writef("watchpd.log %d,%d,%d\n",pdVect[0],pdVect[1],pdVect[2]);
 		nexttick;
 	}
 }
