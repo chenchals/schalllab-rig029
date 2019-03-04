@@ -9,7 +9,7 @@
 //       Adapted from BITSWEEP.PRO
 //
 
-#include C: / TEMPO / ProcLib / UTIL / DISTRIB.PRO
+#include C:/TEMPO/ProcLib/UTIL/DISTRIB.PRO
 
 declare DISTRIB_TEST();
 
