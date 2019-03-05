@@ -31,18 +31,18 @@ process JITTER_TEST() enabled
     while (temp < nPoints)
     {
         spawnwait EXPONENT_JITTER(minT, maxT);
-
         exponentJitter = JITTER_INT;
+		
         spawnwait UNIFORM_JITTER(minT, maxT);
-
         uniformJitter = JITTER_INT;
+		
         spawnwait GAUSS_JITTER(meanT, varianceT);
-
         gaussJitter = JITTER_INT;
+		
         printf("%d,%d,%d\n", exponentJitter, uniformJitter, gaussJitter);
         writef("jitters.csv %d,%d,%d\n", exponentJitter, uniformJitter, gaussJitter);
         temp = temp + 1;
-        nexttick;
+        nexttick 2;
     }
     printf("\n****Writing file : jitters.csv---will complete--ONLY when you exit the TEMPO Client****\n");
 }/* DISTRIB_TEST */
