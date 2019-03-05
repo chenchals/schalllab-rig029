@@ -3,7 +3,7 @@
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
 ; Thu Jan 24 08:13:40 2019
-; CLOAD DISTTEST.pcf
+; CLOAD JITR_TST.pcf
 
 ; tempow 16.10 Set 49.20   'ADMINf811251' connected to 'TEMPO1'
 ; KPED 17.1 Set 49
@@ -55,10 +55,10 @@ ACHANINFO 0
 
 ECHANINFO 0
 
-PLOAD DISTTEST.PRO
+PLOAD JITR_TST.PRO
 
-DLOAD DISTTEST.dcf
-DSHOW Distributions_Test
+DLOAD JITR_TST.dcf
+DSHOW Jitter_Test
 
 ; DATABASES=16
 
