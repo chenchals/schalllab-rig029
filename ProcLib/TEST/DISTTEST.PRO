@@ -25,7 +25,7 @@ process DISTRIB_TEST() enabled
   declare int expJitter, uniformJitter, gausRand;
 
   declare int temp = 0;
-
+  
   writef("distribs.csv expJitter, uniformJitter, gausRand\n");
   while(temp < nPoints)
   {
@@ -35,7 +35,6 @@ process DISTRIB_TEST() enabled
     uniformJitter = RAND_NUM;
     spawnwait RANDOM_GAUS(meanT, sdT);
     gausRand = RAND_NUM;
-
     printf("%d,%d,%d\n",expJitter, uniformJitter, gausRand);
     writef("distribs.csv %d,%d,%d\n",expJitter, uniformJitter, gausRand);
 
