@@ -3,6 +3,10 @@ declare CLEAR_VDO();
 
 process CLEAR_VDO()
 {
-	printf("Clearing Screen\n");
-	dsendf("cl\n");
+	dioSetMode(0, PORTA|PORTB|PORTC); 	
+	mio_dig_set(JUICE_CHANNEL,0);		
+	mio_fout(0);	
+	dsend("vi 256;");					
+	dsend("ca");
 }
+

@@ -16,6 +16,7 @@ process STAIRCASE_SSD_TEST() enabled
 {
   declare int nTrials = 2000;
   declare int trlNo;
+  declare int nogoErrorRunCount = 4;
   declare int stopOutcomes[3] = {OutcomeNoGoCancelled_, OutcomeNoGoNonCancelled_, OutcomeNoGoError_};
   declare int goOutcomes[2] = {OutcomeGoCorrect_, OutcomeGoError_};
   SSD_STEP_UP = 3;
@@ -39,15 +40,7 @@ process STAIRCASE_SSD_TEST() enabled
           }
           else
           {
-            //if(TRL_LAST_STOP_OUTCOME_EVNTCODE == OutcomeNoGoError_ && random(10) > 4)
-            //{
-              // do not change the outcome for some time
-             //   TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
-            //}
-            //else
-            //{
-              TRL_LAST_STOP_OUTCOME_EVNTCODE = stopOutcomes[random(3)];
-            //}
+             TRL_LAST_STOP_OUTCOME_EVNTCODE = stopOutcomes[random(3)];
           }
         }
         // set the trl SSD

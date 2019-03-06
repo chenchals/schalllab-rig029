@@ -126,7 +126,6 @@ process PROC_TARG_SSD()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)
     {
-		spawn TONE(1000,50);
         // if reached here then it is a successful cancel  trial
         if (I_FIX)
         {

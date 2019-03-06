@@ -596,7 +596,7 @@ process INIT_TRL_VARS()
     TRL_ERLY_SACC_TIME             = 0;
     TRL_LATE_SACC_TIME             = 0;
     TRL_NO_SACC_TIME               = 0;
-    TRL_STAIRCASE_SSD_FLAG         = 0;
+    //TRL_STAIRCASE_SSD_FLAG         = 0;
     TRL_TARG_ACQ_ERROR_TIME        = 0;
     TRL_SACC_DURATION              = 0;
     TRL_TARG_ACQ_TIME              = 0;
@@ -646,9 +646,13 @@ process INIT_TRL_VARS()
     TRL_TARG_VRT_RFRSH_COUNT       = 0;
     TRL_TARG_SSD_VRT_RFRSH_COUNT   = 0;
     TRL_OUTCOME_EVNTCODE           = 0;
-    TRL_PREV_TRL_TYPE              = 0;
-    TRL_PREV_OUTCOME_EVNTCODE      = 0;
-    TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
-    TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
-    TRL_LAST_SSD_IDX               = 0;
+	TRL_STAIRCASE_SSD_FLAG = DO_STAIRCASE_NEXT_SSD;
+	if(TRL_NUMBER == 0)
+	{
+		TRL_PREV_TRL_TYPE              = 0;
+		TRL_PREV_OUTCOME_EVNTCODE      = 0;
+		TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
+		TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
+		TRL_LAST_SSD_IDX               = 0;
+	}
 }   /* INIT_TRL_VARS */
