@@ -86,6 +86,7 @@ declare int TRL_IS_TARG_MIN_THT;
 declare int TRL_IS_TIMEOUT;
 declare int TRL_IS_STOP_SIGNAL_ON;
 declare int TRL_STOP_SIGNAL_TIME;
+declare in TRL_STOP_SIGNAL_DELAY_IDX;
 declare int TRL_STOP_SIGNAL_DELAY;
 declare int TRL_STOP_SIGNAL_DURATION;
 
@@ -216,6 +217,7 @@ declare int TRL_PREV_TRL_TYPE;
 declare int TRL_PREV_OUTCOME_EVNTCODE;
 declare int TRL_LAST_STOP_OUTCOME_EVNTCODE;
 declare int TRL_LAST_GO_OUTCOME_EVNTCODE;
+declare int TRL_LAST_SSD_IDX;
 // Trial counts for session
 declare int SESS_N_GO_TRLS;
 declare int SESS_N_GO_CORRECT_TRLS;
@@ -390,7 +392,7 @@ process COMPUTE_MIN_SSHT()
 	declare int tempVar;
 	tempVar = TONE_DELAY_MEAN + TONE_DELAY_VARIANCE + TONE_DURATION;
 	tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
-	
+
     MIN_STOP_SIGNAL_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (tempVar) + BASE_STOP_SIGNAL_HOLD_TIME;
 }/* COMPUTE_MIN_SSHT */
 
@@ -444,8 +446,6 @@ process SET_RWRD_DELAY()
 process PICK_TRL_SSD()
 {
     declare int tempCount;
-
-    SESS_N_STOP_TRLS = SESS_N_STOP_TRLS + 1;
     tempCount        = 0;
     N_SSD            = 0;
     while (tempCount < N_SSD_MAX)
@@ -459,7 +459,10 @@ process PICK_TRL_SSD()
     }
     // must get from SSD_ARRY; use staircasing....
     //printf("****SET_CMD/PICK_TRL_SSD: Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
-    TRL_STOP_SIGNAL_DELAY = 4; //SSD_ARRY[random(N_SSD)];
+    //TRL_STOP_SIGNAL_DELAY_IDX = 4;//SSD_ARRY[random(N_SSD)]; Call STAIR here?
+    spawnwait STAIRCASE_SSD();
+    TRL_STOP_SIGNAL_DELAY = SSD_ARRY[TRL_STOP_SIGNAL_DELAY_IDX];
+    //TRL_LAST_SSD_IDX = TRL_STOP_SIGNAL_DELAY_IDX;
     //printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
 
@@ -565,6 +568,7 @@ process INIT_TRL_VARS()
     TRL_IS_STOP_SIGNAL_ON          = 0;
     TRL_STOP_SIGNAL_TIME           = 0;
     TRL_STOP_SIGNAL_DELAY          = 0;
+    TRL_STOP_SIGNAL_DELAY_IDX      = 0;
     TRL_STOP_SIGNAL_DURATION       = 0;
     TRL_IS_NON_CANCELLED           = 0;
     TRL_IS_CANCELLED               = 0;
@@ -644,4 +648,5 @@ process INIT_TRL_VARS()
     TRL_PREV_OUTCOME_EVNTCODE      = 0;
     TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
     TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
+    TRL_LAST_SSD_IDX               = 0;
 }   /* INIT_TRL_VARS */

@@ -28,7 +28,6 @@ declare constant int TRIAL_TYPE_STOP = 1;
 declare constant int NOGO_CANCELLED_TRIAL     = 1;
 declare constant int NOGO_NON_CANCELLED_TRIAL = 2;
 declare constant int NOGO_ERROR_TRIAL         = 3;
-
 // Percentage of trial types (must sum to 100)
 declare float        GO_WEIGHT     = 100.0;
 declare float        STOP_WEIGHT   = 0.0;
@@ -91,8 +90,13 @@ declare int   N_SSD;
 // min max ssd
 declare int   MIN_SSD;
 declare int   MAX_SSD;
-// do we select the next SSD based on a staircasing algorithm?
+// do we select the next SSD based on a staircasing algorithm
+// No coding for setting of '0' :-)
 declare int   DO_STAIRCASE_NEXT_SSD = 1;
+// Step up max index for increasing SSD. current idx + (random(3) +1)
+declare int SSD_STEP_UP = 3;
+// Step down max index for decreasin SSD. current idx - (random(3) +1)
+declare int SSD_STEP_DOWN = 3;
 // Minimum time *after* stop signal that subject has to fixate
 // in order for trial to be considered as Cancel trial
 // Relative to TRL_STOP_SIGNAL_DELAY

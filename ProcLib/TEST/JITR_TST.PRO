@@ -1,13 +1,11 @@
 //==========================================================================
-// DISTTEST.PRO
+// JITR_TST.PRO
 //   Description: Test different distributions
 //   Author: chenchal.subraveti@vanderbilt.edu
-//   Date: 2019-02-08
+//   Date: 2019-03-05
 //==========================================================================
 //  Revision History:
-//  002: 2019-02-08 chenchal subraveti
-//       Adapted from BITSWEEP.PRO
-//
+//  002: 2019-03-06 chenchal subraveti
 
 #include C:/TEMPO/ProcLib/UTIL/JITTER.PRO
 
@@ -43,4 +41,4 @@ process JITTER_TEST() enabled
         nexttick 2;
     }
     printf("\n****Writing file : jitters.csv---will complete--ONLY when you exit the TEMPO Client****\n");
-}/* DISTRIB_TEST */
+}/* JITTER_TEST */
