@@ -61,7 +61,7 @@ process UNIFORM_JITTER(int meanT, int diffT)
 // Exponential distribution
 process EXPONENT_JITTER(int meanT, int diffT)
 {
-    declare float diffT, jitter;
+    declare float jitter;
 
     jitter     = (random(1001)) / 1000.0;
     jitter     = exp(-1.0 * jitter / 0.25);

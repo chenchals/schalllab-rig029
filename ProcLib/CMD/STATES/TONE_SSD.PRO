@@ -88,7 +88,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(FixHoldBrkMinSSHT_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: FixHoldBrkMinSSHT_[%d]\n", STAT_TONE_SSD, FixHoldBrkMinSSHT_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--PRE--*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--PRE--*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, 
+						TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -98,7 +99,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(FixHoldBrkPreTone_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: FixHoldBrkPreTone_[%d]\n", STAT_TONE_SSD, FixHoldBrkPreTone_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*Pre-Tone*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*Pre-Tone*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, 
+						TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -124,7 +126,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(FixHoldBrkMinSSHT_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: FixHoldBrkMinSSHT_[%d]\n", STAT_TONE_SSD, FixHoldBrkMinSSHT_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--DURING--*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*Min_SSHT*Broke Fixation--DURING--*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_SSD,
+						TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -134,7 +137,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(FixHoldBrkTone_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: FixHoldBrkTone_[%d]\n", STAT_TONE_SSD, FixHoldBrkTone_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*During-Tone*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY+TRL_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*During-Tone*Broke Fixation*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY+TRL_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, 
+						TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -147,7 +151,8 @@ process PROC_TONE_SSD()
         spawn SEND_EVT(ToneOff_);
 
         printf("****STAT_TONE_SSD[%d]: OK sent Event: ToneOff_[%d]\n", STAT_TONE_SSD, ToneOff_);
-        printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY+TRL_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+        printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_MIN_SSHT),[%d] (TRL_TONE_DELAY+TRL_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD, 
+				TRL_FIX_HOLD_DURATION, TEMP_MIN_SSHT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_RWRD_SSD;
     }

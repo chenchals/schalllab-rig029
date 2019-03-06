@@ -84,7 +84,8 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY), STAT_DLTA_T [%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY), STAT_DLTA_T [%d]\n", 
+						STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -94,7 +95,8 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(TargHoldBrkPreRwrd_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPreRwrd_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPreRwrd_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY), STAT_DLTA_T [%d]\n", STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY), STAT_DLTA_T [%d]\n", 
+						STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
