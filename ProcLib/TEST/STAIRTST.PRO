@@ -39,33 +39,34 @@ process STAIRCASE_SSD_TEST() enabled
           }
           else
           {
-            if(TRL_LAST_STOP_OUTCOME_EVNTCODE == OutcomeNoGoError_)
-            {
+            //if(TRL_LAST_STOP_OUTCOME_EVNTCODE == OutcomeNoGoError_ && random(10) > 4)
+            //{
               // do not change the outcome for some time
-              if (random(10) > 4)
-              {
-                TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
-              }
-            }
-            else
-            {
-              TRL_LAST_GO_OUTCOME_EVNTCODE = stopOutcomes[random(3)];
-            }
+             //   TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
+            //}
+            //else
+            //{
+              TRL_LAST_STOP_OUTCOME_EVNTCODE = stopOutcomes[random(3)];
+            //}
           }
         }
         // set the trl SSD
         if(TRL_TYPE == TRIAL_TYPE_STOP)
         {
-          spawnwait STAIRCASE_SSD();
+		  spawnwait STAIRCASE_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
+		  TRL_STOP_SIGNAL_DELAY_IDX = STAIRCASE_SSD_IDX;
+          printf("%d,%d,%d,%d,%d,%d\n", trlNo,TRL_TYPE,TRL_LAST_GO_OUTCOME_EVNTCODE,TRL_LAST_STOP_OUTCOME_EVNTCODE,TRL_LAST_SSD_IDX,TRL_STOP_SIGNAL_DELAY_IDX);
+		  writef("stairSsd.csv %d,%d,%d,%d,%d,%d\n", trlNo,TRL_TYPE,TRL_LAST_GO_OUTCOME_EVNTCODE,TRL_LAST_STOP_OUTCOME_EVNTCODE,TRL_LAST_SSD_IDX,TRL_STOP_SIGNAL_DELAY_IDX);
+
+		  TRL_LAST_SSD_IDX = TRL_STOP_SIGNAL_DELAY_IDX;
         }
         else
         {
           // should we put a -1?
           TRL_STOP_SIGNAL_DELAY_IDX = 0;
-        }
-
-        printf("%d,%d,%d,%d,%d,%d\n", trlNo,TRL_TYPE,TRL_LAST_GO_OUTCOME_EVNTCODE,TRL_LAST_STOP_OUTCOME_EVNTCODE,TRL_LAST_SSD_IDX,TRL_STOP_SIGNAL_DELAY_IDX);
-        writef("stairSsd.csv %d,%d,%d,%d,%d,%d\n", trlNo,TRL_TYPE,TRL_LAST_GO_OUTCOME_EVNTCODE,TRL_LAST_STOP_OUTCOME_EVNTCODE,TRL_LAST_SSD_IDX,TRL_STOP_SIGNAL_DELAY_IDX);
+           printf("%d,%d,%d,%d,%d,%d\n", trlNo,TRL_TYPE,TRL_LAST_GO_OUTCOME_EVNTCODE,TRL_LAST_STOP_OUTCOME_EVNTCODE,TRL_LAST_SSD_IDX,TRL_STOP_SIGNAL_DELAY_IDX);
+		  writef("stairSsd.csv %d,%d,%d,%d,%d,%d\n", trlNo,TRL_TYPE,TRL_LAST_GO_OUTCOME_EVNTCODE,TRL_LAST_STOP_OUTCOME_EVNTCODE,TRL_LAST_SSD_IDX,TRL_STOP_SIGNAL_DELAY_IDX);
+       }
 
         nexttick 2;
     }

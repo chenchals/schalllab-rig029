@@ -26,6 +26,8 @@
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 // Setup event defs so events can be sent
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
+// for using staircase method for SSD
+#include C:/TEMPO/ProcLib/CMD/STAIR.PRO
 
 //=====Now do monk specific========
 // Load all constants and related gobal vars
@@ -86,7 +88,7 @@ declare int TRL_IS_TARG_MIN_THT;
 declare int TRL_IS_TIMEOUT;
 declare int TRL_IS_STOP_SIGNAL_ON;
 declare int TRL_STOP_SIGNAL_TIME;
-declare in TRL_STOP_SIGNAL_DELAY_IDX;
+declare int TRL_STOP_SIGNAL_DELAY_IDX;
 declare int TRL_STOP_SIGNAL_DELAY;
 declare int TRL_STOP_SIGNAL_DURATION;
 
@@ -458,11 +460,11 @@ process PICK_TRL_SSD()
         nexttick;
     }
     // must get from SSD_ARRY; use staircasing....
-    //printf("****SET_CMD/PICK_TRL_SSD: Using RANDOM CHOICE OF SSD from SSD_ARRY****\n");
-    //TRL_STOP_SIGNAL_DELAY_IDX = 4;//SSD_ARRY[random(N_SSD)]; Call STAIR here?
-    spawnwait STAIRCASE_SSD();
+	//declare STAIRCASE_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD);
+    spawnwait STAIRCASE_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
+	TRL_STOP_SIGNAL_DELAY_IDX = STAIRCASE_SSD_IDX;
     TRL_STOP_SIGNAL_DELAY = SSD_ARRY[TRL_STOP_SIGNAL_DELAY_IDX];
-    //TRL_LAST_SSD_IDX = TRL_STOP_SIGNAL_DELAY_IDX;
+    TRL_LAST_SSD_IDX = TRL_STOP_SIGNAL_DELAY_IDX;
     //printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
 
