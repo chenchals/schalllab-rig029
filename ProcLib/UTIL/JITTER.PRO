@@ -4,9 +4,9 @@
 //                The computed value is written to a global variable JITTER_INT.
 //
 //   Inputs:
-//          GAUSS_JITTER(int mu, float variance):
-//          UNIFORM_JITTER(int minT, int maxT);:
-//          EXPONENT_JITTER(int minT, int maxT);:
+//          GAUSS_JITTER(int meanT, float varianceT):
+//          UNIFORM_JITTER(int meanT, int diffT);:
+//          EXPONENT_JITTER(int meanT, int diffT);:
 //   Output:
 //         Global variable: JITTER_INT (int)
 //
@@ -18,15 +18,15 @@
 //   Date: 2019-03-05
 //==========================================================================
 
-declare GAUSS_JITTER(int mu, int variance);
-declare UNIFORM_JITTER(int minT, int maxT);
-declare EXPONENT_JITTER(int minT, int maxT);
+declare GAUSS_JITTER(int meanT, int varianceT);
+declare UNIFORM_JITTER(int meanT, int diffT);
+declare EXPONENT_JITTER(int meanT, int diffT);
 
 declare int JITTER_INT;
 
 
 // Gaussian distribution
-process GAUSS_JITTER(int mu, int variance)
+process GAUSS_JITTER(int meanT, int varianceT)
 {
     // Box-Muller transform
     //Using: https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
@@ -40,23 +40,30 @@ process GAUSS_JITTER(int mu, int variance)
     z1 = sqrt(-2.0 * ln(u1)) * cosrad(u2 * twoPi);
     //z1 = sqrt(-2.0 * ln(u1)) * sinrad(u2 * twoPi);
 
-    JITTER_INT = round(z1 * sqrt(variance)) + mu;
+    JITTER_INT = round(z1 * sqrt(varianceT)) + meanT;
 }
 
 
 // Random uniform distribution
-process UNIFORM_JITTER(int minT, int maxT)
+process UNIFORM_JITTER(int meanT, int diffT)
 {
-    JITTER_INT = (random(maxT - minT) + 1) + minT;
+    if (random(2) > 0)
+    {
+        JITTER_INT = meanT + random(ceil(diffT / 2));
+    }
+    else
+    {
+        JITTER_INT = meanT - random(ceil(diffT / 2));
+    }
 }
 
 
 // Exponential distribution
-process EXPONENT_JITTER(int minT, int maxT)
+process EXPONENT_JITTER(int meanT, int diffT)
 {
     declare float diffT, jitter;
 
     jitter     = (random(1001)) / 1000.0;
     jitter     = exp(-1.0 * jitter / 0.25);
-    JITTER_INT = round((jitter * (maxT - minT)) + minT);
+    JITTER_INT = round(jitter * diffT + meanT);
 }

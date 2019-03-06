@@ -22,13 +22,23 @@ declare int TRL_NUMBER;
 declare int TRIALS_PER_BLOCK = 30;
 
 //===========Trial types and distributions==================
-declare int          TRIAL_TYPE;
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
+// Are these used / useful????
+declare constant int NOGO_CANCELLED_TRIAL     = 1;
+declare constant int NOGO_NON_CANCELLED_TRIAL = 2;
+declare constant int NOGO_ERROR_TRIAL         = 3;
+
 // Percentage of trial types (must sum to 100)
 declare float        GO_WEIGHT     = 100.0;
 declare float        STOP_WEIGHT   = 0.0;
 declare float        IGNORE_WEIGHT = 0.0;
+//==========Jitter flags and definitions=========================
+declare constant int JITTER_GAUSS_FLAG       = 0;
+declare constant int JITTER_UNIFORM_FLAG     = 1;
+declare constant int JITTER_EXPONENTIAL_FLAG = 2;
+declare int          TONE_JITTER_FLAG        = JITTER_GAUSS_FLAG;
+declare int          RWRD_JITTER_FLAG        = JITTER_UNIFORM_FLAG;
 // temporary globals to be used in state processing
 declare int          TEMP_MIN_THT;
 declare int          TEMP_MIN_SSHT;
@@ -56,11 +66,11 @@ declare int MAX_SACC_TIME = 800;
 // once the eyes leave fixation they must be in the target before this time is up
 declare int MAX_SACC_DURATION = 500;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
-declare int   IS_TRL_LENGTH_FIXED = 1;
+declare int IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1)
-declare int   FIXED_TRL_LENGTH_TIME = 5000;
+declare int FIXED_TRL_LENGTH_TIME = 5000;
 // how long between trials (only works if Fixed_trl_length == 0)
-declare int   BASE_ITI_TIME = 500;
+declare int BASE_ITI_TIME = 500;
 //========== GO TRIAL TARG HOLD TIME ======================
 // Base Minimum time subject should hold gaze on TARGET
 declare int BASE_TARG_HOLD_TIME = 0;
@@ -79,8 +89,8 @@ declare float SSD_ARRY[N_SSD_MAX];
 // number of *non-zero* stop signal delays
 declare int   N_SSD;
 // min max ssd
-declare int MIN_SSD;
-declare int MAX_SSD;
+declare int   MIN_SSD;
+declare int   MAX_SSD;
 // do we select the next SSD based on a staircasing algorithm?
 declare int   DO_STAIRCASE_NEXT_SSD = 1;
 // Minimum time *after* stop signal that subject has to fixate
@@ -95,17 +105,27 @@ declare int BASE_STOP_SIGNAL_HOLD_TIME = 0;
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int   TONE_DELAY = 600;
+declare int TONE_DELAY_MEAN = 600;
+// Variance to the delay: See UTIL/JITTER.PRO
+// if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, variance)
+// if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, variance)
+// if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, variance)
+declare int TONE_DELAY_VARIANCE = 175;
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
 // Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
-declare int   TONE_DURATION = 30;
+declare int TONE_DURATION = 30;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int   RWRD_DELAY = 600;
+declare int RWRD_DELAY_MEAN = 600;
+// Variance to the delay: See UTIL/JITTER.PRO
+// if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, variance)
+// if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, variance)
+// if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, variance)
+declare int RWRD_DELAY_VARIANCE = 175;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_RWRD_DURATION
-declare int   RWRD_DURATION = 100;
+declare int RWRD_DURATION = 50;
 
 //===========================Reward and punishment======================
 // timeout time for punishment computed
@@ -118,22 +138,28 @@ declare int TIMEOUT_TONE;
 // GoTrial = TIMEOUT_xxx[0]
 // NoGoTrial_pre_SSD = TIMEOUT_xxx[1]
 // NoGoTrial_post_SSD = TIMEOUT_xxx[2]
-declare constant int GO_IDX = 0;
-declare constant int NOGO_PRE_SSD_IDX = 1;
+declare constant int GO_IDX            = 0;
+declare constant int NOGO_PRE_SSD_IDX  = 1;
 declare constant int NOGO_POST_SSD_IDX = 2;
 //
-declare int TIMEOUT_FIX_ACQ_ERROR[3]      = { 0, 0, 0 };
-declare int TIMEOUT_FIX_BRK[3]            = { 0, 0, 0 };
-declare int TIMEOUT_ERLY_SACC[3]          = { 0, 0, 0 };
-declare int TIMEOUT_LATE_NO_SACC[3]       = { 0, 0, 0 };
-declare int TIMEOUT_TARG_ACQ_ERROR[3]     = { 0, 0, 0 };
-declare int TIMEOUT_BRK_MIN_THT[3]        = { 0, 0, 0 };
-declare int TIMEOUT_BRK_PRE_TONE[3]       = { 0, 0, 0 };
-declare int TIMEOUT_BRK_TONE[3]           = { 0, 0, 0 };
-declare int TIMEOUT_BRK_PRE_RWRD[3]       = { 0, 0, 0 };
-declare int TIMEOUT_BRK_POST_RWRD[3]      = { 0, 0, 0 };
+declare int          TIMEOUT_FIX_ACQ_ERROR[3]  = { 0, 0, 0 };
+declare int          TIMEOUT_FIX_BRK[3]        = { 0, 0, 0 };
+declare int          TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
+declare int          TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
+declare int          TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
-declare int TIMEOUT_BRK_MIN_SSHT[3]       = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_MIN_SSHT[3] = { 0, 0, 0 };
+
+declare int          NON_CANCELLED_TONE_HZ = 300;
+declare int          CANCELLED_TONE_HZ     = 400;
+declare int          GO_CORRECT_TONE_HZ    = 500;
+declare int          GO_ERROR_TONE_HZ      = 1000;
+declare int          NOGO_ERROR_TONE_HZ    = 1500;
 
 // Positive secondary reinforcer in Hz
 declare int SUCCESS_TONE_BIG_REWARD = 300;

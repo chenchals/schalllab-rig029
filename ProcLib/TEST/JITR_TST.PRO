@@ -17,8 +17,6 @@ declare JITTER_TEST();
 process JITTER_TEST() enabled
 {
     declare int nPoints = 2000;
-    declare int minT    = 600;
-    declare int maxT    = 800;
 
     declare int meanT     = 600;
     declare int varianceT = 175;
@@ -30,15 +28,15 @@ process JITTER_TEST() enabled
     writef("jitters.csv exponentJitter, uniformJitter, gaussJitter\n");
     while (temp < nPoints)
     {
-        spawnwait EXPONENT_JITTER(minT, maxT);
+        spawnwait EXPONENT_JITTER(meanT, varianceT);
         exponentJitter = JITTER_INT;
-		
-        spawnwait UNIFORM_JITTER(minT, maxT);
+
+        spawnwait UNIFORM_JITTER(meanT, varianceT);
         uniformJitter = JITTER_INT;
-		
+
         spawnwait GAUSS_JITTER(meanT, varianceT);
         gaussJitter = JITTER_INT;
-		
+
         printf("%d,%d,%d\n", exponentJitter, uniformJitter, gaussJitter);
         writef("jitters.csv %d,%d,%d\n", exponentJitter, uniformJitter, gaussJitter);
         temp = temp + 1;

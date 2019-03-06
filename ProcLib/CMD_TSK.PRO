@@ -183,7 +183,7 @@ process IDLE() enabled
 			//================= State = STAT_TARG_ON===============
 			if (CURR_STAT == STAT_TARG_ON)
 			{
-				if(TRIAL_TYPE == TRIAL_TYPE_STOP)
+				if(TRL_TYPE == TRIAL_TYPE_STOP)
 				{
 					CURR_STAT = STAT_TARG_SSD;
 					spawnwait PROC_TARG_SSD();

@@ -77,15 +77,12 @@ process PROC_TRL_OUTCOME()
 	}
 	// it is big conditional depending on the current trial type and tyep of error
 
-	if (TRIAL_TYPE == TRIAL_TYPE_GO)
+	if (TRL_TYPE == TRIAL_TYPE_GO)
 	{
 		spawnwait PROC_GO_OUTCOMES();
-		TIMEOUT_TONE = FAILURE_TONE_SML_TIMEOUT;
 	}
-	else if (TRIAL_TYPE == TRIAL_TYPE_STOP)
+	else if (TRL_TYPE == TRIAL_TYPE_STOP)
 	{
-		TIMEOUT_TONE = FAILURE_TONE_SML_TIMEOUT;
-
 		if (TRL_CANCEL_TIME)
 		{
 			spawnwait PROC_NOGO_POST_CANCEL_OUTCOMES();
@@ -95,6 +92,19 @@ process PROC_TRL_OUTCOME()
 			spawnwait PROC_NOGO_PRE_CANCEL_OUTCOMES();
 		}
 	}
+  if (TRL_IS_TIMEOUT)
+	{
+      if (TRL_TYPE == TRIAL_TYPE_GO)
+			{
+				TIMEOUT_TONE = GO_ERROR_TONE_HZ;
+			}
+			else if (TRL_TYPE == TRIAL_TYPE_STOP)
+			{
+				TIMEOUT_TONE = NOGO_ERROR_TONE_HZ;
+			}
+
+	}
+
 	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
 	TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
 	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
@@ -178,7 +188,7 @@ process PROC_GO_OUTCOMES()
 process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
   declare int nogoIdx;
-	
+
 	if(TRL_IS_STOP_SIGNAL_ON)
 	{
 		nogoIdx = NOGO_POST_SSD_IDX;
@@ -186,17 +196,17 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 	}
 	else
 	{
-		nogoIdx = NOGO_PRE_SSD_IDX;	
+		nogoIdx = NOGO_PRE_SSD_IDX;
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: STOP Trial; PRE-SSD, PRE_CANCEL\n",STAT_OUTCOME,TRL_NUMBER);
 	}
-	
+
 	if (TRL_IS_TARG_MIN_THT)
 	{
 		TRL_IS_NON_CANCELLED = 1;
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
 		spawn SEND_EVT(OutcomeNoGoNonCancelled_);
-		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");		
+		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: **OutcomeNoGoNonCancelled_** [%d]; TRL_STAIRCASE_SSD_FLAG [%d]; STOP Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoNonCancelled_, TRL_STAIRCASE_SSD_FLAG);
 	}
 	else if (TRL_FIX_BRK_TIME)
