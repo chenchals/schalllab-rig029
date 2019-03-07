@@ -35,6 +35,7 @@
 declare IDLE();
 declare UPD8_MSG();
 declare WRITE_TO_FILE();
+declare USER_SUMMARY();
 
 declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER = 0;
@@ -231,7 +232,7 @@ process IDLE() enabled
 			nexttick;
 		} /*while(TRL_RUNNING)*/
 		spawnwait WRITE_TO_FILE();
-    spawnwait USR_SUMMARY();
+    spawnwait USER_SUMMARY();
 		printf("============================NEXT TRIAL========================\n");
 		nexttick;
 	}     /*while(1)*/

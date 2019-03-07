@@ -271,7 +271,7 @@ process SET_CMD_TRL()
     // Update graph object for Target
     // Show the windows - without the fixspot or target to cue user
     spawnwait GRAF_UPD8_FIX();
-    spawnwait GRAF_UPD8_TARG();
+    spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
 
     spawnwait SET_TONE_DELAY();
     spawnwait SET_RWRD_DELAY();
@@ -299,7 +299,7 @@ process SET_CMD_TRL()
 
     // Setup CMD PAGES
     //printf("Calling CMD-PGS\n");
-    spawnwait CMD_PGS();
+    spawnwait CMD_PGS(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX);
 
     // compute trial duration (mainly for fixed trial length)
     spawnwait COMPUTE_TRL_DURATION();

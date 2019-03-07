@@ -6,7 +6,7 @@
 //==========================================================================
 //  Revision History:
 //  001: 2018/12/10 chenchal subraveti
-//       Global TRL_TARG_COLOR_IDX indices and palettes for colorIdxs
+//       Global targColorIdx indices and palettes for colorIdxs
 //
 
 // Room variables
@@ -22,10 +22,10 @@ declare int PG_SIGNAL_PD   = 5;
 declare int PG_SIGNAL      = 6;
 declare int PG_MAX_PAGE_IDX = 6;
 
-declare CMD_PGS();
+declare CMD_PGS(float targSize, float targAngle, float targEccentricity, int targColorIdx);
 
 
-process CMD_PGS()
+process CMD_PGS(float targSize, float targAngle, float targEccentricity, int targColorIdx)
 {
     declare float pdEccentricity;
     declare float pdAngleR;
@@ -61,12 +61,12 @@ process CMD_PGS()
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 3 TARGET with PD - PD is drawn on LEFT-TOP of screen only
-    //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_TARGET_PD,TRL_TARG_SIZE,PD_WIDTH_DEG,pdAngleL);
+    //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleL %3.2d\n",PG_TARGET_PD,targSize,PD_WIDTH_DEG,pdAngleL);
     dsendf("rw %d,%d;\n", PG_TARGET_PD, PG_TARGET_PD);
     dsendf("cl:\n");
     //printf("drawing target \n");
     // draw PG_TARGET
-    spawnwait DRW_RECT(TRL_TARG_SIZE, TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX, FILL);
+    spawnwait DRW_RECT(targSize, targSize, targAngle, targEccentricity, targColorIdx, FILL);
 
     //printf("drawing open fix\n");
     // draw OPEN PG_FIXATION point
@@ -79,10 +79,10 @@ process CMD_PGS()
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 4 TARGET no PD
-    //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_TARGET,TRL_TARG_SIZE);
+    //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_TARGET,targSize);
     dsendf("rw %d,%d;\n", PG_TARGET, PG_TARGET);
     dsendf("cl:\n");
-    spawnwait DRW_RECT(TRL_TARG_SIZE, TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX, FILL);
+    spawnwait DRW_RECT(targSize, targSize, targAngle, targEccentricity, targColorIdx, FILL);
 
     // draw OPEN PG_FIXATION point
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
@@ -91,10 +91,10 @@ process CMD_PGS()
 
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 5 SIGNAL PD - PD is drawn on the right only
-    //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleR %3.2d\n",PG_SIGNAL_PD,TRL_TARG_SIZE,PD_WIDTH_DEG,pdAngleR);
+    //printf("CMD_PGS: page %d targetSize %2.2d, PD_WIDTH_DEG %3.4d, pdAngleR %3.2d\n",PG_SIGNAL_PD,targSize,PD_WIDTH_DEG,pdAngleR);
     dsendf("rw %d,%d;\n", PG_SIGNAL_PD, PG_SIGNAL_PD);
     dsendf("cl:\n");
-    spawnwait DRW_RECT(TRL_TARG_SIZE, TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX, FILL);
+    spawnwait DRW_RECT(targSize, targSize, targAngle, targEccentricity, targColorIdx, FILL);
 
     // draw PG_TARGET
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, FILL);
@@ -108,10 +108,10 @@ process CMD_PGS()
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 6 SIGNAL no PD
-    //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_SIGNAL,TRL_TARG_SIZE);
+    //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_SIGNAL,targSize);
     dsendf("rw %d,%d;\n", PG_SIGNAL, PG_SIGNAL);
     dsendf("cl:\n");
-    spawnwait DRW_RECT(TRL_TARG_SIZE, TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX, FILL);
+    spawnwait DRW_RECT(targSize, targSize, targAngle, targEccentricity, targColorIdx, FILL);
 
     // draw PG_TARGET
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, FILL);

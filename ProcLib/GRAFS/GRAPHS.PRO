@@ -30,7 +30,7 @@ declare int GRAF_HIDE = 0;
 declare GRAPHS();
 declare GRAF_UPD8_EYE(float currEyeX, float currEyeY);
 declare GRAF_UPD8_FIX();
-declare GRAF_UPD8_TARG();
+declare GRAF_UPD8_TARG(float targSize, float targAngle, float targEccentricity);
 
 // only fis/target windows
 declare GRAF_SHOW_FIX_WIN();
@@ -106,16 +106,16 @@ process GRAF_UPD8_FIX()
 }
 
 
-process GRAF_UPD8_TARG()
+process GRAF_UPD8_TARG(float targSize, float targAngle, float targEccentricity)
 {
     declare float eccX;
     declare float eccY;
 
-    // find the center of the box in x and y space based on the TRL_TARG_ANGLE and TRL_TARG_ECCENTRICITY...
-    eccX = cos(TRL_TARG_ANGLE) * TRL_TARG_ECCENTRICITY;
-    eccY = -sin(TRL_TARG_ANGLE) * TRL_TARG_ECCENTRICITY;
+    // find the center of the box in x and y space based on the targAngle and targEccentricity...
+    eccX = cos(targAngle) * targEccentricity;
+    eccY = -sin(targAngle) * targEccentricity;
     // Update animated graph object
-    oSetAttribute(OBJ_TARG, aSIZE, TRL_TARG_SIZE * DEG_2_PIX_X, TRL_TARG_SIZE * DEG_2_PIX_Y);
+    oSetAttribute(OBJ_TARG, aSIZE, targSize * DEG_2_PIX_X, targSize * DEG_2_PIX_Y);
     oMove(OBJ_TARG, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
     oSetAttribute(OBJ_TARG, aINVISIBLE);
 
@@ -127,9 +127,9 @@ process GRAF_UPD8_TARG()
     oMove(OBJ_TARG_WIN_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
     oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);
 
-    // ANTI- find the center of the box in x and y space based on the TRL_TARG_ANGLE and TRL_TARG_ECCENTRICITY...
-    eccX = cos(TRL_TARG_ANGLE + 180) * TRL_TARG_ECCENTRICITY;
-    eccY = -sin(TRL_TARG_ANGLE + 180) * TRL_TARG_ECCENTRICITY;
+    // ANTI- find the center of the box in x and y space based on the targAngle and targEccentricity...
+    eccX = cos(targAngle + 180) * targEccentricity;
+    eccY = -sin(targAngle + 180) * targEccentricity;
     // Update animated graph object
     oMove(OBJ_TARG_WIN_ANTI, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
     oSetAttribute(OBJ_TARG_WIN_ANTI, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);
