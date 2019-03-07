@@ -185,6 +185,11 @@ declare int TRL_FIX_BRK_RWRD_TIME;
 declare int TRL_FIX_BRK_POST_RWRD_TIME;
 declare int TRL_FIX_BRK_MIN_SSHT_TIME;
 declare int TRL_CANCEL_TIME;
+declare int TRL_FIX_REIGNITE_FLAG;
+// How long *before* SSD did saccade happen (before MAX_SACC_TIME)
+declare int TRL_PRE_SSD_DELAY_FIX_REIGNITE;
+// How long *after* SSD did saccade happen (before MAX_SACC_TIME)
+declare int TRL_POST_SSD_DELAY_FIX_REIGNITE;
 // gaze fulfilled min_stop_signal_hold_time
 declare int TRL_IS_FIX_MIN_SSHT;
 // Tone and reward times
@@ -299,8 +304,8 @@ process COMPUTE_TRL_DURATION()
     TRL_DURATION = TRL_DURATION + ceil(MAX_SSD * REFRESH_RATE);
 
     // now check for the longest time of the following
-    tempVar = TONE_DELAY_MEAN +  TONE_DELAY_VARIANCE + TONE_DURATION;
-	tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
+    tempVar = TONE_DELAY_MEAN + TONE_DELAY_VARIANCE + TONE_DURATION;
+    tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
     if (MIN_TARG_HOLD_TIME > tempVar)
     {
         tempVar = MIN_TARG_HOLD_TIME;
@@ -391,9 +396,10 @@ process SET_MIN_MAX_SSD()
 
 process COMPUTE_MIN_SSHT()
 {
-	declare int tempVar;
-	tempVar = TONE_DELAY_MEAN + TONE_DELAY_VARIANCE + TONE_DURATION;
-	tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
+    declare int tempVar;
+
+    tempVar = TONE_DELAY_MEAN + TONE_DELAY_VARIANCE + TONE_DURATION;
+    tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
 
     MIN_STOP_SIGNAL_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (tempVar) + BASE_STOP_SIGNAL_HOLD_TIME;
 }/* COMPUTE_MIN_SSHT */
@@ -401,9 +407,10 @@ process COMPUTE_MIN_SSHT()
 
 process COMPUTE_MIN_THT()
 {
-	declare int tempVar;
-	tempVar = TONE_DELAY_MEAN + TONE_DELAY_VARIANCE + TONE_DURATION;
-	tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
+    declare int tempVar;
+
+    tempVar = TONE_DELAY_MEAN + TONE_DELAY_VARIANCE + TONE_DURATION;
+    tempVar = tempVar + RWRD_DELAY_MEAN + RWRD_DELAY_VARIANCE + RWRD_DURATION;
 
     MIN_TARG_HOLD_TIME = USE_TONE_AND_RWRD_FOR_MIN_THT * (tempVar) + BASE_TARG_HOLD_TIME;
 }/* COMPUTE_MIN_THT */
@@ -448,8 +455,9 @@ process SET_RWRD_DELAY()
 process PICK_TRL_SSD()
 {
     declare int tempCount;
-    tempCount        = 0;
-    N_SSD            = 0;
+
+    tempCount = 0;
+    N_SSD     = 0;
     while (tempCount < N_SSD_MAX)
     {
         if (SSD_ARRY[tempCount] > 0)
@@ -460,11 +468,12 @@ process PICK_TRL_SSD()
         nexttick;
     }
     // must get from SSD_ARRY; use staircasing....
-	//declare STAIRCASE_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD);
+    //declare STAIRCASE_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD);
     spawnwait STAIRCASE_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
-	TRL_STOP_SIGNAL_DELAY_IDX = STAIRCASE_SSD_IDX;
-    TRL_STOP_SIGNAL_DELAY = SSD_ARRY[TRL_STOP_SIGNAL_DELAY_IDX];
-    TRL_LAST_SSD_IDX = TRL_STOP_SIGNAL_DELAY_IDX;
+
+    TRL_STOP_SIGNAL_DELAY_IDX = STAIRCASE_SSD_IDX;
+    TRL_STOP_SIGNAL_DELAY     = SSD_ARRY[TRL_STOP_SIGNAL_DELAY_IDX];
+    TRL_LAST_SSD_IDX          = TRL_STOP_SIGNAL_DELAY_IDX;
     //printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
 } /* PICK_TRL_SSD */
 
@@ -558,101 +567,103 @@ process INIT_TRL_VARS()
     // do not init TRL_NUMBER
     PROCESS_STATE = 0;
     //TRL_NUMBER = 0;
-    TRL_TYPE                       = 0;
-    TRL_RUNNING                    = 0;
-    TRL_TARG_VR_COUNT_TIME         = 0;
-    TRL_IS_TARG_ON_FLAG            = 0;
-    TRL_IS_TARG_ACQUIRED           = 0;
-    TRL_IS_FIX_ACQUIRED            = 0;
-    TRL_I_IN_FLIGHT                = 0;
-    TRL_IS_TARG_MIN_THT            = 0;
-    TRL_IS_TIMEOUT                 = 0;
-    TRL_IS_STOP_SIGNAL_ON          = 0;
-    TRL_STOP_SIGNAL_TIME           = 0;
-    TRL_STOP_SIGNAL_DELAY          = 0;
-    TRL_STOP_SIGNAL_DELAY_IDX      = 0;
-    TRL_STOP_SIGNAL_DURATION       = 0;
-    TRL_IS_NON_CANCELLED           = 0;
-    TRL_IS_CANCELLED               = 0;
-    TRL_CUM_TIME                   = 0;
-    TRL_DURATION                   = 0;
-    TRL_START_TIME                 = 0;
-    TRL_END_TIME                   = 0;
-    TRL_GET_READY_TIME             = 0;
-    TRL_READY_TIME                 = 0;
-    TRL_GET_READY_DURATION         = 0;
-    TRL_FIX_ON_TIME                = 0;
-    TRL_FIX_ACQ_TIME               = 0;
-    TRL_FIX_ACQ_ERROR_TIME         = 0;
-    TRL_FIX_HOLD_TIME              = 0;
-    TRL_FIXATED_TIME               = 0;
-    TRL_FIX_HOLD_DURATION          = 0;
-    TRL_FIX_BRK_TIME               = 0;
-    TRL_PRE_TARG_ON_TIME           = 0;
-    TRL_TARG_ON_TIME               = 0;
-    TRL_TARG_ON_DURATION           = 0;
-    TRL_DECIDE_TIME                = 0;
-    TRL_SACC_TIME                  = 0;
-    TRL_ERLY_SACC_TIME             = 0;
-    TRL_LATE_SACC_TIME             = 0;
-    TRL_NO_SACC_TIME               = 0;
-    //TRL_STAIRCASE_SSD_FLAG         = 0;
-    TRL_TARG_ACQ_ERROR_TIME        = 0;
-    TRL_SACC_DURATION              = 0;
-    TRL_TARG_ACQ_TIME              = 0;
-    TRL_TARG_HOLD_DURATION         = 0;
-    TRL_TIMEOUT_START_TIME         = 0;
-    TRL_TIMEOUT_END_TIME           = 0;
-    TRL_TIMEOUT_DURATION           = 0;
-    TRL_TARG_MIN_THT_TIME          = 0;
-    TRL_TARG_BRK_TIME              = 0;
-    TRL_TARG_BRK_PRE_TONE_TIME     = 0;
-    TRL_TARG_BRK_TONE_TIME         = 0;
-    TRL_TARG_BRK_PRE_RWRD_TIME     = 0;
-    TRL_TARG_BRK_RWRD_TIME         = 0;
-    TRL_TARG_BRK_POST_RWRD_TIME    = 0;
-    TRL_TARG_BRK_MIN_THT_TIME      = 0;
-    TRL_NOGO_SACC_PRE_SSD_TIME     = 0;
-    TRL_NOGO_SACC_POST_SSD_TIME    = 0;
-    TRL_NOGO_ERLY_SACC_TIME        = 0;
-    TRL_NOGO_LATE_SACC_TIME        = 0;
-    TRL_FIX_HOLD_DURATION          = 0;
-    TRL_FIX_MIN_SSHT_TIME          = 0;
-    TRL_FIX_BRK_PRE_TONE_TIME      = 0;
-    TRL_FIX_BRK_TONE_TIME          = 0;
-    TRL_FIX_BRK_PRE_RWRD_TIME      = 0;
-    TRL_FIX_BRK_RWRD_TIME          = 0;
-    TRL_FIX_BRK_POST_RWRD_TIME     = 0;
-    TRL_FIX_BRK_MIN_SSHT_TIME      = 0;
-    TRL_CANCEL_TIME                = 0;
-    TRL_IS_FIX_MIN_SSHT            = 0;
-    TRL_TONE_DELAY                 = 0;
-    TRL_TONE_FREQ                  = 0;
-    TRL_TONE_DURATION              = 0;
-    TRL_TONE_ON_TIME               = 0;
-    TRL_TONE_OFF_TIME              = 0;
-    TRL_RWRD_DELAY                 = 0;
-    TRL_RWRD_DURATION              = 0;
-    TRL_RWRD_ON_TIME               = 0;
-    TRL_RWRD_OFF_TIME              = 0;
-    TRL_XTRA_RWRD_ON_TIME          = 0;
-    TRL_XTRA_RWRD_OFF_TIME         = 0;
-    TRL_ITI_START_TIME             = 0;
-    TRL_ITI_END_TIME               = 0;
-    TRL_ITI_DURATION               = 0;
-    TRL_REACTION_TIME              = 0;
-    TRL_ABORT_TIME                 = 0;
-    TRL_FIX_VRT_RFRSH_COUNT        = 0;
-    TRL_TARG_VRT_RFRSH_COUNT       = 0;
-    TRL_TARG_SSD_VRT_RFRSH_COUNT   = 0;
-    TRL_OUTCOME_EVNTCODE           = 0;
-	TRL_STAIRCASE_SSD_FLAG = DO_STAIRCASE_NEXT_SSD;
-	if(TRL_NUMBER == 0)
-	{
-		TRL_PREV_TRL_TYPE              = 0;
-		TRL_PREV_OUTCOME_EVNTCODE      = 0;
-		TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
-		TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
-		TRL_LAST_SSD_IDX               = 0;
-	}
+    TRL_TYPE                        = 0;
+    TRL_RUNNING                     = 0;
+    TRL_TARG_VR_COUNT_TIME          = 0;
+    TRL_IS_TARG_ON_FLAG             = 0;
+    TRL_IS_TARG_ACQUIRED            = 0;
+    TRL_IS_FIX_ACQUIRED             = 0;
+    TRL_I_IN_FLIGHT                 = 0;
+    TRL_IS_TARG_MIN_THT             = 0;
+    TRL_IS_TIMEOUT                  = 0;
+    TRL_IS_STOP_SIGNAL_ON           = 0;
+    TRL_STOP_SIGNAL_TIME            = 0;
+    TRL_STOP_SIGNAL_DELAY           = 0;
+    TRL_STOP_SIGNAL_DELAY_IDX       = 0;
+    TRL_STOP_SIGNAL_DURATION        = 0;
+    TRL_IS_NON_CANCELLED            = 0;
+    TRL_IS_CANCELLED                = 0;
+    TRL_CUM_TIME                    = 0;
+    TRL_DURATION                    = 0;
+    TRL_START_TIME                  = 0;
+    TRL_END_TIME                    = 0;
+    TRL_GET_READY_TIME              = 0;
+    TRL_READY_TIME                  = 0;
+    TRL_GET_READY_DURATION          = 0;
+    TRL_FIX_ON_TIME                 = 0;
+    TRL_FIX_ACQ_TIME                = 0;
+    TRL_FIX_ACQ_ERROR_TIME          = 0;
+    TRL_FIX_HOLD_TIME               = 0;
+    TRL_FIXATED_TIME                = 0;
+    TRL_FIX_HOLD_DURATION           = 0;
+    TRL_FIX_BRK_TIME                = 0;
+    TRL_PRE_TARG_ON_TIME            = 0;
+    TRL_TARG_ON_TIME                = 0;
+    TRL_TARG_ON_DURATION            = 0;
+    TRL_DECIDE_TIME                 = 0;
+    TRL_SACC_TIME                   = 0;
+    TRL_ERLY_SACC_TIME              = 0;
+    TRL_LATE_SACC_TIME              = 0;
+    TRL_NO_SACC_TIME                = 0;
+    TRL_STAIRCASE_SSD_FLAG          = DO_STAIRCASE_NEXT_SSD;
+    TRL_TARG_ACQ_ERROR_TIME         = 0;
+    TRL_SACC_DURATION               = 0;
+    TRL_TARG_ACQ_TIME               = 0;
+    TRL_TARG_HOLD_DURATION          = 0;
+    TRL_TIMEOUT_START_TIME          = 0;
+    TRL_TIMEOUT_END_TIME            = 0;
+    TRL_TIMEOUT_DURATION            = 0;
+    TRL_TARG_MIN_THT_TIME           = 0;
+    TRL_TARG_BRK_TIME               = 0;
+    TRL_TARG_BRK_PRE_TONE_TIME      = 0;
+    TRL_TARG_BRK_TONE_TIME          = 0;
+    TRL_TARG_BRK_PRE_RWRD_TIME      = 0;
+    TRL_TARG_BRK_RWRD_TIME          = 0;
+    TRL_TARG_BRK_POST_RWRD_TIME     = 0;
+    TRL_TARG_BRK_MIN_THT_TIME       = 0;
+    TRL_NOGO_SACC_PRE_SSD_TIME      = 0;
+    TRL_NOGO_SACC_POST_SSD_TIME     = 0;
+    TRL_NOGO_ERLY_SACC_TIME         = 0;
+    TRL_NOGO_LATE_SACC_TIME         = 0;
+    TRL_FIX_HOLD_DURATION           = 0;
+    TRL_FIX_MIN_SSHT_TIME           = 0;
+    TRL_FIX_BRK_PRE_TONE_TIME       = 0;
+    TRL_FIX_BRK_TONE_TIME           = 0;
+    TRL_FIX_BRK_PRE_RWRD_TIME       = 0;
+    TRL_FIX_BRK_RWRD_TIME           = 0;
+    TRL_FIX_BRK_POST_RWRD_TIME      = 0;
+    TRL_FIX_BRK_MIN_SSHT_TIME       = 0;
+    TRL_CANCEL_TIME                 = 0;
+    TRL_FIX_REIGNITE_FLAG           = 0;
+    TRL_PRE_SSD_DELAY_FIX_REIGNITE  = 0;
+    TRL_POST_SSD_DELAY_FIX_REIGNITE = 0;
+    TRL_IS_FIX_MIN_SSHT             = 0;
+    TRL_TONE_DELAY                  = 0;
+    TRL_TONE_FREQ                   = 0;
+    TRL_TONE_DURATION               = 0;
+    TRL_TONE_ON_TIME                = 0;
+    TRL_TONE_OFF_TIME               = 0;
+    TRL_RWRD_DELAY                  = 0;
+    TRL_RWRD_DURATION               = 0;
+    TRL_RWRD_ON_TIME                = 0;
+    TRL_RWRD_OFF_TIME               = 0;
+    TRL_XTRA_RWRD_ON_TIME           = 0;
+    TRL_XTRA_RWRD_OFF_TIME          = 0;
+    TRL_ITI_START_TIME              = 0;
+    TRL_ITI_END_TIME                = 0;
+    TRL_ITI_DURATION                = 0;
+    TRL_REACTION_TIME               = 0;
+    TRL_ABORT_TIME                  = 0;
+    TRL_FIX_VRT_RFRSH_COUNT         = 0;
+    TRL_TARG_VRT_RFRSH_COUNT        = 0;
+    TRL_TARG_SSD_VRT_RFRSH_COUNT    = 0;
+    TRL_OUTCOME_EVNTCODE            = 0;
+    if (TRL_NUMBER == 0)
+    {
+        TRL_PREV_TRL_TYPE              = 0;
+        TRL_PREV_OUTCOME_EVNTCODE      = 0;
+        TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
+        TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
+        TRL_LAST_SSD_IDX               = 0;
+    }
 }   /* INIT_TRL_VARS */

@@ -174,6 +174,11 @@ process SSD_CHECK_SACC()
 
             printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoSaccadePostSSD_[%d]\n", STAT_TARG_SSD, NoGoSaccadePostSSD_);
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**After SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+
+            // How long *after* SSD did saccade happen (before MAX_SACC_TIME)
+            TRL_POST_SSD_DELAY_FIX_REIGNITE = TRL_NOGO_SACC_POST_SSD_TIME - TRL_STOP_SIGNAL_TIME;
+            // set the fix-spot turn back on to what user wants; will start out as 0
+            TRL_FIX_REIGNITE_FLAG = FIX_REIGNITE_FLAG;
         }
         else
         {
@@ -182,6 +187,11 @@ process SSD_CHECK_SACC()
 
             printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoSaccadePreSSD_[%d]\n", STAT_TARG_SSD, NoGoSaccadePreSSD_);
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**Before SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+
+            // How long *before* SSD did saccade happen (before MAX_SACC_TIME)
+            TRL_PRE_SSD_DELAY_FIX_REIGNITE = ceil((STAT_ALLOWED_T * REFRESH_RATE) - TRL_NOGO_SACC_PRE_SSD_TIME);
+            // set the fix-spot turn back on to what user wants; will start out as 0
+            TRL_FIX_REIGNITE_FLAG = FIX_REIGNITE_FLAG;
         }
 
         // Flip page to PG_TARG_PD and continue as a GO trial

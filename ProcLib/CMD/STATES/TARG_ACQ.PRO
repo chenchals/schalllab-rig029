@@ -46,26 +46,31 @@ process PROC_TARG_ACQ()
         TRL_SACC_DURATION = TRL_SACC_DURATION + 1;
         if (I_TARG)
         {
-
-            TRL_IS_TARG_ACQUIRED = 1;
-			TRL_STAIRCASE_SSD_FLAG = 1;
-            TRL_TARG_ACQ_TIME    = time();
-            TRL_DECIDE_TIME      = time();
+            TRL_IS_TARG_ACQUIRED   = 1;
+            TRL_TARG_ACQ_TIME      = time();
+            TRL_DECIDE_TIME        = time();
             spawn SEND_EVT(AcquireTarget_);
             spawn SEND_EVT(Decide_);
+
             printf("****STAT_TARG_ACQ[%d]: OK sent Event: AcquireTarget_[%d], Decide_[%d]\n", STAT_TARG_ACQ, AcquireTarget_, Decide_);
             printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
-
-			if( TRL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME)
-			{
-				CURR_STAT = STAT_OUTCOME;
-			}
-			else
-			{
-				CURR_STAT = STAT_TONE_CHK;
-			}
+            // process speparately for STOP / GO trials
+            if (TRL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME)
+            {
+                CURR_STAT = STAT_OUTCOME;
+            }
+            else
+            {
+              if(TRL_TYPE == TRIAL_TYPE_STOP && TRL_FIX_REIGNITE_FLAG)
+              {
+                // change the display to PG_SIGNAL_PD to turn the signal back on
+                dsendf("vp %d\n", PG_SIGNAL_PD);
+                printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial-Saccade-Turn-on-Signal*)\n", STAT_TARG_ACQ);
+              }
+                CURR_STAT = STAT_TONE_CHK;
+            }
         }
     }
     else
@@ -73,9 +78,10 @@ process PROC_TARG_ACQ()
         if (!I_TARG)
         {
             TRL_IS_TARG_ACQUIRED    = 0;
-			TRL_STAIRCASE_SSD_FLAG = 0;
+            TRL_STAIRCASE_SSD_FLAG  = 0;
             TRL_TARG_ACQ_ERROR_TIME = time();
             spawn SEND_EVT(AcquireTargetError_);
+
             //spawn SEND_EVT(GoError_);
 
             // Error saccade?

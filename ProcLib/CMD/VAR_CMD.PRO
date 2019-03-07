@@ -46,7 +46,7 @@ declare int          TEMP_DELY_PLUS_DURATION;
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
 // 1 = default to be used when running expreriment;
-declare int TIME_DILATE_FACTOR = 2;
+declare int TIME_DILATE_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
 declare int READY_TIME = 1000;
 // subject has this long to acquire fixation before a new trial is initiated
@@ -54,7 +54,7 @@ declare int ALLOWED_FIX_TIME = 1000;
 // subject did not acquire fixation, show blank screen and wait before next trial
 declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
-declare int EXPO_JITTER = 1;
+declare int FIX_JITTER_FLAG = JITTER_EXPONENTIAL_FLAG;
 // minimum - maximum time after fixation before target presentation
 declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
 // min-max saccade time is same for Go and STOP trials
@@ -107,6 +107,14 @@ declare int BASE_STOP_SIGNAL_HOLD_TIME = 0;
 // after TRL_STOP_SIGNAL_DELAY, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 declare int MIN_STOP_SIGNAL_HOLD_TIME;
+// Turn fix spot back on for stop trial when:
+// FIX_REIGNITE_FLAG == 1 *AND*
+// saccade is made to target within PRE_SSD_DELAY_FIX_REIGNITE or
+// saccade is made to target within POST_SSD_DELAY_FIX_REIGNITE
+declare int FIX_REIGNITE_FLAG = 1;
+declare int PRE_SSD_DELAY_FIX_REIGNITE = 100;
+declare int POST_SSD_DELAY_FIX_REIGNITE = 100;
+
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int TONE_DELAY_MEAN = 600;
