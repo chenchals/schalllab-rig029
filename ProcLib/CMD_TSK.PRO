@@ -127,34 +127,6 @@ process IDLE() enabled
 			while (CURR_STAT == STAT_TEST)
 			{
 				CURR_STAT = STAT_TEST;
-				/*
-				* printf("SUCCESS_TONE_BIG_REWARD [%d]\n",SUCCESS_TONE_BIG_REWARD);
-				* spawnwait TONE(SUCCESS_TONE_BIG_REWARD,TONE_DURATION);
-				* nexttick 1000;
-				* printf("SUCCESS_TONE_MED_REWARD [%d]\n",SUCCESS_TONE_MED_REWARD);
-				* spawnwait TONE(SUCCESS_TONE_MED_REWARD,TONE_DURATION);
-				* nexttick 1000;
-				* printf("SUCCESS_TONE_SML_REWARD [%d]\n",SUCCESS_TONE_SML_REWARD);
-				* spawnwait TONE(SUCCESS_TONE_SML_REWARD,TONE_DURATION);
-				* nexttick 1000;
-				* printf("Doing TONESWEP()\n");
-				* spawnwait TONESWEP();
-				* nexttick 1000;
-				*/
-				//printf("Giving JUICE\n");
-				//spawnwait JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION + 100);
-
-				//nexttick 1000;
-				//nexttick 5000;
-				//CURR_STAT = STAT_GET_READY;
-				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
-				//nexttick 5000;
-				//CURR_STAT = STAT_FIX_ON;
-				//STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
-				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
-				//nexttick 5000;
-				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
-
 				dsendf("vp %d\n",PG_TARGET_PD);
 				nexttick 64;
 				dsendf("vp %d\n",PG_SIGNAL_PD);
@@ -259,11 +231,20 @@ process IDLE() enabled
 			nexttick;
 		} /*while(TRL_RUNNING)*/
 		spawnwait WRITE_TO_FILE();
+    spawnwait USR_SUMMARY();
 		printf("============================NEXT TRIAL========================\n");
 		nexttick;
 	}     /*while(1)*/
 } /*IDLE()*/
 
+process USER_SUMMARY()
+{
+	printf("**********************************\n");
+	printf("Trial Number: [%d]\n", TRL_NUMBER);
+	printf("GO / CANCELLED / NON-CANCELLED: [%d] / [%d] / [%d]\n", SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS);
+
+
+}
 
 process UPD8_MSG()
 {

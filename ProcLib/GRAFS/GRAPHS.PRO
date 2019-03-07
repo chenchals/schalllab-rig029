@@ -111,11 +111,11 @@ process GRAF_UPD8_TARG()
     declare float eccX;
     declare float eccY;
 
-    // find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
-    eccX = cos(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
-    eccY = -sin(CURR_TARG_ANGLE) * CURR_TARG_ECCENTRICITY;
+    // find the center of the box in x and y space based on the TRL_TARG_ANGLE and TRL_TARG_ECCENTRICITY...
+    eccX = cos(TRL_TARG_ANGLE) * TRL_TARG_ECCENTRICITY;
+    eccY = -sin(TRL_TARG_ANGLE) * TRL_TARG_ECCENTRICITY;
     // Update animated graph object
-    oSetAttribute(OBJ_TARG, aSIZE, CURR_TARG_SIZE * DEG_2_PIX_X, CURR_TARG_SIZE * DEG_2_PIX_Y);
+    oSetAttribute(OBJ_TARG, aSIZE, TRL_TARG_SIZE * DEG_2_PIX_X, TRL_TARG_SIZE * DEG_2_PIX_Y);
     oMove(OBJ_TARG, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
     oSetAttribute(OBJ_TARG, aINVISIBLE);
 
@@ -127,9 +127,9 @@ process GRAF_UPD8_TARG()
     oMove(OBJ_TARG_WIN_L, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
     oSetAttribute(OBJ_TARG_WIN_L, aVISIBLE);
 
-    // ANTI- find the center of the box in x and y space based on the CURR_TARG_ANGLE and CURR_TARG_ECCENTRICITY...
-    eccX = cos(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
-    eccY = -sin(CURR_TARG_ANGLE + 180) * CURR_TARG_ECCENTRICITY;
+    // ANTI- find the center of the box in x and y space based on the TRL_TARG_ANGLE and TRL_TARG_ECCENTRICITY...
+    eccX = cos(TRL_TARG_ANGLE + 180) * TRL_TARG_ECCENTRICITY;
+    eccY = -sin(TRL_TARG_ANGLE + 180) * TRL_TARG_ECCENTRICITY;
     // Update animated graph object
     oMove(OBJ_TARG_WIN_ANTI, eccX * DEG_2_PIX_X, eccY * DEG_2_PIX_Y);
     oSetAttribute(OBJ_TARG_WIN_ANTI, aSIZE, TARG_WIN_SIZE * DEG_2_PIX_X, TARG_WIN_SIZE * DEG_2_PIX_Y);

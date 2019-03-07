@@ -17,11 +17,7 @@
 //       if gaze ob target ==> NO TIMEOUT_TIME
 //
 
-// Trial counters
-declare int TRL_NUMBER;
-declare int TRIALS_PER_BLOCK = 30;
-
-//===========Trial types and distributions==================
+//===========Trial types and distributions======================
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Are these used / useful????
@@ -92,7 +88,7 @@ declare int   MIN_SSD;
 declare int   MAX_SSD;
 // do we select the next SSD based on a staircasing algorithm
 // No coding for setting of '0' :-)
-declare int   DO_STAIRCASE_NEXT_SSD = 1;
+declare int DO_STAIRCASE_NEXT_SSD = 1;
 // Step up max index for increasing SSD. current idx + (random(3) +1)
 declare int SSD_STEP_UP = 3;
 // Step down max index for decreasin SSD. current idx - (random(3) +1)
@@ -111,8 +107,8 @@ declare int MIN_STOP_SIGNAL_HOLD_TIME;
 // FIX_REIGNITE_FLAG == 1 *AND*
 // saccade is made to target within PRE_SSD_DELAY_FIX_REIGNITE or
 // saccade is made to target within POST_SSD_DELAY_FIX_REIGNITE
-declare int FIX_REIGNITE_FLAG = 1;
-declare int PRE_SSD_DELAY_FIX_REIGNITE = 100;
+declare int FIX_REIGNITE_FLAG           = 1;
+declare int PRE_SSD_DELAY_FIX_REIGNITE  = 100;
 declare int POST_SSD_DELAY_FIX_REIGNITE = 100;
 
 //============= TONE and REWARD periods =========================
@@ -166,21 +162,21 @@ declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_MIN_SSHT[3] = { 0, 0, 0 };
-
+// Tone frequencies for different outcomes
 declare int          NON_CANCELLED_TONE_HZ = 300;
 declare int          CANCELLED_TONE_HZ     = 400;
 declare int          GO_CORRECT_TONE_HZ    = 500;
 declare int          GO_ERROR_TONE_HZ      = 1000;
 declare int          NOGO_ERROR_TONE_HZ    = 1500;
-
-// Positive secondary reinforcer in Hz
-declare int SUCCESS_TONE_BIG_REWARD = 300;
-declare int SUCCESS_TONE_MED_REWARD = 400;
-declare int SUCCESS_TONE_SML_REWARD = 500;
-// Negative secondary reinforcer timeout (short, medium, long)
-declare int FAILURE_TONE_SML_TIMEOUT = 800;
-declare int FAILURE_TONE_MED_TIMEOUT = 1600;
-declare int FAILURE_TONE_BIG_TIMEOUT = 3200;
+//====================Asymmetric reward ========================
+// Switch block after number of Correct trials = TRIALS_PER_BLOCK
+declare int          CORRECT_TRIALS_PER_BLOCK = 30;
+declare constant int RWRD_LO_IDX              = 0;
+declare constant int RWRD_HI_IDX              = 1;
+declare int          RWRD_LO_HI_DURATION[2]   = { 50, 100 };
+// determine this randomly
+declare int          LO_RWRD_POS;
+declare int          HI_RWRD_POS;
 
 
 //==========================Additional Timeouts======================

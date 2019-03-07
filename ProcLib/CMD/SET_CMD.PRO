@@ -47,7 +47,8 @@
 
 declare SET_CMD_TRL();
 declare INIT_TRL_VARS();
-declare PCK_TRL_TYPE();
+declare SET_BLOCK_NUM();
+declare PICK_TRL_TYPE();
 declare COMPUTE_FIX_HOLD();
 declare SET_TARGET();
 declare SET_WINS();
@@ -219,12 +220,28 @@ declare int TRL_TARG_VRT_RFRSH_COUNT;
 declare int TRL_TARG_SSD_VRT_RFRSH_COUNT;
 // code trial outcome as event code
 declare int TRL_OUTCOME_EVNTCODE;
+
+// Asymmetic reward vars for trial
+declare int TRL_BLOCK_NUM;
+declare int TRL_IS_LO_RWRD;
+declare int TRL_LO_RWRD_TARG_IDX;
+declare int TRL_REPEAT_LAST_STOP_TRL;
+
+// Attributes of Current Target
+declare int   TRL_TARG_IDX;
+declare float TRL_TARG_SIZE;
+declare float TRL_TARG_ANGLE;
+declare float TRL_TARG_ECCENTRICITY;
+declare int   TRL_TARG_COLOR_IDX;
+
 // Other variables for trial to use for staircasing in next session
 declare int TRL_PREV_TRL_TYPE;
 declare int TRL_PREV_OUTCOME_EVNTCODE;
 declare int TRL_LAST_STOP_OUTCOME_EVNTCODE;
 declare int TRL_LAST_GO_OUTCOME_EVNTCODE;
 declare int TRL_LAST_SSD_IDX;
+declare int TOGGLE_RWRD_ASSOCIATION;
+
 // Trial counts for session
 declare int SESS_N_GO_TRLS;
 declare int SESS_N_GO_CORRECT_TRLS;
@@ -243,7 +260,7 @@ process SET_CMD_TRL()
     spawnwait INIT_TRL_VARS();
 
     // Setup trial type
-    spawnwait PCK_TRL_TYPE();
+    spawnwait PICK_TRL_TYPE();
 
     // Compute TRL_FIX_HOLD_TIME;
     spawnwait COMPUTE_FIX_HOLD();
@@ -287,7 +304,7 @@ process SET_CMD_TRL()
     // compute trial duration (mainly for fixed trial length)
     spawnwait COMPUTE_TRL_DURATION();
 
-    //printf("TRL_TYPE %d, CURR_TARG_IDX %d, CURR_TARG_ANGLE %d\n", TRL_TYPE, CURR_TARG_IDX, CURR_TARG_ANGLE);
+    //printf("TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
 } /* SET_CMD_TRL */
 
 
@@ -485,25 +502,6 @@ process COMPUTE_FIX_HOLD()
 } /* COMPUTE_FIX_HOLD */
 
 
-process SET_TARGET()
-{
-    // pick current target location AND SET WINDOWS
-    // sequential...
-    //CURR_TARG_IDX = CURR_TARG_IDX + 1;
-    //CURR_TARG_IDX = (CURR_TARG_IDX) % N_TARG_POS;
-    // random
-    CURR_TARG_IDX = random(N_TARG_POS);
-    // Target stimulus on this trial
-    CURR_TARG_SIZE         = TARG_SIZE_ARRY[CURR_TARG_IDX];
-    CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[CURR_TARG_IDX];
-    CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-    // Zero is black.  see SET_CLRS.pro
-    CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
-
-    spawnwait SET_WINS();
-} /* SET_TARGET */
-
-
 process SET_WINS()
 {
     declare float eccX, eccY;
@@ -520,8 +518,8 @@ process SET_WINS()
     FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
     FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
     // Compute TARG_WIN and TARG_WIN_LARGE
-    eccX            = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-    eccY            = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+    eccX            = cos(TARG_ANGLE_ARRY[TRL_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[TRL_TARG_IDX];
+    eccY            = -sin(TARG_ANGLE_ARRY[TRL_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[TRL_TARG_IDX];
     TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
     TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
     TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
@@ -532,8 +530,8 @@ process SET_WINS()
     TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
     TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
     // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
-    eccX                 = cos(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
-    eccY                 = -sin(TARG_ANGLE_ARRY[CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[CURR_TARG_IDX];
+    eccX                 = cos(TARG_ANGLE_ARRY[TRL_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[TRL_TARG_IDX];
+    eccY                 = -sin(TARG_ANGLE_ARRY[TRL_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[TRL_TARG_IDX];
     TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
     TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
     TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
@@ -546,20 +544,105 @@ process SET_WINS()
 } /* SET_WINS */
 
 
-process PCK_TRL_TYPE()
+// Assumes only 2 indices 0,1
+process SET_ASYMMETRIC_RWRD()
+{
+    declare int tempRand;
+
+    if (TOGGLE_RWRD_ASSOCIATION)
+    {
+        if (TRL_BLOCK_NUM == 1)
+        {
+            // Choose Left or right as low reward initially
+            // this could be change to low reward for pos 0,1,2,3
+            // Making actual reward duration seection independent targ. position
+            // for countermanding since there are only 2 positions
+            tempRand    = random(2);
+            HI_RWRD_POS = tempRand;
+            if (tempRand)
+            {
+                LO_RWRD_POS = 0;
+            }
+            else
+            {
+                LO_RWRD_POS = 1;
+            }
+        }
+        else // Switch reward association
+        {
+            if (LO_RWRD_POS)
+            {
+                LO_RWRD_POS = 0;
+                HI_RWRD_POS = 1;
+            }
+            else
+            {
+                LO_RWRD_POS = 1;
+                HI_RWRD_POS = 0;
+            }
+        }
+        TOGGLE_RWRD_ASSOCIATION = 0;
+        TRL_LO_RWRD_TARG_IDX    = LO_RWRD_POS;
+    }
+    if (TRL_TARG_IDX == TRL_LO_RWRD_TARG_IDX)
+    {
+        TRL_RWRD_DURATION = RWRD_LO_HI_DURATION[RWRD_LO_IDX];
+        TRL_IS_LO_RWRD    = 1;
+    }
+    else
+    {
+        TRL_RWRD_DURATION = RWRD_LO_HI_DURATION[RWRD_HI_IDX];
+        TRL_IS_LO_RWRD    = 0;
+    }
+}/* SET_ASYMMETRIC_RWRD */
+
+
+process SET_TARGET()
+{
+    // pick current target location AND SET WINDOWS
+    // random
+    TRL_TARG_IDX = random(N_TARG_POS);
+    // Target stimulus on this trial
+    TRL_TARG_SIZE         = TARG_SIZE_ARRY[TRL_TARG_IDX];
+    TRL_TARG_ANGLE        = TARG_ANGLE_ARRY[TRL_TARG_IDX];
+    TRL_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[TRL_TARG_IDX];
+    // Zero is black.  see SET_CLRS.pro
+    // This will not work for search with different targets having different colors
+    TRL_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+
+    spawnwait SET_WINS();
+} /* SET_TARGET */
+
+
+process PICK_TRL_TYPE()
 {
     declare float trlType;
 
     trlType = (1.0 + random(9999))/100.0;
     if (trlType <= GO_WEIGHT)
     {
-        TRL_TYPE = TRIAL_TYPE_GO;
+        TRL_TYPE       = TRIAL_TYPE_GO;
+        SESS_N_GO_TRLS = SESS_N_GO_TRLS + 1;
     }
     else
     {
-        TRL_TYPE = TRIAL_TYPE_STOP;
+        TRL_TYPE       = TRIAL_TYPE_STOP;
+        SESS_N_GO_TRLS = SESS_N_GO_TRLS + 1;
     }
-}/* PCK_TRL_TYPE */
+}/* PICK_TRL_TYPE */
+
+
+process SET_BLOCK_NUM()
+{
+    declare int sessCorrectTrls;
+
+    sessCorrectTrls = SESS_N_GO_CORRECT_TRLS + SESS_N_NON_CANCEL_TRLS;
+    if (TRL_BLOCK_NUM == 0 || sessCorrectTrls >= CORRECT_TRIALS_PER_BLOCK)
+    {
+        TOGGLE_RWRD_ASSOCIATION = 1;
+        TRL_BLOCK_NUM           = TRL_BLOCK_NUM + 1;
+    }
+}/* SET_BLOCK_NUM */
 
 
 process INIT_TRL_VARS()
@@ -578,8 +661,8 @@ process INIT_TRL_VARS()
     TRL_IS_TIMEOUT                  = 0;
     TRL_IS_STOP_SIGNAL_ON           = 0;
     TRL_STOP_SIGNAL_TIME            = 0;
-    TRL_STOP_SIGNAL_DELAY           = 0;
     TRL_STOP_SIGNAL_DELAY_IDX       = 0;
+    TRL_STOP_SIGNAL_DELAY           = 0;
     TRL_STOP_SIGNAL_DURATION        = 0;
     TRL_IS_NON_CANCELLED            = 0;
     TRL_IS_CANCELLED                = 0;
@@ -658,12 +741,24 @@ process INIT_TRL_VARS()
     TRL_TARG_VRT_RFRSH_COUNT        = 0;
     TRL_TARG_SSD_VRT_RFRSH_COUNT    = 0;
     TRL_OUTCOME_EVNTCODE            = 0;
+    //TRL_BLOCK_NUM                   = 0;
+    TRL_IS_LO_RWRD           = 0;
+    TRL_LO_RWRD_TARG_IDX     = 0;
+    TRL_REPEAT_LAST_STOP_TRL = 0;
+    TRL_TARG_IDX             = 0;
+    TRL_TARG_SIZE            = 0;
+    TRL_TARG_ANGLE           = 0;
+    TRL_TARG_ECCENTRICITY    = 0;
+    TRL_TARG_COLOR_IDX       = 0;
+
     if (TRL_NUMBER == 0)
     {
+        TRL_BLOCK_NUM                  = 0;
         TRL_PREV_TRL_TYPE              = 0;
         TRL_PREV_OUTCOME_EVNTCODE      = 0;
         TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
         TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
         TRL_LAST_SSD_IDX               = 0;
+        TOGGLE_RWRD_ASSOCIATION        = 0;
     }
 }   /* INIT_TRL_VARS */

@@ -37,7 +37,7 @@ process DRW_RECT(float sizeX, float sizeY, float targAngle, float targEcc, int c
     stim_ecc_x = cos(targAngle) * targEcc;
     stim_ecc_y = sin(targAngle) * targEcc;
 
-    // find locations of upper left and lower right corners based on location of center and CURR_TARG_SIZE
+    // find locations of upper left and lower right corners based on location of center and TRL_TARG_SIZE
     ulx = round((stim_ecc_x - sizeX / 2) * DEG_2_PIX_X);
     uly = round((stim_ecc_y + sizeY / 2) * DEG_2_PIX_Y);
     lrx = round((stim_ecc_x + sizeX / 2) * DEG_2_PIX_X);
