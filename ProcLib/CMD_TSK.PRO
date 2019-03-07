@@ -31,11 +31,11 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/OUTCOME.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/ITI_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
+#include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 //==========================================================================
 declare IDLE();
 declare UPD8_MSG();
 declare WRITE_TO_FILE();
-declare USER_SUMMARY();
 
 declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER = 0;
@@ -45,6 +45,8 @@ declare int SHOW_PAGES = 0;
 process IDLE() enabled
 {
 	declare int tempCount;
+	declare int infosStartT;
+	declare int infosDuration;
 
 	spawn CLEAR_VDO();
 
@@ -213,6 +215,12 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
+				printf("****CMD_TSK[%d]: Sending synchronously: SEND_INFOS()\n");
+				infosStartT = time();
+				spawnwait SEND_INFOS();
+				infosDuration = time() - infosStartT;
+        printf("****CMD_TSK[%d]: Done Sending synchronously: SEND_INFOS() Time = [%d]\n", infosDuration);
+
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
@@ -232,7 +240,7 @@ process IDLE() enabled
 			nexttick;
 		} /*while(TRL_RUNNING)*/
 		spawnwait WRITE_TO_FILE();
-    spawnwait USER_SUMMARY();
+    spawnwait USR_SUMMARY();
 		printf("============================NEXT TRIAL========================\n");
 		nexttick;
 	}     /*while(1)*/

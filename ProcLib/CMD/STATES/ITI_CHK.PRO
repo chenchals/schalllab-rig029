@@ -65,6 +65,9 @@ process PROC_ITI_CHK()
             PROCESS_STATE        = 1;
             TRL_RUNNING          = 1;
             CURR_STAT            = STAT_TIM_OUT;
+            TRL_END_TIME = time();
+            spawn SEND_EVT(Eot_);
+            printf("****STAT_ITI_CHK[%d]: **Going to TIME_OUT State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
         }
         else if (!TRL_ITI_START_TIME)
         {
@@ -84,5 +87,8 @@ process PROC_ITI_CHK()
         PROCESS_STATE = 1;
         TRL_RUNNING   = 1;
         CURR_STAT     = STAT_IDLE;
+        TRL_END_TIME = time();
+        spawn SEND_EVT(Eot_);
+        printf("****STAT_ITI_CHK[%d]: **Going to IDLE State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
     }
 } /* PROC_ITI_CHK */
