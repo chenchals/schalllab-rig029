@@ -26,13 +26,16 @@ process JITTER_TEST() enabled
     writef("jitters.csv exponentJitter, uniformJitter, gaussJitter\n");
     while (temp < nPoints)
     {
-        spawnwait EXPONENT_JITTER(meanT, varianceT);
+        spawnwait JITTER(meanT, varianceT, JITTER_EXPONENTIAL_FLAG);
+
         exponentJitter = JITTER_INT;
 
-        spawnwait UNIFORM_JITTER(meanT, varianceT);
+        spawnwait JITTER(meanT, varianceT, JITTER_UNIFORM_FLAG);
+
         uniformJitter = JITTER_INT;
 
-        spawnwait GAUSS_JITTER(meanT, varianceT);
+        spawnwait JITTER(meanT, varianceT, JITTER_GAUSS_FLAG);
+
         gaussJitter = JITTER_INT;
 
         printf("%d,%d,%d\n", exponentJitter, uniformJitter, gaussJitter);

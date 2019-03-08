@@ -10,6 +10,8 @@
 
 // Load all constants and related gobal vars
 #include C:/TEMPO/ProcLib/CONSTNTS.PRO
+// Jitter utils
+#include C:/TEMPO/ProcLib/UTIL/JITTER.PRO
 // CMD Vars only...?
 #include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
 // State defs
@@ -38,8 +40,6 @@
 //========other utils=============
 // Send event processes
 #include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
-// Jitter utils
-#include C:/TEMPO/ProcLib/UTIL/JITTER.PRO
 // Set up watches
 #include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
 // Set up watches
@@ -258,6 +258,7 @@ process SET_CMD_TRL()
 
     if (REPEAT_LO_RWRD_ERROR_TRL && TRL_IS_TIMEOUT && (REPEAT_MAX == -1 || (TRL_REPEAT_COUNT < REPEAT_MAX && REPEAT_MAX > 0)))
     {
+      printf("****************REPEAT LOW-REWARD ERROR TRIAL***********************\n");
         // Repeat the complete trial. Do not initialize *all* variables, but only those needed for Repeat
         spawnwait INIT_VARS_REPEAT_TRL();
     }
@@ -449,36 +450,16 @@ process COMPUTE_MIN_THT()
 
 process SET_TONE_DELAY()
 {
-    if (TONE_JITTER_FLAG == JITTER_GAUSS_FLAG)
-    {
-        spawnwait GAUSS_JITTER(TONE_DELAY_MEAN, TONE_DELAY_VARIANCE);
-    }
-    else if (TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG)
-    {
-        spawnwait UNIFORM_JITTER(TONE_DELAY_MEAN, TONE_DELAY_VARIANCE);
-    }
-    else if (TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG)
-    {
-        spawnwait EXPONENT_JITTER(TONE_DELAY_MEAN, TONE_DELAY_VARIANCE);
-    }
+    spawnwait JITTER(TONE_DELAY_MEAN, TONE_DELAY_VARIANCE, TONE_JITTER_FLAG);
+
     TRL_TONE_DELAY = JITTER_INT;
 }/* SET_TONE_DELAY */
 
 
 process SET_RWRD_DELAY()
 {
-    if (RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG)
-    {
-        spawnwait GAUSS_JITTER(RWRD_DELAY_MEAN, RWRD_DELAY_VARIANCE);
-    }
-    else if (RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG)
-    {
-        spawnwait UNIFORM_JITTER(RWRD_DELAY_MEAN, RWRD_DELAY_VARIANCE);
-    }
-    else if (RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG)
-    {
-        spawnwait EXPONENT_JITTER(RWRD_DELAY_MEAN, RWRD_DELAY_VARIANCE);
-    }
+    spawnwait JITTER(RWRD_DELAY_MEAN, RWRD_DELAY_VARIANCE, RWRD_JITTER_FLAG);
+
     TRL_RWRD_DELAY = JITTER_INT;
 }/* SET_RWRD_DELAY */
 
@@ -596,12 +577,14 @@ process SET_ASYMMETRIC_RWRD()
     }
     if (TRL_TARG_IDX == TRL_LO_RWRD_TARG_IDX)
     {
-        TRL_RWRD_DURATION = RWRD_LO_HI_DURATION[RWRD_LO_IDX];
-        TRL_IS_LO_RWRD    = 1;
+        spawnwait JITTER(RWRD_LO_HI_MEAN[RWRD_LO_IDX], RWRD_LO_HI_VARIANCE[RWRD_LO_IDX],RWRD_DURATION_JITTER);
+        TRL_RWRD_DURATION = JITTER_INT;
+        TRL_IS_LO_RWRD = 1;
     }
     else
     {
-        TRL_RWRD_DURATION = RWRD_LO_HI_DURATION[RWRD_HI_IDX];
+        spawnwait JITTER(RWRD_LO_HI_MEAN[RWRD_HI_IDX], RWRD_LO_HI_VARIANCE[RWRD_HI_IDX],RWRD_DURATION_JITTER);
+        TRL_RWRD_DURATION = JITTER_INT;
         TRL_IS_LO_RWRD    = 0;
     }
 }/* SET_ASYMMETRIC_RWRD */

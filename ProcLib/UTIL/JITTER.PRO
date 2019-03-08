@@ -22,7 +22,34 @@ declare GAUSS_JITTER(int meanT, int varianceT);
 declare UNIFORM_JITTER(int meanT, int diffT);
 declare EXPONENT_JITTER(int meanT, int diffT);
 
-declare int JITTER_INT;
+declare constant int JITTER_NONE             = 0;
+declare constant int JITTER_GAUSS_FLAG       = 1;
+declare constant int JITTER_UNIFORM_FLAG     = 2;
+declare constant int JITTER_EXPONENTIAL_FLAG = 3;
+
+declare int          JITTER_INT;
+
+
+process JITTER(int meanT, int varianceT, int jitterFlag)
+{
+
+    if (jitterFlag == JITTER_NONE)
+    {
+      JITTER_INT = meanT;
+    }
+    else if (jitterFlag == JITTER_GAUSS_FLAG)
+    {
+      spawnwait GAUSS_JITTER(meanT,  varianceT);
+    }
+    else if (jitterFlag == JITTER_UNIFORM_FLAG)
+    {
+      spawnwait UNIFORM_JITTER(meanT,  varianceT);
+    }
+    else if (jitterFlag == JITTER_EXPONENTIAL_FLAG)
+    {
+      spawnwait EXPONENT_JITTER(meanT,  varianceT);
+    }
+}
 
 
 // Gaussian distribution

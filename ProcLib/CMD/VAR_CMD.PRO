@@ -29,15 +29,17 @@ declare float        GO_WEIGHT     = 0.0;
 declare float        STOP_WEIGHT   = 100.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
-declare int REPEAT_LO_RWRD_ERROR_TRL= 1;
+declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
-declare int REPEAT_MAX = 5;
+declare int          REPEAT_MAX = 5;
 //==========Jitter flags and definitions=========================
-declare constant int JITTER_GAUSS_FLAG       = 0;
-declare constant int JITTER_UNIFORM_FLAG     = 1;
-declare constant int JITTER_EXPONENTIAL_FLAG = 2;
+// See UTIL/JITTER.PRO
+// declare constant int JITTER_NONE             = 0;
+// declare constant int JITTER_GAUSS_FLAG       = 1;
+// declare constant int JITTER_UNIFORM_FLAG     = 2;
+// declare constant int JITTER_EXPONENTIAL_FLAG = 3;
 declare int          TONE_JITTER_FLAG        = JITTER_GAUSS_FLAG;
 declare int          RWRD_JITTER_FLAG        = JITTER_UNIFORM_FLAG;
 // temporary globals to be used in state processing
@@ -179,7 +181,9 @@ declare int          NOGO_ERROR_TONE_HZ    = 1000;
 declare int          CORRECT_TRIALS_PER_BLOCK = 5;
 declare constant int RWRD_LO_IDX              = 0;
 declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_DURATION[2]   = { 10, 500 };
+declare int          RWRD_LO_HI_MEAN[2]       = { 10, 500 };
+declare int          RWRD_LO_HI_VARIANCE[2]   = { 10, 500 };
+declare int          RWRD_DURATION_JITTER     = JITTER_GAUSS_FLAG;
 // determine this randomly
 declare int          LO_RWRD_POS;
 declare int          HI_RWRD_POS;
