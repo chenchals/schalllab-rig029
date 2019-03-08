@@ -77,15 +77,18 @@ process PROC_TRL_OUTCOME()
 	}
 	// it is big conditional depending on the current trial type and tyep of error
 
-	if (TRIAL_TYPE == TRIAL_TYPE_GO)
+	if (TRL_TYPE == TRIAL_TYPE_GO)
 	{
+		// Assume it is an error and adjust if not
+		TRL_LAST_GO_OUTCOME_EVNTCODE = OutcomeGoError_;
+		SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
 		spawnwait PROC_GO_OUTCOMES();
-		TIMEOUT_TONE = FAILURE_TONE_SML_TIMEOUT;
 	}
-	else if (TRIAL_TYPE == TRIAL_TYPE_STOP)
+	else if (TRL_TYPE == TRIAL_TYPE_STOP)
 	{
-		TIMEOUT_TONE = FAILURE_TONE_SML_TIMEOUT;
-
+		// Assume it is a non-cancelled error trial and adjust if not
+		TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
+		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
 		if (TRL_CANCEL_TIME)
 		{
 			spawnwait PROC_NOGO_POST_CANCEL_OUTCOMES();
@@ -95,6 +98,18 @@ process PROC_TRL_OUTCOME()
 			spawnwait PROC_NOGO_PRE_CANCEL_OUTCOMES();
 		}
 	}
+  if (TRL_IS_TIMEOUT)
+	{
+      if (TRL_TYPE == TRIAL_TYPE_GO)
+			{
+				TIMEOUT_TONE = GO_ERROR_TONE_HZ;
+			}
+			else if (TRL_TYPE == TRIAL_TYPE_STOP)
+			{
+				TIMEOUT_TONE = NOGO_ERROR_TONE_HZ;
+			}
+	}
+
 	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
 	TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
 	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
@@ -110,7 +125,14 @@ process PROC_GO_OUTCOMES()
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
 		spawn SEND_EVT(OutcomeGoCorrect_);
+		TRL_LAST_GO_OUTCOME_EVNTCODE = OutcomeGoCorrect_;
+		printf("---GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT---\n");
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoCorrect_ [%d]; Go Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoCorrect_);
+
+		SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
+		// Adjust initial assumption that this was a error trial
+		SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
+		BLOCK_CORRECT_TRLS = BLOCK_CORRECT_TRLS + 1;
 	}
 	else if (TRL_FIX_BRK_TIME)
 	{
@@ -178,7 +200,7 @@ process PROC_GO_OUTCOMES()
 process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
   declare int nogoIdx;
-	
+
 	if(TRL_IS_STOP_SIGNAL_ON)
 	{
 		nogoIdx = NOGO_POST_SSD_IDX;
@@ -186,18 +208,23 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 	}
 	else
 	{
-		nogoIdx = NOGO_PRE_SSD_IDX;	
+		nogoIdx = NOGO_PRE_SSD_IDX;
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: STOP Trial; PRE-SSD, PRE_CANCEL\n",STAT_OUTCOME,TRL_NUMBER);
 	}
-	
+
 	if (TRL_IS_TARG_MIN_THT)
 	{
 		TRL_IS_NON_CANCELLED = 1;
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
 		spawn SEND_EVT(OutcomeNoGoNonCancelled_);
-		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");		
+		TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoNonCancelled_;
+		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: **OutcomeNoGoNonCancelled_** [%d]; TRL_STAIRCASE_SSD_FLAG [%d]; STOP Trial; (TRL_TARG_MIN_THT_TIME - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoNonCancelled_, TRL_STAIRCASE_SSD_FLAG);
+
+		SESS_N_NON_CANCEL_TRLS = SESS_N_NON_CANCEL_TRLS + 1;
+		// Adjust initial assumption that this was a non-cancelled error trial
+		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
 	}
 	else if (TRL_FIX_BRK_TIME)
 	{
@@ -273,8 +300,14 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
 		spawn SEND_EVT(OutcomeNoGoCancelled_);
+		TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoCancelled_;
 		printf("---CANCELLED------CANCELLED------SSD [%d, %dms]------CANCELLED------CANCELLED---\n",TRL_STOP_SIGNAL_DELAY, TRL_STOP_SIGNAL_DURATION);
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoCancelled_ [%d]; TRL_STAIRCASE_SSD_FLAG  [%d]; STOP Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoCancelled_,TRL_STAIRCASE_SSD_FLAG);
+
+		SESS_N_CANCEL_TRLS = SESS_N_CANCEL_TRLS + 1;
+		// Adjust initial assumption that this was a non-cancelled error trial
+		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+		BLOCK_CORRECT_TRLS = BLOCK_CORRECT_TRLS + 1;
 	}
 	else if (TRL_FIX_BRK_PRE_TONE_TIME)
 	{

@@ -14,7 +14,7 @@
 //==========================================================================
 //  Revision History:
 //
-
+declare constant int DEBUG_PD = 0;
 declare int PD_TRIG_L    = 0;
 declare int PD_TRIG_R    = 0;
 declare int PD_THRESHOLD = 500;
@@ -52,11 +52,11 @@ process WTCH_SCHMITT()
         }
         if (WRITE_FILE)
         {
-            writef("pdValsSc.csv %d,%d,%d,%d,%d\n", Trl_number, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+            writef("pdValsSc.csv %d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
         }
-        if (DEBUG)
+        if (DEBUG_PD)
         {
-            printf("%d,%d,%d,%d,%d\n", Trl_number, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+            printf("%d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
         }
         nexttick;
     }

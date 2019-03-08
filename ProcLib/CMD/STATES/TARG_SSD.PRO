@@ -45,7 +45,8 @@ declare SSD_CHECK_SACC();
 
 process PROC_TARG_SSD()
 {
-  declare int queuedStopSignalPage;
+    declare int queuedStopSignalPage;
+
     if (PROCESS_STATE)
     {
         printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
@@ -65,7 +66,8 @@ process PROC_TARG_SSD()
         // in refresh counts
         STAT_ALLOWED_T           = TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR;
         TRL_TARG_VRT_RFRSH_COUNT = 0;
-        queuedStopSignalPage = 0;
+        queuedStopSignalPage     = 0;
+		TRL_IS_STOP_SIGNAL_ON  = 0;
 
         //        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
         TEMP_DELY_PLUS_DURATION = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR) + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
@@ -76,7 +78,7 @@ process PROC_TARG_SSD()
     // keep track of stop signal duration in ms and in vertical refresh count
     if (!TRL_IS_STOP_SIGNAL_ON && TRL_TARG_VRT_RFRSH_COUNT > 0)
     {
-		    TRL_TARG_SSD_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT;
+        TRL_TARG_SSD_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT;
         TRL_STOP_SIGNAL_DURATION     = TRL_STOP_SIGNAL_DURATION + 1;
     }
 
@@ -95,6 +97,7 @@ process PROC_TARG_SSD()
         TRL_STOP_SIGNAL_TIME = time();
         spawn SEND_EVT(StopSignal_);
         spawn GRAF_SHOW_FIX(GRAF_SHOW);
+
         printf("****STAT_TARG_SSD[%d]: OK sent Event: StopSignal_[%d], Time [%d]\n", STAT_TARG_SSD, StopSignal_, TRL_STOP_SIGNAL_TIME);
     }
 
@@ -117,7 +120,7 @@ process PROC_TARG_SSD()
             //dsendf("vp %d\n", PG_SIGNAL);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
         }
-
+ 
         // till Cancel time is expired and the stop signal is shown
         if (!I_FIX)
         {
@@ -126,7 +129,6 @@ process PROC_TARG_SSD()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)
     {
-		spawn TONE(1000,50);
         // if reached here then it is a successful cancel  trial
         if (I_FIX)
         {
@@ -142,7 +144,7 @@ process PROC_TARG_SSD()
         }
         else
         {
-            printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
+           printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
             spawnwait SSD_CHECK_SACC();
         }
     }
@@ -151,6 +153,14 @@ process PROC_TARG_SSD()
 
 process SSD_CHECK_SACC()
 {
+	// Flip page to PG_TARG_PD and continue as a GO trial
+	printf("****STAT_TARG_SSD[%d]: NoGo correct saccade, continue as Go trial. Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
+	dsendf("vp %d\n", PG_TARGET_PD);
+	//dsendf("vw 1\n");
+	spawn GRAF_SHOW_FIX(GRAF_HIDE);
+	spawn GRAF_SHOW_TARG(GRAF_SHOW);
+	spawn PRINT_MSG();
+
     if (STAT_DLTA_T <= STAT_I_DURATION)
     {
         // Early saccade
@@ -175,6 +185,18 @@ process SSD_CHECK_SACC()
 
             printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoSaccadePostSSD_[%d]\n", STAT_TARG_SSD, NoGoSaccadePostSSD_);
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**After SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+
+            TRL_POST_SSD_DELAY_FIX_REIGNITE = STAT_DLTA_T - ceil((STAT_ALLOWED_T * REFRESH_RATE));
+            // How long *after* SSD did saccade happen (before MAX_SACC_TIME), since we know when SSD happened, use actual stop signal time
+            if (TRL_STOP_SIGNAL_TIME)
+            {
+                TRL_POST_SSD_DELAY_FIX_REIGNITE = TRL_NOGO_SACC_POST_SSD_TIME - TRL_STOP_SIGNAL_TIME;
+            }
+            // set the fix-spot turn back on to what user wants; will start out as 0
+            if (TRL_POST_SSD_DELAY_FIX_REIGNITE * TIME_DILATE_FACTOR < POST_SSD_DELAY_FIX_REIGNITE)
+            {
+                TRL_FIX_REIGNITE_FLAG = FIX_REIGNITE_FLAG;
+            }
         }
         else
         {
@@ -183,15 +205,15 @@ process SSD_CHECK_SACC()
 
             printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoSaccadePreSSD_[%d]\n", STAT_TARG_SSD, NoGoSaccadePreSSD_);
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**Before SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
+
+            // How long *before* SSD did saccade happen (before MAX_SACC_TIME), since we do not have stop signal use possible stop signal time
+            TRL_PRE_SSD_DELAY_FIX_REIGNITE = ceil((STAT_ALLOWED_T * REFRESH_RATE * TIME_DILATE_FACTOR) - STAT_DLTA_T);
+            // set the fix-spot turn back on to what user wants; will start out as 0
+            if (TRL_PRE_SSD_DELAY_FIX_REIGNITE * TIME_DILATE_FACTOR < PRE_SSD_DELAY_FIX_REIGNITE)
+            {
+                TRL_FIX_REIGNITE_FLAG = FIX_REIGNITE_FLAG;
+            }
         }
-
-        // Flip page to PG_TARG_PD and continue as a GO trial
-        printf("****STAT_TARG_SSD[%d]: NoGo correct saccade, continue as Go trial. Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
-        dsendf("vp %d\n", PG_TARGET_PD);
-        spawn GRAF_SHOW_FIX(GRAF_HIDE);
-        spawn GRAF_SHOW_TARG(GRAF_SHOW);
-        spawn PRINT_MSG();
-
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_TARG_ACQ;
         spawn PRINT_MSG();
@@ -214,16 +236,17 @@ process SSD_CHECK_SACC()
 
 process PRINT_MSG()
 {
-	declare int dummy;
-	dummy = 0;
-	/*
-    printf("****STAT_TARG_SSD[%d]: STOP TRIAL; TRL_STOP_SIGNAL_DELAY = (TRL_STOP_SIGNAL_DELAY * REFRESH_RATE)\n", STAT_TARG_SSD);
-    printf("****STAT_TARG_SSD[%d]: Expected SSD = TRL_STOP_SIGNAL_DELAY[%d, %dms]\n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR, STAT_ALLOWED_T);
-    printf("****STAT_TARG_SSD[%d]: SSD (using nexttick count)  = TRL_STOP_SIGNAL_DURATION[%d, %dms],  \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, TRL_STOP_SIGNAL_DURATION);
-    printf("****STAT_TARG_SSD[%d]: SSD (using SSD Vertical Refresh count) TRL_TARG_SSD_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_SSD_VRT_RFRSH_COUNT, ceil(TRL_TARG_SSD_VRT_RFRSH_COUNT * REFRESH_RATE));
-    printf("****STAT_TARG_SSD[%d]: SSD + CANCEL TIME [%d + %d] = [%dms] \n", STAT_TARG_SSD,
-      ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR), (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR), TEMP_DELY_PLUS_DURATION);
-    printf("****STAT_TARG_SSD[%d]: Target ON duration   = TRL_TARG_ON_DURATION [%dms],  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
-    printf("****STAT_TARG_SSD[%d]: Target ON duration (using Vertical Refresh count) TRL_TARG_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, ceil(TRL_TARG_VRT_RFRSH_COUNT * REFRESH_RATE));
-	*/
+    declare int dummy;
+
+    dummy = 0;
+    /*
+     * printf("****STAT_TARG_SSD[%d]: STOP TRIAL; TRL_STOP_SIGNAL_DELAY = (TRL_STOP_SIGNAL_DELAY * REFRESH_RATE)\n", STAT_TARG_SSD);
+     * printf("****STAT_TARG_SSD[%d]: Expected SSD = TRL_STOP_SIGNAL_DELAY[%d, %dms]\n", STAT_TARG_SSD, TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR, STAT_ALLOWED_T);
+     * printf("****STAT_TARG_SSD[%d]: SSD (using nexttick count)  = TRL_STOP_SIGNAL_DURATION[%d, %dms],  \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, TRL_STOP_SIGNAL_DURATION);
+     * printf("****STAT_TARG_SSD[%d]: SSD (using SSD Vertical Refresh count) TRL_TARG_SSD_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_SSD_VRT_RFRSH_COUNT, ceil(TRL_TARG_SSD_VRT_RFRSH_COUNT * REFRESH_RATE));
+     * printf("****STAT_TARG_SSD[%d]: SSD + CANCEL TIME [%d + %d] = [%dms] \n", STAT_TARG_SSD,
+     * ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR), (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR), TEMP_DELY_PLUS_DURATION);
+     * printf("****STAT_TARG_SSD[%d]: Target ON duration   = TRL_TARG_ON_DURATION [%dms],  \n", STAT_TARG_SSD, TRL_TARG_ON_DURATION);
+     * printf("****STAT_TARG_SSD[%d]: Target ON duration (using Vertical Refresh count) TRL_TARG_VRT_RFRSH_COUNT[%d, %dms] \n", STAT_TARG_SSD, TRL_TARG_VRT_RFRSH_COUNT, ceil(TRL_TARG_VRT_RFRSH_COUNT * REFRESH_RATE));
+     */
 }/* PRINT_MSG */

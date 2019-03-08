@@ -11,6 +11,12 @@
 //
 
 declare int RIG_ID;
+
+// Ports on DIO board
+declare constant PORTA = 0x1;
+declare constant PORTB = 0x2;
+declare constant PORTC = 0x4;
+
 //==========================================================================
 // Screen width and height in pixels
 declare int   SCRN_PIX_X;

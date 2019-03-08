@@ -9,11 +9,12 @@
 //==========================================================================
 // Use variables on the fly - no declaration
 #pragma declare = 1
-#include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
+
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 #include C:/TEMPO/ProcLib/UTIL/TONE.PRO
 #include C:/TEMPO/ProcLib/UTIL/JUICE.PRO
+#include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
 
 // State flow
 #include C:/TEMPO/ProcLib/CMD/STATES/GET_REDY.PRO
@@ -30,10 +31,12 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/OUTCOME.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/ITI_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
+#include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 //==========================================================================
 declare IDLE();
 declare UPD8_MSG();
 declare WRITE_TO_FILE();
+declare USER_SUMMARY();
 
 declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER = 0;
@@ -43,6 +46,8 @@ declare int SHOW_PAGES = 0;
 process IDLE() enabled
 {
 	declare int tempCount;
+	declare int infosStartT;
+	declare int infosDuration;
 
 	spawn CLEAR_VDO();
 
@@ -126,34 +131,6 @@ process IDLE() enabled
 			while (CURR_STAT == STAT_TEST)
 			{
 				CURR_STAT = STAT_TEST;
-				/*
-				* printf("SUCCESS_TONE_BIG_REWARD [%d]\n",SUCCESS_TONE_BIG_REWARD);
-				* spawnwait TONE(SUCCESS_TONE_BIG_REWARD,TONE_DURATION);
-				* nexttick 1000;
-				* printf("SUCCESS_TONE_MED_REWARD [%d]\n",SUCCESS_TONE_MED_REWARD);
-				* spawnwait TONE(SUCCESS_TONE_MED_REWARD,TONE_DURATION);
-				* nexttick 1000;
-				* printf("SUCCESS_TONE_SML_REWARD [%d]\n",SUCCESS_TONE_SML_REWARD);
-				* spawnwait TONE(SUCCESS_TONE_SML_REWARD,TONE_DURATION);
-				* nexttick 1000;
-				* printf("Doing TONESWEP()\n");
-				* spawnwait TONESWEP();
-				* nexttick 1000;
-				*/
-				//printf("Giving JUICE\n");
-				//spawnwait JUICE(JUICE_CHANNEL, TRL_RWRD_DURATION + 100);
-
-				//nexttick 1000;
-				//nexttick 5000;
-				//CURR_STAT = STAT_GET_READY;
-				//STAT_ALLOWED_T = READY_TIME*TIME_DILATE_FACTOR*10;
-				//nexttick 5000;
-				//CURR_STAT = STAT_FIX_ON;
-				//STAT_ALLOWED_T = ALLOWED_FIX_TIME*TIME_DILATE_FACTOR*10;
-				//spawn GRAF_SHOW_FIX(GRAF_SHOW);
-				//nexttick 5000;
-				//spawn GRAF_SHOW_FIX(GRAF_HIDE);
-
 				dsendf("vp %d\n",PG_TARGET_PD);
 				nexttick 64;
 				dsendf("vp %d\n",PG_SIGNAL_PD);
@@ -183,7 +160,7 @@ process IDLE() enabled
 			//================= State = STAT_TARG_ON===============
 			if (CURR_STAT == STAT_TARG_ON)
 			{
-				if(TRIAL_TYPE == TRIAL_TYPE_STOP)
+				if(TRL_TYPE == TRIAL_TYPE_STOP)
 				{
 					CURR_STAT = STAT_TARG_SSD;
 					spawnwait PROC_TARG_SSD();
@@ -239,6 +216,13 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
+				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
+				infosStartT = time();
+				spawn SEND_INFOS();
+				waitforprocess SEND_INFOS;
+				infosDuration = time() - infosStartT;
+				printf("****CMD_TSK[%d]: Done Sending Infos: SEND_INFOS() Time = [%d]\n", infosDuration);
+
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
@@ -258,11 +242,20 @@ process IDLE() enabled
 			nexttick;
 		} /*while(TRL_RUNNING)*/
 		spawnwait WRITE_TO_FILE();
+		spawnwait USER_SUMMARY();
 		printf("============================NEXT TRIAL========================\n");
 		nexttick;
 	}     /*while(1)*/
 } /*IDLE()*/
 
+process USER_SUMMARY()
+{
+	printf("**********************************\n");
+	printf("Trial Number: [%d]\n", TRL_NUMBER);
+	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d] / [%d]\n", 
+	     SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS, SESS_N_NOGO_ERROR_TRLS);
+	nexttick;
+}
 
 process UPD8_MSG()
 {

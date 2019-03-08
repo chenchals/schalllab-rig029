@@ -28,8 +28,8 @@ declare SET_SCRN();
 // Screen mm to pixel conversion factor
 declare float MM_2_PIX_X;
 declare float MM_2_PIX_Y;
-// Screen in degrees of visual CURR_TARG_ANGLE
-// Visual CURR_TARG_ANGLE is CURR_TARG_ANGLE subtended by gaze shift from center of screen to either
+// Screen in degrees of visual TRL_TARG_ANGLE
+// Visual TRL_TARG_ANGLE is TRL_TARG_ANGLE subtended by gaze shift from center of screen to either
 // Left/right or top/bottom of the screen. Therefore,
 // distance from eye to screen is adjacent, while
 // distance from center of screen to left/right of screen is opposite in X-coordinate

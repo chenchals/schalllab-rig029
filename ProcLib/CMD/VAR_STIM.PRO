@@ -27,15 +27,7 @@ declare float        TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
 declare float        TARG_WIN_LARGE[4];
 declare float        TARG_WIN_ANTI_LARGE[4];
 
-// Attributes of Current Target
-declare int   CURR_TARG_IDX;
-declare float CURR_TARG_SIZE;
-declare float CURR_TARG_ANGLE;
-declare float CURR_TARG_ECCENTRICITY;
-declare int   CURR_TARG_COLOR_IDX;
-
-
-// Photocell marker CURR_TARG_SIZE
+// Photocell marker TRL_TARG_SIZE
 declare float PD_WIDTH_DEG = 4.0;
 
 declare SET_DEFAULT_STIM_VARS();

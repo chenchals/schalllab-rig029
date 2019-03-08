@@ -48,7 +48,7 @@ process PROC_RWRD_SSD()
         STAT_STRT_T   = time();
         STAT_DLTA_T   = 0;
         // Give reward after this time, unless Abort
-        STAT_ALLOWED_T = RWRD_DELAY * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T = TRL_RWRD_DELAY * TIME_DILATE_FACTOR;
         // Reward already given, during reward duration check gaze
         TEMP_RWRD_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
         // This is incremented in the CMD_TSK.PRO --> state flow controller
