@@ -251,7 +251,7 @@ process USER_SUMMARY()
 {
 	printf("**********************************\n");
 	printf("Trial Number: [%d]\n", TRL_NUMBER);
-	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d]\n", 
+	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d] / [%d]\n", 
 	     SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS, SESS_N_NOGO_ERROR_TRLS);
 	nexttick;
 }

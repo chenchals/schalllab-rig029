@@ -47,6 +47,7 @@
 
 declare SET_CMD_TRL();
 declare INIT_TRL_VARS();
+declare INIT_VARS_REPEAT_TRL();
 declare SET_BLOCK_NUM();
 declare PICK_TRL_TYPE();
 declare COMPUTE_FIX_HOLD();
@@ -178,7 +179,7 @@ declare int TRL_NOGO_ERLY_SACC_TIME;
 // saccade left Fix window after MAX saccade time
 declare int TRL_NOGO_LATE_SACC_TIME;
 // fixspot was fixated for this amount of time *After* Cancel time
-declare int TRL_FIX_HOLD_DURATION;
+// declare int TRL_FIX_HOLD_DURATION;
 declare int TRL_FIX_MIN_SSHT_TIME;
 declare int TRL_FIX_BRK_PRE_TONE_TIME;
 declare int TRL_FIX_BRK_TONE_TIME;
@@ -219,24 +220,21 @@ declare int TRL_FIX_VRT_RFRSH_COUNT;
 declare int TRL_TARG_VRT_RFRSH_COUNT;
 // number of vertical refreshs TARGET with PD was on when stop-signal page was shown
 declare int TRL_TARG_SSD_VRT_RFRSH_COUNT;
-// code trial outcome as event code
-declare int TRL_OUTCOME_EVNTCODE;
+
 
 // Asymmetic reward vars for trial
-declare int TRL_BLOCK_NUM;
-declare int TRL_IS_LO_RWRD;
-declare int TRL_LO_RWRD_TARG_IDX;
-declare int TRL_REPEAT_LAST_STOP_TRL;
+declare int   TRL_BLOCK_NUM;
+declare int   TRL_IS_LO_RWRD;
+declare int   TRL_LO_RWRD_TARG_IDX;
 // Attributes of Current Target
 declare int   TRL_TARG_IDX;
 declare float TRL_TARG_SIZE;
 declare float TRL_TARG_ANGLE;
 declare float TRL_TARG_ECCENTRICITY;
 declare int   TRL_TARG_COLOR_IDX;
+declare int   TRL_REPEAT_COUNT;
 
 // Other variables for trial to use for staircasing in next session
-declare int TRL_PREV_TRL_TYPE;
-declare int TRL_PREV_OUTCOME_EVNTCODE;
 declare int TRL_LAST_STOP_OUTCOME_EVNTCODE;
 declare int TRL_LAST_GO_OUTCOME_EVNTCODE;
 declare int TRL_LAST_SSD_IDX;
@@ -253,65 +251,74 @@ declare int SESS_N_NOGO_ERROR_TRLS;
 
 declare int BLOCK_CORRECT_TRLS;
 
+
 process SET_CMD_TRL()
 {
     declare int tempCount;
 
-    // Initialize all trial variables
-    spawnwait INIT_TRL_VARS();
-
-    // Setup trial type
-    spawnwait PICK_TRL_TYPE();
-	
-	spawnwait SET_BLOCK_NUM();
-
-    // Compute TRL_FIX_HOLD_TIME;
-    spawnwait COMPUTE_FIX_HOLD();
-
-    // Setup TARGET
-    spawnwait SET_TARGET();
-	
-	spawnwait SET_RWRD_DELAY();
-	spawnwait SET_ASYMMETRIC_RWRD();
-
-    spawnwait SET_TONE_DELAY();
-    TRL_TONE_DURATION = TONE_DURATION;
-	
-    // Update graph object for Target
-    // Show the windows - without the fixspot or target to cue user
-    spawnwait GRAF_UPD8_FIX();
-    spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
-
-    if (TRL_TYPE == TRIAL_TYPE_STOP)
+    if (REPEAT_LO_RWRD_ERROR_TRL && TRL_IS_TIMEOUT && (REPEAT_MAX == -1 || (TRL_REPEAT_COUNT < REPEAT_MAX && REPEAT_MAX > 0)))
     {
-        SESS_N_STOP_TRLS = SESS_N_STOP_TRLS + 1;
-        spawnwait SET_CANCEL_TIME();
-
-        // Compute MIN_STOP_SIGNAL_HOLD_TIME
-        spawnwait COMPUTE_MIN_SSHT();
-        spawnwait PICK_TRL_SSD();
+        // Repeat the complete trial. Do not initialize *all* variables, but only those needed for Repeat
+        spawnwait INIT_VARS_REPEAT_TRL();
     }
     else
     {
-        SESS_N_GO_TRLS        = SESS_N_GO_TRLS + 1;
-        TRL_STOP_SIGNAL_DELAY = 0;
-    }
-    // Compute this for both STOP and GO trials
-    // Compute MIN_TARG_HOLD_TIME
-    spawnwait COMPUTE_MIN_THT();
+        // Initialize all trial variables
+        spawnwait INIT_TRL_VARS();
 
-    // Setup CMD PAGES
-    //printf("Calling CMD-PGS\n");
-    spawnwait CMD_PGS(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX);
+        // Setup trial type
+        spawnwait PICK_TRL_TYPE();
 
-    // compute trial duration (mainly for fixed trial length)
-    spawnwait COMPUTE_TRL_DURATION();
+        spawnwait SET_BLOCK_NUM();
 
-    //printf("TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
-	
-	
-	printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
-	       TRL_BLOCK_NUM, TRL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_TARG_IDX, TRL_IS_LO_RWRD);
+        // Compute TRL_FIX_HOLD_TIME;
+        spawnwait COMPUTE_FIX_HOLD();
+
+        // Setup TARGET
+        spawnwait SET_TARGET();
+
+        spawnwait SET_RWRD_DELAY();
+        spawnwait SET_ASYMMETRIC_RWRD();
+
+        spawnwait SET_TONE_DELAY();
+
+        TRL_TONE_DURATION = TONE_DURATION;
+
+        // Update graph object for Target
+        // Show the windows - without the fixspot or target to cue user
+        spawnwait GRAF_UPD8_FIX();
+        spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
+
+        if (TRL_TYPE == TRIAL_TYPE_STOP)
+        {
+            SESS_N_STOP_TRLS = SESS_N_STOP_TRLS + 1;
+            spawnwait SET_CANCEL_TIME();
+
+            // Compute MIN_STOP_SIGNAL_HOLD_TIME
+            spawnwait COMPUTE_MIN_SSHT();
+            spawnwait PICK_TRL_SSD();
+        }
+        else
+        {
+            SESS_N_GO_TRLS        = SESS_N_GO_TRLS + 1;
+            TRL_STOP_SIGNAL_DELAY = 0;
+        }
+        // Compute this for both STOP and GO trials
+        // Compute MIN_TARG_HOLD_TIME
+        spawnwait COMPUTE_MIN_THT();
+
+        // Setup CMD PAGES
+        //printf("Calling CMD-PGS\n");
+        spawnwait CMD_PGS(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX);
+
+        // compute trial duration (mainly for fixed trial length)
+        spawnwait COMPUTE_TRL_DURATION();
+
+        //printf("TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
+    } // if previous trial is not an error
+
+    printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
+           TRL_BLOCK_NUM, TRL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_TARG_IDX, TRL_IS_LO_RWRD);
 } /* SET_CMD_TRL */
 
 
@@ -558,7 +565,7 @@ process SET_ASYMMETRIC_RWRD()
 
     if (TOGGLE_RWRD_ASSOCIATION)
     {
-		TOGGLE_RWRD_ASSOCIATION = 0;
+        TOGGLE_RWRD_ASSOCIATION = 0;
 
         if (TRL_BLOCK_NUM == 1)
         {
@@ -568,22 +575,22 @@ process SET_ASYMMETRIC_RWRD()
             // for countermanding since there are only 2 positions
             if (random(2))
             {
-				TRL_LO_RWRD_TARG_IDX = 1;
+                TRL_LO_RWRD_TARG_IDX = 1;
             }
             else
             {
-				TRL_LO_RWRD_TARG_IDX = 0;
+                TRL_LO_RWRD_TARG_IDX = 0;
             }
         }
         else // Switch reward association
         {
             if (TRL_LO_RWRD_TARG_IDX)
             {
-				TRL_LO_RWRD_TARG_IDX    = 0;           
-			}
+                TRL_LO_RWRD_TARG_IDX = 0;
+            }
             else
             {
-				TRL_LO_RWRD_TARG_IDX    = 1;           
+                TRL_LO_RWRD_TARG_IDX = 1;
             }
         }
     }
@@ -637,19 +644,106 @@ process PICK_TRL_TYPE()
 
 process SET_BLOCK_NUM()
 {
-	if(TRL_BLOCK_NUM == 0)
-	{
-		TRL_BLOCK_NUM = 1;
-		BLOCK_CORRECT_TRLS = 0;
-	}	
+    if (TRL_BLOCK_NUM == 0)
+    {
+        TRL_BLOCK_NUM      = 1;
+        BLOCK_CORRECT_TRLS = 0;
+    }
     else if (BLOCK_CORRECT_TRLS == CORRECT_TRIALS_PER_BLOCK)
     {
         TOGGLE_RWRD_ASSOCIATION = 1;
-        TRL_BLOCK_NUM = TRL_BLOCK_NUM + 1;
-		BLOCK_CORRECT_TRLS = 0;
+        TRL_BLOCK_NUM           = TRL_BLOCK_NUM + 1;
+        BLOCK_CORRECT_TRLS      = 0;
     }
-
 }/* SET_BLOCK_NUM */
+
+
+process INIT_VARS_REPEAT_TRL()
+{
+    PROCESS_STATE                   = 0;
+    TRL_RUNNING                     = 0;
+    TRL_TARG_VR_COUNT_TIME          = 0;
+    TRL_IS_TARG_ON_FLAG             = 0;
+    TRL_IS_TARG_ACQUIRED            = 0;
+    TRL_IS_FIX_ACQUIRED             = 0;
+    TRL_I_IN_FLIGHT                 = 0;
+    TRL_IS_TARG_MIN_THT             = 0;
+    TRL_IS_TIMEOUT                  = 0;
+    TRL_IS_STOP_SIGNAL_ON           = 0;
+    TRL_STOP_SIGNAL_TIME            = 0;
+    TRL_STOP_SIGNAL_DELAY_IDX       = 0;
+    TRL_STOP_SIGNAL_DELAY           = 0;
+    TRL_STOP_SIGNAL_DURATION        = 0;
+    TRL_IS_NON_CANCELLED            = 0;
+    TRL_IS_CANCELLED                = 0;
+    TRL_CUM_TIME                    = 0;
+    TRL_START_TIME                  = 0;
+    TRL_END_TIME                    = 0;
+    TRL_GET_READY_TIME              = 0;
+    TRL_READY_TIME                  = 0;
+    TRL_GET_READY_DURATION          = 0;
+    TRL_FIX_ON_TIME                 = 0;
+    TRL_FIX_ACQ_TIME                = 0;
+    TRL_FIX_ACQ_ERROR_TIME          = 0;
+    TRL_FIXATED_TIME                = 0;
+    TRL_FIX_HOLD_DURATION           = 0;
+    TRL_FIX_BRK_TIME                = 0;
+    TRL_PRE_TARG_ON_TIME            = 0;
+    TRL_TARG_ON_TIME                = 0;
+    TRL_TARG_ON_DURATION            = 0;
+    TRL_DECIDE_TIME                 = 0;
+    TRL_SACC_TIME                   = 0;
+    TRL_ERLY_SACC_TIME              = 0;
+    TRL_LATE_SACC_TIME              = 0;
+    TRL_NO_SACC_TIME                = 0;
+    TRL_TARG_ACQ_ERROR_TIME         = 0;
+    TRL_SACC_DURATION               = 0;
+    TRL_TARG_ACQ_TIME               = 0;
+    TRL_TARG_HOLD_DURATION          = 0;
+    TRL_TIMEOUT_START_TIME          = 0;
+    TRL_TIMEOUT_END_TIME            = 0;
+    TRL_TIMEOUT_DURATION            = 0;
+    TRL_TARG_MIN_THT_TIME           = 0;
+    TRL_TARG_BRK_TIME               = 0;
+    TRL_TARG_BRK_PRE_TONE_TIME      = 0;
+    TRL_TARG_BRK_TONE_TIME          = 0;
+    TRL_TARG_BRK_PRE_RWRD_TIME      = 0;
+    TRL_TARG_BRK_RWRD_TIME          = 0;
+    TRL_TARG_BRK_POST_RWRD_TIME     = 0;
+    TRL_TARG_BRK_MIN_THT_TIME       = 0;
+    TRL_NOGO_SACC_PRE_SSD_TIME      = 0;
+    TRL_NOGO_SACC_POST_SSD_TIME     = 0;
+    TRL_NOGO_ERLY_SACC_TIME         = 0;
+    TRL_NOGO_LATE_SACC_TIME         = 0;
+    TRL_FIX_MIN_SSHT_TIME           = 0;
+    TRL_FIX_BRK_PRE_TONE_TIME       = 0;
+    TRL_FIX_BRK_TONE_TIME           = 0;
+    TRL_FIX_BRK_PRE_RWRD_TIME       = 0;
+    TRL_FIX_BRK_RWRD_TIME           = 0;
+    TRL_FIX_BRK_POST_RWRD_TIME      = 0;
+    TRL_FIX_BRK_MIN_SSHT_TIME       = 0;
+    TRL_CANCEL_TIME                 = 0;
+    TRL_FIX_REIGNITE_FLAG           = 0;
+    TRL_PRE_SSD_DELAY_FIX_REIGNITE  = 0;
+    TRL_POST_SSD_DELAY_FIX_REIGNITE = 0;
+    TRL_IS_FIX_MIN_SSHT             = 0;
+    TRL_TONE_FREQ                   = 0;
+    TRL_TONE_ON_TIME                = 0;
+    TRL_TONE_OFF_TIME               = 0;
+    TRL_RWRD_ON_TIME                = 0;
+    TRL_RWRD_OFF_TIME               = 0;
+    TRL_XTRA_RWRD_ON_TIME           = 0;
+    TRL_XTRA_RWRD_OFF_TIME          = 0;
+    TRL_ITI_START_TIME              = 0;
+    TRL_ITI_END_TIME                = 0;
+    TRL_ITI_DURATION                = 0;
+    TRL_REACTION_TIME               = 0;
+    TRL_ABORT_TIME                  = 0;
+    TRL_FIX_VRT_RFRSH_COUNT         = 0;
+    TRL_TARG_VRT_RFRSH_COUNT        = 0;
+    TRL_TARG_SSD_VRT_RFRSH_COUNT    = 0;
+    TRL_REPEAT_COUNT                = TRL_REPEAT_COUNT + 1;
+} /* INIT_REPEAT_TRL_VARS */
 
 
 process INIT_TRL_VARS()
@@ -715,7 +809,6 @@ process INIT_TRL_VARS()
     TRL_NOGO_SACC_POST_SSD_TIME     = 0;
     TRL_NOGO_ERLY_SACC_TIME         = 0;
     TRL_NOGO_LATE_SACC_TIME         = 0;
-    TRL_FIX_HOLD_DURATION           = 0;
     TRL_FIX_MIN_SSHT_TIME           = 0;
     TRL_FIX_BRK_PRE_TONE_TIME       = 0;
     TRL_FIX_BRK_TONE_TIME           = 0;
@@ -747,22 +840,16 @@ process INIT_TRL_VARS()
     TRL_FIX_VRT_RFRSH_COUNT         = 0;
     TRL_TARG_VRT_RFRSH_COUNT        = 0;
     TRL_TARG_SSD_VRT_RFRSH_COUNT    = 0;
-    TRL_OUTCOME_EVNTCODE            = 0;
-    //TRL_BLOCK_NUM                   = 0;
-    TRL_IS_LO_RWRD           = 0;
-    //TRL_LO_RWRD_TARG_IDX     = 0;
-    TRL_REPEAT_LAST_STOP_TRL = 0;
-    TRL_TARG_IDX             = 0;
-    TRL_TARG_SIZE            = 0;
-    TRL_TARG_ANGLE           = 0;
-    TRL_TARG_ECCENTRICITY    = 0;
-    TRL_TARG_COLOR_IDX       = 0;
-
+    TRL_IS_LO_RWRD                  = 0;
+    TRL_TARG_IDX                    = 0;
+    TRL_TARG_SIZE                   = 0;
+    TRL_TARG_ANGLE                  = 0;
+    TRL_TARG_ECCENTRICITY           = 0;
+    TRL_TARG_COLOR_IDX              = 0;
+    TRL_REPEAT_COUNT                = 0;
     if (TRL_NUMBER == 0)
     {
         TRL_BLOCK_NUM                  = 0;
-        TRL_PREV_TRL_TYPE              = 0;
-        TRL_PREV_OUTCOME_EVNTCODE      = 0;
         TRL_LAST_STOP_OUTCOME_EVNTCODE = 0;
         TRL_LAST_GO_OUTCOME_EVNTCODE   = 0;
         TRL_LAST_SSD_IDX               = 0;

@@ -28,6 +28,12 @@ declare constant int NOGO_ERROR_TRIAL         = 3;
 declare float        GO_WEIGHT     = 0.0;
 declare float        STOP_WEIGHT   = 100.0;
 declare float        IGNORE_WEIGHT = 0.0;
+// Repeat low reward error Trials
+declare int REPEAT_LO_RWRD_ERROR_TRL= 1;
+// Values: -1 : repeat till monk got it right
+//          0 : No repeat
+//          N : Any positive number
+declare int REPEAT_MAX = 5;
 //==========Jitter flags and definitions=========================
 declare constant int JITTER_GAUSS_FLAG       = 0;
 declare constant int JITTER_UNIFORM_FLAG     = 1;
