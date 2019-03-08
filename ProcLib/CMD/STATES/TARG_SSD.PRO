@@ -67,6 +67,7 @@ process PROC_TARG_SSD()
         STAT_ALLOWED_T           = TRL_STOP_SIGNAL_DELAY * TIME_DILATE_FACTOR;
         TRL_TARG_VRT_RFRSH_COUNT = 0;
         queuedStopSignalPage     = 0;
+		TRL_IS_STOP_SIGNAL_ON  = 0;
 
         //        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
         TEMP_DELY_PLUS_DURATION = ceil(TRL_STOP_SIGNAL_DELAY * REFRESH_RATE * TIME_DILATE_FACTOR) + (FIX_HOLD_FOR_CANCEL * TIME_DILATE_FACTOR);
@@ -119,7 +120,7 @@ process PROC_TARG_SSD()
             //dsendf("vp %d\n", PG_SIGNAL);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
         }
-
+ 
         // till Cancel time is expired and the stop signal is shown
         if (!I_FIX)
         {
@@ -143,7 +144,7 @@ process PROC_TARG_SSD()
         }
         else
         {
-            printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
+           printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
             spawnwait SSD_CHECK_SACC();
         }
     }

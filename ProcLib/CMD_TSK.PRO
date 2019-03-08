@@ -36,6 +36,7 @@
 declare IDLE();
 declare UPD8_MSG();
 declare WRITE_TO_FILE();
+declare USER_SUMMARY();
 
 declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER = 0;
@@ -219,7 +220,7 @@ process IDLE() enabled
 				infosStartT = time();
 				spawnwait SEND_INFOS();
 				infosDuration = time() - infosStartT;
-        printf("****CMD_TSK[%d]: Done Sending synchronously: SEND_INFOS() Time = [%d]\n", infosDuration);
+				printf("****CMD_TSK[%d]: Done Sending synchronously: SEND_INFOS() Time = [%d]\n", infosDuration);
 
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
@@ -240,7 +241,7 @@ process IDLE() enabled
 			nexttick;
 		} /*while(TRL_RUNNING)*/
 		spawnwait WRITE_TO_FILE();
-    spawnwait USR_SUMMARY();
+		spawnwait USER_SUMMARY();
 		printf("============================NEXT TRIAL========================\n");
 		nexttick;
 	}     /*while(1)*/
@@ -250,9 +251,9 @@ process USER_SUMMARY()
 {
 	printf("**********************************\n");
 	printf("Trial Number: [%d]\n", TRL_NUMBER);
-	printf("GO / CANCELLED / NON-CANCELLED: [%d] / [%d] / [%d]\n", SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS);
-
-
+	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d]\n", 
+	     SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS, SESS_N_NOGO_ERROR_TRLS);
+	nexttick;
 }
 
 process UPD8_MSG()
