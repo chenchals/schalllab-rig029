@@ -55,6 +55,7 @@ declare SET_WINS();
 declare PICK_TRL_SSD();
 declare SET_TONE_DELAY();
 declare SET_RWRD_DELAY();
+declare SET_ASYMMETRIC_RWRD();
 
 // min stop signal hold time
 declare COMPUTE_MIN_SSHT();
@@ -226,7 +227,6 @@ declare int TRL_BLOCK_NUM;
 declare int TRL_IS_LO_RWRD;
 declare int TRL_LO_RWRD_TARG_IDX;
 declare int TRL_REPEAT_LAST_STOP_TRL;
-
 // Attributes of Current Target
 declare int   TRL_TARG_IDX;
 declare float TRL_TARG_SIZE;
@@ -251,6 +251,7 @@ declare int SESS_N_CANCEL_TRLS;
 declare int SESS_N_NON_CANCEL_TRLS;
 declare int SESS_N_NOGO_ERROR_TRLS;
 
+declare int BLOCK_CORRECT_TRLS;
 
 process SET_CMD_TRL()
 {
@@ -261,23 +262,25 @@ process SET_CMD_TRL()
 
     // Setup trial type
     spawnwait PICK_TRL_TYPE();
+	
+	spawnwait SET_BLOCK_NUM();
 
     // Compute TRL_FIX_HOLD_TIME;
     spawnwait COMPUTE_FIX_HOLD();
 
     // Setup TARGET
     spawnwait SET_TARGET();
+	
+	spawnwait SET_RWRD_DELAY();
+	spawnwait SET_ASYMMETRIC_RWRD();
 
+    spawnwait SET_TONE_DELAY();
+    TRL_TONE_DURATION = TONE_DURATION;
+	
     // Update graph object for Target
     // Show the windows - without the fixspot or target to cue user
     spawnwait GRAF_UPD8_FIX();
     spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
-
-    spawnwait SET_TONE_DELAY();
-    spawnwait SET_RWRD_DELAY();
-
-    TRL_TONE_DURATION = TONE_DURATION;
-    TRL_RWRD_DURATION = RWRD_DURATION;
 
     if (TRL_TYPE == TRIAL_TYPE_STOP)
     {
@@ -305,6 +308,10 @@ process SET_CMD_TRL()
     spawnwait COMPUTE_TRL_DURATION();
 
     //printf("TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
+	
+	
+	printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
+	       TRL_BLOCK_NUM, TRL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_TARG_IDX, TRL_IS_LO_RWRD);
 } /* SET_CMD_TRL */
 
 
@@ -551,38 +558,34 @@ process SET_ASYMMETRIC_RWRD()
 
     if (TOGGLE_RWRD_ASSOCIATION)
     {
+		TOGGLE_RWRD_ASSOCIATION = 0;
+
         if (TRL_BLOCK_NUM == 1)
         {
             // Choose Left or right as low reward initially
             // this could be change to low reward for pos 0,1,2,3
             // Making actual reward duration seection independent targ. position
             // for countermanding since there are only 2 positions
-            tempRand    = random(2);
-            HI_RWRD_POS = tempRand;
-            if (tempRand)
+            if (random(2))
             {
-                LO_RWRD_POS = 0;
+				TRL_LO_RWRD_TARG_IDX = 1;
             }
             else
             {
-                LO_RWRD_POS = 1;
+				TRL_LO_RWRD_TARG_IDX = 0;
             }
         }
         else // Switch reward association
         {
-            if (LO_RWRD_POS)
+            if (TRL_LO_RWRD_TARG_IDX)
             {
-                LO_RWRD_POS = 0;
-                HI_RWRD_POS = 1;
-            }
+				TRL_LO_RWRD_TARG_IDX    = 0;           
+			}
             else
             {
-                LO_RWRD_POS = 1;
-                HI_RWRD_POS = 0;
+				TRL_LO_RWRD_TARG_IDX    = 1;           
             }
         }
-        TOGGLE_RWRD_ASSOCIATION = 0;
-        TRL_LO_RWRD_TARG_IDX    = LO_RWRD_POS;
     }
     if (TRL_TARG_IDX == TRL_LO_RWRD_TARG_IDX)
     {
@@ -634,14 +637,18 @@ process PICK_TRL_TYPE()
 
 process SET_BLOCK_NUM()
 {
-    declare int sessCorrectTrls;
-
-    sessCorrectTrls = SESS_N_GO_CORRECT_TRLS + SESS_N_NON_CANCEL_TRLS;
-    if (TRL_BLOCK_NUM == 0 || sessCorrectTrls >= CORRECT_TRIALS_PER_BLOCK)
+	if(TRL_BLOCK_NUM == 0)
+	{
+		TRL_BLOCK_NUM = 1;
+		BLOCK_CORRECT_TRLS = 0;
+	}	
+    else if (BLOCK_CORRECT_TRLS == CORRECT_TRIALS_PER_BLOCK)
     {
         TOGGLE_RWRD_ASSOCIATION = 1;
-        TRL_BLOCK_NUM           = TRL_BLOCK_NUM + 1;
+        TRL_BLOCK_NUM = TRL_BLOCK_NUM + 1;
+		BLOCK_CORRECT_TRLS = 0;
     }
+
 }/* SET_BLOCK_NUM */
 
 
@@ -743,7 +750,7 @@ process INIT_TRL_VARS()
     TRL_OUTCOME_EVNTCODE            = 0;
     //TRL_BLOCK_NUM                   = 0;
     TRL_IS_LO_RWRD           = 0;
-    TRL_LO_RWRD_TARG_IDX     = 0;
+    //TRL_LO_RWRD_TARG_IDX     = 0;
     TRL_REPEAT_LAST_STOP_TRL = 0;
     TRL_TARG_IDX             = 0;
     TRL_TARG_SIZE            = 0;

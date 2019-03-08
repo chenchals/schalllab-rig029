@@ -54,12 +54,12 @@ declare int FIX_JITTER_FLAG = JITTER_EXPONENTIAL_FLAG;
 // minimum - maximum time after fixation before target presentation
 declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
 // min-max saccade time is same for Go and STOP trials
-declare int MIN_SACC_TIME = 300;
+declare int MIN_SACC_TIME = 100;
 declare int MAX_SACC_TIME = 800;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
-declare int MAX_SACC_DURATION = 500;
+declare int MAX_SACC_DURATION = 150;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1)
@@ -108,8 +108,8 @@ declare int MIN_STOP_SIGNAL_HOLD_TIME;
 // saccade is made to target within PRE_SSD_DELAY_FIX_REIGNITE or
 // saccade is made to target within POST_SSD_DELAY_FIX_REIGNITE
 declare int FIX_REIGNITE_FLAG           = 1;
-declare int PRE_SSD_DELAY_FIX_REIGNITE  = 100;
-declare int POST_SSD_DELAY_FIX_REIGNITE = 100;
+declare int PRE_SSD_DELAY_FIX_REIGNITE  = 0;
+declare int POST_SSD_DELAY_FIX_REIGNITE = 5000;
 
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
@@ -163,17 +163,17 @@ declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_MIN_SSHT[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_TONE_HZ = 300;
-declare int          CANCELLED_TONE_HZ     = 400;
-declare int          GO_CORRECT_TONE_HZ    = 500;
+declare int          NON_CANCELLED_TONE_HZ = 200;
+declare int          CANCELLED_TONE_HZ     = 600;
+declare int          GO_CORRECT_TONE_HZ    = 600;
 declare int          GO_ERROR_TONE_HZ      = 1000;
-declare int          NOGO_ERROR_TONE_HZ    = 1500;
+declare int          NOGO_ERROR_TONE_HZ    = 1000;
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int          CORRECT_TRIALS_PER_BLOCK = 30;
+declare int          CORRECT_TRIALS_PER_BLOCK = 5;
 declare constant int RWRD_LO_IDX              = 0;
 declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_DURATION[2]   = { 50, 100 };
+declare int          RWRD_LO_HI_DURATION[2]   = { 10, 500 };
 // determine this randomly
 declare int          LO_RWRD_POS;
 declare int          HI_RWRD_POS;

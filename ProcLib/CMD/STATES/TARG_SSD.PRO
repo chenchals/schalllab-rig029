@@ -153,6 +153,14 @@ process PROC_TARG_SSD()
 
 process SSD_CHECK_SACC()
 {
+	// Flip page to PG_TARG_PD and continue as a GO trial
+	printf("****STAT_TARG_SSD[%d]: NoGo correct saccade, continue as Go trial. Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
+	dsendf("vp %d\n", PG_TARGET_PD);
+	//dsendf("vw 1\n");
+	spawn GRAF_SHOW_FIX(GRAF_HIDE);
+	spawn GRAF_SHOW_TARG(GRAF_SHOW);
+	spawn PRINT_MSG();
+
     if (STAT_DLTA_T <= STAT_I_DURATION)
     {
         // Early saccade
@@ -185,7 +193,7 @@ process SSD_CHECK_SACC()
                 TRL_POST_SSD_DELAY_FIX_REIGNITE = TRL_NOGO_SACC_POST_SSD_TIME - TRL_STOP_SIGNAL_TIME;
             }
             // set the fix-spot turn back on to what user wants; will start out as 0
-            if (TRL_POST_SSD_DELAY_FIX_REIGNITE < POST_SSD_DELAY_FIX_REIGNITE)
+            if (TRL_POST_SSD_DELAY_FIX_REIGNITE * TIME_DILATE_FACTOR < POST_SSD_DELAY_FIX_REIGNITE)
             {
                 TRL_FIX_REIGNITE_FLAG = FIX_REIGNITE_FLAG;
             }
@@ -199,21 +207,13 @@ process SSD_CHECK_SACC()
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**Before SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
 
             // How long *before* SSD did saccade happen (before MAX_SACC_TIME), since we do not have stop signal use possible stop signal time
-            TRL_PRE_SSD_DELAY_FIX_REIGNITE = ceil((STAT_ALLOWED_T * REFRESH_RATE) - STAT_DLTA_T);
+            TRL_PRE_SSD_DELAY_FIX_REIGNITE = ceil((STAT_ALLOWED_T * REFRESH_RATE * TIME_DILATE_FACTOR) - STAT_DLTA_T);
             // set the fix-spot turn back on to what user wants; will start out as 0
-            if (TRL_PRE_SSD_DELAY_FIX_REIGNITE < PRE_SSD_DELAY_FIX_REIGNITE)
+            if (TRL_PRE_SSD_DELAY_FIX_REIGNITE * TIME_DILATE_FACTOR < PRE_SSD_DELAY_FIX_REIGNITE)
             {
                 TRL_FIX_REIGNITE_FLAG = FIX_REIGNITE_FLAG;
             }
         }
-
-        // Flip page to PG_TARG_PD and continue as a GO trial
-        printf("****STAT_TARG_SSD[%d]: NoGo correct saccade, continue as Go trial. Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
-        dsendf("vp %d\n", PG_TARGET_PD);
-        spawn GRAF_SHOW_FIX(GRAF_HIDE);
-        spawn GRAF_SHOW_TARG(GRAF_SHOW);
-        spawn PRINT_MSG();
-
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_TARG_ACQ;
         spawn PRINT_MSG();

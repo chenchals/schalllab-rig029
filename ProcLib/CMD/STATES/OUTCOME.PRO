@@ -132,6 +132,7 @@ process PROC_GO_OUTCOMES()
 		SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
 		// Adjust initial assumption that this was a error trial
 		SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
+		BLOCK_CORRECT_TRLS = BLOCK_CORRECT_TRLS + 1;
 	}
 	else if (TRL_FIX_BRK_TIME)
 	{
@@ -306,6 +307,7 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
 		SESS_N_CANCEL_TRLS = SESS_N_CANCEL_TRLS + 1;
 		// Adjust initial assumption that this was a non-cancelled error trial
 		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+		BLOCK_CORRECT_TRLS = BLOCK_CORRECT_TRLS + 1;
 	}
 	else if (TRL_FIX_BRK_PRE_TONE_TIME)
 	{
