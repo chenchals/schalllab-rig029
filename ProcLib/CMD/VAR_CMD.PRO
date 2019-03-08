@@ -184,10 +184,6 @@ declare constant int RWRD_HI_IDX              = 1;
 declare int          RWRD_LO_HI_MEAN[2]       = { 25, 500 };
 declare int          RWRD_LO_HI_VARIANCE[2]   = { 4, 25 };
 declare int          RWRD_DURATION_JITTER     = JITTER_GAUSS_FLAG;
-// determine this randomly
-declare int          LO_RWRD_POS;
-declare int          HI_RWRD_POS;
-
 
 //==========================Additional Timeouts======================
 // additive timeout imposed for each body movement
