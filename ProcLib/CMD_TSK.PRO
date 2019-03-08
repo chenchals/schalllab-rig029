@@ -216,11 +216,12 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
-				printf("****CMD_TSK[%d]: Sending synchronously: SEND_INFOS()\n");
+				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
 				infosStartT = time();
-				spawnwait SEND_INFOS();
+				spawn SEND_INFOS();
+				waitforprocess SEND_INFOS;
 				infosDuration = time() - infosStartT;
-				printf("****CMD_TSK[%d]: Done Sending synchronously: SEND_INFOS() Time = [%d]\n", infosDuration);
+				printf("****CMD_TSK[%d]: Done Sending Infos: SEND_INFOS() Time = [%d]\n", infosDuration);
 
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);

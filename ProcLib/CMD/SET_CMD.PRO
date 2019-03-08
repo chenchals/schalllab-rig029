@@ -255,8 +255,14 @@ declare int BLOCK_CORRECT_TRLS;
 process SET_CMD_TRL()
 {
     declare int tempCount;
+	if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/SET_CMD_TRL: Setting Trial/Task Variables for trial****\n");
+	}		
 
-    if (REPEAT_LO_RWRD_ERROR_TRL && TRL_IS_TIMEOUT && (REPEAT_MAX == -1 || (TRL_REPEAT_COUNT < REPEAT_MAX && REPEAT_MAX > 0)))
+    if (REPEAT_LO_RWRD_ERROR_TRL && TRL_IS_TIMEOUT && TRL_IS_LO_RWRD  
+	    && (REPEAT_MAX == -1 || (TRL_REPEAT_COUNT < REPEAT_MAX && REPEAT_MAX > 0))
+		)
     {
       printf("****************REPEAT LOW-REWARD ERROR TRIAL***********************\n");
         // Repeat the complete trial. Do not initialize *all* variables, but only those needed for Repeat
@@ -285,11 +291,6 @@ process SET_CMD_TRL()
 
         TRL_TONE_DURATION = TONE_DURATION;
 
-        // Update graph object for Target
-        // Show the windows - without the fixspot or target to cue user
-        spawnwait GRAF_UPD8_FIX();
-        spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
-
         if (TRL_TYPE == TRIAL_TYPE_STOP)
         {
             SESS_N_STOP_TRLS = SESS_N_STOP_TRLS + 1;
@@ -309,15 +310,25 @@ process SET_CMD_TRL()
         spawnwait COMPUTE_MIN_THT();
 
         // Setup CMD PAGES
-        //printf("Calling CMD-PGS\n");
+		if(DEBUG_CONSOLE)
+		{
+			printf("****SET_CMD/SET_CMD_TRL: Setting CMD_PGS****\n");
+		}		
         spawnwait CMD_PGS(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX);
 
         // compute trial duration (mainly for fixed trial length)
         spawnwait COMPUTE_TRL_DURATION();
-
-        //printf("TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
     } // if previous trial is not an error
 
+	// Update graph object for Target
+    // Show the windows - without the fixspot or target to cue user
+    spawnwait GRAF_UPD8_FIX();
+    spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
+	if(DEBUG_CONSOLE)
+	{
+        printf("****SET_CMD/SET_CMD_TRL: TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", 
+			TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
+	}
     printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
            TRL_BLOCK_NUM, TRL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_TARG_IDX, TRL_IS_LO_RWRD);
 } /* SET_CMD_TRL */
@@ -326,6 +337,10 @@ process SET_CMD_TRL()
 process COMPUTE_TRL_DURATION()
 {
     declare int tempVar;
+	if(DEBUG_CONSOLE)
+	{
+        printf("****SET_CMD/COMPUTE_TRL_DURATION: Computing MAX TRL_DURATION and Checking user setting for FIXED TRL LENGTH\n" );
+	}
 
     // TRL_DURATION is computed *after* Fixation is acquired, using all max times
     // same for GO/STOP
@@ -355,14 +370,22 @@ process COMPUTE_TRL_DURATION()
             TRL_DURATION = TRL_DURATION;
             // error alert user that for fixed trial length duration, the computed TRL_LENGTH_TIME > than that specified
             // TRL_DURATION adjusted to
-            //printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n");
-            //printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
-            //printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
-            //printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
+			if(DEBUG_CONSOLE)
+			{
+				printf("**********FIXED_TRL_LENGTH_TIME CHANGE ALERT********************\n");
+				printf("****SET_CMD/COMPUTE_TRL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
+				printf("****SET_CMD/COMPUTE_TRL_DURATION: Computed trial length time[%d] exceeds FIXED_TRL_LENGTH_TIME [%d]****\n", TRL_DURATION, FIXED_TRL_LENGTH_TIME);
+				printf("****SET_CMD/COMPUTE_TRL_DURATION: Using TRL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_DURATION, IS_TRL_LENGTH_FIXED);
+			}
         }
         else
         {
             TRL_DURATION = FIXED_TRL_LENGTH_TIME;
+			if(DEBUG_CONSOLE)
+			{
+				DEBUG_CONSOLE=DEBUG_CONSOLE;
+				//printf("****SET_CMD/COMPUTE_TRL_DURATION:  Using TRL_DURATION of [%d] ms set by user\n" FIXED_TRL_LENGTH_TIME);
+			}
         }
     }
 } /* COMPUTE_TRL_DURATION */
@@ -371,28 +394,38 @@ process COMPUTE_TRL_DURATION()
 process SET_CANCEL_TIME()
 {
     declare int tempVar;
-
+	if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/SET_CANCEL_TIME: Compute CANCEL_TIME\n");
+	}
     spawnwait SET_MIN_MAX_SSD();
 
-    // shorted cancel time relative to Target on is
+    // short SSD cancel time relative to Target on 
     // must be greater than MAX_SACC_TIME
-    //declare int SSD_CANCEL_TIME = 1500;
-    //declare int FIX_HOLD_FOR_CANCEL;
-    //printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
-    //printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
+    if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/SET_CANCEL_TIME: Checking min CANCEL time > MAX_SACC_TIME****\n");
+		printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME****\n");
+	}
     tempVar = ceil(MIN_SSD * REFRESH_RATE) + SSD_CANCEL_TIME;
     if (tempVar < MAX_SACC_TIME + MAX_SACC_DURATION)
     {
-        //printf("**********CANCEL_TIME CHANGE ALERT********************\n");
-        //printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME + MAX_SACC_DURATION [%d]****\n", tempVar, MAX_SACC_TIME + MAX_SACC_DURATION);
         FIX_HOLD_FOR_CANCEL = (MAX_SACC_TIME + MAX_SACC_DURATION) - ceil(MIN_SSD * REFRESH_RATE);
-        //printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
+		if(DEBUG_CONSOLE)
+		{
+          printf("**********CANCEL_TIME CHANGE ALERT********************\n");
+          printf("****SET_CMD/SET_CANCEL_TIME: min CANCEL time [%d] is less than MAX_SACC_TIME + MAX_SACC_DURATION [%d]****\n", tempVar, MAX_SACC_TIME + MAX_SACC_DURATION);
+          printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time [%d] instead of SSD_CANCEL_TIME[%d]****\n", FIX_HOLD_FOR_CANCEL, SSD_CANCEL_TIME);
+		}
     }
     else
     {
         FIX_HOLD_FOR_CANCEL = SSD_CANCEL_TIME;
-        //printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
-    }
+		if(DEBUG_CONSOLE)
+		{
+			printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
+		}		
+	}
 }
 
 
@@ -422,7 +455,10 @@ process SET_MIN_MAX_SSD()
         }
         tempCount = tempCount + 1;
     }
-    //printf("****SET_CMD/SET_MIN_MAX_SSD: MIN_SSD, MAX_SSD[in vert refresh] = [%d, %d]****\n", MIN_SSD, MAX_SSD);
+	if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/SET_MIN_MAX_SSD: MIN_SSD, MAX_SSD[in vert refresh] = [%d, %d]****\n", MIN_SSD, MAX_SSD);
+	}
 }
 
 
@@ -480,18 +516,24 @@ process PICK_TRL_SSD()
         nexttick;
     }
     // must get from SSD_ARRY; use staircasing....
-    //declare STAIRCASE_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD);
     spawnwait STAIRCASE_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
 
     TRL_STOP_SIGNAL_DELAY_IDX = STAIRCASE_SSD_IDX;
     TRL_STOP_SIGNAL_DELAY     = SSD_ARRY[TRL_STOP_SIGNAL_DELAY_IDX];
     TRL_LAST_SSD_IDX          = TRL_STOP_SIGNAL_DELAY_IDX;
-    //printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
+	if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/PICK_TRL_SSD: TRL_STOP_SIGNAL_DELAY[in vert refresh] = [%d]****\n", TRL_STOP_SIGNAL_DELAY);
+	}
 } /* PICK_TRL_SSD */
 
 
 process COMPUTE_FIX_HOLD()
 {
+	if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/COMPUTE_FIX_HOLD: Setting FIX_HOLD jitter****\n");
+	}
     // Set up any timing jitters etc
     TRL_FIX_HOLD_TIME = random(MIN_MAX_FIX_HOLD_TIME[1] - MIN_MAX_FIX_HOLD_TIME[0]) + MIN_MAX_FIX_HOLD_TIME[0];
 } /* COMPUTE_FIX_HOLD */
@@ -500,7 +542,10 @@ process COMPUTE_FIX_HOLD()
 process SET_WINS()
 {
     declare float eccX, eccY;
-
+	if(DEBUG_CONSOLE)
+	{
+		printf("****SET_CMD/SET_WINS: Setting Window sizes for FIX and TARG****\n");
+	}
     // Compute fix win size
     // Fix spot center is at 0,0, so we do not need to compute
     FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
