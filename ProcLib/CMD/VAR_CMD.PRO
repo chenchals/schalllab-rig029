@@ -181,8 +181,8 @@ declare int          NOGO_ERROR_TONE_HZ    = 1000;
 declare int          CORRECT_TRIALS_PER_BLOCK = 5;
 declare constant int RWRD_LO_IDX              = 0;
 declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_MEAN[2]       = { 10, 500 };
-declare int          RWRD_LO_HI_VARIANCE[2]   = { 10, 500 };
+declare int          RWRD_LO_HI_MEAN[2]       = { 25, 500 };
+declare int          RWRD_LO_HI_VARIANCE[2]   = { 4, 25 };
 declare int          RWRD_DURATION_JITTER     = JITTER_GAUSS_FLAG;
 // determine this randomly
 declare int          LO_RWRD_POS;
