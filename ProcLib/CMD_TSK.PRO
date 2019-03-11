@@ -49,7 +49,9 @@ process IDLE() enabled
 	declare int infosStartT;
 	declare int infosDuration;
 
-	spawn CLEAR_VDO();
+	spawnwait CLEAR_VDO();
+	printf("flushing video memory please wait...\n");
+	nexttick 8000;
 
 	seed1(time());
 	// activate seed by drawing a number from some distribution
@@ -82,7 +84,10 @@ process IDLE() enabled
 
 	printf("Setting WTCH_SCHMITT\n");
 	spawn WTCH_SCHMITT();
-
+	
+	printf("waiting for all processes to start...\n");
+	nexttick 1000;
+	
 	printf("Sending Identify_Room_\n");
 	spawn SEND_EVT(Identify_Room_);
 
@@ -217,12 +222,12 @@ process IDLE() enabled
 			if(CURR_STAT == STAT_IDLE)
 			{
 				TRL_START_INFOS_TIME = time();
-				spawn SEND_EVT(StartInfos_)
+				spawn SEND_EVT(StartInfos_);
 				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
 				spawn SEND_INFOS();
 				waitforprocess SEND_INFOS;
 				TRL_END_INFOS_TIME = time();
-				spawn SEND_EVT(EndInfos_)
+				spawn SEND_EVT(EndInfos_);
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
