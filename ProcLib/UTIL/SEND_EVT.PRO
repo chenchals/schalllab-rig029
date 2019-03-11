@@ -24,7 +24,7 @@ declare int constant N_EVENT_FIFO        = 1000;
 declare int          EVENT_FIFO[N_EVENT_FIFO];
 
 // Max number of events to send during 1 process cycle
-declare int events_per_cycle = 5;
+declare int events_per_cycle = 8;
 // current event index to send. When event_idx == CURR_EVENT_FIFO_IDX,
 // then there are no more events  to send in EVENT_FIFO buffer
 declare int event_idx;
@@ -110,11 +110,10 @@ process SEND_TTL(int value)
     dioSetA(output, value & 0xFF);
     // load the high 8 bits on port B
     dioSetB(output, (value >> 8) & 0xFF);
-    //wait 200 micro seconds to avoid losing events
-    spawnwait WAIT_MU(200);
+    //wait 100 micro seconds to avoid losing events
+    spawnwait WAIT_MU(100);
 
     // Clear ports after sending
     dioSetA(output, ~0xFF);
     dioSetB(output, ~0xFF);
-    //spawnwait WAIT_MU(50);
 }

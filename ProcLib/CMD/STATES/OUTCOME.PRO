@@ -57,6 +57,7 @@ declare PROC_NOGO_POST_CANCEL_OUTCOMES();
 
 process PROC_TRL_OUTCOME()
 {
+	declare int doOnce;
 	// Target acquired, but not fixated yet or eye still in FixWin
 	if (PROCESS_STATE)
 	{
@@ -65,7 +66,7 @@ process PROC_TRL_OUTCOME()
 		PROCESS_STATE = 0;
 		STAT_STRT_T  = time();
 		STAT_DLTA_T  = 0;
-		STAT_ALLOWED_T = 2;
+		STAT_ALLOWED_T = 5;
 		dsendf("vp %d\n", STAT_OUTCOME, TRL_NUMBER, PG_BLANK);
 
 		TRL_IS_TARG_ON_FLAG = 0;
@@ -74,33 +75,43 @@ process PROC_TRL_OUTCOME()
 		// set this as default and change to
 		// TRL_IS_TIMEOUT = 0; when not error
 		TRL_IS_TIMEOUT = 1;
+		doOnce = 1;
 	}
 	// it is big conditional depending on the current trial type and tyep of error
 
-	if (TRL_TYPE == TRIAL_TYPE_GO)
+	if(STAT_DLTA_T <= STAT_ALLOWED_T)
 	{
-		// Assume it is an error and adjust if not
-		TRL_LAST_GO_OUTCOME_EVNTCODE = OutcomeGoError_;
-		SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
-		spawnwait PROC_GO_OUTCOMES();
-	}
-	else if (TRL_TYPE == TRIAL_TYPE_STOP)
-	{
-		// Assume it is a non-cancelled error trial and adjust if not
-		TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
-		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
-		if (TRL_CANCEL_TIME)
+		if(doOnce)
 		{
-			spawnwait PROC_NOGO_POST_CANCEL_OUTCOMES();
-		}
-		else
-		{
-			spawnwait PROC_NOGO_PRE_CANCEL_OUTCOMES();
-		}
+			doOnce = 0;
+			if (TRL_TYPE == TRIAL_TYPE_GO)
+			{
+				// Assume it is an error and adjust if not
+				TRL_LAST_GO_OUTCOME_EVNTCODE = OutcomeGoError_;
+				SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
+				spawn PROC_GO_OUTCOMES();
+			}
+			else if (TRL_TYPE == TRIAL_TYPE_STOP)
+			{
+				// Assume it is a non-cancelled error trial and adjust if not
+				TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
+				SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
+				if (TRL_CANCEL_TIME)
+				{
+					spawn PROC_NOGO_POST_CANCEL_OUTCOMES();
+				}
+				else
+				{
+					spawn PROC_NOGO_PRE_CANCEL_OUTCOMES();
+				}
+			}
+		}	
 	}
-  if (TRL_IS_TIMEOUT)
+	else
 	{
-      if (TRL_TYPE == TRIAL_TYPE_GO)
+		if (TRL_IS_TIMEOUT)
+		{
+			if (TRL_TYPE == TRIAL_TYPE_GO)
 			{
 				TIMEOUT_TONE = GO_ERROR_TONE_HZ;
 			}
@@ -108,13 +119,17 @@ process PROC_TRL_OUTCOME()
 			{
 				TIMEOUT_TONE = NOGO_ERROR_TONE_HZ;
 			}
-	}
+		}
 
-	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
-	TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
-	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
-	PROCESS_STATE = 1;
-	CURR_STAT   = STAT_ITI_CHK;
+		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
+		TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR;
+		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] (TIMEOUT_DURATION * TRL_DURATION * TIME_DILATE_FACTOR) = [%d] \n", STAT_OUTCOME, TRL_NUMBER, TIMEOUT_DURATION);
+		PROCESS_STATE = 1;
+		CURR_STAT   = STAT_ITI_CHK;		
+	}
+	
+
+
 } /* PROC_OUTCOME */
 
 
@@ -199,7 +214,7 @@ process PROC_GO_OUTCOMES()
 // if Eye left fix win Before Cancel time
 process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
-  declare int nogoIdx;
+	declare int nogoIdx;
 
 	if(TRL_IS_STOP_SIGNAL_ON)
 	{
