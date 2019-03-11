@@ -119,14 +119,8 @@ process IDLE() enabled
 			TRL_RUNNING   = 1;
 			printf("Trial running....\n");
 			spawn SEND_EVT(TaskStart_);
-
 			spawn SEND_EVT(CmanHeader_);
 
-			//spawn GRAF_HIDE_FIX_TARG();
-
-			printf("Sending BLANK page\n");
-			dsendf("vp %d\n", PG_BLANK);
-			nexttick 5;
 			CURR_STAT   = STAT_GET_READY;
 			STAT_DLTA_T = 0;
 		}
@@ -221,11 +215,15 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
+				printf("Sending BLANK page\n");
+				dsendf("vp %d\n", PG_BLANK);
+
 				TRL_START_INFOS_TIME = time();
 				spawn SEND_EVT(StartInfos_);
 				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
 				spawn SEND_INFOS();
 				waitforprocess SEND_INFOS;
+
 				TRL_END_INFOS_TIME = time();
 				spawn SEND_EVT(EndInfos_);
 				spawn SEND_EVT(TaskEnd_);
