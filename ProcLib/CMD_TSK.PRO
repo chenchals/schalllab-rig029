@@ -216,13 +216,13 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
+				TRL_START_INFOS_TIME = time();
+				spawn SEND_EVT(StartInfos_)
 				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
-				infosStartT = time();
 				spawn SEND_INFOS();
 				waitforprocess SEND_INFOS;
-				infosDuration = time() - infosStartT;
-				printf("****CMD_TSK[%d]: Done Sending Infos: SEND_INFOS() Time = [%d]\n", infosDuration);
-
+				TRL_END_INFOS_TIME = time();
+				spawn SEND_EVT(EndInfos_)
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
@@ -252,7 +252,7 @@ process USER_SUMMARY()
 {
 	printf("**********************************\n");
 	printf("Trial Number: [%d]\n", TRL_NUMBER);
-	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d] / [%d]\n", 
+	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d] / [%d]\n",
 	     SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS, SESS_N_NOGO_ERROR_TRLS);
 	nexttick;
 }

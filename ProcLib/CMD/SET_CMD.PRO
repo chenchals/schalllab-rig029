@@ -210,6 +210,8 @@ declare int TRL_XTRA_RWRD_OFF_TIME;
 declare int TRL_ITI_START_TIME;
 declare int TRL_ITI_END_TIME;
 declare int TRL_ITI_DURATION;
+declare int TRL_START_INFOS_TIME;
+declare int TRL_END_INFOS_TIME;
 // TRL_TARG_ACQ_TIME - TRL_SACC_TIME (When subject made a saccade to target)
 declare int TRL_REACTION_TIME;
 // any break fixations?
@@ -258,9 +260,9 @@ process SET_CMD_TRL()
 	if(DEBUG_CONSOLE)
 	{
 		printf("****SET_CMD/SET_CMD_TRL: Setting Trial/Task Variables for trial****\n");
-	}		
+	}
 
-    if (REPEAT_LO_RWRD_ERROR_TRL && TRL_IS_TIMEOUT && TRL_IS_LO_RWRD  
+    if (REPEAT_LO_RWRD_ERROR_TRL && TRL_IS_TIMEOUT && TRL_IS_LO_RWRD
 	    && (REPEAT_MAX == -1 || (TRL_REPEAT_COUNT < REPEAT_MAX && REPEAT_MAX > 0))
 		)
     {
@@ -313,7 +315,7 @@ process SET_CMD_TRL()
 		if(DEBUG_CONSOLE)
 		{
 			printf("****SET_CMD/SET_CMD_TRL: Setting CMD_PGS****\n");
-		}		
+		}
         spawnwait CMD_PGS(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY, TRL_TARG_COLOR_IDX);
 
         // compute trial duration (mainly for fixed trial length)
@@ -326,7 +328,7 @@ process SET_CMD_TRL()
     spawnwait GRAF_UPD8_TARG(TRL_TARG_SIZE, TRL_TARG_ANGLE, TRL_TARG_ECCENTRICITY);
 	if(DEBUG_CONSOLE)
 	{
-        printf("****SET_CMD/SET_CMD_TRL: TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n", 
+        printf("****SET_CMD/SET_CMD_TRL: TRL_TYPE %d, TRL_TARG_IDX %d, TRL_TARG_ANGLE %d\n",
 			TRL_TYPE, TRL_TARG_IDX, TRL_TARG_ANGLE);
 	}
     printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
@@ -400,7 +402,7 @@ process SET_CANCEL_TIME()
 	}
     spawnwait SET_MIN_MAX_SSD();
 
-    // short SSD cancel time relative to Target on 
+    // short SSD cancel time relative to Target on
     // must be greater than MAX_SACC_TIME
     if(DEBUG_CONSOLE)
 	{
@@ -424,7 +426,7 @@ process SET_CANCEL_TIME()
 		if(DEBUG_CONSOLE)
 		{
 			printf("****SET_CMD/SET_CANCEL_TIME: Using CANCEL time as SSD_CANCEL_TIME[%d]****\n", SSD_CANCEL_TIME);
-		}		
+		}
 	}
 }
 
@@ -765,6 +767,8 @@ process INIT_VARS_REPEAT_TRL()
     TRL_ITI_START_TIME              = 0;
     TRL_ITI_END_TIME                = 0;
     TRL_ITI_DURATION                = 0;
+    TRL_START_INFOS_TIME            = 0;
+    TRL_END_INFOS_TIME              = 0;
     TRL_REACTION_TIME               = 0;
     TRL_ABORT_TIME                  = 0;
     TRL_FIX_VRT_RFRSH_COUNT         = 0;
@@ -863,6 +867,8 @@ process INIT_TRL_VARS()
     TRL_ITI_START_TIME              = 0;
     TRL_ITI_END_TIME                = 0;
     TRL_ITI_DURATION                = 0;
+    TRL_START_INFOS_TIME            = 0;
+    TRL_END_INFOS_TIME              = 0;
     TRL_REACTION_TIME               = 0;
     TRL_ABORT_TIME                  = 0;
     TRL_FIX_VRT_RFRSH_COUNT         = 0;

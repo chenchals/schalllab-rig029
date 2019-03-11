@@ -15,6 +15,7 @@
 //  Revision History:
 //
 declare constant int DEBUG_PD = 0;
+declare constant int WRITE_PD_FILE = 0;
 declare int PD_TRIG_L    = 0;
 declare int PD_TRIG_R    = 0;
 declare int PD_THRESHOLD = 500;
@@ -34,7 +35,7 @@ process WTCH_SCHMITT()
         if (pdValL < PD_THRESHOLD && PD_TRIG_L == 0)
         {
             PD_TRIG_L = 1;
-            //spawn SEND_EVT(PDTriggerLeft_);
+            spawn SEND_EVT(PDTriggerLeft_);
         }
         else if (pdValL > PD_THRESHOLD && PD_TRIG_L == 1)
         {
@@ -44,13 +45,13 @@ process WTCH_SCHMITT()
         if (pdValR < PD_THRESHOLD && PD_TRIG_R == 0)
         {
             PD_TRIG_R = 1;
-            //spawn SEND_EVT(PDTriggerRight_);
+            spawn SEND_EVT(PDTriggerRight_);
         }
         else if (pdValR > PD_THRESHOLD && PD_TRIG_R == 1)
         {
             PD_TRIG_R = 0;
         }
-        if (WRITE_FILE)
+        if (WRITE_PD_FILE)
         {
             writef("pdValsSc.csv %d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
         }

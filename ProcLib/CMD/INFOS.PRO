@@ -278,6 +278,12 @@ process SEND_INFOS()
     spawn SEND_EVT(INFOS_ZERO + TRL_ITI_DURATION);
     spawnwait WAIT_INFOS();
 
+    spawn SEND_EVT(INFOS_ZERO + abs(TRL_START_INFOS_TIME - TRL_START_TIME));
+    spawnwait WAIT_INFOS();
+
+    spawn SEND_EVT(INFOS_ZERO + abs(TRL_END_INFOS_TIME - TRL_START_TIME));
+    spawnwait WAIT_INFOS();
+
     spawn SEND_EVT(INFOS_ZERO + abs(TRL_REACTION_TIME - TRL_START_TIME));
     spawnwait WAIT_INFOS();
 
