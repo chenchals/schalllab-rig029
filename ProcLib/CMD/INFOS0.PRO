@@ -28,7 +28,7 @@ process SEND_INFOS()
     spawnwait SEND_EVT(INFOS_ZERO + TRL_RUNNING);
     spawnwait WAIT_INFOS();
 
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_VR_COUNT_TIME - TRL_START_TIME));
+    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_VR_COUNT_DURATION - TRL_START_TIME));
     spawnwait WAIT_INFOS();
 
     spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_TARG_ON_FLAG);
@@ -70,7 +70,7 @@ process SEND_INFOS()
     spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_CANCELLED);
     spawnwait WAIT_INFOS();
 
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_CUM_TIME - TRL_START_TIME));
+    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_CUM_DURATION - TRL_START_TIME));
     spawnwait WAIT_INFOS();
 
     spawnwait SEND_EVT(INFOS_ZERO + TRL_DURATION);

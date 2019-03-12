@@ -77,6 +77,11 @@ process PROC_TONE_SSD()
             printf("****STAT_TONE_SSD[%d]: OK sent Event: FixHoldMinSSHT_[%d]\n", STAT_TONE_SSD, FixHoldMinSSHT_);
         }
     }
+	if (TRL_FIX_HOLD_DURATION < TEMP_MIN_SSHT)
+    {
+		TRL_IS_FIX_MIN_SSHT   = 0;
+	}
+
     // Tone delay
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {

@@ -74,6 +74,11 @@ process PROC_RWRD_SSD()
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: FixHoldMinSSHT_[%d]\n", STAT_RWRD_SSD, FixHoldMinSSHT_);
         }
     }
+	
+	if (TRL_FIX_HOLD_DURATION < TEMP_MIN_SSHT)
+    {
+		TRL_IS_FIX_MIN_SSHT   = 0;
+	}	
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {

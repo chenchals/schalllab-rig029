@@ -228,7 +228,7 @@ process IDLE() enabled
 				spawn SEND_EVT(EndInfos_);
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
-				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
+				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_DURATION[%d]\n", TRL_NUMBER, TRL_CUM_DURATION);
 				TRL_RUNNING = 0;
 				PROCESS_STATE = 0;
 			}
@@ -240,7 +240,7 @@ process IDLE() enabled
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
 			if(TRL_START_TIME)
 			{
-				TRL_CUM_TIME = TRL_CUM_TIME + 1;
+				TRL_CUM_DURATION = TRL_CUM_DURATION + 1;
 			}
 			nexttick;
 		} /*while(TRL_RUNNING)*/
@@ -265,7 +265,7 @@ process UPD8_MSG()
 	declare int dummy = 0;
 
 	dummy = 1;
-	printf("TRL_NUM [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
+	printf("TRL_NUM [%d], TRL_CUM_DURATION [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_DURATION, CURR_STAT, STAT_DLTA_T);
 }
 
 process WRITE_TO_FILE()

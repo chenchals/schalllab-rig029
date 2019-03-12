@@ -85,7 +85,10 @@ process PROC_TONE_CHK()
             printf("****STAT_TONE_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_TONE_CHK, TargHoldMinTHT_);
         }
     }
-
+	if (TRL_TARG_HOLD_DURATION < TEMP_MIN_THT)
+    {
+		TRL_IS_TARG_MIN_THT = 0;
+	}
     // Tone delay
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {

@@ -24,8 +24,6 @@ process SEND_INFOS()
 
     spawnwait SEND_INFO_EVT(TRL_RUNNING);
 
-    spawnwait SEND_INFO_REL_TIME(TRL_TARG_VR_COUNT_TIME, TRL_START_TIME);
-
     spawnwait SEND_INFO_EVT(TRL_IS_TARG_ON_FLAG);
 
     spawnwait SEND_INFO_EVT(TRL_IS_TARG_ACQUIRED);
@@ -52,7 +50,7 @@ process SEND_INFOS()
 
     spawnwait SEND_INFO_EVT(TRL_IS_CANCELLED);
 
-    spawnwait SEND_INFO_REL_TIME(TRL_CUM_TIME, TRL_START_TIME);
+    spawnwait SEND_INFO_EVT(TRL_CUM_DURATION);
 
     spawnwait SEND_INFO_EVT(TRL_DURATION);
 
@@ -135,8 +133,6 @@ process SEND_INFOS()
     spawnwait SEND_INFO_REL_TIME(TRL_NOGO_ERLY_SACC_TIME, TRL_START_TIME);
 
     spawnwait SEND_INFO_REL_TIME(TRL_NOGO_LATE_SACC_TIME, TRL_START_TIME);
-
-    spawnwait SEND_INFO_EVT(TRL_FIX_HOLD_DURATION);
 
     spawnwait SEND_INFO_REL_TIME(TRL_FIX_MIN_SSHT_TIME, TRL_START_TIME);
 
@@ -234,6 +230,14 @@ process SEND_INFOS()
 process SEND_INFO_EVT(int evtVal)
 {
    N_INFOS = N_INFOS + 1;
+   if(evtVal == -1)
+   {
+	   evtVal = 32768 + 1 - INFOS_ZERO;
+   }
+   else if(evtVal == 0)
+   {
+	   evtVal = 32768 - INFOS_ZERO;
+   }
    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
    nexttick;
 }
@@ -241,13 +245,24 @@ process SEND_INFO_EVT(int evtVal)
 process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
 {
    N_INFOS = N_INFOS + 1;
-   if (evtVal > offsetVal)
+   if(evtVal == -1)
    {
-     spawnwait SEND_EVT(INFOS_ZERO + evtVal - offsetVal);
+	   evtVal = 32768 + 1 - INFOS_ZERO;
    }
-   else
+   else if(evtVal == 0)
    {
-     spawnwait SEND_EVT(INFOS_ZERO);
+	   evtVal = 32768 - INFOS_ZERO;
    }
+   else if (evtVal > offsetVal)
+   {
+     evtVal = evtVal - offsetVal;
+   }
+   else if (evtVal < offsetVal)
+   {
+     evtVal = 32768 + (offsetVal - evtVal) - INFOS_ZERO;
+   }
+   
+   spawnwait SEND_EVT(INFOS_ZERO + evtVal);
+   
    nexttick;
 }
