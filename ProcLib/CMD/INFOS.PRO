@@ -15,10 +15,14 @@ declare int          N_INFOS;
 
 process SEND_INFOS()
 {
+	declare int TRL_RAND_NEG;
     N_INFOS = 0;
     printf("****INFOS.PRO: Sending infos....\n");
-
-    spawnwait SEND_INFO_EVT(TRL_NUMBER);
+    TRL_RAND_NEG = -((random(5000) + 1) *2);
+	
+    spawnwait SEND_INFO_EVT(TRL_RAND_NEG);
+	
+	spawnwait SEND_INFO_EVT(TRL_NUMBER);
 
     spawnwait SEND_INFO_EVT(TRL_TYPE);
 
@@ -232,11 +236,11 @@ process SEND_INFO_EVT(int evtVal)
    N_INFOS = N_INFOS + 1;
    if(evtVal == -1)
    {
-	   evtVal = 32768 + 1 - INFOS_ZERO;
+	   evtVal = 32768 + 1;
    }
    else if(evtVal == 0)
    {
-	   evtVal = 32768 - INFOS_ZERO;
+	   evtVal = 32768;
    }
    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
    nexttick;
@@ -247,11 +251,11 @@ process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
    N_INFOS = N_INFOS + 1;
    if(evtVal == -1)
    {
-	   evtVal = 32768 + 1 - INFOS_ZERO;
+	   evtVal = 32768 + 1;
    }
    else if(evtVal == 0)
    {
-	   evtVal = 32768 - INFOS_ZERO;
+	   evtVal = 32768;
    }
    else if (evtVal > offsetVal)
    {
@@ -259,7 +263,7 @@ process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
    }
    else if (evtVal < offsetVal)
    {
-     evtVal = 32768 + (offsetVal - evtVal) - INFOS_ZERO;
+     evtVal = 32768 + (offsetVal - evtVal);
    }
    
    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
