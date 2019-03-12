@@ -25,8 +25,8 @@ declare constant int NOGO_CANCELLED_TRIAL     = 1;
 declare constant int NOGO_NON_CANCELLED_TRIAL = 2;
 declare constant int NOGO_ERROR_TRIAL         = 3;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 0.0;
-declare float        STOP_WEIGHT   = 100.0;
+declare float        GO_WEIGHT     = 50.0;
+declare float        STOP_WEIGHT   = 50.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;

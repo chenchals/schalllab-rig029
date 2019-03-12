@@ -109,7 +109,7 @@ process PROC_TRL_OUTCOME()
 	}
 	else
 	{
-		if (TRL_IS_TIMEOUT)
+		if (TRL_IS_TIMEOUT > 0)
 		{
 			if (TRL_TYPE == TRIAL_TYPE_GO)
 			{
@@ -135,7 +135,7 @@ process PROC_TRL_OUTCOME()
 
 process PROC_GO_OUTCOMES()
 {
-	if (TRL_IS_TARG_MIN_THT)
+	if (TRL_IS_TARG_MIN_THT > 0)
 	{
 		TIMEOUT_DURATION = 0;
 		TRL_IS_TIMEOUT  = 0;
@@ -309,7 +309,7 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
 	declare int nogoIdx;
 	nogoIdx = NOGO_POST_SSD_IDX;
 	printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n",STAT_OUTCOME,TRL_NUMBER);
-	if (TRL_IS_FIX_MIN_SSHT)
+	if (TRL_IS_FIX_MIN_SSHT > 0)
 	{
 		TRL_IS_CANCELLED = 1;
 		TIMEOUT_DURATION = 0;

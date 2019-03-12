@@ -178,7 +178,7 @@ process SSD_CHECK_SACC()
     {
         TRL_I_IN_FLIGHT = 1;
 
-        if (TRL_IS_STOP_SIGNAL_ON)
+        if (TRL_IS_STOP_SIGNAL_ON > 0)
         {
             TRL_NOGO_SACC_POST_SSD_TIME = time();
             spawn SEND_EVT(NoGoSaccadePostSSD_);
@@ -188,7 +188,7 @@ process SSD_CHECK_SACC()
 
             TRL_POST_SSD_DELAY_FIX_REIGNITE = STAT_DLTA_T - ceil((STAT_ALLOWED_T * REFRESH_RATE));
             // How long *after* SSD did saccade happen (before MAX_SACC_TIME), since we know when SSD happened, use actual stop signal time
-            if (TRL_STOP_SIGNAL_TIME)
+            if (TRL_STOP_SIGNAL_TIME > 0)
             {
                 TRL_POST_SSD_DELAY_FIX_REIGNITE = TRL_NOGO_SACC_POST_SSD_TIME - TRL_STOP_SIGNAL_TIME;
             }
