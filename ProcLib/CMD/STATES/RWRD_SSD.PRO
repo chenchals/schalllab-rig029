@@ -65,7 +65,7 @@ process PROC_RWRD_SSD()
 
     if (TRL_FIX_HOLD_DURATION > TEMP_MIN_SSHT)
     {
-        if (!TRL_IS_FIX_MIN_SSHT)
+        if (TRL_IS_FIX_MIN_SSHT<=0)
         {
             TRL_IS_FIX_MIN_SSHT   = 1;
             TRL_FIX_MIN_SSHT_TIME = time();
@@ -82,7 +82,7 @@ process PROC_RWRD_SSD()
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        if (!I_FIX && !TRL_IS_FIX_MIN_SSHT)
+        if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
         {
             if (TEMP_MIN_SSHT <= STAT_ALLOWED_T)
             {
@@ -111,7 +111,7 @@ process PROC_RWRD_SSD()
     // Reward duration
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
-        if (!TRL_RWRD_ON_TIME)
+        if (TRL_RWRD_ON_TIME<=0)
         {
             TRL_RWRD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
@@ -119,7 +119,7 @@ process PROC_RWRD_SSD()
 
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_SSD, RewardOn_);
         }
-        if (!I_FIX && !TRL_IS_FIX_MIN_SSHT)
+        if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
         {
             if (TEMP_MIN_SSHT > STAT_ALLOWED_T && TEMP_MIN_SSHT <= TEMP_DELY_PLUS_DURATION)
             {
@@ -147,7 +147,7 @@ process PROC_RWRD_SSD()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (!TRL_RWRD_OFF_TIME)
+        if (TRL_RWRD_OFF_TIME<=0)
         {
             TRL_RWRD_OFF_TIME = time();
             spawn SEND_EVT(RewardOff_);
@@ -162,7 +162,7 @@ process PROC_RWRD_SSD()
             CURR_STAT     = STAT_OUTCOME;
         }
 
-        if (STAT_DLTA_T <= TEMP_MIN_SSHT && !TRL_IS_FIX_MIN_SSHT)
+        if (STAT_DLTA_T <= TEMP_MIN_SSHT && TRL_IS_FIX_MIN_SSHT<=0)
         {
             if (!I_FIX)
             {

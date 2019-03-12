@@ -48,7 +48,7 @@ process PROC_TARG_ON()
 
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (TRL_TARG_VRT_RFRSH_COUNT == 1 && !TRL_TARG_ON_TIME)
+    if (TRL_TARG_VRT_RFRSH_COUNT == 1 && TRL_TARG_ON_TIME<=0)
     {
         TRL_TARG_ON_TIME = time();
         spawn SEND_EVT(Target_);

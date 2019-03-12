@@ -68,7 +68,7 @@ process PROC_TONE_SSD()
 
     if (TRL_FIX_HOLD_DURATION > TEMP_MIN_SSHT)
     {
-        if (!TRL_IS_FIX_MIN_SSHT)
+        if (TRL_IS_FIX_MIN_SSHT<=0)
         {
             TRL_IS_FIX_MIN_SSHT   = 1;
             TRL_FIX_MIN_SSHT_TIME = time();
@@ -85,7 +85,7 @@ process PROC_TONE_SSD()
     // Tone delay
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        if (!I_FIX && !TRL_IS_FIX_MIN_SSHT)
+        if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
         {
             if (TEMP_MIN_SSHT <= STAT_ALLOWED_T)
             {
@@ -115,7 +115,7 @@ process PROC_TONE_SSD()
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // Reach here give GOOD tone, if entered this condition
-        if (!TRL_TONE_ON_TIME)
+        if (TRL_TONE_ON_TIME<=0)
         {
             TRL_TONE_ON_TIME = time();
             spawn TONE(TRL_TONE_FREQ, TEMP_TONE_DURATION);
@@ -123,7 +123,7 @@ process PROC_TONE_SSD()
 
             printf("****STAT_TONE_SSD[%d]: OK sent Event: ToneOn_[%d]\n", STAT_TONE_SSD, ToneOn_);
         }
-        if (!I_FIX && !TRL_IS_FIX_MIN_SSHT)
+        if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
         {
             if (TEMP_MIN_SSHT > STAT_ALLOWED_T && TEMP_MIN_SSHT <= TEMP_DELY_PLUS_DURATION)
             {

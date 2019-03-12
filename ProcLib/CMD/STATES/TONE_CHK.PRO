@@ -76,7 +76,7 @@ process PROC_TONE_CHK()
 
     if (TRL_TARG_HOLD_DURATION > TEMP_MIN_THT)
     {
-        if (!TRL_IS_TARG_MIN_THT)
+        if (TRL_IS_TARG_MIN_THT<=0)
         {
             TRL_IS_TARG_MIN_THT   = 1;
             TRL_TARG_MIN_THT_TIME = time();
@@ -92,7 +92,7 @@ process PROC_TONE_CHK()
     // Tone delay
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        if (!I_TARG && !TRL_IS_TARG_MIN_THT)
+        if (!I_TARG && TRL_IS_TARG_MIN_THT<=0)
         {
             if (TEMP_MIN_THT <= STAT_ALLOWED_T)
             {
@@ -120,7 +120,7 @@ process PROC_TONE_CHK()
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // Reach here give GOOD tone, if entered this condition
-        if (!TRL_TONE_ON_TIME)
+        if (TRL_TONE_ON_TIME<=0)
         {
             TRL_TONE_ON_TIME = time();
             spawn TONE(TRL_TONE_FREQ, TEMP_TONE_DURATION);
@@ -128,7 +128,7 @@ process PROC_TONE_CHK()
 
             printf("****STAT_TONE_CHK[%d]: OK sent Event: ToneOn_[%d]\n", STAT_TONE_CHK, ToneOn_);
         }
-        if (!I_TARG && !TRL_IS_TARG_MIN_THT)
+        if (!I_TARG && TRL_IS_TARG_MIN_THT<=0)
         {
             if (TEMP_MIN_THT > STAT_ALLOWED_T && TEMP_MIN_THT <= TEMP_DELY_PLUS_DURATION)
             {

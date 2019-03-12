@@ -49,7 +49,7 @@ process PROC_TIMEOUT_CHK()
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         TRL_TIMEOUT_DURATION = TRL_TIMEOUT_DURATION + 1;
-        if (!TRL_TIMEOUT_START_TIME)
+        if (TRL_TIMEOUT_START_TIME<=0)
         {
             TRL_TIMEOUT_START_TIME = time();
             spawn SEND_EVT(PunishStart_);

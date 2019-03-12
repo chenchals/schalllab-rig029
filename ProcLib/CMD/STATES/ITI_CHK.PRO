@@ -69,7 +69,7 @@ process PROC_ITI_CHK()
             spawn SEND_EVT(Eot_);
             printf("****STAT_ITI_CHK[%d]: **Going to TIME_OUT State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
         }
-        else if (!TRL_ITI_START_TIME)
+        else if (TRL_ITI_START_TIME <= 0)
         {
             TRL_ITI_START_TIME = time();
             spawn SEND_EVT(ITIStart_);

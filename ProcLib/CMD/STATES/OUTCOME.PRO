@@ -96,7 +96,7 @@ process PROC_TRL_OUTCOME()
 				// Assume it is a non-cancelled error trial and adjust if not
 				TRL_LAST_STOP_OUTCOME_EVNTCODE = OutcomeNoGoError_;
 				SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
-				if (TRL_CANCEL_TIME)
+				if (TRL_CANCEL_TIME > 0)
 				{
 					spawn PROC_NOGO_POST_CANCEL_OUTCOMES();
 				}
@@ -203,7 +203,7 @@ process PROC_GO_OUTCOMES()
 		spawn SEND_EVT(OutcomeGoError_);
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeGoError_ [%d]; Go Trial; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeGoError_);
 	}
-	else if (!TRL_IS_TARG_MIN_THT)
+	else if (TRL_IS_TARG_MIN_THT<=0)
 	{
 		TIMEOUT_DURATION = TIMEOUT_BRK_MIN_THT[GO_IDX];
 		spawn SEND_EVT(OutcomeGoError_);
@@ -295,7 +295,7 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 		spawn SEND_EVT(OutcomeNoGoError_);
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
 	}
-	else if (!TRL_IS_TARG_MIN_THT)
+	else if (TRL_IS_TARG_MIN_THT<=0)
 	{
 		TIMEOUT_DURATION = TIMEOUT_BRK_MIN_THT[nogoIdx];
 		spawn SEND_EVT(OutcomeNoGoError_);
@@ -354,7 +354,7 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
 		spawn SEND_EVT(OutcomeNoGoError_);
 		printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; (TRL_TARG_BRK_POST_RWRD_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeNoGoError_);
 	}
-	else if (!TRL_IS_FIX_MIN_SSHT)
+	else if (TRL_IS_FIX_MIN_SSHT<=0)
 	{
 		TIMEOUT_DURATION = TIMEOUT_BRK_MIN_SSHT[nogoIdx];
 		TRL_IS_TIMEOUT  = 1;

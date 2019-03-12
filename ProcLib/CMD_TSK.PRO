@@ -49,10 +49,6 @@ process IDLE() enabled
 	declare int infosStartT;
 	declare int infosDuration;
 
-	spawnwait CLEAR_VDO();
-	printf("flushing video memory please wait...\n");
-	nexttick 8000;
-
 	seed1(time());
 	// activate seed by drawing a number from some distribution
 	random(5);
@@ -61,6 +57,12 @@ process IDLE() enabled
 	//RIG_ID = 29;
 	//MONK_ID = JOULE_ID;
 	printf("Setting SET_RIG\n");
+	spawnwait SET_RIG(RIG_ID);
+	
+	spawnwait CLEAR_VDO();
+	printf("flushing video memory please wait...\n");
+	nexttick 8000;
+	
 	spawnwait SET_RIG(RIG_ID);
 
 	printf("Setting SET_CLRS\n");
