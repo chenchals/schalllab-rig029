@@ -14,7 +14,7 @@
 //       Changed event sending
 
 declare JUICE(int channel, int duration);
-
+declare JUICE_EXTRA();
 
 process JUICE(int channel, int duration)
 {
@@ -26,4 +26,9 @@ process JUICE(int channel, int duration)
     wait(duration);
     mio_dig_set(channel, channelClose);
     spawn SEND_EVT(JuiceEnd_);
+}
+
+process JUICE_EXTRA()
+{
+	spawnwait JUICE(JUICE_CHANNEL, 50);
 }

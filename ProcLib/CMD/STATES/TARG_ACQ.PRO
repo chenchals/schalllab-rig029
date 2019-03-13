@@ -57,13 +57,13 @@ process PROC_TARG_ACQ()
 
             PROCESS_STATE = 1;
             // process speparately for STOP / GO trials
-            if (TRL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME)
+            if (TRL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME > 0)
             {
                 CURR_STAT = STAT_OUTCOME;
             }
             else
             {
-              if(TRL_TYPE == TRIAL_TYPE_STOP && TRL_FIX_REIGNITE_FLAG)
+              if(TRL_TYPE == TRIAL_TYPE_STOP && TRL_FIX_REIGNITE_FLAG > 0)
               {
                 // change the display to PG_SIGNAL_PD to turn the signal back on
                 dsendf("vp %d\n", PG_SIGNAL_PD);

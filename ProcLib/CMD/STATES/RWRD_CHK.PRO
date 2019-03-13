@@ -64,7 +64,7 @@ process PROC_RWRD_CHK()
 
     if (TRL_TARG_HOLD_DURATION > TEMP_MIN_THT)
     {
-        if (!TRL_IS_TARG_MIN_THT)
+        if (TRL_IS_TARG_MIN_THT<=0)
         {
             TRL_IS_TARG_MIN_THT   = 1;
             TRL_TARG_MIN_THT_TIME = time();
@@ -73,10 +73,14 @@ process PROC_RWRD_CHK()
             printf("****STAT_RWRD_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldMinTHT_);
         }
     }
+	if (TRL_TARG_HOLD_DURATION < TEMP_MIN_THT)
+    {
+		TRL_IS_TARG_MIN_THT = 0;
+	}	
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        if (!I_TARG && !TRL_IS_TARG_MIN_THT)
+        if (!I_TARG && TRL_IS_TARG_MIN_THT<=0)
         {
             if (TEMP_MIN_THT <= STAT_ALLOWED_T)
             {
@@ -106,7 +110,7 @@ process PROC_RWRD_CHK()
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
 		// DO not give juice for NOGO trial
-        if (!TRL_RWRD_ON_TIME && TRL_TYPE == TRIAL_TYPE_GO)
+        if (TRL_RWRD_ON_TIME<=0 && TRL_TYPE == TRIAL_TYPE_GO)
         {
             TRL_RWRD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
@@ -114,7 +118,7 @@ process PROC_RWRD_CHK()
             printf("****STAT_RWRD_CHK[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_CHK, RewardOn_);
         }
 
-        if (!I_TARG && !TRL_IS_TARG_MIN_THT)
+        if (!I_TARG && TRL_IS_TARG_MIN_THT<=0)
         {
             if (TEMP_MIN_THT > STAT_ALLOWED_T && TEMP_MIN_THT <= TEMP_DELY_PLUS_DURATION)
             {
@@ -141,7 +145,7 @@ process PROC_RWRD_CHK()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (!TRL_RWRD_OFF_TIME)
+        if (TRL_RWRD_OFF_TIME<=0)
         {
             TRL_RWRD_OFF_TIME = time();
             spawn SEND_EVT(RewardOff_);
@@ -156,7 +160,7 @@ process PROC_RWRD_CHK()
             CURR_STAT     = STAT_OUTCOME;
         }
 
-        if (STAT_DLTA_T <= TEMP_MIN_THT && TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION && !TRL_IS_TARG_MIN_THT)
+        if (STAT_DLTA_T <= TEMP_MIN_THT && TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION && TRL_IS_TARG_MIN_THT<=0)
         {
             if (!I_TARG)
             {

@@ -49,8 +49,6 @@ process IDLE() enabled
 	declare int infosStartT;
 	declare int infosDuration;
 
-	spawn CLEAR_VDO();
-
 	seed1(time());
 	// activate seed by drawing a number from some distribution
 	random(5);
@@ -59,6 +57,12 @@ process IDLE() enabled
 	//RIG_ID = 29;
 	//MONK_ID = JOULE_ID;
 	printf("Setting SET_RIG\n");
+	spawnwait SET_RIG(RIG_ID);
+
+	spawnwait CLEAR_VDO();
+	printf("flushing video memory please wait...\n");
+	nexttick 8000;
+
 	spawnwait SET_RIG(RIG_ID);
 
 	printf("Setting SET_CLRS\n");
@@ -82,6 +86,9 @@ process IDLE() enabled
 
 	printf("Setting WTCH_SCHMITT\n");
 	spawn WTCH_SCHMITT();
+
+	printf("waiting for all processes to start...\n");
+	nexttick 1000;
 
 	printf("Sending Identify_Room_\n");
 	spawn SEND_EVT(Identify_Room_);
@@ -114,14 +121,8 @@ process IDLE() enabled
 			TRL_RUNNING   = 1;
 			printf("Trial running....\n");
 			spawn SEND_EVT(TaskStart_);
-
 			spawn SEND_EVT(CmanHeader_);
 
-			//spawn GRAF_HIDE_FIX_TARG();
-
-			printf("Sending BLANK page\n");
-			dsendf("vp %d\n", PG_BLANK);
-			nexttick 5;
 			CURR_STAT   = STAT_GET_READY;
 			STAT_DLTA_T = 0;
 		}
@@ -216,28 +217,32 @@ process IDLE() enabled
 			}
 			if(CURR_STAT == STAT_IDLE)
 			{
+				printf("Sending BLANK page\n");
+				dsendf("vp %d\n", PG_BLANK);
+
+				TRL_START_INFOS_TIME = time();
+				spawn SEND_EVT(StartInfos_);
 				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
-				infosStartT = time();
 				spawn SEND_INFOS();
 				waitforprocess SEND_INFOS;
-				infosDuration = time() - infosStartT;
-				printf("****CMD_TSK[%d]: Done Sending Infos: SEND_INFOS() Time = [%d]\n", infosDuration);
 
+				TRL_END_INFOS_TIME = time();
+				spawn SEND_EVT(EndInfos_);
 				spawn SEND_EVT(TaskEnd_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
-				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_TIME[%d]\n", TRL_NUMBER, TRL_CUM_TIME);
+				printf("****CMD_TSK: OK (Ending Task) TRL_NUMBER [%d], TRL_CUM_DURATION[%d]\n", TRL_NUMBER, TRL_CUM_DURATION);
 				TRL_RUNNING = 0;
 				PROCESS_STATE = 0;
 			}
 			//================= State = xxxxxx===============
-			if (TRL_IS_TARG_ON_FLAG)
+			if (TRL_IS_TARG_ON_FLAG > 0)
 			{
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
-			if(TRL_START_TIME)
+			if(TRL_START_TIME > 0)
 			{
-				TRL_CUM_TIME = TRL_CUM_TIME + 1;
+				TRL_CUM_DURATION = TRL_CUM_DURATION + 1;
 			}
 			nexttick;
 		} /*while(TRL_RUNNING)*/
@@ -252,7 +257,7 @@ process USER_SUMMARY()
 {
 	printf("**********************************\n");
 	printf("Trial Number: [%d]\n", TRL_NUMBER);
-	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d] / [%d]\n", 
+	printf("GO / CANCELLED / NON-CANCELLED / NOGO_ERROR: [%d] / [%d] / [%d] / [%d]\n",
 	     SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_TRLS, SESS_N_NON_CANCEL_TRLS, SESS_N_NOGO_ERROR_TRLS);
 	nexttick;
 }
@@ -262,7 +267,7 @@ process UPD8_MSG()
 	declare int dummy = 0;
 
 	dummy = 1;
-	printf("TRL_NUM [%d], TRL_CUM_TIME [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_TIME, CURR_STAT, STAT_DLTA_T);
+	printf("TRL_NUM [%d], TRL_CUM_DURATION [%d], CURR_STAT [%d], STAT_DLTA_T [%d]\n", TRL_NUMBER, TRL_CUM_DURATION, CURR_STAT, STAT_DLTA_T);
 }
 
 process WRITE_TO_FILE()

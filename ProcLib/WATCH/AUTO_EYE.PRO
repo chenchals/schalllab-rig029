@@ -142,12 +142,24 @@ process AUTO_EYE_FIXATE()
 // State TARG_SSD
 process AUTO_EYE_TARG_SSD()
 {
-    declare int BRK_RWRD_DURATION = 1;
+    declare int out;
 	// just fixate, no saccade
 	spawnwait AUTO_EYE_POS_FIX();
-	if (CURR_STAT == STAT_RWRD_SSD && STAT_DLTA_T > TEMP_DELY_PLUS_DURATION - 50)
+	out = random(3);
+	if (STAT_DLTA_T > (random(50) * random(10))+1)
 	{
-	   spawnwait AUTO_EYE_POS_TARG();
+		if(out ==0)
+		{
+			spawnwait AUTO_EYE_POS_FIX();
+		}
+		else if(out ==1)
+		{
+			spawnwait AUTO_EYE_POS_RAND();
+		}
+		else if(out ==2)
+		{
+			spawnwait AUTO_EYE_POS_TARG();
+		}
 	}
 }
 

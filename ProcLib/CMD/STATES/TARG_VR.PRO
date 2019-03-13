@@ -13,39 +13,39 @@
 
 declare CHECK_TARG_VERT_RFRSH();
 
-
+declare int PD_WIDTH_DURATION;
 // For counting Target vertical refresh for both GO and STOP trials
 process CHECK_TARG_VERT_RFRSH()
 {
 
 	declare int trigWidth = 3;
 
-	if(PD_TRIG_R) 
+	if(PD_TRIG_R)
 	{
-		if (!TRL_IS_STOP_SIGNAL_ON)
+		if (TRL_IS_STOP_SIGNAL_ON<=0)
 		{
 			TRL_IS_STOP_SIGNAL_ON = 1;
 			printf("****TARG_VR.PRO: TRL_IS_STOP_SIGNAL_ON = [%d]\n",TRL_IS_STOP_SIGNAL_ON);
 			TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
 		}
-		if ((STAT_DLTA_T - TRL_TARG_VR_COUNT_TIME) > trigWidth)
+		if ((STAT_DLTA_T - PD_WIDTH_DURATION) > trigWidth)
 		{
 			TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
 		}
-		TRL_TARG_VR_COUNT_TIME = STAT_DLTA_T;
+		PD_WIDTH_DURATION = STAT_DLTA_T;
 	}
 
     if (PD_TRIG_L)
     {
-        if (TRL_TARG_VRT_RFRSH_COUNT == 0)
+        if (TRL_TARG_VRT_RFRSH_COUNT <=0)
         {
             TRL_IS_TARG_ON_FLAG      = 1;
             TRL_TARG_VRT_RFRSH_COUNT = 1;
         }
-        else if ((STAT_DLTA_T - TRL_TARG_VR_COUNT_TIME) > trigWidth)
+        else if ((STAT_DLTA_T - PD_WIDTH_DURATION) > trigWidth)
         {
             TRL_TARG_VRT_RFRSH_COUNT = TRL_TARG_VRT_RFRSH_COUNT + 1;
         }
-        TRL_TARG_VR_COUNT_TIME = STAT_DLTA_T;
+        PD_WIDTH_DURATION = STAT_DLTA_T;
     }
 } /* CHECK_TARG_VERT_RFRSH */

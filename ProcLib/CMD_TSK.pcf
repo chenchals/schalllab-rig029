@@ -17,27 +17,27 @@
 ; CCHANNELS=0
 ; ECHANNELS=2
 ;
-;                          Protocol Usage of Kernel Resources  
+;                          Protocol Usage of Kernel Resources
 ;
 ; Parameter       Limit          Used    Pct        Bytes/Total        Develop    Stable
 ; -------------   -------     -------  -----        -----------        -------    ------
-; PROCESSES       =300             50    17%         2200/13200         =71        =53      
-; INSTRUCTIONS    =1820           916    50%        16488/32760         =1146      =965     
-; InstructionsXMS =20025          916     5%        16488/360448        =1146      =965     
-; SYMBOLTABLE     =4000           636    16%         5088/32000         =748       =669     
-; NametableXMS    =208896      177752    85%       177752/208896                        
-; NAMETABLE       =40894         9750    24%         9750/40894         =11471     =10263   
-; DATABASES       =16               0     0%            0/960           =0         =0       
-; ARRAYTABLE      =30000          146     0%          146/30000         =183       =151     
-; ARRAYDATA       =30000128      4440     0%         4440/30000128      =5550      =4577    
-; OBJECTS         =257              0     0%            0/11308         =0         =0       
+; PROCESSES       =300             50    17%         2200/13200         =71        =53
+; INSTRUCTIONS    =1820           916    50%        16488/32760         =1146      =965
+; InstructionsXMS =20025          916     5%        16488/360448        =1146      =965
+; SYMBOLTABLE     =4000           636    16%         5088/32000         =748       =669
+; NametableXMS    =208896      177752    85%       177752/208896
+; NAMETABLE       =40894         9750    24%         9750/40894         =11471     =10263
+; DATABASES       =16               0     0%            0/960           =0         =0
+; ARRAYTABLE      =30000          146     0%          146/30000         =183       =151
+; ARRAYDATA       =30000128      4440     0%         4440/30000128      =5550      =4577
+; OBJECTS         =257              0     0%            0/11308         =0         =0
 ;
 ; PROTOCOL PROCESS CONTROL BLOCKS (XMS Instructions Caching ENABLED)
 ; INSTRUCTIONS=1820,20024
 ; Memory (bytes):  16488/32760 Conventional, 16488/360448 XMS
 ; Server CPU Mhz  Empirical 3391.6    Theoretical 3400.0
 ;
-;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec 
+;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec
 ;   1 SUSP CLEAR_VDO                    0    0    0    0  0.000  0.000  0.000    16    notLoaded         2-17          0     0
 ;   2 SUSP SET_DEFAULT_STIM_VARS        0    0    0    0  0.000  0.000  0.000   174    notLoaded        18-191         0     0
 ;   3 SUSP SET_CLRS                     0    0    0    0  0.000  0.000  0.000   520    notLoaded       192-711         0     0
@@ -138,6 +138,19 @@ DSHOW CMD_Task_Menu
 KEY ALTE = EYE_ON_VDOSYNC = 1
 KEY ALTX = EYE_ON_VDOSYNC = 0
 KEY ALTC = CENTER_EYE_NOW = 1
+KEY INSERT = spawn JUICE_EXTRA
+
+; From old ALLPROSC.PCF
+; KEY F1 = dialog Info_and_StartClock
+; KEY ESC = dpop
+; KEY INSERT = spawn key_rewd
+; KEY ALTE = Eye_on_VDOSync = 1
+; KEY ALTX = Eye_on_VDOSync = 0
+; KEY ALTC = CenterEyeNow = 1
+; KEY F2 = dialog Choose_Task
+; KEY F3 = dialog Fixation_Main
+; KEY F4 = dialog In_Task_pane
+; KEY ALTS = spawn key_stim
+; KEY F12 = spawn key_stim
 
 ; END KEY DEFINITIONS
-
