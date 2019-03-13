@@ -58,11 +58,11 @@ process IDLE() enabled
 	//MONK_ID = JOULE_ID;
 	printf("Setting SET_RIG\n");
 	spawnwait SET_RIG(RIG_ID);
-	
+
 	spawnwait CLEAR_VDO();
 	printf("flushing video memory please wait...\n");
 	nexttick 8000;
-	
+
 	spawnwait SET_RIG(RIG_ID);
 
 	printf("Setting SET_CLRS\n");
@@ -86,10 +86,10 @@ process IDLE() enabled
 
 	printf("Setting WTCH_SCHMITT\n");
 	spawn WTCH_SCHMITT();
-	
+
 	printf("waiting for all processes to start...\n");
 	nexttick 1000;
-	
+
 	printf("Sending Identify_Room_\n");
 	spawn SEND_EVT(Identify_Room_);
 
@@ -235,12 +235,12 @@ process IDLE() enabled
 				PROCESS_STATE = 0;
 			}
 			//================= State = xxxxxx===============
-			if (TRL_IS_TARG_ON_FLAG)
+			if (TRL_IS_TARG_ON_FLAG > 0)
 			{
 				TRL_TARG_ON_DURATION = TRL_TARG_ON_DURATION + 1;
 			}
 			STAT_DLTA_T  = STAT_DLTA_T + 1;
-			if(TRL_START_TIME)
+			if(TRL_START_TIME > 0)
 			{
 				TRL_CUM_DURATION = TRL_CUM_DURATION + 1;
 			}

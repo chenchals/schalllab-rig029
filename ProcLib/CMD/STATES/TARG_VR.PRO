@@ -20,7 +20,7 @@ process CHECK_TARG_VERT_RFRSH()
 
 	declare int trigWidth = 3;
 
-	if(PD_TRIG_R) 
+	if(PD_TRIG_R)
 	{
 		if (TRL_IS_STOP_SIGNAL_ON<=0)
 		{
@@ -37,7 +37,7 @@ process CHECK_TARG_VERT_RFRSH()
 
     if (PD_TRIG_L)
     {
-        if (TRL_TARG_VRT_RFRSH_COUNT == 0)
+        if (TRL_TARG_VRT_RFRSH_COUNT <=0)
         {
             TRL_IS_TARG_ON_FLAG      = 1;
             TRL_TARG_VRT_RFRSH_COUNT = 1;
