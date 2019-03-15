@@ -71,7 +71,7 @@ process PROC_TONE_SSD()
         if (TRL_IS_FIX_MIN_SSHT<=0)
         {
             TRL_IS_FIX_MIN_SSHT   = 1;
-            TRL_FIX_MIN_SSHT_TIME = time();
+            //TRL_FIX_MIN_SSHT_TIME = time();
             spawn SEND_EVT(FixHoldMinSSHT_);
 
             printf("****STAT_TONE_SSD[%d]: OK sent Event: FixHoldMinSSHT_[%d]\n", STAT_TONE_SSD, FixHoldMinSSHT_);

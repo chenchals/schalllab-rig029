@@ -68,7 +68,7 @@ process PROC_RWRD_SSD()
         if (TRL_IS_FIX_MIN_SSHT<=0)
         {
             TRL_IS_FIX_MIN_SSHT   = 1;
-            TRL_FIX_MIN_SSHT_TIME = time();
+            //TRL_FIX_MIN_SSHT_TIME = time();
             spawn SEND_EVT(FixHoldMinSSHT_);
 
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: FixHoldMinSSHT_[%d]\n", STAT_RWRD_SSD, FixHoldMinSSHT_);

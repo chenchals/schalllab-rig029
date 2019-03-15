@@ -44,13 +44,13 @@ process PROC_FIX_HOLD()
 		// so that we sync all target presentation to vertical retrace (less offsetForVdoSync)
 		// variable time when fix is acquired and the length of fix hold time
 		
-		tempVRCount = (TRL_FIX_ACQ_TIME - TRL_FIX_ON_TIME + TRL_FIX_HOLD)*1.0/REFRESH_RATE;
-		tempFixHoldAdjust = round(round(tempVRCount)*REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_FIX_ACQ_TIME - TRL_USE_FIX_HOLD_DURATION
+		tempVRCount = (TRL_FIX_ACQ_TIME - TRL_FIX_ON_TIME + TRL_USE_FIX_HOLD_DURATION)*1.0/REFRESH_RATE;
+		tempFixHoldAdjust = round(round(tempVRCount)*REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_FIX_ACQ_TIME - TRL_USE_FIX_HOLD_DURATION;
 		tempFixHoldAdjust = tempFixHoldAdjust - offsetForVdoSync;
 		if(adjust)
 		{
 			printf("*************tempVRCount [%8.4d], tempFixHoldAjust = [%d]\n",tempVRCount,tempFixHoldAdjust);
-			printf("****STAT_FIX_HOLD[%d]: Adjusting TRL_USE_FIX_HOLD_DURATION[%d] by [%d] ms\n",STAT_FIX_HOLD,TRL_FIX_HOLD,tempFixHoldAdjust);
+			printf("****STAT_FIX_HOLD[%d]: Adjusting TRL_USE_FIX_HOLD_DURATION[%d] by [%d] ms\n",STAT_FIX_HOLD,TRL_USE_FIX_HOLD_DURATION,tempFixHoldAdjust);
 			TRL_USE_FIX_HOLD_DURATION= TRL_USE_FIX_HOLD_DURATION+ tempFixHoldAdjust;
 		}
 		

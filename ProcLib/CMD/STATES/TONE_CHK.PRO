@@ -100,7 +100,8 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
 
                 printf("****STAT_TONE_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_TONE_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY), STAT_DLTA_T [%d]\n", 
+						STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -110,7 +111,8 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(TargHoldBrkPreTone_);
 
                 printf("****STAT_TONE_CHK[%d]: ERR sent Event: TargHoldBrkPreTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkPreTone_);
-                printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY), STAT_DLTA_T [%d]\n", STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY), STAT_DLTA_T [%d]\n", 
+						STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -136,8 +138,8 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
 
                 printf("****STAT_TONE_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_TONE_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_CHK,
-						TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_TONE_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", 
+						STAT_TONE_CHK,TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -147,8 +149,8 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(TargHoldBrkTone_);
 
                 printf("****STAT_TONE_CHK[%d]: ERR sent Event: TargHoldBrkTone_[%d]\n", STAT_TONE_CHK, TargHoldBrkTone_);
-                printf("****STAT_TONE_CHK[%d]: ERR (*During-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_CHK,
-					TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_TONE_CHK[%d]: ERR (*During-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", 
+						STAT_TONE_CHK,TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }

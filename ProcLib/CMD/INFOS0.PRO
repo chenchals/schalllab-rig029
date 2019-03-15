@@ -289,9 +289,6 @@ process SEND_INFOS()
     spawnwait SEND_EVT(INFOS_ZERO + int(TRL_ABORT_TIME - TRL_TRIAL_START_TIME));
     spawnwait WAIT_INFOS();
 
-    spawnwait SEND_EVT(INFOS_ZERO + DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT);
-    spawnwait WAIT_INFOS();
-
     spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_VR_COUNT);
     spawnwait WAIT_INFOS();
 

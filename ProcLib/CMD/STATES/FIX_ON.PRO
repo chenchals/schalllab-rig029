@@ -25,8 +25,7 @@ process PROC_FIX_ON()
     if (PROCESS_STATE)
     {
         printf("****STAT_FIX_ON[%d]: Processing Fixspot On\n", STAT_FIX_ON);
-        DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT = 0;
-
+ 
         dsendf("vp %d\n", PG_FIXATION_PD);
         // show for only 1 screen refresh
         dsendf("vw 1\n");
@@ -39,8 +38,7 @@ process PROC_FIX_ON()
 
     if (PD_TRIG_L)
     {
-        DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT = DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT + 1;
-        if (DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT == 1)
+        if (TRL_FIX_ON_TIME <= 0)
         {
             TRL_FIX_ON_TIME = time();
             spawn SEND_EVT(FixSpotOn_);
