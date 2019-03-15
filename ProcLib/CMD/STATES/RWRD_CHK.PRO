@@ -1,20 +1,20 @@
 //==========================================================================
 // RWRD_CHK.PRO
 //   Description: Process Reward state after Tone is delivered
-//                Gaze is in TARG_WIN only if MIN_TARG_HOLD_TIME >
+//                Gaze is in TARG_WIN only if TRL_USE_XTRA_HOLD_DURATION >
 //                TONE_DELAY + TONE_DURATION.
 // Gaze Check:
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: MIN_TARG_HOLD_TIME <= TRL_RWRD_DELAY
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: No Reward --> goto STAT_OUTCOME
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: Deliver reward at TRL_RWRD_DELAY time
-//   case 1: MIN_TARG_HOLD_TIME <= TRL_RWRD_DELAY + RWRD_DURATION
+//   case 0: TRL_USE_XTRA_HOLD_DURATION <= TRL_USE_RWRD_DELAY
+//         if gaze out of TARG_WIN before TRL_USE_XTRA_HOLD_DURATION expires: No Reward --> goto STAT_OUTCOME
+//         if gaze in TARG_WIN until TRL_USE_XTRA_HOLD_DURATION expires: Deliver reward at TRL_USE_RWRD_DELAY time
+//   case 1: TRL_USE_XTRA_HOLD_DURATION <= TRL_USE_RWRD_DELAY + RWRD_DURATION
 //                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered) --> goto STAT_OUTCOME
 //                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) --> goto STAT_TIM_OUT
-//   case 2: MIN_TARG_HOLD_TIME > TRL_RWRD_DELAY + RWRD_DURATION
-//         if gaze in TARG_WIN until MIN_TARG_HOLD_TIME expires: (reward already delivered) --> goto STAT_OUTCOME
-//         if gaze out of TARG_WIN before MIN_TARG_HOLD_TIME expires: (reward already delivered) --> goto STAT_TIM_OUT
+//   case 2: TRL_USE_XTRA_HOLD_DURATION > TRL_USE_RWRD_DELAY + RWRD_DURATION
+//         if gaze in TARG_WIN until TRL_USE_XTRA_HOLD_DURATION expires: (reward already delivered) --> goto STAT_OUTCOME
+//         if gaze out of TARG_WIN before TRL_USE_XTRA_HOLD_DURATION expires: (reward already delivered) --> goto STAT_TIM_OUT
 //
 //   All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
@@ -48,11 +48,11 @@ process PROC_RWRD_CHK()
         STAT_STRT_T   = time();
         STAT_DLTA_T   = 0;
         // Give reward after this time, unless Abort
-        STAT_ALLOWED_T = TRL_RWRD_DELAY * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T = TRL_USE_RWRD_DELAY * TIME_DILATE_FACTOR;
         // Reward already given, during reward duration check gaze
-        TEMP_RWRD_DURATION = TRL_RWRD_DURATION * TIME_DILATE_FACTOR;
+        TEMP_RWRD_DURATION = TRL_USE_RWRD_DURATION * TIME_DILATE_FACTOR;
         // This is incremented in the CMD_TSK.PRO --> state flow controller
-        TEMP_MIN_THT            = MIN_TARG_HOLD_TIME * TIME_DILATE_FACTOR;
+        TEMP_XTRA_HOLD_TIME            = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_DURATION;
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
@@ -62,7 +62,7 @@ process PROC_RWRD_CHK()
         TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
     }
 
-    if (TRL_TARG_HOLD_DURATION > TEMP_MIN_THT)
+    if (TRL_TARG_HOLD_DURATION > TEMP_XTRA_HOLD_TIME)
     {
         if (TRL_IS_TARG_MIN_THT<=0)
         {
@@ -73,7 +73,7 @@ process PROC_RWRD_CHK()
             printf("****STAT_RWRD_CHK[%d]: OK sent Event: TargHoldMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldMinTHT_);
         }
     }
-	if (TRL_TARG_HOLD_DURATION < TEMP_MIN_THT)
+	if (TRL_TARG_HOLD_DURATION < TEMP_XTRA_HOLD_TIME)
     {
 		TRL_IS_TARG_MIN_THT = 0;
 	}	
@@ -82,25 +82,25 @@ process PROC_RWRD_CHK()
     {
         if (!I_TARG && TRL_IS_TARG_MIN_THT<=0)
         {
-            if (TEMP_MIN_THT <= STAT_ALLOWED_T)
+            if (TEMP_XTRA_HOLD_TIME <= STAT_ALLOWED_T)
             {
                 TRL_TARG_BRK_MIN_THT_TIME = time();
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY), STAT_DLTA_T [%d]\n", 
-						STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY), STAT_DLTA_T [%d]\n", 
+						STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
-            else if (TEMP_MIN_THT > STAT_ALLOWED_T)
+            else if (TEMP_XTRA_HOLD_TIME > STAT_ALLOWED_T)
             {
-                TRL_TARG_BRK_PRE_RWRD_TIME = time();
+                TRL_BRK_PRE_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkPreRwrd_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkPreRwrd_[%d]\n", STAT_RWRD_CHK, TargHoldBrkPreRwrd_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY), STAT_DLTA_T [%d]\n", 
-						STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY), STAT_DLTA_T [%d]\n", 
+						STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -110,7 +110,7 @@ process PROC_RWRD_CHK()
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
 		// DO not give juice for NOGO trial
-        if (TRL_RWRD_ON_TIME<=0 && TRL_TYPE == TRIAL_TYPE_GO)
+        if (TRL_RWRD_ON_TIME<=0 && TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
         {
             TRL_RWRD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
@@ -120,24 +120,24 @@ process PROC_RWRD_CHK()
 
         if (!I_TARG && TRL_IS_TARG_MIN_THT<=0)
         {
-            if (TEMP_MIN_THT > STAT_ALLOWED_T && TEMP_MIN_THT <= TEMP_DELY_PLUS_DURATION)
+            if (TEMP_XTRA_HOLD_TIME > STAT_ALLOWED_T && TEMP_XTRA_HOLD_TIME <= TEMP_DELY_PLUS_DURATION)
             {
                 TRL_TARG_BRK_MIN_THT_TIME = time();
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldBrkMinTHT_);
-				printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation*--DURING--*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY+TRL_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-						STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_MIN_THT,TEMP_DELY_PLUS_DURATION,STAT_DLTA_T);
+				printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation*--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
+						STAT_RWRD_CHK,TRL_TARG_HOLD_DURATION,TEMP_XTRA_HOLD_TIME,TEMP_DELY_PLUS_DURATION,STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
-            else if (TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION)
+            else if (TEMP_XTRA_HOLD_TIME > TEMP_DELY_PLUS_DURATION)
             {
-                TRL_TARG_BRK_RWRD_TIME = time();
+                TRL_BRK_RWRD_TIME = time();
                 spawn SEND_EVT(TargHoldBrkRwrd_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkRwrd_[%d][%d]\n", STAT_RWRD_CHK, TargHoldBrkRwrd_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*During-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY+TRL_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-				      STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*During-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
+				      STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -154,13 +154,13 @@ process PROC_RWRD_CHK()
         }
         if (TRL_IS_TARG_MIN_THT)
         {
-            printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_THT*Target Fixated*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY+TRL_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+            printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**MIN_TARG_THT*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
+					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
         }
 
-        if (STAT_DLTA_T <= TEMP_MIN_THT && TEMP_MIN_THT > TEMP_DELY_PLUS_DURATION && TRL_IS_TARG_MIN_THT<=0)
+        if (STAT_DLTA_T <= TEMP_XTRA_HOLD_TIME && TEMP_XTRA_HOLD_TIME > TEMP_DELY_PLUS_DURATION && TRL_IS_TARG_MIN_THT<=0)
         {
             if (!I_TARG)
             {
@@ -168,8 +168,8 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(TargHoldBrkMinTHT_);
 
                 printf("****STAT_RWRD_CHK[%d]: ERR sent Event: TargHoldBrkMinTHT_[%d]\n", STAT_RWRD_CHK, TargHoldBrkMinTHT_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--POST--*)[%d]/[%d](TEMP_MIN_THT),[%d](TRL_RWRD_DELAY+TRL_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_MIN_THT, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_CHK[%d]: ERR (*Min_THT*Broke Target Fixation--POST--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
+					STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }

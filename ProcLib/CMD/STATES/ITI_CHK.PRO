@@ -1,11 +1,11 @@
 //==========================================================================
 // ITI_CHK.PRO
-//   Description: Process ITI state. Compute the TRL_ITI_DURATION based on IS_TRL_LENGTH_FIXED
-//                if IS_TRL_LENGTH_FIXED = 1 : Use TRL_DURATION and TRL_CUM_DURATION
+//   Description: Process ITI state. Compute the TRL_USE_ITI_DURATION based on IS_TRL_LENGTH_FIXED
+//                if IS_TRL_LENGTH_FIXED = 1 : Use TRL_USE_TRIAL_DURATION and TRL_CUM_DURATION
 //                if IS_TRL_LENGTH_FIXED = 0 : Use BASE_ITI_TIME
 //
-//                if TRL_IS_TIMEOUT = 0 : Continue processing until TRL_ITI_DURATION expires
-//                If TRL_IS_TIMEOUT = 1 : Add TRL_ITI_DURATION to TIMEOUT_DURATION (from OUTCOME.PRO)
+//                if TRL_IS_TIMEOUT = 0 : Continue processing until TRL_USE_ITI_DURATION expires
+//                If TRL_IS_TIMEOUT = 1 : Add TRL_USE_ITI_DURATION to TIMEOUT_DURATION (from OUTCOME.PRO)
 //                                        and goto STAT_TIM_OUT for further processing
 //
 //                All Global variables and the following state variables are available to monitor state progress
@@ -39,33 +39,33 @@ process PROC_ITI_CHK()
         dsendf("vp %d\n", PG_BLANK);
         spawn GRAF_HIDE_FIX_TARG();
 
-        TRL_IS_TARG_ON_FLAG = 0;
+        TRL_IS_TARG_ON = 0;
         if (!IS_TRL_LENGTH_FIXED)
         {
-            TRL_ITI_DURATION = BASE_ITI_TIME * TIME_DILATE_FACTOR;
+            TRL_USE_ITI_DURATION = BASE_ITI_TIME * TIME_DILATE_FACTOR;
             printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
-            printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_ITI_DURATION[%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED, TRL_ITI_DURATION);
+            printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_USE_ITI_DURATION[%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED, TRL_USE_ITI_DURATION);
         }
         else
         {
             printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
-            printf("****STAT_ITI_CHK[%d]: OK; TRL_ITI_DURATION = (TRL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_DURATION\n");
-            TRL_ITI_DURATION = (TRL_DURATION * TIME_DILATE_FACTOR) - TRL_CUM_DURATION;
-            printf("****STAT_ITI_CHK[%d]: OK; TRL_ITI_DURATION [%d] = (%d * %d) - %d\n", STAT_ITI_CHK, TRL_ITI_DURATION, TRL_DURATION, TIME_DILATE_FACTOR, TRL_CUM_DURATION);
-            printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_ITI_DURATION[%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED, TRL_ITI_DURATION);
+            printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_DURATION\n");
+            TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) - TRL_CUM_DURATION;
+            printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION [%d] = (%d * %d) - %d\n", STAT_ITI_CHK, TRL_USE_ITI_DURATION, TRL_USE_TRIAL_DURATION, TIME_DILATE_FACTOR, TRL_CUM_DURATION);
+            printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_USE_ITI_DURATION[%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED, TRL_USE_ITI_DURATION);
         }
-        STAT_ALLOWED_T = TRL_ITI_DURATION;
+        STAT_ALLOWED_T = TRL_USE_ITI_DURATION;
     }
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         if (TRL_IS_TIMEOUT)
         {
-						TIMEOUT_DURATION = TIMEOUT_DURATION + TRL_ITI_DURATION;
+						TIMEOUT_DURATION = TIMEOUT_DURATION + TRL_USE_ITI_DURATION;
             PROCESS_STATE        = 1;
-            TRL_RUNNING          = 1;
+            TRL_IS_RUNNING          = 1;
             CURR_STAT            = STAT_TIM_OUT;
-            TRL_END_TIME = time();
+            TRL_EOT_TIME = time();
             spawn SEND_EVT(Eot_);
             printf("****STAT_ITI_CHK[%d]: **Going to TIME_OUT State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
         }
@@ -85,9 +85,9 @@ process PROC_ITI_CHK()
         printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIEnd_[%d]\n", STAT_ITI_CHK, ITIEnd_);
 
         PROCESS_STATE = 1;
-        TRL_RUNNING   = 1;
+        TRL_IS_RUNNING   = 1;
         CURR_STAT     = STAT_IDLE;
-        TRL_END_TIME = time();
+        TRL_EOT_TIME = time();
         spawn SEND_EVT(Eot_);
         printf("****STAT_ITI_CHK[%d]: **Going to IDLE State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
     }

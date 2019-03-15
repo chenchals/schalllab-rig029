@@ -27,7 +27,7 @@ declare float        TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
 declare float        TARG_WIN_LARGE[4];
 declare float        TARG_WIN_ANTI_LARGE[4];
 
-// Photocell marker TRL_TARG_SIZE
+// Photocell marker TRL_CURR_TARG_SIZE
 declare float PD_WIDTH_DEG = 4.0;
 
 declare SET_DEFAULT_STIM_VARS();

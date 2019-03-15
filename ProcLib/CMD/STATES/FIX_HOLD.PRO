@@ -1,7 +1,7 @@
 //==========================================================================
 // FIX_HOLD.PRO
 //   Description: Process Hold fixation State
-//                Eye has to HOLD fixation for TRL_FIX_HOLD_TIME.
+//                Eye has to HOLD fixation for TRL_FIX_HOLD.
 //
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
@@ -38,23 +38,23 @@ process PROC_FIX_HOLD()
 		PROCESS_STATE  = 0;
 		STAT_STRT_T    = time();
 		STAT_DLTA_T    = 0;
-		//STAT_ALLOWED_T = TRL_FIX_HOLD_TIME * TIME_DILATE_FACTOR;
-		// Dynamically adjust TRL_FIX_HOLD_TIME such that the duration from 
-		// TRL_FIX_ON_TIME till the end of TRL_FIX_HOLD_TIME is a multiple of REFRESH_RATE
+		//STAT_ALLOWED_T = TRL_USE_FIX_HOLD_DURATION* TIME_DILATE_FACTOR;
+		// Dynamically adjust TRL_USE_FIX_HOLD_DURATIONsuch that the duration from 
+		// TRL_FIX_ON_TIME till the end of TRL_USE_FIX_HOLD_DURATIONis a multiple of REFRESH_RATE
 		// so that we sync all target presentation to vertical retrace (less offsetForVdoSync)
 		// variable time when fix is acquired and the length of fix hold time
 		
-		tempVRCount = (TRL_FIX_ACQ_TIME - TRL_FIX_ON_TIME + TRL_FIX_HOLD_TIME)*1.0/REFRESH_RATE;
-		tempFixHoldAdjust = round(round(tempVRCount)*REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_FIX_ACQ_TIME - TRL_FIX_HOLD_TIME;
+		tempVRCount = (TRL_FIX_ACQ_TIME - TRL_FIX_ON_TIME + TRL_FIX_HOLD)*1.0/REFRESH_RATE;
+		tempFixHoldAdjust = round(round(tempVRCount)*REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_FIX_ACQ_TIME - TRL_USE_FIX_HOLD_DURATION
 		tempFixHoldAdjust = tempFixHoldAdjust - offsetForVdoSync;
 		if(adjust)
 		{
 			printf("*************tempVRCount [%8.4d], tempFixHoldAjust = [%d]\n",tempVRCount,tempFixHoldAdjust);
-			printf("****STAT_FIX_HOLD[%d]: Adjusting TRL_FIX_HOLD_TIME [%d] by [%d] ms\n",STAT_FIX_HOLD,TRL_FIX_HOLD_TIME,tempFixHoldAdjust);
-			TRL_FIX_HOLD_TIME = TRL_FIX_HOLD_TIME + tempFixHoldAdjust;
+			printf("****STAT_FIX_HOLD[%d]: Adjusting TRL_USE_FIX_HOLD_DURATION[%d] by [%d] ms\n",STAT_FIX_HOLD,TRL_FIX_HOLD,tempFixHoldAdjust);
+			TRL_USE_FIX_HOLD_DURATION= TRL_USE_FIX_HOLD_DURATION+ tempFixHoldAdjust;
 		}
 		
-		STAT_ALLOWED_T = TRL_FIX_HOLD_TIME * TIME_DILATE_FACTOR;
+		STAT_ALLOWED_T = TRL_USE_FIX_HOLD_DURATION* TIME_DILATE_FACTOR;
 	}
 
 	TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
@@ -67,7 +67,7 @@ process PROC_FIX_HOLD()
 			spawn SEND_EVT(BreakFix_);
 
 			printf("****STAT_FIX_HOLD[%d]: ERR sent Event: BreakFix_[%d]\n", STAT_FIX_HOLD, BreakFix_);
-			printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (TRL_FIX_HOLD_TIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
+			printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (TRL_FIX_HOLD)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_OUTCOME;
 		}
@@ -80,7 +80,7 @@ process PROC_FIX_HOLD()
 			spawn SEND_EVT(Fixate_);
 
 			printf("****STAT_FIX_HOLD[%d]: OK sent Event: Fixate_[%d], Abort_[%d]\n", STAT_FIX_HOLD, Fixate_);
-			printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (TRL_FIX_HOLD_TIME)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
+			printf("****STAT_FIX_HOLD[%d]: OK (Fixated)[%d]/[%d] (TRL_FIX_HOLD)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_TARG_ON;
 		}

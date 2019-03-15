@@ -35,20 +35,20 @@ process PROC_TIMEOUT_CHK()
         STAT_ALLOWED_T = TIMEOUT_DURATION;
         printf("****STAT_TIM_OUT[%d]: TIMEOUT_DURATION[%d]\n", STAT_TIM_OUT, TIMEOUT_DURATION);
 				// spent 1 tick in ITI_CHK.PRO
-        TRL_TIMEOUT_DURATION = 1;
-        TRL_TONE_DURATION    = TIMEOUT_DURATION;
-        TRL_TONE_FREQ        = TIMEOUT_TONE;
-        if (TRL_IS_TARG_ON_FLAG)
+        TRL_USE_TIMEOUT_DURATION = 1;
+        TRL_USE_TONE_DURATION    = TIMEOUT_DURATION;
+        TRL_USE_TONE_FREQ        = TIMEOUT_TONE;
+        if (TRL_IS_TARG_ON)
         {
             dsendf("vp %d\n", PG_BLANK);
             spawn GRAF_HIDE_FIX_TARG();
-            TRL_IS_TARG_ON_FLAG = 0;
+            TRL_IS_TARG_ON = 0;
         }
     }
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        TRL_TIMEOUT_DURATION = TRL_TIMEOUT_DURATION + 1;
+        TRL_USE_TIMEOUT_DURATION = TRL_USE_TIMEOUT_DURATION + 1;
         if (TRL_TIMEOUT_START_TIME<=0)
         {
             TRL_TIMEOUT_START_TIME = time();
@@ -56,8 +56,8 @@ process PROC_TIMEOUT_CHK()
 
             printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
 
-            //spawn PLAY_WHITE_NOISE(TRL_TONE_DURATION);
-            spawn TONE(TRL_TONE_FREQ, TRL_TONE_DURATION);
+            //spawn PLAY_WHITE_NOISE(TRL_USE_TONE_DURATION);
+            spawn TONE(TRL_USE_TONE_FREQ, TRL_USE_TONE_DURATION);
         }
     }
     else
@@ -66,10 +66,10 @@ process PROC_TIMEOUT_CHK()
         spawn SEND_EVT(PunishEnd_);
 
         printf("****STAT_TIM_OUT[%d]: ERR sent Event: PunishEnd_[%d]\n", STAT_TIM_OUT, PunishEnd_);
-        printf("****STAT_TIM_OUT[%d]: ERR  TRL_TIMEOUT_DURATION[%d] / TRL_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_TIMEOUT_DURATION, TRL_TONE_DURATION);
+        printf("****STAT_TIM_OUT[%d]: ERR  TRL_USE_TIMEOUT_DURATION[%d] / TRL_USE_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_USE_TIMEOUT_DURATION, TRL_USE_TONE_DURATION);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_IDLE;
-        TRL_RUNNING   = 1;
+        TRL_IS_RUNNING   = 1;
         printf(":-)\n");
     }
 }/*PROC_TIMEOUT_CHK*/

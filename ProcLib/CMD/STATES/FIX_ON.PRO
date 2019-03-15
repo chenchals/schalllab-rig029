@@ -25,7 +25,7 @@ process PROC_FIX_ON()
     if (PROCESS_STATE)
     {
         printf("****STAT_FIX_ON[%d]: Processing Fixspot On\n", STAT_FIX_ON);
-        TRL_FIX_VRT_RFRSH_COUNT = 0;
+        DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT = 0;
 
         dsendf("vp %d\n", PG_FIXATION_PD);
         // show for only 1 screen refresh
@@ -39,8 +39,8 @@ process PROC_FIX_ON()
 
     if (PD_TRIG_L)
     {
-        TRL_FIX_VRT_RFRSH_COUNT = TRL_FIX_VRT_RFRSH_COUNT + 1;
-        if (TRL_FIX_VRT_RFRSH_COUNT == 1)
+        DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT = DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT + 1;
+        if (DELETE_ME_TRL_FIX_VRT_RFRSH_COUNT == 1)
         {
             TRL_FIX_ON_TIME = time();
             spawn SEND_EVT(FixSpotOn_);
@@ -59,7 +59,7 @@ process PROC_FIX_ON()
             TRL_IS_FIX_ACQUIRED = 1;
             TRL_FIX_ACQ_TIME = time();
             spawn SEND_EVT(AcquireFix_);
-			TRL_START_TIME   = time();
+			TRL_TRIAL_START_TIME   = time();
 			spawn SEND_EVT(TrialStart_);
             printf("****STAT_FIX_ON[%d]: OK sent Event: AcquireFix_[%d], TrialStart_[%d]\n", STAT_FIX_ON, AcquireFix_,TrialStart_);
             printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
@@ -83,11 +83,11 @@ process PROC_FIX_ON()
 			spawn GRAF_HIDE_FIX_TARG();
 			
 			spawn SEND_EVT(OutcomeFixError_);
-			printf("****STAT_OUTCOME[%d]: TRL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; Go Trial; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_NUMBER, OutcomeFixError_);
+			printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: OutcomeFixError_ [%d]; Go Trial; (TRL_FIX_ACQ_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, OutcomeFixError_);
             wait(FIX_NOT_ACQ_WAIT_TIME);
 			PROCESS_STATE = 1;
 			CURR_STAT     = STAT_IDLE;
-			TRL_RUNNING = 0;
+			TRL_IS_RUNNING = 0;
         }
     }
 } /* PROC_FIX_ON */

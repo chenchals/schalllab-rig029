@@ -39,7 +39,7 @@ process PROC_TARG_ACQ()
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    //TRL_I_IN_FLIGHT  should be true
+    //TRL_IS_I_IN_FLIGHT  should be true
     // Acquire target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
@@ -57,13 +57,13 @@ process PROC_TARG_ACQ()
 
             PROCESS_STATE = 1;
             // process speparately for STOP / GO trials
-            if (TRL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME > 0)
+            if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME > 0)
             {
                 CURR_STAT = STAT_OUTCOME;
             }
             else
             {
-              if(TRL_TYPE == TRIAL_TYPE_STOP && TRL_FIX_REIGNITE_FLAG > 0)
+              if(TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_IS_FIX_REIGNITE > 0)
               {
                 // change the display to PG_SIGNAL_PD to turn the signal back on
                 dsendf("vp %d\n", PG_SIGNAL_PD);
@@ -78,7 +78,7 @@ process PROC_TARG_ACQ()
         if (!I_TARG)
         {
             TRL_IS_TARG_ACQUIRED    = 0;
-            TRL_STAIRCASE_SSD_FLAG  = 0;
+            TRL_IS_STAIRCASE_SSD  = 0;
             TRL_TARG_ACQ_ERROR_TIME = time();
             spawn SEND_EVT(AcquireTargetError_);
 
