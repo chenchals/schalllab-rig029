@@ -84,7 +84,7 @@ process FAILURE(int trial_length,									// see DEFAULT.pro and ALL_VARS.pro fo
 																	// Impose the correct intertrial interval and timeout based on user input
 		
 	
-	Event_fifo[Set_event] = TaskEnd_;									// queue CMand header strobe
+	Event_fifo[Set_event] = EVT_TASK_END_;									// queue CMand header strobe
 	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 	
 	

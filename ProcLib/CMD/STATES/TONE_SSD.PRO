@@ -119,9 +119,9 @@ process PROC_TONE_SSD()
         {
             TRL_TONE_ON_TIME = time();
             spawn TONE(TRL_USE_TONE_FREQ, TEMP_TONE_DURATION);
-            spawn SEND_EVT(ToneOn_);
+            spawn SEND_EVT(EVT_TONE_ON_);
 
-            printf("****STAT_TONE_SSD[%d]: OK sent Event: ToneOn_[%d]\n", STAT_TONE_SSD, ToneOn_);
+            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_ON_[%d]\n", STAT_TONE_SSD, EVT_TONE_ON_);
         }
         if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
         {
@@ -153,9 +153,9 @@ process PROC_TONE_SSD()
     {
         printf("\n");
         TRL_TONE_OFF_TIME = time();
-        spawn SEND_EVT(ToneOff_);
+        spawn SEND_EVT(EVT_TONE_OFF_);
 
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: ToneOff_[%d]\n", STAT_TONE_SSD, ToneOff_);
+        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_OFF_[%d]\n", STAT_TONE_SSD, EVT_TONE_OFF_);
         printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d] (TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD,
 				TRL_FIX_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;

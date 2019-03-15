@@ -30,7 +30,7 @@ process ABORT()
                                                 // NOTE: if you add a bunch more strobes to INFOS.pro and you...
 	                                            // start getting buffer overflow errors increase the number of nextticks.
 												
-	Event_fifo[Set_event] = TaskEnd_;									// queue CMand header strobe
+	Event_fifo[Set_event] = EVT_TASK_END_;									// queue CMand header strobe
 	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 	
 	

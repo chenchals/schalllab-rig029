@@ -24,7 +24,7 @@ declare hide int Sig_color;									// next signal color (could be either stop o
 declare hide int Trl_type;									// stop, go, or ignore
 declare hide int Curr_SSD;									// SSD on next stop or ignore trial
 declare hide int Curr_holdtime;								// next trial time between fixation and target onset
-declare hide int Decide_SSD;
+declare hide int EVT_DECIDE_SSD;
  
 declare hide int DistFix;
 

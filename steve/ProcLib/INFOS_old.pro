@@ -22,7 +22,7 @@ declare INFOS();
 			
 			if (State == run_search_sess) 
 				{
-				Event_fifo[Set_event] = StartInfos_;								// Let Matlab know that trial infos are going to start streaming in...
+				Event_fifo[Set_event] = EVT_START_INFOS_;								// Let Matlab know that trial infos are going to start streaming in...
 				Set_event = (Set_event + 1) % Event_fifo_N;							// ...incriment event queue.
 					
 				//---------------------------------------------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ declare INFOS();
 					Set_event = (Set_event + 1) % Event_fifo_N;						// ...incriment event queu						
 				//---------------------------------------------------------------------------------------------------------------------------------------
 					
-				Event_fifo[Set_event] = EndInfos_;									// Let Matlab know that trial infos are finished streaming in...
+				Event_fifo[Set_event] = EVT_END_INFOS_;									// Let Matlab know that trial infos are finished streaming in...
 				Set_event = (Set_event + 1) % Event_fifo_N;							// ...incriment event queue.	
 				
 				}
@@ -167,7 +167,7 @@ declare INFOS();
 				target_color_g		= Color_list[Curr_target,1];
 				target_color_b		= Color_list[Curr_target,2];
 				
-				Event_fifo[Set_event] = StartInfos_;								// Let Matlab know that trial infos are going to start streaming in...
+				Event_fifo[Set_event] = EVT_START_INFOS_;								// Let Matlab know that trial infos are going to start streaming in...
 				Set_event = (Set_event + 1) % Event_fifo_N;							// ...incriment event queue.
 				
 			//---------------------------------------------------------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ declare INFOS();
 				Set_event = (Set_event + 1) % Event_fifo_N;						// ...incriment event queue
 				//---------------------------------------------------------------------------------------------------------------------------------------
 				
-				Event_fifo[Set_event] = EndInfos_;									// Let Matlab know that trial infos are finished streaming in...
+				Event_fifo[Set_event] = EVT_END_INFOS_;									// Let Matlab know that trial infos are finished streaming in...
 				Set_event = (Set_event + 1) % Event_fifo_N;							// ...incriment event queue.	
 				
 			

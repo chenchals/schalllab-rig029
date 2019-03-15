@@ -51,7 +51,7 @@ process INFOS()
 	target_color_g		= Color_list[Curr_target,1];
 	target_color_b		= Color_list[Curr_target,2];
 
-	spawnwait SEND_EVT(StartInfos_);
+	spawnwait SEND_EVT(EVT_START_INFOS_);
 	tempInfosN = Set_event;
 	spawnwait SEND_EVT(InfosZero + Trl_number);
 	spawnwait SEND_EVT(InfosZero + Fixed_trl_length);
@@ -124,7 +124,7 @@ process INFOS()
 	spawnwait SEND_EVT(InfosZero + abs(pdRefract));
 	//nexttick;
 	spawnwait SEND_EVT(InfosZero + abs(pdThresh));
-	spawnwait SEND_EVT(EndInfos_);
+	spawnwait SEND_EVT(EVT_END_INFOS_);
 
 	printf("****Trial Infos sent to TDT.****\n");
 

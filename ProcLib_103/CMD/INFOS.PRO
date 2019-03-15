@@ -49,7 +49,7 @@ process INFOS()
   target_color_g = Color_list[Curr_target, 1];
   target_color_b = Color_list[Curr_target, 2];
 
-  spawn SEND_EVT(StartInfos_);
+  spawn SEND_EVT(EVT_START_INFOS_);
 
   tempInfosN = Set_event;
   spawn SEND_EVT(InfosZero + Block_number);
@@ -150,7 +150,7 @@ process INFOS()
   nInfos = Set_event - tempInfosN;
   spawn SEND_EVT(nInfos);
 
-  spawn SEND_EVT(EndInfos_);
+  spawn SEND_EVT(EVT_END_INFOS_);
 
   printf("****Trial Infos sent to TDT.****\n");
   nexttick 10;

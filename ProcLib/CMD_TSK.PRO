@@ -90,8 +90,8 @@ process IDLE() enabled
 	printf("waiting for all processes to start...\n");
 	nexttick 1000;
 
-	printf("Sending Identify_Room_\n");
-	spawn SEND_EVT(Identify_Room_);
+	printf("Sending EVT_IDENTIFY_ROOM_\n");
+	spawn SEND_EVT(EVT_IDENTIFY_ROOM_);
 
 	printf("Sending RIG_ID\n");
 	spawn SEND_EVT(RIG_ID);
@@ -120,8 +120,9 @@ process IDLE() enabled
 			PROCESS_STATE = 1;
 			TRL_IS_RUNNING   = 1;
 			printf("Trial running....\n");
-			spawn SEND_EVT(TaskStart_);
-			spawn SEND_EVT(CmanHeader_);
+			TRL_TASK_START_TIME = time();
+			spawn SEND_EVT(EVT_TASK_START_);
+			spawn SEND_EVT(EVT_CMAN_HEADER_);
 
 			CURR_STAT   = STAT_GET_READY;
 			STAT_DLTA_T = 0;
@@ -221,15 +222,16 @@ process IDLE() enabled
 				dsendf("vp %d\n", PG_BLANK);
 
 				TRL_START_INFOS_TIME = time();
-				spawn SEND_EVT(StartInfos_);
+				spawn SEND_EVT(EVT_START_INFOS_);
 				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
 				spawn SEND_INFOS();
 				waitforprocess SEND_INFOS;
 
 				TRL_END_INFOS_TIME = time();
-				spawn SEND_EVT(EndInfos_);
-				spawn SEND_EVT(TaskEnd_);
-				printf("****CMD_TSK: OK (Ending Task) sent Event: TaskEnd_[%d]\n", TaskEnd_);
+				spawn SEND_EVT(EVT_END_INFOS_);
+				TRL_TASK_END_TIME = time();
+				spawn SEND_EVT(EVT_TASK_END_);
+				printf("****CMD_TSK: OK (Ending Task) sent Event: EVT_TASK_END_[%d]\n", EVT_TASK_END_);
 				printf("****CMD_TSK: OK (Ending Task) TRL_TRIAL_NUMBER [%d], TRL_CUM_DURATION[%d]\n", TRL_TRIAL_NUMBER, TRL_CUM_DURATION);
 				TRL_IS_RUNNING = 0;
 				PROCESS_STATE = 0;
@@ -274,15 +276,15 @@ process WRITE_TO_FILE()
 {
 	if(WRITE_TO_FILE_FLAG)
 	{
-		printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",TRL_TRIAL_NUMBER,TRL_USE_SSD_VR_COUNT,TRL_SSD_VR_COUNT,TRL_TARG_ON_TIME,
-		       TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION, TRL_FIX_ON_TIME, TRL_FIX_ACQ_TIME, TRL_FIX_HOLD_DURATION, TRL_FIXATED_TIME);
+		printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",TRL_TRIAL_NUMBER,TRL_USE_SSD_VR_COUNT,TRL_SSD_VR_COUNT,TRL_TARGET_TIME,
+		       TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION, TRL_FIX_ON_TIME, TRL_ACQUIRE_FIX_TIME, TRL_FIX_HOLD_DURATION, TRL_FIXATE_TIME);
 		if(!WROTE_HEADER)
 		{
-			writef("stopSig.csv TRL_TRIAL_NUMBER,TRL_USE_SSD_VR_COUNT,TRL_SSD_VR_COUNT,TRL_TARG_ON_TIME,");
-			writef("stopSig.csv TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION,TRL_FIX_ON_TIME,TRL_FIX_ACQ_TIME,TRL_FIX_HOLD,TRL_FIXATED_TIME\n");
+			writef("stopSig.csv TRL_TRIAL_NUMBER,TRL_USE_SSD_VR_COUNT,TRL_SSD_VR_COUNT,TRL_TARGET_TIME,");
+			writef("stopSig.csv TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION,TRL_FIX_ON_TIME,TRL_ACQUIRE_FIX_TIME,TRL_FIX_HOLD,TRL_FIXATE_TIME\n");
 			WROTE_HEADER = 1;
 		}
-		writef("stopSig.csv %d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",TRL_TRIAL_NUMBER,TRL_USE_SSD_VR_COUNT,TRL_SSD_VR_COUNT,TRL_TARG_ON_TIME,
-		      TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION,TRL_FIX_ON_TIME,TRL_FIX_ACQ_TIME,TRL_FIX_HOLD_DURATION,TRL_FIXATED_TIME);
+		writef("stopSig.csv %d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",TRL_TRIAL_NUMBER,TRL_USE_SSD_VR_COUNT,TRL_SSD_VR_COUNT,TRL_TARGET_TIME,
+		      TRL_STOP_SIGNAL_TIME,TRL_STOP_SIGNAL_DURATION,TRL_FIX_ON_TIME,TRL_ACQUIRE_FIX_TIME,TRL_FIX_HOLD_DURATION,TRL_FIXATE_TIME);
 	}
 }

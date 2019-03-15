@@ -19,7 +19,7 @@ declare int  Curr_target;            // OUTPUT: next trial target
 declare int  Sig_color;              // next signal color (could be either stop or ignore)
 declare int  Trl_type;               // stop, go, or ignore
 declare int  Curr_holdtime;          // next trial time between fixation and target onset
-declare int  Decide_SSD;
+declare int  EVT_DECIDE_SSD;
 
 declare int constant Go_trl     = 0;                                    // label these so they are easier to read below
 declare int constant Stop_trl   = 1;                                    // label these so they are easier to read below

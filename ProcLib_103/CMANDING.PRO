@@ -72,7 +72,7 @@ process CMANDING()
 				expo_jitter);
 
 	spawn SEND_EVT(SessionStart_);
-	spawn SEND_EVT(Identify_Room_);
+	spawn SEND_EVT(EVT_IDENTIFY_ROOM_);
 	spawn SEND_EVT(Room);
 
 	nexttick 10;								// to prevent buffer overflows after task reentry.

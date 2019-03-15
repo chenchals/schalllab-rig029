@@ -125,8 +125,8 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			printf("     ISD = %d\n",round(curr_ssd * (1000.0/Refresh_rate)));
 			}
 
-		spawn SEND_EVT(CmanHeader_);
-		spawn SEND_EVT(TrialStart_);
+		spawn SEND_EVT(EVT_CMAN_HEADER_);
+		spawn SEND_EVT(EVT_TRIAL_START_);
     // Show fixation with white boxes for photocell
 		dsendf("vp %d\n",fixation_pd);
 		while(!pdIsOn)
@@ -135,7 +135,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 		}
 		fix_spot_time = time();
 		dsendf("vp %d\n",fixation);
-		spawn SEND_EVT(FixSpotOn_);
+		spawn SEND_EVT(EVT_FIX_SPOT_ON_);
 		oSetAttribute(object_fix, aVISIBLE);
 
 	while (trl_running)
@@ -151,14 +151,14 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				dsendf("vp %d\n",fixation_pd);
 				while (!pdIsOn) {spawnwait WAIT_VS();}
 				dsendf("vp %d\n",fixation);
-				spawn SEND_EVT(FixSpotOn_);
+				spawn SEND_EVT(EVT_FIX_SPOT_ON_);
 
 				wait 100;
 
 				dsendf("vp %d\n",target_pd);
 				while (!pdIsOn) {spawnwait WAIT_VS();}
 				dsendf("vp %d\n",target);
-				spawn SEND_EVT(Target_);
+				spawn SEND_EVT(EVT_TARGET_);
 
 				wait 100;
 
@@ -172,7 +172,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 				{
 				aquire_fix_time = time();									// ...function call to time to note current time and...
 				Trl_Start_Time = aquire_fix_time;							// Global output
-				spawn SEND_EVT(Fixate_);
+				spawn SEND_EVT(EVT_FIXATE_);
 				stage = fixating;											// ...advance to the next stage.
 				}
 			else if (time() > fix_spot_time + allowed_fix_time)				// But if time runs out...
@@ -225,10 +225,10 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					nexttick;
 					}
 				targ_time = time();
-				spawn SEND_EVT(Target_);									// ...flip the pg to the target without pd marker.
+				spawn SEND_EVT(EVT_TARGET_);									// ...flip the pg to the target without pd marker.
 				dsendf("vp %d\n",target);
 				
-				spawn SEND_EVT(FixSpotOff_);									// ...flip the pg to the target without pd marker.
+				spawn SEND_EVT(EVT_FIX_SPOT_OFF_);									// ...flip the pg to the target without pd marker.
 				if (trl_type == go_trl)										// If the trial is a go trial...
 					{
 					oSetAttribute(object_targ, aVISIBLE); 					// ...show target in animated graph...
@@ -292,7 +292,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			if (!In_FixWin)													// If the eyes leave the fixation window...
 				{															// ...we have a saccade, so...
 				saccade_time = time();										// ...record the time...
-				spawn SEND_EVT(Saccade_);
+				spawn SEND_EVT(EVT_SACCADE_);
 				printf("     Reaction Time = %d\n",saccade_time - targ_time);	// ...tell the user whats up...
 				stage = in_flight;											// ...and advance to the next stage.
 
@@ -354,7 +354,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 			if (In_TargWin)													// If the eyes get into the target window...
 				{
 				aquire_targ_time = time();									// ...record the time...
-				spawn SEND_EVT(Decide_);
+				spawn SEND_EVT(EVT_DECIDE_);
 				stage = on_target;											// ...and advance to the next stage of the trial.
 				if (trl_type == stop_trl)									// But if a saccade was the wrong thing to do...
 					{

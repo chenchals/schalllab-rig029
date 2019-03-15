@@ -77,7 +77,7 @@ process FAILURE(int trial_length,									// see DEFAULT.pro and ALL_VARS.pro fo
 
 	nexttick 15;
 
-	spawn SEND_EVT(TaskEnd_);
+	spawn SEND_EVT(EVT_TASK_END_);
 
 // Setuop for next trial
 	if (State == run_cmd_sess)

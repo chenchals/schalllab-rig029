@@ -31,12 +31,12 @@ process PROC_GET_REDY()
         printf("****STAT_GET_READY[%d]: Waiting for Eye to be outside FIX_WIN_WIDE\n", STAT_GET_READY);
         TRL_GET_READY_TIME     = time();
         TRL_GET_READY_DURATION = 0;
-        spawn SEND_EVT(TrialGetReady_);
+        spawn SEND_EVT(EVT_TRIAL_GET_READY_);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
 
         TRL_TRIAL_NUMBER     = TRL_TRIAL_NUMBER + 1;
         printf("****STAT_GET_READY[%d]: TRL_TRIAL_NUMBER[%d]\n", STAT_GET_READY, TRL_TRIAL_NUMBER);
-		
+
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
@@ -57,9 +57,9 @@ process PROC_GET_REDY()
     else
     {
         TRL_READY_TIME = time();
-        spawn SEND_EVT(TrialReady_);
+        spawn SEND_EVT(EVT_TRIAL_READY_);
 
-        printf("****STAT_GET_READY[%d]: OK sent Event: TrialReady_[%d]\n", STAT_GET_READY, TrialReady_);
+        printf("****STAT_GET_READY[%d]: OK sent Event: EVT_TRIAL_READY_[%d]\n", STAT_GET_READY, EVT_TRIAL_READY_);
         printf("****STAT_GET_READY[%d]: OK (Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FIX_ON;

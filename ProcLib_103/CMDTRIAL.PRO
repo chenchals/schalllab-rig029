@@ -149,15 +149,15 @@ process CMDTRIAL(allowed_fix_time,
   saccade_time = 0;
 //================================================================================================
 
-  spawn SEND_EVT(CmanHeader_);
-  spawn SEND_EVT(TrialStart_);
+  spawn SEND_EVT(EVT_CMAN_HEADER_);
+  spawn SEND_EVT(EVT_TRIAL_START_);
 
   // Show fixation with pd
   dsendf("vp %d\n", fixation_pd);
   spawnwait ACQ_LEFT_PD();
   dsendf("vp %d\n", fixation);
   fix_spot_time = time();
-  spawn SEND_EVT(FixSpotOn_);
+  spawn SEND_EVT(EVT_FIX_SPOT_ON_);
 
   oSetAttribute(object_fix, aVISIBLE);
   while (trl_running)
@@ -169,7 +169,7 @@ process CMDTRIAL(allowed_fix_time,
       // If the eyes have entered the fixation window (before time, see below)...
       if (In_FixWin)
       {
-        spawn SEND_EVT(Fixate_);
+        spawn SEND_EVT(EVT_FIXATE_);
 
         aquire_fix_time = time();
         Trl_Start_Time  = aquire_fix_time;
@@ -207,8 +207,8 @@ process CMDTRIAL(allowed_fix_time,
           nexttick;
         }
         vertRefreshCountTarget = vertRefreshCountTarget + 1;
-        spawn SEND_EVT(Target_);
-        spawn SEND_EVT(FixSpotOff_);
+        spawn SEND_EVT(EVT_TARGET_);
+        spawn SEND_EVT(EVT_FIX_SPOT_OFF_);
 
         stage     = targ_on;
         targ_time = time();
@@ -271,7 +271,7 @@ process CMDTRIAL(allowed_fix_time,
       if (!In_FixWin)
       {
         saccade_time = time();
-        spawn SEND_EVT(Saccade_);
+        spawn SEND_EVT(EVT_SACCADE_);
 
         printf("     Reaction Time = %d\n", saccade_time - targ_time);
         stage = in_flight;
@@ -329,7 +329,7 @@ process CMDTRIAL(allowed_fix_time,
       {
         // If the eyes get into the target window...
         aquire_targ_time = time();
-        spawn SEND_EVT(Decide_);
+        spawn SEND_EVT(EVT_DECIDE_);
 
         stage = on_target;
         if (trl_type == go_trl || trl_type == ignore_trl)

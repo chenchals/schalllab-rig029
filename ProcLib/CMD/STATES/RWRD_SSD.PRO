@@ -52,7 +52,7 @@ process PROC_RWRD_SSD()
         // Reward already given, during reward duration check gaze
         TEMP_RWRD_DURATION = TRL_USE_RWRD_DURATION * TIME_DILATE_FACTOR;
         // This is incremented in the CMD_TSK.PRO --> state flow controller
-        TEMP_XTRA_HOLD_TIME           = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
+        TEMP_XTRA_HOLD_TIME     = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_RWRD_DURATION;
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
@@ -65,24 +65,24 @@ process PROC_RWRD_SSD()
 
     if (TRL_FIX_HOLD_DURATION > TEMP_XTRA_HOLD_TIME)
     {
-        if (TRL_IS_FIX_MIN_SSHT<=0)
+        if (TRL_IS_FIX_MIN_SSHT <= 0)
         {
-            TRL_IS_FIX_MIN_SSHT   = 1;
+            TRL_IS_FIX_MIN_SSHT = 1;
             //TRL_FIX_MIN_SSHT_TIME = time();
             spawn SEND_EVT(FixHoldMinSSHT_);
 
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: FixHoldMinSSHT_[%d]\n", STAT_RWRD_SSD, FixHoldMinSSHT_);
         }
     }
-	
-	if (TRL_FIX_HOLD_DURATION < TEMP_XTRA_HOLD_TIME)
+
+    if (TRL_FIX_HOLD_DURATION < TEMP_XTRA_HOLD_TIME)
     {
-		TRL_IS_FIX_MIN_SSHT   = 0;
-	}	
+        TRL_IS_FIX_MIN_SSHT = 0;
+    }
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
-        if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
+        if (!I_FIX && TRL_IS_FIX_MIN_SSHT <= 0)
         {
             if (TEMP_XTRA_HOLD_TIME <= STAT_ALLOWED_T)
             {
@@ -111,15 +111,15 @@ process PROC_RWRD_SSD()
     // Reward duration
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
-        if (TRL_RWRD_ON_TIME<=0)
+        if (TRL_REWARD_ON_TIME <= 0)
         {
-            TRL_RWRD_ON_TIME = time();
+            TRL_REWARD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
-            spawn SEND_EVT(RewardOn_);
+            spawn SEND_EVT(EVT_REWARD_ON_);
 
-            printf("****STAT_RWRD_SSD[%d]: OK sent Event: RewardOn_[%d]\n", STAT_RWRD_SSD, RewardOn_);
+            printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_ON_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_ON_);
         }
-        if (!I_FIX && TRL_IS_FIX_MIN_SSHT<=0)
+        if (!I_FIX && TRL_IS_FIX_MIN_SSHT <= 0)
         {
             if (TEMP_XTRA_HOLD_TIME > STAT_ALLOWED_T && TEMP_XTRA_HOLD_TIME <= TEMP_DELY_PLUS_DURATION)
             {
@@ -147,12 +147,12 @@ process PROC_RWRD_SSD()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (TRL_RWRD_OFF_TIME<=0)
+        if (TRL_REWARD_OFF_TIME <= 0)
         {
-            TRL_RWRD_OFF_TIME = time();
-            spawn SEND_EVT(RewardOff_);
+            TRL_REWARD_OFF_TIME = time();
+            spawn SEND_EVT(TRL_REWARD_OFF_);
 
-            printf("****STAT_RWRD_SSD[%d]: OK sent Event: RewardOff_[%d]\n", STAT_RWRD_SSD, RewardOff_);
+            printf("****STAT_RWRD_SSD[%d]: OK sent Event: TRL_REWARD_OFF_[%d]\n", STAT_RWRD_SSD, TRL_REWARD_OFF_);
         }
         if (TRL_IS_FIX_MIN_SSHT)
         {
@@ -162,7 +162,7 @@ process PROC_RWRD_SSD()
             CURR_STAT     = STAT_OUTCOME;
         }
 
-        if (STAT_DLTA_T <= TEMP_XTRA_HOLD_TIME && TRL_IS_FIX_MIN_SSHT<=0)
+        if (STAT_DLTA_T <= TEMP_XTRA_HOLD_TIME && TRL_IS_FIX_MIN_SSHT <= 0)
         {
             if (!I_FIX)
             {

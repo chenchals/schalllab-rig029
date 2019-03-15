@@ -12,15 +12,15 @@
 //        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 // Check:
 //   case 0: TRL_USE_SSD_VR_COUNT has not expired
-//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEarlySaccade_, goto STAT_OUTCOME
-//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoSaccade_, goto STAT_TARG_ACQ
-//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateSaccade_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEVT_EARLY_SACCADE_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoEVT_SACCADE_, goto STAT_TARG_ACQ
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateEVT_SACCADE_, goto STAT_OUTCOME
 //   case 1: TRL_USE_SSD_VR_COUNT has expired and TRL_USE_SSD_CANCEL_DURATION has not expired
 //   [Stop Signal ON] show PG_SIGNAL_PD (PD on RIGHT) for 1 screen refresh and switch to PG_SIGNAL(PD on LEFT)
-//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEarlySaccade_, goto STAT_OUTCOME
-//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoSaccade_, goto STAT_TARG_ACQ
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEVT_EARLY_SACCADE_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoEVT_SACCADE_, goto STAT_TARG_ACQ
 //   [Stop Signal OFF] switch page from PG_SIGNAL to PG_TARGET_PD (do nto show stop signal)
-//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateSaccade_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateEVT_SACCADE_, goto STAT_OUTCOME
 //
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
@@ -50,8 +50,8 @@ process PROC_TARG_SSD()
     if (PROCESS_STATE)
     {
         printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
-        TRL_PRE_TARG_ON_TIME = time();
-        spawn SEND_EVT(TargetPre_);
+        TRL_TARGET_PRE_TIME = time();
+        spawn SEND_EVT(EVT_TARGET_PRE_);
 
         dsendf("vp %d\n", PG_TARGET_PD);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
@@ -59,7 +59,7 @@ process PROC_TARG_SSD()
 
         PROCESS_STATE    = 0;
         STAT_DLTA_T      = 0;
-        STAT_STRT_T      = TRL_PRE_TARG_ON_TIME;
+        STAT_STRT_T      = TRL_TARGET_PRE_TIME;
         STAT_I_DURATION  = MIN_SACC_TIME * TIME_DILATE_FACTOR;
         STAT_I_DURATION2 = MAX_SACC_TIME * TIME_DILATE_FACTOR;
         //STAT_ALLOWED_T          = ceil(TRL_USE_SSD_VR_COUNT * REFRESH_RATE * TIME_DILATE_FACTOR);
@@ -83,14 +83,14 @@ process PROC_TARG_SSD()
     }
 
     // keep track of target vertical refresh count
-    if (TRL_TARG_VR_COUNT == 1 && TRL_TARG_ON_TIME<=0)
+    if (TRL_TARG_VR_COUNT == 1 && TRL_TARGET_TIME<=0)
     {
-        TRL_TARG_ON_TIME = time();
-        printf("****STAT_TARG_SSD[%d]: Sending Event Target_[%d], Time [%d]\n", STAT_TARG_SSD, Target_, TRL_TARG_ON_TIME);
-        spawn SEND_EVT(Target_);
+        TRL_TARGET_TIME = time();
+        printf("****STAT_TARG_SSD[%d]: Sending Event EVT_TARGET_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_TARGET_, TRL_TARGET_TIME);
+        spawn SEND_EVT(EVT_TARGET_);
 
-        printf("****STAT_TARG_SSD[%d]: Sending Event FixSpotOff_[%d], Time [%d]\n", STAT_TARG_SSD, FixSpotOff_, TRL_TARG_ON_TIME);
-        spawn SEND_EVT(FixSpotOff_);
+        printf("****STAT_TARG_SSD[%d]: Sending Event EVT_FIX_SPOT_OFF_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_FIX_SPOT_OFF_, TRL_TARGET_TIME);
+        spawn SEND_EVT(EVT_FIX_SPOT_OFF_);
     }
     if (TRL_IS_STOP_SIGNAL_ON && TRL_STOP_SIGNAL_TIME<=0)
     {
@@ -166,9 +166,9 @@ process SSD_CHECK_SACC()
         // Early saccade
         TRL_IS_I_IN_FLIGHT         = 1;
         TRL_NOGO_ERLY_SACC_TIME = time();
-        spawn SEND_EVT(NoGoEarlySaccade_);
+        spawn SEND_EVT(NoGoEVT_EARLY_SACCADE_);
 
-        printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoEarlySaccade_[%d]\n", STAT_TARG_SSD, NoGoEarlySaccade_);
+        printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoEVT_EARLY_SACCADE_[%d]\n", STAT_TARG_SSD, NoGoEVT_EARLY_SACCADE_);
         printf("****STAT_TARG_SSD[%d]: ERR (*NoGo Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
@@ -223,9 +223,9 @@ process SSD_CHECK_SACC()
         // Late saccade
         TRL_IS_I_IN_FLIGHT         = 1;
         TRL_NOGO_LATE_SACC_TIME = time();
-        spawn SEND_EVT(NoGoLateSaccade_);
+        spawn SEND_EVT(NoGoLateEVT_SACCADE_);
 
-        printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoLateSaccade_[%d]\n", STAT_TARG_SSD, NoGoLateSaccade_);
+        printf("****STAT_TARG_SSD[%d]: ERR sent Event: NoGoLateEVT_SACCADE_[%d]\n", STAT_TARG_SSD, NoGoLateEVT_SACCADE_);
         printf("****STAT_TARG_SSD[%d]: ERR (*NoGo Late Saccade*)[%d]/[%d] (MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION2);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_TARG_ACQ;

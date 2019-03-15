@@ -264,17 +264,17 @@ hashAddNamtab: ADDED '#I29' at iOffset=168578
 hashAddNamtab: ADDED '#I30' at iOffset=168584
 postInstructionCompilation: Saving 'RIGSETUP' nops=912 nInstructions=910 iInstruction=2 iInstructionCache=0
 ICacheSave - PROCESS 'RIGSETUP' Wrote 910 bytes from op[2..911] to instcach[2..911]
-hashAddNamtab: ADDED 'FixSpotOn_' at iOffset=168590
-hashAddNamtab: ADDED 'Fixate_' at iOffset=168602
+hashAddNamtab: ADDED 'EVT_FIX_SPOT_ON_' at iOffset=168590
+hashAddNamtab: ADDED 'EVT_FIXATE_' at iOffset=168602
 hashAddNamtab: ADDED 'CueOn_' at iOffset=168610
 hashAddNamtab: ADDED 'PlacOn_' at iOffset=168618
-hashAddNamtab: ADDED 'Target_' at iOffset=168626
+hashAddNamtab: ADDED 'EVT_TARGET_' at iOffset=168626
 hashAddNamtab: ADDED 'TargetOff_' at iOffset=168634
-hashAddNamtab: ADDED 'FixSpotOff_' at iOffset=168646
+hashAddNamtab: ADDED 'EVT_FIX_SPOT_OFF_' at iOffset=168646
 hashAddNamtab: ADDED 'StopSignal_' at iOffset=168658
-hashAddNamtab: ADDED 'TrialStart_' at iOffset=168670
+hashAddNamtab: ADDED 'EVT_TRIAL_START_' at iOffset=168670
 hashAddNamtab: ADDED 'FixError_' at iOffset=168682
-hashAddNamtab: ADDED 'GoSaccade_' at iOffset=168692
+hashAddNamtab: ADDED 'GoEVT_SACCADE_' at iOffset=168692
 hashAddNamtab: ADDED 'GoError_' at iOffset=168704
 hashAddNamtab: ADDED 'NOGOWrong_' at iOffset=168714
 hashAddNamtab: ADDED 'GoTargFixError_' at iOffset=168726
@@ -286,7 +286,7 @@ hashAddNamtab: ADDED 'CatchCorrect_' at iOffset=168786
 hashAddNamtab: ADDED 'CatchIncorrectG_' at iOffset=168800
 hashAddNamtab: ADDED 'CatchIncorrectNG_' at iOffset=168818
 hashAddNamtab: ADDED 'BreakTFix_' at iOffset=168836
-hashAddNamtab: ADDED 'EarlySaccade_' at iOffset=168848
+hashAddNamtab: ADDED 'EVT_EARLY_SACCADE_' at iOffset=168848
 hashAddNamtab: ADDED 'Reward_' at iOffset=168862
 hashAddNamtab: ADDED 'Tone_' at iOffset=168870
 hashAddNamtab: ADDED 'PunishEnd_' at iOffset=168876
@@ -298,22 +298,22 @@ hashAddNamtab: ADDED 'ExtraReward_' at iOffset=168938
 hashAddNamtab: ADDED 'SoundOnReward_' at iOffset=168952
 hashAddNamtab: ADDED 'SoundNoReward_' at iOffset=168968
 hashAddNamtab: ADDED 'Eot_' at iOffset=168984
-hashAddNamtab: ADDED 'CmanHeader_' at iOffset=168990
+hashAddNamtab: ADDED 'EVT_CMAN_HEADER_' at iOffset=168990
 hashAddNamtab: ADDED 'MemHeader_' at iOffset=169002
 hashAddNamtab: ADDED 'GONOGOHeader_' at iOffset=169014
 hashAddNamtab: ADDED 'DelayedHeader_' at iOffset=169028
 hashAddNamtab: ADDED 'SearchHeader_' at iOffset=169044
 hashAddNamtab: ADDED 'CaptureHeader_' at iOffset=169058
 hashAddNamtab: ADDED 'AntiHeader_' at iOffset=169074
-hashAddNamtab: ADDED 'Identify_Room_' at iOffset=169086
+hashAddNamtab: ADDED 'EVT_IDENTIFY_ROOM_' at iOffset=169086
 hashAddNamtab: ADDED 'ShamStim_' at iOffset=169102
 hashAddNamtab: ADDED 'Stimulation_' at iOffset=169112
 hashAddNamtab: ADDED 'EndStim_' at iOffset=169126
 hashAddNamtab: ADDED 'ZeroEyePosition_' at iOffset=169136
 hashAddNamtab: ADDED 'VSyncSynced_' at iOffset=169154
-hashAddNamtab: ADDED 'Saccade_' at iOffset=169168
+hashAddNamtab: ADDED 'EVT_SACCADE_' at iOffset=169168
 hashAddNamtab: ADDED 'StimHelp_' at iOffset=169178
-hashAddNamtab: ADDED 'Decide_' at iOffset=169188
+hashAddNamtab: ADDED 'EVT_DECIDE_' at iOffset=169188
 hashAddNamtab: ADDED 'MouthBegin_' at iOffset=169196
 hashAddNamtab: ADDED 'MouthEnd_' at iOffset=169208
 hashAddNamtab: ADDED 'MapHeader_' at iOffset=169218
@@ -325,11 +325,11 @@ hashAddNamtab: ADDED 'Feedback_' at iOffset=169288
 hashAddNamtab: ADDED 'RewardSize_' at iOffset=169298
 hashAddNamtab: ADDED 'TrialInBlock' at iOffset=169310
 hashAddNamtab: ADDED 'SendPenatrInfo_' at iOffset=169324
-hashAddNamtab: ADDED 'TargetPre_' at iOffset=169340
+hashAddNamtab: ADDED 'EVT_TARGET_PRE_' at iOffset=169340
 hashAddNamtab: ADDED 'StopOn_' at iOffset=169352
 hashAddNamtab: ADDED 'StimFailed_' at iOffset=169360
-hashAddNamtab: ADDED 'StartInfos_' at iOffset=169372
-hashAddNamtab: ADDED 'EndInfos_' at iOffset=169384
+hashAddNamtab: ADDED 'EVT_START_INFOS_' at iOffset=169372
+hashAddNamtab: ADDED 'EVT_END_INFOS_' at iOffset=169384
 hashAddNamtab: ADDED 'InfosZero' at iOffset=169394
 hashAddNamtab: ADDED 'Trl_number' at iOffset=169404
 hashAddNamtab: ADDED 'Comp_Trl_number' at iOffset=169416
@@ -1747,7 +1747,7 @@ hashAddNamtab: ADDED 'SearchInd' at iOffset=181570
 hashAddNamtab: ADDED '#I360' at iOffset=181580
 postInstructionCompilation: Saving 'SET_LOCS' nops=820 nInstructions=818 iInstruction=2 iInstructionCache=0
 ICacheSave - PROCESS 'SET_LOCS' Wrote 818 bytes from op[2..819] to instcach[46168..46985]
-hashAddNamtab: ADDED 'Decide_SSD' at iOffset=181586
+hashAddNamtab: ADDED 'EVT_DECIDE_SSD' at iOffset=181586
 hashAddNamtab: ADDED 'TypeCode' at iOffset=181598
 hashAddNamtab: ADDED 'DistFix' at iOffset=181608
 hashAddNamtab: ADDED 'saccEnd' at iOffset=181616
@@ -4240,7 +4240,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
  794: 33350    76     0 long                                    DECL  clock_cycles@WAIT_MU =0 (0x00000000)
  795: 33392    65     0 long                INIT      HIDE      DECL  closed@JUICE =0 (0x00000000)
  796: 33434     6     0 long                          HIDE      DECL  clrInd@SET_CLRS =0 (0x00000000)
- 797: 33476     0     0 long CONS           INIT      HIDE      DECL  CmanHeader_ =1501 (0x000005DD)
+ 797: 33476     0     0 long CONS           INIT      HIDE      DECL  EVT_CMAN_HEADER_ =1501 (0x000005DD)
  798: 33518     0   800 long                          HIDE      DECL  Color =0 (0x00000000)
  799: 33560    24     0 long                                    DECL  color@DRW_SQR =0 (0x00000000)
  800: 33602    25   799 long                                    DECL  color@DRW_RECT =0 (0x00000000)
@@ -4357,12 +4357,12 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
  911: 38264     0     0 flot                          HIDE      DECL  d9_ecc =0.000000 (0x00000000)
  912: 38306     0     0 flot                          HIDE      DECL  d9_orient =0.000000 (0x00000000)
  913: 38348     0     0 flot                                    DECL  Dealer_wins_weight =0.000000 (0x00000000)
- 914: 38390     0     0 long CONS           INIT      HIDE      DECL  Decide_ =2811 (0x00000AFB)
+ 914: 38390     0     0 long CONS           INIT      HIDE      DECL  EVT_DECIDE_ =2811 (0x00000AFB)
  915: 38432    31     0 flot                          HIDE      DECL  decide_jitter@SETA_TRL =0.000000 (0x00000000)
  916: 38474    56   915 flot                          HIDE      DECL  decide_jitter@SETMGTRL =0.000000 (0x00000000)
  917: 38516    59   916 flot                          HIDE      DECL  decide_jitter@SETS_TRL =0.000000 (0x00000000)
  918: 38558    56     0 flot                          HIDE      DECL  decide_soa_jitter@SETMGTRL =0.000000 (0x00000000)
- 919: 38600     0     0 long                          HIDE      DECL  Decide_SSD =0 (0x00000000)
+ 919: 38600     0     0 long                          HIDE      DECL  EVT_DECIDE_SSD =0 (0x00000000)
  920: 38642    60   919 long                                    DECL  decide_ssd@UPD8_INH =0 (0x00000000)
  921: 38684    31     0 flot                          HIDE      DECL  decide_trl_type@SETA_TRL =0.000000 (0x00000000)
  922: 38726    56   921 flot                          HIDE      DECL  decide_trl_type@SETMGTRL =0.000000 (0x00000000)
@@ -4423,7 +4423,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
  977: 41036     0     0 long                                    DECL  dynamicColor =0 (0x00000000)
  978: 41078    22     0 long CONS           INIT      HIDE      DECL  early_sacc@MGTRIAL =9 (0x00000009)
  979: 41120    68   978 long CONS           INIT      HIDE      DECL  early_sacc@END_TRL =9 (0x00000009)
- 980: 41162     0     0 long CONS           INIT      HIDE      DECL  EarlySaccade_ =2761 (0x00000AC9)
+ 980: 41162     0     0 long CONS           INIT      HIDE      DECL  EVT_EARLY_SACCADE_ =2761 (0x00000AC9)
  981: 41204     0   984 flot                          HIDE      DECL  Eccentricity =0.000000 (0x00000000)
  982: 41246    13     0 flot                          HIDE      DECL  eccentricity@WINDOWS =0.000000 (0x00000000)
  983: 41288    24   982 flot                                    DECL  eccentricity@DRW_SQR =0.000000 (0x00000000)
@@ -4436,7 +4436,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
  990: 41582     0     0 arry                                    DECL  eccList len=4 xmsOff=5212 [8] 1 @290 = {}
  991: 41624     0     0 arry                                    DECL  eccProbs len=4 xmsOff=5180 [8] 1 @282 = {}
  992: 41666     0     0 long CONS PROC      INIT HDDN           DECL  END_TRL =68 (0x00000044)
- 993: 41708     0     0 long CONS           INIT      HIDE      DECL  EndInfos_ =2999 (0x00000BB7)
+ 993: 41708     0     0 long CONS           INIT      HIDE      DECL  EVT_END_INFOS_ =2999 (0x00000BB7)
  994: 41750     0     0 long CONS           INIT      HIDE      DECL  EndStim_ =667 (0x0000029B)
  995: 41792     0     0 long CONS           INIT      HIDE      DECL  Eot_ =1667 (0x00000683)
  996: 41834    27     0 flot                INIT      HIDE      DECL  equalTol@CHECK_PA =0.010000 (0x3C23D70A)
@@ -4511,7 +4511,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 1065: 44732    13  1064 flot                                    DECL  fix_win_size@WINDOWS =0.000000 (0x00000000)
 1066: 44774     0     0 flot                          HIDE      DECL  Fix_win_up =0.000000 (0x00000000)
 1067: 44816    14  1066 flot                                    DECL  fix_win_up@LOCATE_I =0.000000 (0x00000000)
-1068: 44858     0     0 long CONS           INIT      HIDE      DECL  Fixate_ =2660 (0x00000A64)
+1068: 44858     0     0 long CONS           INIT      HIDE      DECL  EVT_FIXATE_ =2660 (0x00000A64)
 1069: 44900    22     0 long                INIT      HIDE      DECL  fixating@MGTRIAL =2 (0x00000002)
 1070: 44942    72  1069 long                INIT      HIDE      DECL  fixating@FIXTRIAL =2 (0x00000002)
 1071: 44984    32     0 long                INIT      HIDE      DECL  fixating_cue@ANTITR =2 (0x00000002)
@@ -4561,8 +4561,8 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 1115: 46832    67  1114 long                                    DECL  fixed_trl_length@FAILURE =0 (0x00000000)
 1116: 46874     0     0 long CONS           INIT      HIDE      DECL  FixError_ =2750 (0x00000ABE)
 1117: 46916     0     0 long                                    DECL  FixJitter =0 (0x00000000)
-1118: 46958     0     0 long CONS           INIT      HIDE      DECL  FixSpotOff_ =2300 (0x000008FC)
-1119: 47000     0     0 long CONS           INIT      HIDE      DECL  FixSpotOn_ =2301 (0x000008FD)
+1118: 46958     0     0 long CONS           INIT      HIDE      DECL  EVT_FIX_SPOT_OFF_ =2300 (0x000008FC)
+1119: 47000     0     0 long CONS           INIT      HIDE      DECL  EVT_FIX_SPOT_ON_ =2301 (0x000008FD)
 1120: 47042     0     0 long CONS PROC      INIT HDDN           DECL  FIXTRIAL =72 (0x00000048)
 1121: 47084     0     0 long CONS           INIT      HIDE      DECL  FixWindow_ =2770 (0x00000AD2)
 1122: 47126     0     0 flot                                    DECL  flashTime =0.000000 (0x00000000)
@@ -4594,7 +4594,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 1148: 48218     0     0 long CONS           INIT      HIDE      DECL  GoError_ =2752 (0x00000AC0)
 1149: 48260     0     0 long CONS           INIT      HIDE      DECL  GONOGOHeader_ =1503 (0x000005DF)
 1150: 48302     0     0 long CONS PROC      INIT HDDN           DECL  GOODVARS =3 (0x00000003)
-1151: 48344     0     0 long CONS           INIT      HIDE      DECL  GoSaccade_ =2751 (0x00000ABF)
+1151: 48344     0     0 long CONS           INIT      HIDE      DECL  GoEVT_SACCADE_ =2751 (0x00000ABF)
 1152: 48386     0     0 long CONS           INIT      HIDE      DECL  GoTargFixError_ =2754 (0x00000AC2)
 1153: 48428     0     0 flot                                    DECL  graph_rand_rt =0.000000 (0x00000000)
 1154: 48470     0     0 flot                                    DECL  graph_rep_rt =0.000000 (0x00000000)
@@ -4631,7 +4631,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 1185: 49772    29  1184 long                          HIDE      DECL  ic@A_DIFFS =0 (0x00000000)
 1186: 49814     0     0 long                          HIDE      DECL  id =0 (0x00000000)
 1187: 49856    29  1186 long                          HIDE      DECL  id@A_DIFFS =0 (0x00000000)
-1188: 49898     0     0 long CONS           INIT      HIDE      DECL  Identify_Room_ =1500 (0x000005DC)
+1188: 49898     0     0 long CONS           INIT      HIDE      DECL  EVT_IDENTIFY_ROOM_ =1500 (0x000005DC)
 1189: 49940     0     0 long CONS PROC      INIT HDDN           DECL  IDLE =81 (0x00000051)
 1190: 49982    81     0 long                          HIDE      DECL  idling@IDLE =0 (0x00000000)
 1191: 50024    30     0 long                          HIDE      DECL  ie@SET_LOCS =0 (0x00000000)
@@ -5392,7 +5392,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 1946: 81734    23  1945 long CONS           INIT      HIDE      DECL  sacc_out@SCHTRIAL =5 (0x00000005)
 1947: 81776    32  1946 long CONS           INIT      HIDE      DECL  sacc_out@ANTITR =5 (0x00000005)
 1948: 81818    68  1947 long CONS           INIT      HIDE      DECL  sacc_out@END_TRL =5 (0x00000005)
-1949: 81860     0     0 long CONS           INIT      HIDE      DECL  Saccade_ =2810 (0x00000AFA)
+1949: 81860     0     0 long CONS           INIT      HIDE      DECL  EVT_SACCADE_ =2810 (0x00000AFA)
 1950: 81902    22     0 flot                          HIDE      DECL  saccade_time@MGTRIAL =0.000000 (0x00000000)
 1951: 81944    23  1950 flot                          HIDE      DECL  saccade_time@SCHTRIAL =0.000000 (0x00000000)
 1952: 81986    32  1951 flot                          HIDE      DECL  saccade_time@ANTITR =0.000000 (0x00000000)
@@ -5495,7 +5495,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 2049: 86060    59  2048 long                                    DECL  staircase@SETS_TRL =0 (0x00000000)
 2050: 86102     0     0 long CONS           INIT      HIDE      DECL  Staircase_ =2772 (0x00000AD4)
 2051: 86144    76     0 long                                    DECL  start@WAIT_MU =0 (0x00000000)
-2052: 86186     0     0 long CONS           INIT      HIDE      DECL  StartInfos_ =2998 (0x00000BB6)
+2052: 86186     0     0 long CONS           INIT      HIDE      DECL  EVT_START_INFOS_ =2998 (0x00000BB6)
 2053: 86228     0     0 long                                    DECL  State =0 (0x00000000)
 2054: 86270     3  2053 long                                    DECL  state@GOODVARS =0 (0x00000000)
 2055: 86312    18     0 long                INIT                DECL  still@WATCHMTH =0 (0x00000000)
@@ -5616,7 +5616,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 2170: 91142    57  2169 long                INIT      HIDE      DECL  target@TSCH_PGS =7 (0x00000007)
 2171: 91184    58  2170 long                INIT      HIDE      DECL  target@LSCH_PGS =7 (0x00000007)
 2172: 91226    72  2171 long                INIT      HIDE      DECL  target@FIXTRIAL =1 (0x00000001)
-2173: 91268     0     0 long CONS           INIT      HIDE      DECL  Target_ =2651 (0x00000A5B)
+2173: 91268     0     0 long CONS           INIT      HIDE      DECL  EVT_TARGET_ =2651 (0x00000A5B)
 2174: 91310     0     0 long                                    DECL  target_color_b =0 (0x00000000)
 2175: 91352     0     0 long                                    DECL  target_color_g =0 (0x00000000)
 2176: 91394     0     0 long                                    DECL  target_color_r =0 (0x00000000)
@@ -5633,7 +5633,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 2187: 91856    22     0 long                INIT      HIDE      DECL  target_pd@MGTRIAL =3 (0x00000003)
 2188: 91898    55  2187 long                INIT      HIDE      DECL  target_pd@MG_PGS =3 (0x00000003)
 2189: 91940     0     0 long CONS           INIT      HIDE      DECL  TargetOff_ =2652 (0x00000A5C)
-2190: 91982     0     0 long CONS           INIT      HIDE      DECL  TargetPre_ =2650 (0x00000A5A)
+2190: 91982     0     0 long CONS           INIT      HIDE      DECL  EVT_TARGET_PRE_ =2650 (0x00000A5A)
 2191: 92024     0     0 long                                    DECL  TargetType =0 (0x00000000)
 2192: 92066     0     0 long CONS           INIT      HIDE      DECL  TargetWindow_ =2771 (0x00000AD3)
 2193: 92108    26     0 flot                          HIDE      DECL  targH@ANTI_PGS =0.000000 (0x00000000)
@@ -5693,7 +5693,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 2247: 94376    66  2246 long                                    DECL  trial_length@SUCCESS =0 (0x00000000)
 2248: 94418    67  2247 long                                    DECL  trial_length@FAILURE =0 (0x00000000)
 2249: 94460     0     0 long CONS           INIT      HIDE      DECL  TrialInBlock =2928 (0x00000B70)
-2250: 94502     0     0 long CONS           INIT      HIDE      DECL  TrialStart_ =1666 (0x00000682)
+2250: 94502     0     0 long CONS           INIT      HIDE      DECL  EVT_TRIAL_START_ =1666 (0x00000682)
 2251: 94544     0     0 long                                    DECL  TrialTp =0 (0x00000000)
 2252: 94586     0     0 long                                    DECL  trialtype =0 (0x00000000)
 2253: 94628    66     0 long                          HIDE      DECL  trl_end_time@SUCCESS =0 (0x00000000)
@@ -8662,13 +8662,13 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:40C2 37FB:00B2   176: Event_fifo:1002[Set_event:1990] = MemHeader_:1313
  33FA:40CA 37FB:00BA   184: #L0:155 = Set_event:1990 + #I1:17
  33FA:40D8 37FB:00C8   198: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:40E6 37FB:00D6   212: Event_fifo:1002[Set_event:1990] = TrialStart_:2250
+ 33FA:40E6 37FB:00D6   212: Event_fifo:1002[Set_event:1990] = EVT_TRIAL_START_:2250
  33FA:40EE 37FB:00DE   220: #L0:155 = Set_event:1990 + #I1:17
  33FA:40FC 37FB:00EC   234: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:410A 37FB:00FA   248: #L0 = CALL2 dSendf(#S45:591,fixation_pd@22:1099)
  33FA:4114 37FB:0104   258: #L0 = CALL0 time()
  33FA:411A 37FB:010A   264: fix_spot_time@22:1055 = F= fix_spot_time@22:1055
- 33FA:4124 37FB:0114   274: Event_fifo:1002[Set_event:1990] = FixSpotOn_:1119
+ 33FA:4124 37FB:0114   274: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_ON_:1119
  33FA:412C 37FB:011C   282: #L0:155 = Set_event:1990 + #I1:17
  33FA:413A 37FB:012A   296: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4148 37FB:0138   310: #L0 = CALL1 dSendf(#S46:592)
@@ -8681,7 +8681,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:418A 37FB:017A   376: #L1 = CALL0 time()
  33FA:4190 37FB:0180   382: aquire_fix_time@22:697 = F= aquire_fix_time@22:697
  33FA:419A 37FB:018A   392: Trl_Start_Time:2262 = F= Trl_Start_Time:2262
- 33FA:41A4 37FB:0194   402: Event_fifo:1002[Set_event:1990] = Fixate_:1068
+ 33FA:41A4 37FB:0194   402: Event_fifo:1002[Set_event:1990] = EVT_FIXATE_:1068
  33FA:41AC 37FB:019C   410: #L0:155 = Set_event:1990 + #I1:17
  33FA:41BA 37FB:01AA   424: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:41C8 37FB:01B8   438: stage@22:2043 = fixating@22:1069
@@ -8747,7 +8747,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:4434 37FB:0424  1058: #L0 = CALL2 dSendf(#S53:600,target_pd@22:2187)
  33FA:443E 37FB:042E  1068: #L0 = CALL0 time()
  33FA:4444 37FB:0434  1074: targ_time@22:2149 = F= targ_time@22:2149
- 33FA:444E 37FB:043E  1084: Event_fifo:1002[Set_event:1990] = Target_:2173
+ 33FA:444E 37FB:043E  1084: Event_fifo:1002[Set_event:1990] = EVT_TARGET_:2173
  33FA:4456 37FB:0446  1092: #L0:155 = Set_event:1990 + #I1:17
  33FA:4464 37FB:0454  1106: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4472 37FB:0462  1120: #L0 = CALL1 dSendf(#S54:601)
@@ -8767,8 +8767,8 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:44FA 37FB:04EA  1256: LastStopOutcome:1249 = no_change@22:1362
  33FA:4504 37FB:04F4  1266: #L0 = CALL2 dSendf(#S57:604,blank@22:727)
  33FA:450E 37FB:04FE  1276: #L0 = CALL2 dSendf(#S58:605,blank@22:727)
- 33FA:4518 37FB:0508  1286: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
- 33FA:4520 37FB:0510  1294: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:4518 37FB:0508  1286: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
+ 33FA:4520 37FB:0510  1294: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:4528 37FB:0518  1302: #L0:155 = Set_event:1990 + #I1:17
  33FA:4536 37FB:0526  1316: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4544 37FB:0534  1330: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -8799,8 +8799,8 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:4640 37FB:0630  1582: LastStopOutcome:1249 = no_change@22:1362
  33FA:464A 37FB:063A  1592: #L0 = CALL2 dSendf(#S62:610,blank@22:727)
  33FA:4654 37FB:0644  1602: #L0 = CALL2 dSendf(#S63:611,blank@22:727)
- 33FA:465E 37FB:064E  1612: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
- 33FA:4666 37FB:0656  1620: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:465E 37FB:064E  1612: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
+ 33FA:4666 37FB:0656  1620: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:466E 37FB:065E  1628: #L0:155 = Set_event:1990 + #I1:17
  33FA:467C 37FB:066C  1642: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:468A 37FB:067A  1656: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -8849,7 +8849,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:4860 37FB:0850  2126: #L6 = CALL2 dSendf(#S65:613,signal_pd@22:2012)
  33FA:486A 37FB:085A  2136: #L0 = CALL0 time()
  33FA:4870 37FB:0860  2142: fix_off_time@22:1051 = F= fix_off_time@22:1051
- 33FA:487A 37FB:086A  2152: Event_fifo:1002[Set_event:1990] = FixSpotOff_:1118
+ 33FA:487A 37FB:086A  2152: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_OFF_:1118
  33FA:4882 37FB:0872  2160: #L0:155 = Set_event:1990 + #I1:17
  33FA:4890 37FB:0880  2174: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:489E 37FB:088E  2188: #L0 = CALL1 dSendf(#S66:614)
@@ -8862,7 +8862,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:48DE 37FB:08CE  2252: #L1 = CALL2 dSendf(#S68:616,signal_pd@22:2012)
  33FA:48E8 37FB:08D8  2262: #L0 = CALL0 time()
  33FA:48EE 37FB:08DE  2268: fix_off_time@22:1051 = F= fix_off_time@22:1051
- 33FA:48F8 37FB:08E8  2278: Event_fifo:1002[Set_event:1990] = FixSpotOff_:1118
+ 33FA:48F8 37FB:08E8  2278: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_OFF_:1118
  33FA:4900 37FB:08F0  2286: #L0:155 = Set_event:1990 + #I1:17
  33FA:490E 37FB:08FE  2300: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:491C 37FB:090C  2314: #L0 = CALL1 dSendf(#S69:617)
@@ -8888,7 +8888,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:49EA 37FB:09DA  2520: LastStopOutcome:1249 = no_change@22:1362
  33FA:49F4 37FB:09E4  2530: #L0 = CALL2 dSendf(#S72:621,blank@22:727)
  33FA:49FE 37FB:09EE  2540: #L0 = CALL2 dSendf(#S73:622,blank@22:727)
- 33FA:4A08 37FB:09F8  2550: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:4A08 37FB:09F8  2550: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:4A10 37FB:0A00  2558: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
  33FA:4A1A 37FB:0A0A  2568: #L0 = CALL2 oSetAttribute(object_fix@22:1403,aINVISIBLE:662)
  33FA:4A24 37FB:0A14  2578: #L0 = CALL1 printf(#S74:623)
@@ -8898,7 +8898,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:4A44 37FB:0A34  2610: #F0:1 = saccade_time@22:1950 F- fix_off_time@22:1051
  33FA:4A52 37FB:0A42  2624: #L0:155 = #I150:41 F< #F0:1
  33FA:4A60 37FB:0A50  2638: IFnot (#L0:155) GOTO .+78 (goto 2716)
- 33FA:4A68 37FB:0A58  2646: Event_fifo:1002[Set_event:1990] = Saccade_:1949
+ 33FA:4A68 37FB:0A58  2646: Event_fifo:1002[Set_event:1990] = EVT_SACCADE_:1949
  33FA:4A70 37FB:0A60  2654: #L0:155 = Set_event:1990 + #I1:17
  33FA:4A7E 37FB:0A6E  2668: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4A8C 37FB:0A7C  2682: ReactionTime:1848 = saccade_time@22:1950 F- fix_off_time@22:1051
@@ -8968,7 +8968,7 @@ PROCESS  22: MGTRIAL (Args=9 CtrlBlk=33FA:202C Size=4016  iOp=2-4017 iCache=2682
  33FA:4D1C 37FB:0D0C  3338: sacctarg:1954 = #I0:16
  33FA:4D26 37FB:0D16  3348: #L0 = CALL1 dSendf(#S83:633)
  33FA:4D2E 37FB:0D1E  3356: #L0 = CALL2 dSendf(#S84:634,target@22:2164)
- 33FA:4D38 37FB:0D28  3366: Event_fifo:1002[Set_event:1990] = Decide_:914
+ 33FA:4D38 37FB:0D28  3366: Event_fifo:1002[Set_event:1990] = EVT_DECIDE_:914
  33FA:4D40 37FB:0D30  3374: #L0:155 = Set_event:1990 + #I1:17
  33FA:4D4E 37FB:0D3E  3388: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4D5C 37FB:0D4C  3402: stage@22:2043 = on_target@22:1472
@@ -9095,13 +9095,13 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:422A 37FB:021A   536: Event_fifo:1002[Set_event:1990] = CaptureHeader_:764
  33FA:4232 37FB:0222   544: #L0:155 = Set_event:1990 + #I1:17
  33FA:4240 37FB:0230   558: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:424E 37FB:023E   572: Event_fifo:1002[Set_event:1990] = TrialStart_:2250
+ 33FA:424E 37FB:023E   572: Event_fifo:1002[Set_event:1990] = EVT_TRIAL_START_:2250
  33FA:4256 37FB:0246   580: #L0:155 = Set_event:1990 + #I1:17
  33FA:4264 37FB:0254   594: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4272 37FB:0262   608: #L0 = CALL2 dSendf(#S124:309,fixation_pd@23:1100)
  33FA:427C 37FB:026C   618: #L0 = CALL0 time()
  33FA:4282 37FB:0272   624: fix_spot_time@23:1056 = F= fix_spot_time@23:1056
- 33FA:428C 37FB:027C   634: Event_fifo:1002[Set_event:1990] = FixSpotOn_:1119
+ 33FA:428C 37FB:027C   634: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_ON_:1119
  33FA:4294 37FB:0284   642: #L0:155 = Set_event:1990 + #I1:17
  33FA:42A2 37FB:0292   656: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:42B0 37FB:02A0   670: #L0 = CALL1 dSendf(#S125:310)
@@ -9115,7 +9115,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:42FC 37FB:02EC   746: #L1 = CALL0 time()
  33FA:4302 37FB:02F2   752: aquire_fix_time@23:698 = F= aquire_fix_time@23:698
  33FA:430C 37FB:02FC   762: Trl_Start_Time:2262 = F= Trl_Start_Time:2262
- 33FA:4316 37FB:0306   772: Event_fifo:1002[Set_event:1990] = Fixate_:1068
+ 33FA:4316 37FB:0306   772: Event_fifo:1002[Set_event:1990] = EVT_FIXATE_:1068
  33FA:431E 37FB:030E   780: #L0:155 = Set_event:1990 + #I1:17
  33FA:432C 37FB:031C   794: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:433A 37FB:032A   808: stage@23:2044 = fixating_ph@23:1074
@@ -9192,7 +9192,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:460A 37FB:05FA  1528: trl_running@23:2259 = #I0:16
  33FA:4614 37FB:0604  1538: GOTO .+112 (goto 1650)
  33FA:4618 37FB:0608  1542: IFnot (In_FixWin:1209) GOTO .+108 (goto 1650)
- 33FA:4620 37FB:0610  1550: Event_fifo:1002[Set_event:1990] = Target_:2173
+ 33FA:4620 37FB:0610  1550: Event_fifo:1002[Set_event:1990] = EVT_TARGET_:2173
  33FA:4628 37FB:0618  1558: #L0:155 = Set_event:1990 + #I1:17
  33FA:4636 37FB:0626  1572: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4644 37FB:0634  1586: #L0 = CALL2 dSendf(#S137:323,target_f_pd@23:2182)
@@ -9209,7 +9209,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:46AC 37FB:069C  1690: IFnot (#L1:156) GOTO .+116 (goto 1806)
  33FA:46B4 37FB:06A4  1698: Trl_Outcome:2256 = too_fast@23:2240
  33FA:46BE 37FB:06AE  1708: #L0 = CALL2 dSendf(#S141:328,blank@23:728)
- 33FA:46C8 37FB:06B8  1718: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:46C8 37FB:06B8  1718: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:46D0 37FB:06C0  1726: #L0:155 = Set_event:1990 + #I1:17
  33FA:46DE 37FB:06CE  1740: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:46EC 37FB:06DC  1754: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -9226,7 +9226,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:475E 37FB:074E  1868: IFnot (#L3:167) GOTO .+116 (goto 1984)
  33FA:4766 37FB:0756  1876: Trl_Outcome:2256 = too_fast@23:2240
  33FA:4770 37FB:0760  1886: #L0 = CALL2 dSendf(#S143:330,blank@23:728)
- 33FA:477A 37FB:076A  1896: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:477A 37FB:076A  1896: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:4782 37FB:0772  1904: #L0:155 = Set_event:1990 + #I1:17
  33FA:4790 37FB:0780  1918: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:479E 37FB:078E  1932: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -9247,7 +9247,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:4830 37FB:0820  2078: stage@23:2044 = fixation_offset@23:1097
  33FA:483A 37FB:082A  2088: #L0 = CALL0 time()
  33FA:4840 37FB:0830  2094: fix_off_Time@23:1052 = F= fix_off_Time@23:1052
- 33FA:484A 37FB:083A  2104: Event_fifo:1002[Set_event:1990] = FixSpotOff_:1118
+ 33FA:484A 37FB:083A  2104: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_OFF_:1118
  33FA:4852 37FB:0842  2112: #L0:155 = Set_event:1990 + #I1:17
  33FA:4860 37FB:0850  2126: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:486E 37FB:085E  2140: #L0:155 = StimDone@23:2082 == #I0:16
@@ -9279,7 +9279,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:497A 37FB:096A  2408: IFnot (#L0:155) GOTO .+318 (goto 2726)
  33FA:4982 37FB:0972  2416: #L1 = CALL0 time()
  33FA:4988 37FB:0978  2422: saccade_time@23:1951 = F= saccade_time@23:1951
- 33FA:4992 37FB:0982  2432: Event_fifo:1002[Set_event:1990] = Saccade_:1949
+ 33FA:4992 37FB:0982  2432: Event_fifo:1002[Set_event:1990] = EVT_SACCADE_:1949
  33FA:499A 37FB:098A  2440: #L0:155 = Set_event:1990 + #I1:17
  33FA:49A8 37FB:0998  2454: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:49B6 37FB:09A6  2468: #F0:1 = saccade_time@23:1951 F- targ_time@23:2150
@@ -9296,7 +9296,7 @@ PROCESS  23: SCHTRIAL (Args=9 CtrlBlk=33FA:2058 Size=3872  iOp=2-3873 iCache=308
  33FA:4A48 37FB:0A38  2614: IFnot (#L0:155) GOTO .+112 (goto 2726)
  33FA:4A50 37FB:0A40  2622: Trl_Outcome:2256 = too_fast@23:2240
  33FA:4A5A 37FB:0A4A  2632: #L0 = CALL2 dSendf(#S149:336,blank@23:728)
- 33FA:4A64 37FB:0A54  2642: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:4A64 37FB:0A54  2642: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:4A6C 37FB:0A5C  2650: #L0:155 = Set_event:1990 + #I1:17
  33FA:4A7A 37FB:0A6A  2664: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4A88 37FB:0A78  2678: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -10969,7 +10969,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:4134 37FB:0124   290: Event_fifo:1002[Set_event:1990] = AntiHeader_:693
  33FA:413C 37FB:012C   298: #L0:155 = Set_event:1990 + #I1:17
  33FA:414A 37FB:013A   312: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:4158 37FB:0148   326: Event_fifo:1002[Set_event:1990] = TrialStart_:2250
+ 33FA:4158 37FB:0148   326: Event_fifo:1002[Set_event:1990] = EVT_TRIAL_START_:2250
  33FA:4160 37FB:0150   334: #L0:155 = Set_event:1990 + #I1:17
  33FA:416E 37FB:015E   348: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:417C 37FB:016C   362: #P1:254 = N_targ_pos:1348
@@ -10986,7 +10986,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:41E2 37FB:01D2   464: #L0 = CALL2 dSendf(#S202:396,fixation_pd@32:1102)
  33FA:41EC 37FB:01DC   474: #L0 = CALL0 time()
  33FA:41F2 37FB:01E2   480: fix_spot_time@32:1057 = F= fix_spot_time@32:1057
- 33FA:41FC 37FB:01EC   490: Event_fifo:1002[Set_event:1990] = FixSpotOn_:1119
+ 33FA:41FC 37FB:01EC   490: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_ON_:1119
  33FA:4204 37FB:01F4   498: #L0:155 = Set_event:1990 + #I1:17
  33FA:4212 37FB:0202   512: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4220 37FB:0210   526: #L0 = CALL1 dSendf(#S203:397)
@@ -11000,7 +11000,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:426C 37FB:025C   602: #L1 = CALL0 time()
  33FA:4272 37FB:0262   608: aquire_fix_time@32:699 = F= aquire_fix_time@32:699
  33FA:427C 37FB:026C   618: Trl_Start_Time:2262 = F= Trl_Start_Time:2262
- 33FA:4286 37FB:0276   628: Event_fifo:1002[Set_event:1990] = Fixate_:1068
+ 33FA:4286 37FB:0276   628: Event_fifo:1002[Set_event:1990] = EVT_FIXATE_:1068
  33FA:428E 37FB:027E   636: #L0:155 = Set_event:1990 + #I1:17
  33FA:429C 37FB:028C   650: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:42AA 37FB:029A   664: #L0:155 = curr_cuetime:859 > #I0:16
@@ -11079,7 +11079,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:4584 37FB:0574  1394: #L1:156 = #L0:155 F> #F1:2
  33FA:4592 37FB:0582  1408: #L2:166 = In_FixWin:1209 && #L1:156
  33FA:45A0 37FB:0590  1422: IFnot (#L2:166) GOTO .+108 (goto 1530)
- 33FA:45A8 37FB:0598  1430: Event_fifo:1002[Set_event:1990] = Target_:2173
+ 33FA:45A8 37FB:0598  1430: Event_fifo:1002[Set_event:1990] = EVT_TARGET_:2173
  33FA:45B0 37FB:05A0  1438: #L0:155 = Set_event:1990 + #I1:17
  33FA:45BE 37FB:05AE  1452: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:45CC 37FB:05BC  1466: #L0 = CALL2 dSendf(#S213:408,target_f_pd@32:2184)
@@ -11096,7 +11096,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:4634 37FB:0624  1570: IFnot (#L1:156) GOTO .+116 (goto 1686)
  33FA:463C 37FB:062C  1578: Trl_Outcome:2256 = too_fast@32:2241
  33FA:4646 37FB:0636  1588: #L0 = CALL2 dSendf(#S217:412,blank@32:730)
- 33FA:4650 37FB:0640  1598: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:4650 37FB:0640  1598: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:4658 37FB:0648  1606: #L0:155 = Set_event:1990 + #I1:17
  33FA:4666 37FB:0656  1620: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4674 37FB:0664  1634: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -11113,7 +11113,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:46E6 37FB:06D6  1748: IFnot (#L3:167) GOTO .+116 (goto 1864)
  33FA:46EE 37FB:06DE  1756: Trl_Outcome:2256 = too_fast@32:2241
  33FA:46F8 37FB:06E8  1766: #L0 = CALL2 dSendf(#S219:414,blank@32:730)
- 33FA:4702 37FB:06F2  1776: Event_fifo:1002[Set_event:1990] = EarlySaccade_:980
+ 33FA:4702 37FB:06F2  1776: Event_fifo:1002[Set_event:1990] = EVT_EARLY_SACCADE_:980
  33FA:470A 37FB:06FA  1784: #L0:155 = Set_event:1990 + #I1:17
  33FA:4718 37FB:0708  1798: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4726 37FB:0716  1812: #L0 = CALL2 oSetAttribute(object_targ:1450,aINVISIBLE:662)
@@ -11134,7 +11134,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:47B8 37FB:07A8  1958: stage@32:2045 = fixation_offset@32:1098
  33FA:47C2 37FB:07B2  1968: #L0 = CALL0 time()
  33FA:47C8 37FB:07B8  1974: fix_off_Time@32:1053 = F= fix_off_Time@32:1053
- 33FA:47D2 37FB:07C2  1984: Event_fifo:1002[Set_event:1990] = FixSpotOff_:1118
+ 33FA:47D2 37FB:07C2  1984: Event_fifo:1002[Set_event:1990] = EVT_FIX_SPOT_OFF_:1118
  33FA:47DA 37FB:07CA  1992: #L0:155 = Set_event:1990 + #I1:17
  33FA:47E8 37FB:07D8  2006: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:47F6 37FB:07E6  2020: #L0:155 = StimDone@32:2083 == #I0:16
@@ -11166,7 +11166,7 @@ PROCESS  32: ANTITR (Args=9 CtrlBlk=33FA:21E4 Size=4092  iOp=2-4093 iCache=49154
  33FA:4902 37FB:08F2  2288: IFnot (#L0:155) GOTO .+204 (goto 2492)
  33FA:490A 37FB:08FA  2296: #L1 = CALL0 time()
  33FA:4910 37FB:0900  2302: saccade_time@32:1952 = F= saccade_time@32:1952
- 33FA:491A 37FB:090A  2312: Event_fifo:1002[Set_event:1990] = Saccade_:1949
+ 33FA:491A 37FB:090A  2312: Event_fifo:1002[Set_event:1990] = EVT_SACCADE_:1949
  33FA:4922 37FB:0912  2320: #L0:155 = Set_event:1990 + #I1:17
  33FA:4930 37FB:0920  2334: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:493E 37FB:092E  2348: #F0:1 = saccade_time@32:1952 F- targ_time@32:2151
@@ -16682,7 +16682,7 @@ PROCESS  63: INFOS (Args=0 CtrlBlk=33FA:2738 Size=4948  iOp=2-4949 iCache=103924
  33FA:403C 37FB:002C    42: #L3:167 = State:2053 == run_pop_prime:1932
  33FA:404A 37FB:003A    56: #L4:168 = #L2:166 || #L3:167
  33FA:4058 37FB:0048    70: IFnot (#L4:168) GOTO .+520 (goto 590)
- 33FA:4060 37FB:0050    78: Event_fifo:1002[Set_event:1990] = StartInfos_:2052
+ 33FA:4060 37FB:0050    78: Event_fifo:1002[Set_event:1990] = EVT_START_INFOS_:2052
  33FA:4068 37FB:0058    86: #L0:155 = Set_event:1990 + #I1:17
  33FA:4076 37FB:0066   100: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4084 37FB:0074   114: id:1186 = #I0:16
@@ -16723,13 +16723,13 @@ PROCESS  63: INFOS (Args=0 CtrlBlk=33FA:2738 Size=4948  iOp=2-4949 iCache=103924
  33FA:4214 37FB:0204   514: Event_fifo:1002[Set_event:1990] = #L0:155
  33FA:421C 37FB:020C   522: #L0:155 = Set_event:1990 + #I1:17
  33FA:422A 37FB:021A   536: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:4238 37FB:0228   550: Event_fifo:1002[Set_event:1990] = EndInfos_:993
+ 33FA:4238 37FB:0228   550: Event_fifo:1002[Set_event:1990] = EVT_END_INFOS_:993
  33FA:4240 37FB:0230   558: #L0:155 = Set_event:1990 + #I1:17
  33FA:424E 37FB:023E   572: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:425C 37FB:024C   586: GOTO .+4362 (goto 4948)
  33FA:4260 37FB:0250   590: #L0:155 = State:2053 == run_search_sess:1937
  33FA:426E 37FB:025E   604: IFnot (#L0:155) GOTO .+2004 (goto 2608)
- 33FA:4276 37FB:0266   612: Event_fifo:1002[Set_event:1990] = StartInfos_:2052
+ 33FA:4276 37FB:0266   612: Event_fifo:1002[Set_event:1990] = EVT_START_INFOS_:2052
  33FA:427E 37FB:026E   620: #L0:155 = Set_event:1990 + #I1:17
  33FA:428C 37FB:027C   634: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:429A 37FB:028A   648: #L0:155 = InfosZero:1215 F+ #I999:153
@@ -16885,7 +16885,7 @@ PROCESS  63: INFOS (Args=0 CtrlBlk=33FA:2738 Size=4948  iOp=2-4949 iCache=103924
  33FA:49F6 37FB:09E6  2532: Event_fifo:1002[Set_event:1990] = #L0:155
  33FA:49FE 37FB:09EE  2540: #L0:155 = Set_event:1990 + #I1:17
  33FA:4A0C 37FB:09FC  2554: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:4A1A 37FB:0A0A  2568: Event_fifo:1002[Set_event:1990] = EndInfos_:993
+ 33FA:4A1A 37FB:0A0A  2568: Event_fifo:1002[Set_event:1990] = EVT_END_INFOS_:993
  33FA:4A22 37FB:0A12  2576: #L0:155 = Set_event:1990 + #I1:17
  33FA:4A30 37FB:0A20  2590: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4A3E 37FB:0A2E  2604: GOTO .+2344 (goto 4948)
@@ -16913,7 +16913,7 @@ PROCESS  63: INFOS (Args=0 CtrlBlk=33FA:2738 Size=4948  iOp=2-4949 iCache=103924
  33FA:4B02 37FB:0AF2  2800: target_color_g:2175 = #L0:155
  33FA:4B0C 37FB:0AFC  2810: #L0:155 = Color_list:805[Curr_target:871,#I2:52]
  33FA:4B16 37FB:0B06  2820: target_color_b:2174 = #L0:155
- 33FA:4B20 37FB:0B10  2830: Event_fifo:1002[Set_event:1990] = StartInfos_:2052
+ 33FA:4B20 37FB:0B10  2830: Event_fifo:1002[Set_event:1990] = EVT_START_INFOS_:2052
  33FA:4B28 37FB:0B18  2838: #L0:155 = Set_event:1990 + #I1:17
  33FA:4B36 37FB:0B26  2852: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4B44 37FB:0B34  2866: #L0:155 = InfosZero:1215 F+ Fixed_trl_length:1113
@@ -17078,7 +17078,7 @@ PROCESS  63: INFOS (Args=0 CtrlBlk=33FA:2738 Size=4948  iOp=2-4949 iCache=103924
  33FA:531E 37FB:130E  4876: Event_fifo:1002[Set_event:1990] = #L0:155
  33FA:5326 37FB:1316  4884: #L0:155 = Set_event:1990 + #I1:17
  33FA:5334 37FB:1324  4898: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:5342 37FB:1332  4912: Event_fifo:1002[Set_event:1990] = EndInfos_:993
+ 33FA:5342 37FB:1332  4912: Event_fifo:1002[Set_event:1990] = EVT_END_INFOS_:993
  33FA:534A 37FB:133A  4920: #L0:155 = Set_event:1990 + #I1:17
  33FA:5358 37FB:1348  4934: Set_event:1990 = #L0:155 % Event_fifo_N:1003
 
@@ -17306,7 +17306,7 @@ PROCESS  67: FAILURE (Args=6 CtrlBlk=33FA:27E8 Size=788  iOp=2-789 iCache=110136
  33FA:42FA 37FB:02EA   744: IFnot (#L2:166) GOTO .+44 (goto 788)
  33FA:4302 37FB:02F2   752: #P1:254 = Curr_SSD:867
  33FA:430C 37FB:02FC   762: #P2:257 = LastStopOutcome:1249
- 33FA:4316 37FB:0306   772: #P3:258 = Decide_SSD:919
+ 33FA:4316 37FB:0306   772: #P3:258 = EVT_DECIDE_SSD:919
  33FA:4320 37FB:0310   782: SPAWN UPD8_INH:2295(with 3 args)
 
 PROCESS  68: END_TRL (Args=1 CtrlBlk=33FA:2814 Size=6832  iOp=2-6833 iCache=110924-117755) DISABLED
@@ -18162,7 +18162,7 @@ PROCESS  74: MGUIDE (Args=0 CtrlBlk=33FA:291C Size=952  iOp=2-953 iCache=119602-
  33FA:41BE 37FB:01AE   428: Event_fifo:1002[Set_event:1990] = MemHeader_:1313
  33FA:41C6 37FB:01B6   436: #L0:155 = Set_event:1990 + #I1:17
  33FA:41D4 37FB:01C4   450: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:41E2 37FB:01D2   464: Event_fifo:1002[Set_event:1990] = Identify_Room_:1188
+ 33FA:41E2 37FB:01D2   464: Event_fifo:1002[Set_event:1990] = EVT_IDENTIFY_ROOM_:1188
  33FA:41EA 37FB:01DA   472: #L0:155 = Set_event:1990 + #I1:17
  33FA:41F8 37FB:01E8   486: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4206 37FB:01F6   500: Event_fifo:1002[Set_event:1990] = Room:1877
@@ -18786,7 +18786,7 @@ iHSH  iNAM  iSYM iNXT Symbol
   95 175258  265 1472 "#Q1"
   96 175262  272    0 "#Q2"
   97 175266  273    0 "#Q3"
-  98 169086 1188 1366 "Identify_Room_"
+  98 169086 1188 1366 "EVT_IDENTIFY_ROOM_"
   99 174058   27 1421 "#I1100"
  100 176742  276    0 "#Q6"
  101 176746  277    0 "#Q7"
@@ -18862,7 +18862,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  171 179802  316    0 "#S130"
  172 179816  317    0 "#S131"
  173 173554   53 1541 "#I20"
- 174 168590 1119 2006 "FixSpotOn_"
+ 174 168590 1119 2006 "EVT_FIX_SPOT_ON_"
  175 174098   59 1543 "#I22"
  176 168404   62 1544 "#I23"
  177 179908  322    0 "#S136"
@@ -18929,7 +18929,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  238 181236  363    0 "#S173"
  239 170216  878 1627 "current_rt"
  240 172988  131 1628 "#I63"
- 241 168692 1151 1666 "GoSaccade_"
+ 241 168692 1151 1666 "GoEVT_SACCADE_"
  242 181296  367    0 "#S177"
  243 181314  368    0 "#S178"
  244 181326  369    0 "#S179"
@@ -18966,7 +18966,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  275 172506  737 1671 "Bmove_tout"
  276 170788 1117 1987 "FixJitter"
  277      0    0    0 ""
- 278 169372 2052 1060 "StartInfos_"
+ 278 169372 2052 1060 "EVT_START_INFOS_"
  279      0    0    0 ""
  280      0    0    0 ""
  281      0    0    0 ""
@@ -19025,7 +19025,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  334 181436  999    0 "equalTol"
  335      0    0    0 ""
  336 173104   15    0 "#I-90"
- 337 169188  914    0 "Decide_"
+ 337 169188  914    0 "EVT_DECIDE_"
  338      0    0    0 ""
  339      0    0    0 ""
  340      0    0    0 ""
@@ -19429,7 +19429,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  738 170604 1539 2133 "PlacPres"
  739 178070  597 2134 "#S50"
  740 178102  598 2135 "#S51"
- 741 168990  797 1499 "CmanHeader_"
+ 741 168990  797 1499 "EVT_CMAN_HEADER_"
  742 178140  600 1662 "#S53"
  743 178158  601    0 "#S54"
  744 168044 2054 1500 "state"
@@ -19438,7 +19438,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  747 178252  605 2136 "#S58"
  748 177598 2011 1503 "signal"
  749 168002 2000 1449 "SETS"
- 750 169340 2190 1320 "TargetPre_"
+ 750 169340 2190 1320 "EVT_TARGET_PRE_"
  751      0    0    0 ""
  752      0    0    0 ""
  753      0    0    0 ""
@@ -19497,7 +19497,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  806 179174  644    0 "#S93"
  807 179190  645    0 "#S94"
  808 170882 2018 2069 "SingFreq"
- 809 168626 2173 1523 "Target_"
+ 809 168626 2173 1523 "EVT_TARGET_"
  810 179222  648    0 "#S97"
  811 179244  649    0 "#S98"
  812 179254  650    0 "#S99"
@@ -19690,7 +19690,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  999      0    0    0 ""
 1000      0    0    0 ""
 1001      0    0    0 ""
-1002 168670 2250 1420 "TrialStart_"
+1002 168670 2250 1420 "EVT_TRIAL_START_"
 1003 176882 1019    0 "eye_y"
 1004      0    0    0 ""
 1005 168374  789 1097 "CheckBody"
@@ -19724,14 +19724,14 @@ iHSH  iNAM  iSYM iNXT Symbol
 1028 168322 1526 1027 "PhotoD_channel"
 1029 168350  669    0 "analogUnits"
 1030 168426  224    0 "#M43918000"
-1031 168602 1068    0 "Fixate_"
-1032 168646 1118    0 "FixSpotOff_"
+1031 168602 1068    0 "EVT_FIXATE_"
+1032 168646 1118    0 "EVT_FIX_SPOT_OFF_"
 1033 168704 1148    0 "GoError_"
 1034 168726 1152 1033 "GoTargFixError_"
 1035 168760 1147    0 "GOCorrect_"
 1036 168772 1387 1035 "NOGOCorrect_"
 1037 168786  771 1036 "CatchCorrect_"
-1038 168848  980    0 "EarlySaccade_"
+1038 168848  980    0 "EVT_EARLY_SACCADE_"
 1039 168888 1001    0 "Error_tone"
 1040 168900 1872 1039 "Reward_tone"
 1041 168912 1000    0 "Error_sacc"
@@ -19747,13 +19747,13 @@ iHSH  iNAM  iSYM iNXT Symbol
 1051 169074  693 1050 "AntiHeader_"
 1052 169126  994    0 "EndStim_"
 1053 169136 2315    0 "ZeroEyePosition_"
-1054 169168 1949 1038 "Saccade_"
+1054 169168 1949 1038 "EVT_SACCADE_"
 1055 169208 1336    0 "MouthEnd_"
 1056 169218 1286 1051 "MapHeader_"
 1057 169230 1121    0 "FixWindow_"
 1058 169242 2192 1057 "TargetWindow_"
 1059 169298 1873    0 "RewardSize_"
-1060 169384  993    0 "EndInfos_"
+1060 169384  993    0 "EVT_END_INFOS_"
 1061 169416  809    0 "Comp_Trl_number"
 1062 169456 1792    0 "Rand_Comp_Trl_number_DA"
 1063 169480 1859 1061 "Rep_Comp_Trl_number"
@@ -21632,7 +21632,7 @@ NAME TABLE
  33350  794 "clock_cycles"
  33392  795 "closed"
  33434  796 "clrInd"
- 33476  797 "CmanHeader_"
+ 33476  797 "EVT_CMAN_HEADER_"
  33518  798 "Color"
  33560  799 "color"
  33602  800 "color"
@@ -21749,12 +21749,12 @@ NAME TABLE
  38264  911 "d9_ecc"
  38306  912 "d9_orient"
  38348  913 "Dealer_wins_weight"
- 38390  914 "Decide_"
+ 38390  914 "EVT_DECIDE_"
  38432  915 "decide_jitter"
  38474  916 "decide_jitter"
  38516  917 "decide_jitter"
  38558  918 "decide_soa_jitter"
- 38600  919 "Decide_SSD"
+ 38600  919 "EVT_DECIDE_SSD"
  38642  920 "decide_ssd"
  38684  921 "decide_trl_type"
  38726  922 "decide_trl_type"
@@ -21815,7 +21815,7 @@ NAME TABLE
  41036  977 "dynamicColor"
  41078  978 "early_sacc"
  41120  979 "early_sacc"
- 41162  980 "EarlySaccade_"
+ 41162  980 "EVT_EARLY_SACCADE_"
  41204  981 "Eccentricity"
  41246  982 "eccentricity"
  41288  983 "eccentricity"
@@ -21828,7 +21828,7 @@ NAME TABLE
  41582  990 "eccList"
  41624  991 "eccProbs"
  41666  992 "END_TRL"
- 41708  993 "EndInfos_"
+ 41708  993 "EVT_END_INFOS_"
  41750  994 "EndStim_"
  41792  995 "Eot_"
  41834  996 "equalTol"
@@ -21903,7 +21903,7 @@ NAME TABLE
  44732 1065 "fix_win_size"
  44774 1066 "Fix_win_up"
  44816 1067 "fix_win_up"
- 44858 1068 "Fixate_"
+ 44858 1068 "EVT_FIXATE_"
  44900 1069 "fixating"
  44942 1070 "fixating"
  44984 1071 "fixating_cue"
@@ -21953,8 +21953,8 @@ NAME TABLE
  46832 1115 "fixed_trl_length"
  46874 1116 "FixError_"
  46916 1117 "FixJitter"
- 46958 1118 "FixSpotOff_"
- 47000 1119 "FixSpotOn_"
+ 46958 1118 "EVT_FIX_SPOT_OFF_"
+ 47000 1119 "EVT_FIX_SPOT_ON_"
  47042 1120 "FIXTRIAL"
  47084 1121 "FixWindow_"
  47126 1122 "flashTime"
@@ -21986,7 +21986,7 @@ NAME TABLE
  48218 1148 "GoError_"
  48260 1149 "GONOGOHeader_"
  48302 1150 "GOODVARS"
- 48344 1151 "GoSaccade_"
+ 48344 1151 "GoEVT_SACCADE_"
  48386 1152 "GoTargFixError_"
  48428 1153 "graph_rand_rt"
  48470 1154 "graph_rep_rt"
@@ -22023,7 +22023,7 @@ NAME TABLE
  49772 1185 "ic"
  49814 1186 "id"
  49856 1187 "id"
- 49898 1188 "Identify_Room_"
+ 49898 1188 "EVT_IDENTIFY_ROOM_"
  49940 1189 "IDLE"
  49982 1190 "idling"
  50024 1191 "ie"
@@ -22784,7 +22784,7 @@ NAME TABLE
  81734 1946 "sacc_out"
  81776 1947 "sacc_out"
  81818 1948 "sacc_out"
- 81860 1949 "Saccade_"
+ 81860 1949 "EVT_SACCADE_"
  81902 1950 "saccade_time"
  81944 1951 "saccade_time"
  81986 1952 "saccade_time"
@@ -22887,7 +22887,7 @@ NAME TABLE
  86060 2049 "staircase"
  86102 2050 "Staircase_"
  86144 2051 "start"
- 86186 2052 "StartInfos_"
+ 86186 2052 "EVT_START_INFOS_"
  86228 2053 "State"
  86270 2054 "state"
  86312 2055 "still"
@@ -23008,7 +23008,7 @@ NAME TABLE
  91142 2170 "target"
  91184 2171 "target"
  91226 2172 "target"
- 91268 2173 "Target_"
+ 91268 2173 "EVT_TARGET_"
  91310 2174 "target_color_b"
  91352 2175 "target_color_g"
  91394 2176 "target_color_r"
@@ -23025,7 +23025,7 @@ NAME TABLE
  91856 2187 "target_pd"
  91898 2188 "target_pd"
  91940 2189 "TargetOff_"
- 91982 2190 "TargetPre_"
+ 91982 2190 "EVT_TARGET_PRE_"
  92024 2191 "TargetType"
  92066 2192 "TargetWindow_"
  92108 2193 "targH"
@@ -23085,7 +23085,7 @@ NAME TABLE
  94376 2247 "trial_length"
  94418 2248 "trial_length"
  94460 2249 "TrialInBlock"
- 94502 2250 "TrialStart_"
+ 94502 2250 "EVT_TRIAL_START_"
  94544 2251 "TrialTp"
  94586 2252 "trialtype"
  94628 2253 "trl_end_time"
@@ -23222,17 +23222,17 @@ NAME TABLE
 168570 "#I65536"
 168578 "#I29"
 168584 "#I30"
-168590 "FixSpotOn_"
-168602 "Fixate_"
+168590 "EVT_FIX_SPOT_ON_"
+168602 "EVT_FIXATE_"
 168610 "CueOn_"
 168618 "PlacOn_"
-168626 "Target_"
+168626 "EVT_TARGET_"
 168634 "TargetOff_"
-168646 "FixSpotOff_"
+168646 "EVT_FIX_SPOT_OFF_"
 168658 "StopSignal_"
-168670 "TrialStart_"
+168670 "EVT_TRIAL_START_"
 168682 "FixError_"
-168692 "GoSaccade_"
+168692 "GoEVT_SACCADE_"
 168704 "GoError_"
 168714 "NOGOWrong_"
 168726 "GoTargFixError_"
@@ -23244,7 +23244,7 @@ NAME TABLE
 168800 "CatchIncorrectG_"
 168818 "CatchIncorrectNG_"
 168836 "BreakTFix_"
-168848 "EarlySaccade_"
+168848 "EVT_EARLY_SACCADE_"
 168862 "Reward_"
 168870 "Tone_"
 168876 "PunishEnd_"
@@ -23256,22 +23256,22 @@ NAME TABLE
 168952 "SoundOnReward_"
 168968 "SoundNoReward_"
 168984 "Eot_"
-168990 "CmanHeader_"
+168990 "EVT_CMAN_HEADER_"
 169002 "MemHeader_"
 169014 "GONOGOHeader_"
 169028 "DelayedHeader_"
 169044 "SearchHeader_"
 169058 "CaptureHeader_"
 169074 "AntiHeader_"
-169086 "Identify_Room_"
+169086 "EVT_IDENTIFY_ROOM_"
 169102 "ShamStim_"
 169112 "Stimulation_"
 169126 "EndStim_"
 169136 "ZeroEyePosition_"
 169154 "VSyncSynced_"
-169168 "Saccade_"
+169168 "EVT_SACCADE_"
 169178 "StimHelp_"
-169188 "Decide_"
+169188 "EVT_DECIDE_"
 169196 "MouthBegin_"
 169208 "MouthEnd_"
 169218 "MapHeader_"
@@ -23283,11 +23283,11 @@ NAME TABLE
 169298 "RewardSize_"
 169310 "TrialInBlock"
 169324 "SendPenatrInfo_"
-169340 "TargetPre_"
+169340 "EVT_TARGET_PRE_"
 169352 "StopOn_"
 169360 "StimFailed_"
-169372 "StartInfos_"
-169384 "EndInfos_"
+169372 "EVT_START_INFOS_"
+169384 "EVT_END_INFOS_"
 169394 "InfosZero"
 169404 "Trl_number"
 169416 "Comp_Trl_number"
@@ -24618,7 +24618,7 @@ NAME TABLE
 181560 "cumEProbs"
 181570 "SearchInd"
 181580 "#I360"
-181586 "Decide_SSD"
+181586 "EVT_DECIDE_SSD"
 181598 "TypeCode"
 181608 "DistFix"
 181616 "saccEnd"

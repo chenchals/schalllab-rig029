@@ -71,7 +71,7 @@ process FLSHSCRN()
 	nexttick 10;									// to prevent buffer overflows after task reentry.
 	
 	// Let's identify the next section of trials as a flash session
-	Event_fifo[Set_event] = flashSessStart;									// queue TrialStart_ strobe
+	Event_fifo[Set_event] = flashSessStart;									// queue EVT_TRIAL_START_ strobe
 	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 		
 	system("dialog Color_Vars");
@@ -110,7 +110,7 @@ process FLSHSCRN()
 				{
 				if (In_FixWin)
 					{
-					Event_fifo[Set_event] = flashOnEv;									// queue TrialStart_ strobe
+					Event_fifo[Set_event] = flashOnEv;									// queue EVT_TRIAL_START_ strobe
 					Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 					dsendf("vp %d\n",flash);
 					flashStart = time();
@@ -122,7 +122,7 @@ process FLSHSCRN()
 				{
 				if (!In_FixWin)
 					{
-					Event_fifo[Set_event] = flashFailEv;									// queue TrialStart_ strobe
+					Event_fifo[Set_event] = flashFailEv;									// queue EVT_TRIAL_START_ strobe
 					Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 					dsendf("vp %d\n",blank);
 					stage = need_fix;
@@ -137,7 +137,7 @@ process FLSHSCRN()
 						//printf("Stim turned off...");
 						offTime = time();
 						stage = waitIFI;
-						Event_fifo[Set_event] = flashSuccEv;									// queue TrialStart_ strobe
+						Event_fifo[Set_event] = flashSuccEv;									// queue EVT_TRIAL_START_ strobe
 						Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 						//spawn TONE(success_Tone_medR,tone_duration);				// give the secondary reinforcer tone
 						spawn JUICE(juice_channel,Base_Reward_time);				// YEAH BABY!  THAT'S WHAT IT'S ALL ABOUT!
@@ -172,7 +172,7 @@ process FLSHSCRN()
 				}
 		}
 	
-	Event_fifo[Set_event] = flashSessEnd;									// queue TrialStart_ strobe
+	Event_fifo[Set_event] = flashSessEnd;									// queue EVT_TRIAL_START_ strobe
 	Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 						
 													// the State global variables allow a control structure...

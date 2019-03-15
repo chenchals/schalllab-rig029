@@ -63,12 +63,12 @@ process WATCHMTH()
 				{
 				if (mouth_status == moving)
 					{
-					Event_fifo[Set_event] = MouthBegin_;		// queue TrialStart_ strobe
+					Event_fifo[Set_event] = MouthBegin_;		// queue EVT_TRIAL_START_ strobe
 					Set_event = (Set_event + 1) % Event_fifo_N;	// incriment event queue
 					}
 				else if (mouth_status == still)
 					{
-					Event_fifo[Set_event] = MouthEnd_;			// queue TrialStart_ strobe
+					Event_fifo[Set_event] = MouthEnd_;			// queue EVT_TRIAL_START_ strobe
 					Set_event = (Set_event + 1) % Event_fifo_N;	// incriment event queue
 					}
 				last_status = mouth_status;

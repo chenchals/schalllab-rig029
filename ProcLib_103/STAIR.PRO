@@ -4,7 +4,7 @@
 
 declare Curr_SSD;								// Global output
 				
-declare int	Decide_SSD = -1; 					// Global only sets at load time.
+declare int	EVT_DECIDE_SSD = -1; 					// Global only sets at load time.
 												// Why you ask? So that we can start
 												// the SSDs out at the longest and 
 												// discourage speeding at the start.

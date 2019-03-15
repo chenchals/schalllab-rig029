@@ -19,8 +19,8 @@
 //       appropriate locations.
 // 002: 2019/01/08 chenchal subravtei
 //      Added / modified event codes:
-//      PDTriggerLeft_  = 2990 and
-//      PDTriggerRight_ = 2991
+//      EVT_PD_TRIGGER_LEFT_  = 2990 and
+//      EVT_PD_TRIGGER_RIGHT_ = 2991
 //
 
 declare constant ShamStim_          = 665;
@@ -32,44 +32,44 @@ declare constant Reward_tone        = 777;
 declare constant Error_sacc         = 887;
 declare constant Correct_sacc       = 888;
 declare constant VSyncRefresh_      = 999;
-declare constant Identify_Room_     = 1500;
-declare constant CmanHeader_        = 1501;
+declare constant EVT_IDENTIFY_ROOM_     = 1500;
+declare constant EVT_CMAN_HEADER_        = 1501;
 declare constant MemHeader_         = 1502;
 declare constant GONOGOHeader_      = 1503;
 declare constant DelayedHeader_     = 1504;
 declare constant SearchHeader_      = 1507;
 declare constant CaptureHeader_     = 1508;
 declare constant AntiHeader_        = 1509;
-declare constant TrialStart_        = 1666;
+declare constant EVT_TRIAL_START_        = 1666;
 declare constant Eot_               = 1667;
 declare constant Tone_              = 2001;
 declare constant PunishEnd_         = 2002;
 declare constant ITIStart_          = 2124;
 declare constant ITIEnd_            = 2125;
 declare constant ExtraReward_       = 2127;
-declare constant FixSpotOff_        = 2300;
-declare constant FixSpotOn_         = 2301;
+declare constant EVT_FIX_SPOT_OFF_        = 2300;
+declare constant EVT_FIX_SPOT_ON_         = 2301;
 //Note that this is followed by a 1 or a 2 if MultElectrodeStimFlag is set depending on the stim channel
 declare constant ZeroEyePosition_   = 2302;
 declare constant PlacOn_            = 2320;
 declare constant Correct_           = 2600;
 declare constant Abort_             = 2620;
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
-declare constant TargetPre_         = 2650;
-declare constant Target_            = 2651;
+declare constant EVT_TARGET_PRE_         = 2650;
+declare constant EVT_TARGET_            = 2651;
 declare constant TargetOff_         = 2652;
 declare constant StopSignal_        = 2653;
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
 declare constant StopOn_            = 2654;
 declare constant MouthBegin_        = 2655;
 declare constant MouthEnd_          = 2656;
-declare constant Fixate_            = 2660;
+declare constant EVT_FIXATE_            = 2660;
 declare constant CueOn_             = 2661;
-declare constant TaskEnd_           = 2680;
+declare constant EVT_TASK_END_           = 2680;
 declare constant SessionStart_      = 2681;
 declare constant Reward_            = 2727;
 declare constant FixError_          = 2750;
-declare constant GoSaccade_         = 2751;
+declare constant GoEVT_SACCADE_         = 2751;
 declare constant GoError_           = 2752;
 declare constant NOGOWrong_         = 2753;
 declare constant GoTargFixError_    = 2754;
@@ -79,7 +79,7 @@ declare constant CatchCorrect_      = 2757;
 declare constant CatchIncorrectG_   = 2758;
 declare constant CatchIncorrectNG_  = 2759;
 declare constant BreakTFix_         = 2760;
-declare constant EarlySaccade_      = 2761;
+declare constant EVT_EARLY_SACCADE_      = 2761;
 declare constant FixWindow_         = 2770;
 declare constant TargetWindow_      = 2771;
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
@@ -93,8 +93,8 @@ declare constant JuiceEnd_          = 2776;
 declare constant JuiceStart_        = 2777;
 declare constant SoundOnReward_     = 2778;
 declare constant SoundNoReward_     = 2779;
-declare constant Saccade_           = 2810;
-declare constant Decide_            = 2811;
+declare constant EVT_SACCADE_           = 2810;
+declare constant EVT_DECIDE_            = 2811;
 declare constant StimHelp_          = 2820;
 //Note followed by another TTL == 2820 + trials[1] (looks like it classifies trial type)
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
@@ -104,9 +104,9 @@ declare constant TrialInBlock       = 2928;
 // MUST CHECK IN TRANSLATED VARIABLES (MY VERSION DIED WITHOUT NETWORK)
 declare constant SendPenatrInfo_    = 2929;
 
-declare constant PDTriggerLeft_     = 2990;
-declare constant PDTriggerRight_    = 2991;
-declare constant StartInfos_        = 2998;
-declare constant EndInfos_          = 2999;
+declare constant EVT_PD_TRIGGER_LEFT_     = 2990;
+declare constant EVT_PD_TRIGGER_RIGHT_    = 2991;
+declare constant EVT_START_INFOS_        = 2998;
+declare constant EVT_END_INFOS_          = 2999;
 declare constant InfosZero        = 3000;
 // declare hide constant SendStimInfo_ 	= 7000; 

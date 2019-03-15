@@ -3,11 +3,11 @@ fName = 'stopSig_20190227_3_8ms_Lag_fixSS2.csv';
 
 ssdTable = readtable(fName,'ReadVariableNames',true);
 refreshRate = 1000/60;
-% varNames: TRL_TRIAL_NUMBER, TRL_USE_SSD_VR_COUNT, TRL_SSD_VR_COUNT, TRL_TARG_ON_TIME, TRL_STOP_SIGNAL_TIME, TRL_STOP_SIGNAL_DURATION
+% varNames: TRL_TRIAL_NUMBER, TRL_USE_SSD_VR_COUNT, TRL_SSD_VR_COUNT, TRL_TARGET_TIME, TRL_STOP_SIGNAL_TIME, TRL_STOP_SIGNAL_DURATION
 ssdTable.ssdTimeExpected = (ssdTable.TRL_USE_SSD_VR_COUNT)* refreshRate;
 ssdTable.ssdTimeFromVRCount = (ssdTable.TRL_SSD_VR_COUNT)* refreshRate;
 ssdTable.ssdTimeFromTickCount = ssdTable.TRL_STOP_SIGNAL_DURATION;
-ssdTable.ssdTimeFromTargOnSSOn = ssdTable.TRL_STOP_SIGNAL_TIME - ssdTable.TRL_TARG_ON_TIME;
+ssdTable.ssdTimeFromTargOnSSOn = ssdTable.TRL_STOP_SIGNAL_TIME - ssdTable.TRL_TARGET_TIME;
 
 
 varNames = ssdTable.Properties.VariableNames;

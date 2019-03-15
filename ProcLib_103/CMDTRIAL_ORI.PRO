@@ -133,8 +133,8 @@ process CMDTRIAL(allowed_fix_time,
 	stage = need_fix;
 	traceTime = 0;
 	
-	spawn SEND_EVT(CmanHeader_);
-	spawn SEND_EVT(TrialStart_);
+	spawn SEND_EVT(EVT_CMAN_HEADER_);
+	spawn SEND_EVT(EVT_TRIAL_START_);
 	// Show fixation with white boxes for photocell
 	dsendf("vp %d\n", fixation_pd);
 	while (!PD_TRIG_L)
@@ -143,7 +143,7 @@ process CMDTRIAL(allowed_fix_time,
 	}
 	fix_spot_time = time();
 	dsendf("vp %d\n", fixation);
-	spawn SEND_EVT(FixSpotOn_);
+	spawn SEND_EVT(EVT_FIX_SPOT_ON_);
 	oSetAttribute(object_fix, aVISIBLE);
 
 	while (trl_running)
@@ -162,7 +162,7 @@ process CMDTRIAL(allowed_fix_time,
 					nexttick;
 				}
 				dsendf("vp %d\n", fixation);
-				spawn SEND_EVT(FixSpotOn_);
+				spawn SEND_EVT(EVT_FIX_SPOT_ON_);
 				wait 100;
 			}
 		}
@@ -177,7 +177,7 @@ process CMDTRIAL(allowed_fix_time,
 				// ...function call to time to note current time and...
 				aquire_fix_time = time();
 				Trl_Start_Time = aquire_fix_time;
-				spawn SEND_EVT(Fixate_);
+				spawn SEND_EVT(EVT_FIXATE_);
 				// ...advance to the next stage.
 				stage = fixating;
 			}
@@ -246,8 +246,8 @@ process CMDTRIAL(allowed_fix_time,
 				// ...record the time...Refresh#=1
 				dsendf("vp %d\n", target);
 				// ...flip the pg to the target without pd marker.
-				spawn SEND_EVT(Target_);
-				spawn SEND_EVT(FixSpotOff_);
+				spawn SEND_EVT(EVT_TARGET_);
+				spawn SEND_EVT(EVT_FIX_SPOT_OFF_);
 				// If the trial is a go trial...
 				if (trl_type == go_trl)
 				{
@@ -331,7 +331,7 @@ process CMDTRIAL(allowed_fix_time,
 				spawn TRACE_FLOW(trl_type,13);
 				// ...we have a saccade, so, record the time...
 				saccade_time = time();
-				spawn SEND_EVT(Saccade_);
+				spawn SEND_EVT(EVT_SACCADE_);
 				// ...tell the user whats up...
 				printf("     Reaction Time = %d\n", saccade_time - targ_time);
 				// ...and advance to the next stage.
@@ -405,7 +405,7 @@ process CMDTRIAL(allowed_fix_time,
 				spawn TRACE_FLOW(trl_type,18);
 				// ...record the time...
 				aquire_targ_time = time();
-				spawn SEND_EVT(Decide_);
+				spawn SEND_EVT(EVT_DECIDE_);
 				// ...and advance to the next stage of the trial.
 				stage = on_target;
 				// But if a saccade was the wrong thing to do...
