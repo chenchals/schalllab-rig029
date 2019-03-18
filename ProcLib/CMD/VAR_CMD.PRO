@@ -166,6 +166,7 @@ declare int          TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
 declare int          TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };

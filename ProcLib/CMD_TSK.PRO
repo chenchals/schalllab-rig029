@@ -24,6 +24,7 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ON.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_SSD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TARG_ACQ.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/TARG_HLD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TONE_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TONE_SSD.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/RWRD_CHK.PRO
@@ -180,6 +181,11 @@ process IDLE() enabled
 			if (CURR_STAT == STAT_TARG_ACQ)
 			{
 				spawnwait PROC_TARG_ACQ();
+			}
+			//================= State = STAT_TARG_HOLD===============
+			if (CURR_STAT == STAT_TARG_HOLD)
+			{
+				spawnwait PROC_TARG_HOLD();
 			}
 			//================= State = STAT_TONE_CHK===============
 			if (CURR_STAT == STAT_TONE_CHK)

@@ -76,6 +76,12 @@ declare constant EVT_XTRA_HOLD_START_ = 2450;
 declare constant EVT_XTRA_HOLD_END_   = 2452;
 declare constant EVT_XTRA_HOLD_BREAK_ = 2454;
 declare constant EVT_DECIDE_          = 2460;
+
+declare constant EVT_MIN_SSHT_START_ = 2470;
+declare constant EVT_MIN_SSHT_END_   = 2472;
+declare constant EVT_MIN_THT_START_  = 2480;
+declare constant EVT_MIN_THT_END_    = 2482;
+
 // Saccade reward and reinforcement
 declare constant EVT_EARLY_SACCADE_ = 2500;
 declare constant EVT_SACCADE_       = 2502;

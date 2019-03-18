@@ -22,7 +22,6 @@
 
 declare PROC_GET_REDY();
 
-
 process PROC_GET_REDY()
 {
     if (PROCESS_STATE)

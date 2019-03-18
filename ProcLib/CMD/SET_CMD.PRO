@@ -101,8 +101,10 @@ declare int TRL_IS_TARG_ON;
 declare int TRL_IS_TARG_ACQUIRED;
 // was the stop-signal page shown (detected by PD signal)
 declare int TRL_IS_STOP_SIGNAL_ON;
-// did gaze fulfill min_targ_hold_time (GO trial)
+// did gaze fulfill extra hold-time (GO trial/STOP trial - time from when tone-delay starts)
 declare int TRL_IS_XTRA_HOLD_DONE;
+// did gaze fulfill min-target-hold-time duration (GO trial)
+declare int TRL_IS_MIN_THT;
 // did gaze fulfill cancel duration (STOP trial)
 declare int TRL_IS_MIN_SSHT;
 // did current trial lead to a timeout situation
@@ -117,7 +119,6 @@ declare int TRL_IS_LO_RWRD;
 declare int TRL_IS_FIX_REIGNITE;
 // use to compute next STOP trial SSD (Cancel or non-cancelled and good saccade landed on target)
 declare int TRL_IS_STAIRCASE_SSD;
-
 
 //======= TRIAL TIMES = time when event occurred ========
 // when did task start - first code followed by task-header for every trial
@@ -166,6 +167,14 @@ declare int TRL_LATE_SACC_TIME;
 declare int TRL_NO_SACCADE_TIME;
 // when was it decided that gaze was elsewhere and did not land in target window
 declare int TRL_ACQUIRE_TARGET_ERROR_TIME;
+// when did min target-hold-time start
+declare int TRL_MIN_THT_START_TIME;
+// when did min target-hold-time end
+declare int TRL_MIN_THT_END_TIME;
+// when did min stop-signal-hold-time start (Cancel time start)
+declare int TRL_MIN_SSHT_START_TIME;
+// when did min stop-signal-hold-time end (Cancel time start)
+declare int TRL_MIN_SSHT_END_TIME;
 // when did gaze hold on target start after min target hold time/duration achieved
 declare int TRL_XTRA_HOLD_START_TIME;
 // when did gaze hold on target end after min target hold time/duration achieved
@@ -221,7 +230,6 @@ declare int TRL_XTRA_RWRD_OFF_TIME;
 // when did task end - last code for every trial,followed by task-start for next trial, unless manual juice
 declare int TRL_TASK_END_TIME;
 
-
 //========== TRIAL DURATION - Observed through counting nextticks===========
 // how long *from* trial-start-time, used to compute ITI if trial length is fixed
 declare int TRL_CUM_DURATION;
@@ -231,6 +239,8 @@ declare int TRL_GET_READY_DURATION;
 declare int TRL_FIX_HOLD_DURATION;
 // how long was gaze in fix window *after* stop-signal was on (STOP trial = SSD Cancel duration)
 declare int TRL_MIN_SSHT_DURATION;
+// how long was gaze in target window *after* target was acquired
+declare int TRL_MIN_THT_DURATION;
 // how long target was on
 declare int TRL_TARG_ON_DURATION;
 // how long more was gaze held (GO: on target or STOP: on Fix/signal) during the reinforcement time
@@ -242,13 +252,11 @@ declare int TRL_TARG_HOLD_DURATION;
 // how long did it take from PD detected first for target-page till PD deceted for stop-signal-page
 declare int TRL_STOP_SIGNAL_DURATION;
 
-
 //=========== TRIAL COUTNS - counting of PD signal (keep track of screen refreshe)=======
 // number of vertical refreshs TARGET with PD was on
 declare int TRL_TARG_VR_COUNT;
 // number of vertical refreshs TARGET with PD was on *before* stop-signal page was shown
 declare int TRL_SSD_VR_COUNT;
-
 
 //========= TRIAL Variables to Use that are set by User or system ================
 // user/system set - trial duration for determining iti when trial length is fixed
@@ -269,8 +277,8 @@ declare int TRL_USE_SSD_VR_COUNT;
 declare int TRL_USE_FIX_HOLD_DURATION;
 // system set - fix hold time for this trial *adjusted* so that target-on page can be queued for next refresh
 declare int TRL_USE_FIX_HOLD_ADJUST;
-// system set - targ hold time for this trial
-declare int TRL_USE_MIN_TARG_HOLD_DURATION;
+// system set - min targ hold time for this trial
+declare int TRL_USE_MIN_THT_DURATION;
 // system/user set - how long to hold fixation *after* stop signal is shown for trial to be considered Cancel
 declare int TRL_USE_SSD_CANCEL_DURATION;
 // user/system set - delay *before* SSD for saccade to happen (before MAX_SACC_TIME) to turn FIX Back ON
@@ -413,8 +421,8 @@ process SET_CMD_TRL()
     spawnwait GRAF_UPD8_FIX();
     spawnwait GRAF_UPD8_TARG(TRL_CURR_TARG_SIZE, TRL_CURR_TARG_ANGLE, TRL_CURR_TARG_ECCENTRICITY);
 
-	// increment trial number
-    TRL_TRIAL_NUMBER     = TRL_TRIAL_NUMBER + 1;
+    // increment trial number
+    TRL_TRIAL_NUMBER = TRL_TRIAL_NUMBER + 1;
 
     printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
            TRL_BLOCK_NUM, TRL_TRIAL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_CURR_TARG_IDX, TRL_IS_LO_RWRD);
@@ -443,7 +451,7 @@ process COMPUTE_TRIAL_DURATION()
     // Add max ssd delay as this will be the longest TRL duration
     TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + ceil(MAX_SSD * REFRESH_RATE);
     // add min-target hold time
-    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TRL_USE_MIN_TARG_HOLD_DURATION;
+    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TRL_USE_MIN_THT_DURATION;
     // check for extra hold time based on user set flag
     if (TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG == 1)
     {
@@ -572,6 +580,11 @@ process COMPUTE_XTRA_HOLD_TIME()
             TRL_USE_XTRA_HOLD_DURATION = JITTER_INT;
         }
     }
+    // atleast 1 tick for running the process check
+    if (TRL_USE_XTRA_HOLD_DURATION <= 0)
+    {
+        TRL_USE_XTRA_HOLD_DURATION = 1;
+    }
 
     if (DEBUG_CONSOLE)
     {
@@ -584,10 +597,10 @@ process COMPUTE_MIN_THT()
 {
     spawnwait JITTER(TARG_HOLD_MEAN, TARG_HOLD_SPREAD, TARG_HOLD_JITTER_FLAG);
 
-    TRL_USE_MIN_TARG_HOLD_DURATION = JITTER_INT;
+    TRL_USE_MIN_THT_DURATION = JITTER_INT;
     if (DEBUG_CONSOLE)
     {
-        printf("****SET_CMD/COMPUTE_MIN_THT: TRL_USE_MIN_TARG_HOLD_DURATION = [%d]****\n", TRL_USE_MIN_TARG_HOLD_DURATION);
+        printf("****SET_CMD/COMPUTE_MIN_THT: TRL_USE_MIN_THT_DURATION = [%d]****\n", TRL_USE_MIN_THT_DURATION);
     }
 }/* COMPUTE_MIN_THT */
 
@@ -855,6 +868,10 @@ process INIT_VARS_REPEAT_TRL()
     TRL_FIX_ON_TIME                = -1;
     TRL_ACQUIRE_FIX_TIME           = -1;
     TRL_ACQUIRE_FIX_ERROR_TIME     = -1;
+    TRL_MIN_THT_START_TIME         = -1;
+    TRL_MIN_THT_END_TIME           = -1;
+    TRL_MIN_SSHT_START_TIME        = -1;
+    TRL_MIN_SSHT_END_TIME          = -1;
     TRL_FIXATE_TIME                = -1;
     TRL_FIX_BREAK_TIME             = -1;
     TRL_TARGET_PRE_TIME            = -1;
@@ -900,6 +917,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_GET_READY_DURATION         = 0;
     TRL_FIX_HOLD_DURATION          = 0;
     TRL_MIN_SSHT_DURATION          = 0;
+    TRL_MIN_THT_DURATION           = 0;
     TRL_TARG_ON_DURATION           = 0;
     TRL_XTRA_HOLD_DURATION         = 0;
     TRL_SACC_DURATION              = 0;
@@ -943,6 +961,10 @@ process INIT_TRL_VARS()
     TRL_FIX_ON_TIME                  = -1;
     TRL_ACQUIRE_FIX_TIME             = -1;
     TRL_ACQUIRE_FIX_ERROR_TIME       = -1;
+    TRL_MIN_THT_START_TIME           = -1;
+    TRL_MIN_THT_END_TIME             = -1;
+    TRL_MIN_SSHT_START_TIME          = -1;
+    TRL_MIN_SSHT_END_TIME            = -1;
     TRL_FIXATE_TIME                  = -1;
     TRL_FIX_BREAK_TIME               = -1;
     TRL_TARGET_PRE_TIME              = -1;
@@ -988,6 +1010,7 @@ process INIT_TRL_VARS()
     TRL_GET_READY_DURATION           = 0;
     TRL_FIX_HOLD_DURATION            = 0;
     TRL_MIN_SSHT_DURATION            = 0;
+    TRL_MIN_THT_DURATION             = 0;
     TRL_TARG_ON_DURATION             = 0;
     TRL_XTRA_HOLD_DURATION           = 0;
     TRL_SACC_DURATION                = 0;

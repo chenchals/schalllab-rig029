@@ -51,7 +51,6 @@ process PROC_TONE_CHK()
         // Tone already given, during tone check gaze
         TEMP_TONE_DURATION = TRL_USE_TONE_DURATION * TIME_DILATE_FACTOR;
 
-        TRL_TARG_HOLD_DURATION  = 1;                       // as target was already acquired in previous state
         TEMP_XTRA_HOLD_TIME     = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_TONE_DURATION;
 
@@ -72,7 +71,7 @@ process PROC_TONE_CHK()
 
         printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_START_);
         TRL_XTRA_HOLD_DURATION = 0;
-		TRL_IS_XTRA_HOLD_DONE = 0;
+        TRL_IS_XTRA_HOLD_DONE  = 0;
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -85,13 +84,13 @@ process PROC_TONE_CHK()
     if (TRL_XTRA_HOLD_DURATION >= TEMP_XTRA_HOLD_TIME)
     {
         TRL_IS_XTRA_HOLD_DONE = 1;
-		if (TRL_XTRA_HOLD_END_TIME <=0)
-		{
-        TRL_XTRA_HOLD_END_TIME = time();
-        spawn SEND_EVT(EVT_XTRA_HOLD_END_);
+        if (TRL_XTRA_HOLD_END_TIME <= 0)
+        {
+            TRL_XTRA_HOLD_END_TIME = time();
+            spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-        printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_END_);			
-		}
+            printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_END_);
+        }
     }
 
     // Tone delay

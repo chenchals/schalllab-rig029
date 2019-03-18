@@ -19,6 +19,7 @@
 //==========================================================================
 //  Revision History:
 
+declare PROC_FIX_HOLD();
 
 process PROC_FIX_HOLD()
 {

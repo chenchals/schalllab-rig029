@@ -69,7 +69,7 @@ process PROC_TARG_ACQ()
                 dsendf("vp %d\n", PG_SIGNAL_PD);
                 printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial Saccade happened; Turn-on-Signal*)\n", STAT_TARG_ACQ);
               }
-                CURR_STAT = STAT_TONE_CHK;
+                CURR_STAT = STAT_TARG_HOLD;
             }
         }
     }

@@ -97,15 +97,22 @@ process PROC_TARG_SSD()
     }
     if (TRL_IS_STOP_SIGNAL_ON)
     {
-      if (TRL_STOP_SIGNAL_TIME <= 0)
-      {
-        TRL_STOP_SIGNAL_TIME = time();
-        spawn SEND_EVT(EVT_STOP_SIGNAL_);
-        spawn GRAF_SHOW_FIX(GRAF_SHOW);
+        if (TRL_STOP_SIGNAL_TIME <= 0)
+        {
+            TRL_STOP_SIGNAL_TIME = time();
+            spawn SEND_EVT(EVT_STOP_SIGNAL_);
+            spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
-        printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_STOP_SIGNAL_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_STOP_SIGNAL_, TRL_STOP_SIGNAL_TIME);
-      }
-      TRL_MIN_SSHT_DURATION = TRL_MIN_SSHT_DURATION + 1;
+            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_STOP_SIGNAL_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_STOP_SIGNAL_, TRL_STOP_SIGNAL_TIME);
+        }
+        TRL_MIN_SSHT_DURATION = TRL_MIN_SSHT_DURATION + 1;
+        if (TRL_MIN_SSHT_START_TIME <= 0)
+        {
+            TRL_MIN_SSHT_START_TIME = time();
+            spawn SEND_EVT(EVT_MIN_SSHT_START_);
+
+            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_MIN_SSHT_START_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_MIN_SSHT_START_, TRL_MIN_SSHT_START_TIME);
+        }
     }
 
     if (TRL_TARG_VR_COUNT < STAT_ALLOWED_T)    // || TRL_TARG_VR_COUNT < TRL_USE_SSD_VR_COUNT)
@@ -123,8 +130,6 @@ process PROC_TARG_SSD()
         {
             queuedStopSignalPage = 1;
             dsendf("vp %d\n", PG_SIGNAL_PD);
-            //dsendf("vw 1\n");
-            //dsendf("vp %d\n", PG_SIGNAL);
             printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
         }
 
@@ -144,8 +149,13 @@ process PROC_TARG_SSD()
 
             spawn SEND_EVT(EVT_CANCEL_);
 
+            TRL_MIN_SSHT_END_TIME = time();
+            spawn SEND_EVT(EVT_MIN_SSHT_END_);
+
             printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_CANCEL_TIME);
+            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_MIN_SSHT_END_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_MIN_SSHT_END_TIME);
             printf("****STAT_TARG_SSD[%d]: OK (EVT_CANCEL_ in)[%d]/[%d](TRL_USE_SSD_VR_COUNT + TRL_USE_SSD_CANCEL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TEMP_DELY_PLUS_DURATION);
+
             spawn PRINT_MSG();
 
             PROCESS_STATE = 1;

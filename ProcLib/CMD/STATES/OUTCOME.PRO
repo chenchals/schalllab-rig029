@@ -57,315 +57,369 @@ declare PROC_NOGO_POST_CANCEL_OUTCOMES();
 
 process PROC_TRL_OUTCOME()
 {
-	declare int doOnce;
-	// Target acquired, but not fixated yet or eye still in FixWin
-	if (PROCESS_STATE)
-	{
-		printf("****STAT_OUTCOME[%d]: Processing Trial outcome\n", STAT_OUTCOME);
-		// Keep independent of previous state times if any.
-		PROCESS_STATE = 0;
-		STAT_STRT_T  = time();
-		STAT_DLTA_T  = 0;
-		STAT_ALLOWED_T = 5;
-		dsendf("vp %d\n", PG_BLANK);
+    declare int doOnce;
 
-		TRL_IS_TARG_ON = 0;
+    // Target acquired, but not fixated yet or eye still in FixWin
+    if (PROCESS_STATE)
+    {
+        printf("****STAT_OUTCOME[%d]: Processing Trial outcome\n", STAT_OUTCOME);
+        // Keep independent of previous state times if any.
+        PROCESS_STATE  = 0;
+        STAT_STRT_T    = time();
+        STAT_DLTA_T    = 0;
+        STAT_ALLOWED_T = 5;
+        dsendf("vp %d\n", PG_BLANK);
 
-		TIMEOUT_DURATION = 0;
-		// set this as default and change to
-		// TRL_IS_TIMEOUT = 0; when not error
-		TRL_IS_TIMEOUT = 1;
-		doOnce = 1;
-	}
-	// it is big conditional depending on the current trial type and tyep of error
+        TRL_IS_TARG_ON = 0;
 
-	if(STAT_DLTA_T <= STAT_ALLOWED_T)
-	{
-		if(doOnce)
-		{
-			doOnce = 0;
-			if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
-			{
-				// Assume it is an error and adjust if not
-				TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERROR_;
-				SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
-				spawn PROC_GO_OUTCOMES();
-			}
-			else if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
-			{
-				// Assume it is a non-cancelled error trial and adjust if not
-				TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERROR_;
-				SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
-				if (TRL_CANCEL_TIME > 0)
-				{
-					spawn PROC_NOGO_POST_CANCEL_OUTCOMES();
-				}
-				else
-				{
-					spawn PROC_NOGO_PRE_CANCEL_OUTCOMES();
-				}
-			}
-		}	
-	}
-	else
-	{
-		if (TRL_IS_TIMEOUT > 0)
-		{
-			if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
-			{
-				TIMEOUT_TONE = GO_ERROR_TONE_HZ;
-			}
-			else if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
-			{
-				TIMEOUT_TONE = NOGO_ERROR_TONE_HZ;
-			}
-		}
+        TIMEOUT_DURATION = 0;
+        // set this as default and change to
+        // TRL_IS_TIMEOUT = 0; when not error
+        TRL_IS_TIMEOUT = 1;
+        doOnce         = 1;
+    }
+    // it is big conditional depending on the current trial type and tyep of error
 
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
-		TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR;
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] (TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) = [%d] \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
-		PROCESS_STATE = 1;
-		CURR_STAT   = STAT_ITI_CHK;		
-	}
+    if (STAT_DLTA_T <= STAT_ALLOWED_T)
+    {
+        if (doOnce)
+        {
+            doOnce = 0;
+            if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
+            {
+                // Assume it is an error and adjust if not
+                TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERROR_;
+                SESS_N_GO_ERROR_TRLS         = SESS_N_GO_ERROR_TRLS + 1;
+                spawn PROC_GO_OUTCOMES();
+            }
+            else if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
+            {
+                // Assume it is a non-cancelled error trial and adjust if not
+                TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERROR_;
+                SESS_N_NOGO_ERROR_TRLS         = SESS_N_NOGO_ERROR_TRLS + 1;
+                if (TRL_CANCEL_TIME > 0)
+                {
+                    spawn PROC_NOGO_POST_CANCEL_OUTCOMES();
+                }
+                else
+                {
+                    spawn PROC_NOGO_PRE_CANCEL_OUTCOMES();
+                }
+            }
+        }
+    }
+    else
+    {
+        if (TRL_IS_TIMEOUT > 0)
+        {
+            if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
+            {
+                TIMEOUT_TONE = GO_ERROR_TONE_HZ;
+            }
+            else if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
+            {
+                TIMEOUT_TONE = NOGO_ERROR_TONE_HZ;
+            }
+        }
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
+        TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR;
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] (TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) = [%d] \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
+        PROCESS_STATE = 1;
+        CURR_STAT     = STAT_ITI_CHK;
+    }
 } /* PROC_OUTCOME */
 
 
 process PROC_GO_OUTCOMES()
 {
-	if (TRL_IS_XTRA_HOLD_DONE > 0)
-	{
-		TIMEOUT_DURATION = 0;
-		TRL_IS_TIMEOUT  = 0;
-		spawn SEND_EVT(EVT_OUTCOME_GO_CORRECT_);
-		TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_CORRECT_;
-		printf("---GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT---\n");
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_CORRECT_ [%d]; Go Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
+    if (TRL_IS_MIN_THT > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
+    {
+        TIMEOUT_DURATION = 0;
+        TRL_IS_TIMEOUT   = 0;
+        spawn SEND_EVT(EVT_OUTCOME_GO_CORRECT_);
 
-		SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
-		// Adjust initial assumption that this was a error trial
-		SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
-		BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
-	}
-	else if (TRL_FIX_BREAK_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_FIX_BRK[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_FIX_BREAK_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_FIX_BREAK_ [%d]; Go Trial; (TRL_FIX_BREAK_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_FIX_BREAK_);
-	}
-	else if (TRL_ERLY_SACCADE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_ERLY_SACCADE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_NO_SACCADE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_NO_SACCADE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_ACQUIRE_TARGET_ERROR_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_BRK_PRE_TONE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_BRK_TONE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_TONE[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_BRK_PRE_RWRD_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_PRE_RWRD_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_BRK_RWRD_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_RWRD_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
-	else if (TRL_IS_XTRA_HOLD_DONE<=0)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_MIN_THT[GO_IDX];
-		spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TIMEOUT_BRK_MIN_THT - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
-	}
+        TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_CORRECT_;
+        printf("---GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT---\n");
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_CORRECT_ [%d]; Go Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
+
+        SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
+        // Adjust initial assumption that this was a error trial
+        SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
+        BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
+    }
+    else if (TRL_FIX_BREAK_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_FIX_BRK[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_FIX_BREAK_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_FIX_BREAK_ [%d]; Go Trial; (TRL_FIX_BREAK_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_FIX_BREAK_);
+    }
+    else if (TRL_ERLY_SACCADE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_ERLY_SACCADE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+    else if (TRL_NO_SACCADE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_NO_SACCADE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+    else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_ACQUIRE_TARGET_ERROR_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+    else if (TRL_BRK_PRE_TONE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+    else if (TRL_BRK_TONE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_TONE[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+    else if (TRL_BRK_PRE_RWRD_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_PRE_RWRD_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+    else if (TRL_BRK_RWRD_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TRL_BRK_RWRD_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
+		else if (TRL_IS_MIN_THT <= 0)
+		{
+				TIMEOUT_DURATION = TIMEOUT_BRK_MIN_THT[GO_IDX];
+				spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+				printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TIMEOUT_BRK_MIN_THT - ERR) \n",
+							 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+		}
+    else if (TRL_IS_XTRA_HOLD_DONE <= 0)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_XTRA_HOLD[GO_IDX];
+        spawn SEND_EVT(EVT_OUTCOME_GO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERROR_ [%d]; Go Trial; (TIMEOUT_BRK_XTRA_HOLD - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERROR_);
+    }
 } /* PROC_GO_OUTCOMES */
+
 
 // if Eye left fix win Before Cancel time
 process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
-	declare int nogoIdx;
+    declare int nogoIdx;
 
-	if(TRL_IS_STOP_SIGNAL_ON)
-	{
-		nogoIdx = NOGO_POST_SSD_IDX;
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n",STAT_OUTCOME,TRL_TRIAL_NUMBER);
-	}
-	else
-	{
-		nogoIdx = NOGO_PRE_SSD_IDX;
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; PRE-SSD, PRE_CANCEL\n",STAT_OUTCOME,TRL_TRIAL_NUMBER);
-	}
+    if (TRL_IS_STOP_SIGNAL_ON)
+    {
+        nogoIdx = NOGO_POST_SSD_IDX;
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    }
+    else
+    {
+        nogoIdx = NOGO_PRE_SSD_IDX;
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; PRE-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    }
 
-	if (TRL_IS_XTRA_HOLD_DONE)
-	{
-		TRL_IS_NON_CANCELLED = 1;
-		TIMEOUT_DURATION = 0;
-		TRL_IS_TIMEOUT  = 0;
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCELLED_);
-		TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCELLED_;
-		printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCELLED_** [%d]; TRL_IS_STAIRCASE_SSD [%d]; STOP Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n", 
-			STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCELLED_, TRL_IS_STAIRCASE_SSD);
+    if (TRL_IS_MIN_THT > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
+    {
+        TRL_IS_NON_CANCELLED = 1;
+        TIMEOUT_DURATION     = 0;
+        TRL_IS_TIMEOUT       = 0;
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCELLED_);
 
-		SESS_N_NON_CANCEL_TRLS = SESS_N_NON_CANCEL_TRLS + 1;
-		// Adjust initial assumption that this was a non-cancelled error trial
-		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
-	}
-	else if (TRL_FIX_BREAK_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_FIX_BRK[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_FIX_BREAK_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_FIX_BREAK_ [%d]; (TRL_FIX_BREAK_TIME - ERR) \n", 
-			STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_FIX_BREAK_);
-	}
-	else if (TRL_NOGO_EARLY_SACCADE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_NOGO_EARLY_SACCADE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_ACQUIRE_TARGET_ERROR_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_NOGO_LATE_SACCADE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_PRE_TONE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_TONE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_PRE_RWRD_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_RWRD_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_RWRD_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_RWRD_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_IS_XTRA_HOLD_DONE<=0)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_MIN_THT[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; Go Trial; (TIMEOUT_BRK_MIN_THT - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
+        TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCELLED_;
+        printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCELLED_** [%d]; TRL_IS_STAIRCASE_SSD [%d]; STOP Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCELLED_, TRL_IS_STAIRCASE_SSD);
+
+        SESS_N_NON_CANCEL_TRLS = SESS_N_NON_CANCEL_TRLS + 1;
+        // Adjust initial assumption that this was a non-cancelled error trial
+        SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+    }
+    else if (TRL_FIX_BREAK_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_FIX_BRK[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_FIX_BREAK_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_FIX_BREAK_ [%d]; (TRL_FIX_BREAK_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_FIX_BREAK_);
+    }
+    else if (TRL_NOGO_EARLY_SACCADE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_NOGO_EARLY_SACCADE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_ACQUIRE_TARGET_ERROR_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_NOGO_LATE_SACCADE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_PRE_TONE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_TONE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_PRE_RWRD_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_RWRD_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_RWRD_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_RWRD_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+		else if (TRL_IS_MIN_THT <= 0)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_MIN_THT[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; Go Trial; (TIMEOUT_BRK_MIN_THT - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+		else if (TRL_IS_XTRA_HOLD_DONE <= 0)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_XTRA_HOLD[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; Go Trial; (TIMEOUT_BRK_XTRA_HOLD - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
 } /* PROC_NOGO_PRE_CANCEL_OUTCOMES */
+
 
 // if Eye left fix win After Cancel time
 process PROC_NOGO_POST_CANCEL_OUTCOMES()
 {
-	declare int nogoIdx;
-	nogoIdx = NOGO_POST_SSD_IDX;
-	printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n",STAT_OUTCOME,TRL_TRIAL_NUMBER);
-	if (TRL_IS_MIN_SSHT > 0)
-	{
-		TRL_IS_CANCELLED = 1;
-		TIMEOUT_DURATION = 0;
-		TRL_IS_TIMEOUT  = 0;
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCELLED_);
-		TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCELLED_;
-		printf("---CANCELLED------CANCELLED------SSD [%d, %dms]------CANCELLED------CANCELLED---\n",TRL_USE_SSD_VR_COUNT, TRL_STOP_SIGNAL_DURATION);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_CANCELLED_ [%d]; TRL_IS_STAIRCASE_SSD  [%d]; STOP Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCELLED_,TRL_IS_STAIRCASE_SSD);
+    declare int nogoIdx;
 
-		SESS_N_CANCEL_TRLS = SESS_N_CANCEL_TRLS + 1;
-		// Adjust initial assumption that this was a non-cancelled error trial
-		SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
-		BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
-	}
-	else if (TRL_BRK_PRE_TONE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_TONE_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_TONE_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_PRE_RWRD_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_RWRD_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_BRK_RWRD_TIME)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_RWRD_TIME - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
-	else if (TRL_IS_MIN_SSHT<=0)
-	{
-		TIMEOUT_DURATION = TIMEOUT_BRK_MIN_SSHT[nogoIdx];
-		TRL_IS_TIMEOUT  = 1;
-		spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+    nogoIdx = NOGO_POST_SSD_IDX;
+    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    if (TRL_IS_MIN_SSHT > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
+    {
+        TRL_IS_CANCELLED = 1;
+        TIMEOUT_DURATION = 0;
+        TRL_IS_TIMEOUT   = 0;
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCELLED_);
 
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_IS_MIN_SSHT - ERR) \n",
-			 STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
-	}
+        TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCELLED_;
+        printf("---CANCELLED------CANCELLED------SSD [%d, %dms]------CANCELLED------CANCELLED---\n", TRL_USE_SSD_VR_COUNT, TRL_STOP_SIGNAL_DURATION);
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_CANCELLED_ [%d]; TRL_IS_STAIRCASE_SSD  [%d]; STOP Trial; (TRL_IS_TARG_MIN_SSHT - OK) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCELLED_, TRL_IS_STAIRCASE_SSD);
+
+        SESS_N_CANCEL_TRLS = SESS_N_CANCEL_TRLS + 1;
+        // Adjust initial assumption that this was a non-cancelled error trial
+        SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+        BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
+    }
+    else if (TRL_BRK_PRE_TONE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_TONE_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_TONE_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_PRE_RWRD_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_PRE_RWRD_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+    else if (TRL_BRK_RWRD_TIME)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_BRK_RWRD_TIME - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+		else if (TRL_IS_MIN_SSHT <= 0)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_MIN_SSHT[nogoIdx];
+        TRL_IS_TIMEOUT   = 1;
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_IS_MIN_SSHT - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
+		else if (TRL_IS_XTRA_HOLD_DONE <= 0)
+    {
+        TIMEOUT_DURATION = TIMEOUT_BRK_XTRA_HOLD[nogoIdx];
+        TRL_IS_TIMEOUT   = 1;
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_ERROR_);
+
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERROR_ [%d]; STOP Trial; (TRL_IS_XTRA_HOLD_DONE - ERR) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERROR_);
+    }
 } /* PROC_NOGO_POST_CANCEL_OUTCOMES */
