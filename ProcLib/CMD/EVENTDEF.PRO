@@ -79,13 +79,14 @@ declare constant EVT_ACQUIRE_TARGET_ERROR_ = 2422;
 declare constant EVT_Target_Hold_          = 2424;
 declare constant EVT_Target_Brk_           = 2426;
 
-declare constant EVT_BRK_PRE_TONE_         = 2430;
-declare constant EVT_BRK_TONE_             = 2432;
-declare constant EVT_BRK_PRE_RWRD_         = 2434;
-declare constant EVT_BRK_RWRD_             = 2438;
-declare constant EVT_XTRA_HOLD_END_        = 2450;
-declare constant EVT_BRK_XTRA_HOLD_        = 2452;
-declare constant EVT_DECIDE_               = 2460;
+declare constant EVT_BRK_PRE_TONE_    = 2430;
+declare constant EVT_BRK_TONE_        = 2432;
+declare constant EVT_BRK_PRE_RWRD_    = 2434;
+declare constant EVT_BRK_RWRD_        = 2438;
+declare constant EVT_XTRA_HOLD_START_ = 2450;
+declare constant EVT_XTRA_HOLD_END_   = 2452;
+declare constant EVT_BRK_XTRA_HOLD_   = 2454;
+declare constant EVT_DECIDE_          = 2460;
 // Saccade reward and reinforcement
 declare constant EVT_EARLY_SACCADE_ = 2500;
 declare constant EVT_SACCADE_       = 2502;
@@ -94,6 +95,8 @@ declare constant EVT_TONE_ON_       = 2510;
 declare constant EVT_TONE_OFF_      = 2512;
 declare constant EVT_REWARD_ON_     = 2530;
 declare constant EVT_REWARD_OFF_    = 2532;
+declare constant EVT_JUICE_START_   = 2534;
+declare constant EVT_JUICE_END_     = 2536;
 declare constant MouthBegin_        = 2550;
 declare constant MouthEnd_          = 2552;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460
