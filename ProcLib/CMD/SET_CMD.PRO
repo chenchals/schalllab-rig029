@@ -104,7 +104,7 @@ declare int TRL_IS_STOP_SIGNAL_ON;
 // did gaze fulfill min_targ_hold_time (GO trial)
 declare int TRL_IS_XTRA_HOLD_DONE;
 // did gaze fulfill cancel duration (STOP trial)
-declare int TRL_IS_FIX_MIN_SSHT;
+declare int TRL_IS_MIN_SSHT;
 // did current trial lead to a timeout situation
 declare int TRL_IS_TIMEOUT;
 // is the current STOP trail non-cancelled (GO trial value = -1)
@@ -227,8 +227,10 @@ declare int TRL_TASK_END_TIME;
 declare int TRL_CUM_DURATION;
 // how long to get ready (how long gaze was outside FIX_WIN_LARGE)
 declare int TRL_GET_READY_DURATION;
-// how long gaze was in fix window (GO trial = user set fix-hold-period; STOP trial = user set fix-hold-period + time for successful cancel)
+// how long gaze was in fix window
 declare int TRL_FIX_HOLD_DURATION;
+// how long was gaze in fix window *after* stop-signal was on (STOP trial = SSD Cancel duration)
+declare int TRL_MIN_SSHT_DURATION;
 // how long target was on
 declare int TRL_TARG_ON_DURATION;
 // how long more was gaze held (GO: on target or STOP: on Fix/signal) during the reinforcement time
@@ -834,7 +836,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_IS_TARG_ACQUIRED           = -1;
     TRL_IS_STOP_SIGNAL_ON          = -1;
     TRL_IS_XTRA_HOLD_DONE          = -1;
-    TRL_IS_FIX_MIN_SSHT            = -1;
+    TRL_IS_MIN_SSHT                = -1;
     TRL_IS_TIMEOUT                 = -1;
     TRL_IS_NON_CANCELLED           = -1;
     TRL_IS_CANCELLED               = -1;
@@ -894,6 +896,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_CUM_DURATION               = 0;
     TRL_GET_READY_DURATION         = 0;
     TRL_FIX_HOLD_DURATION          = 0;
+    TRL_MIN_SSHT_DURATION          = 0;
     TRL_TARG_ON_DURATION           = 0;
     TRL_XTRA_HOLD_DURATION         = 0;
     TRL_SACC_DURATION              = 0;
@@ -921,7 +924,7 @@ process INIT_TRL_VARS()
     TRL_IS_TARG_ACQUIRED             = -1;
     TRL_IS_STOP_SIGNAL_ON            = -1;
     TRL_IS_XTRA_HOLD_DONE            = -1;
-    TRL_IS_FIX_MIN_SSHT              = -1;
+    TRL_IS_MIN_SSHT                  = -1;
     TRL_IS_TIMEOUT                   = -1;
     TRL_IS_NON_CANCELLED             = -1;
     TRL_IS_CANCELLED                 = -1;
@@ -981,6 +984,7 @@ process INIT_TRL_VARS()
     TRL_CUM_DURATION                 = 0;
     TRL_GET_READY_DURATION           = 0;
     TRL_FIX_HOLD_DURATION            = 0;
+    TRL_MIN_SSHT_DURATION            = 0;
     TRL_TARG_ON_DURATION             = 0;
     TRL_XTRA_HOLD_DURATION           = 0;
     TRL_SACC_DURATION                = 0;
