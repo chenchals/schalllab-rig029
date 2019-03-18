@@ -154,7 +154,7 @@ process SEND_INFO_EVT(int evtVal)
     {
         evtVal = 32768;
     }
-    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
+    spawn SEND_EVT(INFOS_ZERO + evtVal);
 
     nexttick;
 }
@@ -179,7 +179,7 @@ process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
     {
         evtVal = 32768 + (offsetVal - evtVal);
     }
-    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
+    spawn SEND_EVT(INFOS_ZERO + evtVal);
 
     nexttick;
 }

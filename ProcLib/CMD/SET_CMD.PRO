@@ -413,6 +413,9 @@ process SET_CMD_TRL()
     spawnwait GRAF_UPD8_FIX();
     spawnwait GRAF_UPD8_TARG(TRL_CURR_TARG_SIZE, TRL_CURR_TARG_ANGLE, TRL_CURR_TARG_ECCENTRICITY);
 
+	// increment trial number
+    TRL_TRIAL_NUMBER     = TRL_TRIAL_NUMBER + 1;
+
     printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
            TRL_BLOCK_NUM, TRL_TRIAL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_CURR_TARG_IDX, TRL_IS_LO_RWRD);
 } /* SET_CMD_TRL */
@@ -1013,7 +1016,6 @@ process INIT_TRL_VARS()
     TRL_CURR_TARG_ANGLE              = -1;
     TRL_CURR_TARG_ECCENTRICITY       = -1;
     TRL_CURR_TARG_COLOR_IDX          = -1;
-    TRL_LO_RWRD_TARG_IDX             = -1;
     TRL_REPEAT_COUNT                 = 0;
     if (TRL_TRIAL_NUMBER == 0)
     {

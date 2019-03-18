@@ -60,25 +60,19 @@ process PROC_RWRD_CHK()
     if (I_TARG)
     {
         TRL_TARG_HOLD_DURATION = TRL_TARG_HOLD_DURATION + 1;
-        if (TEMP_XTRA_HOLD_TIME > 0)
-        {
-            TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
-        }
+        TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }
 
-    if (TRL_XTRA_HOLD_DURATION >= TEMP_XTRA_HOLD_TIME && TRL_IS_XTRA_HOLD_DONE <= 0)
+    if (TRL_XTRA_HOLD_DURATION >= TEMP_XTRA_HOLD_TIME)
     {
-        TRL_IS_XTRA_HOLD_DONE  = 1;
+        TRL_IS_XTRA_HOLD_DONE = 1;
+		if (TRL_XTRA_HOLD_END_TIME <=0)
+		{
         TRL_XTRA_HOLD_END_TIME = time();
         spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);
-    }
-
-    // this loop may not be necessary
-    if (TRL_TARG_HOLD_DURATION < TEMP_XTRA_HOLD_TIME)
-    {
-        TRL_IS_XTRA_HOLD_DONE = 0;
+        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);			
+		}
     }
 
     // reward delay

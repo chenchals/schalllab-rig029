@@ -33,8 +33,6 @@ process PROC_GET_REDY()
         TRL_GET_READY_DURATION = 0;
         spawn SEND_EVT(EVT_TRIAL_GET_READY_);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
-
-        TRL_TRIAL_NUMBER     = TRL_TRIAL_NUMBER + 1;
         printf("****STAT_GET_READY[%d]: TRL_TRIAL_NUMBER[%d]\n", STAT_GET_READY, TRL_TRIAL_NUMBER);
 
         PROCESS_STATE  = 0;

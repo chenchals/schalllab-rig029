@@ -25,15 +25,15 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 50.0;
-declare float        STOP_WEIGHT   = 50.0;
+declare float        GO_WEIGHT     = 100.0;
+declare float        STOP_WEIGHT   = 0.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
-declare int REPEAT_MAX = -1;
+declare int REPEAT_MAX = 2;
 //==========Jitter flags and definitions=========================
 // See UTIL/JITTER.PRO
 // declare constant int JITTER_NONE             = 0;
@@ -63,7 +63,7 @@ declare int FIX_HOLD_MEAN = 750;
 declare int FIX_HOLD_SPREAD      = 250;
 declare int FIX_HOLD_JITTER_FLAG = JITTER_UNIFORM_FLAG;
 // min-max saccade time is same for Go and STOP trials
-declare int MIN_SACC_TIME = 100;
+declare int MIN_SACC_TIME = 150;
 declare int MAX_SACC_TIME = 800;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
@@ -85,7 +85,7 @@ declare int TARG_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 declare int XTRA_HOLD_TONE_RWRD_FLAG = 1;
 // compute xtra hold time if XTRA_HOLD_TONE_RWRD_FLAG = 0;
 declare int XTRA_HOLD_MEAN   = 200;
-declare int XTRA_HOLD_SPREAD = 500;
+declare int XTRA_HOLD_SPREAD = 0;
 declare int XTRA_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 
 //========== STOP TASK SPECIFIC =============================
@@ -127,7 +127,7 @@ declare int TONE_DELAY_MEAN = 600;
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
-declare int TONE_DELAY_SPREAD = 15;
+declare int TONE_DELAY_SPREAD = 100;
 declare int TONE_JITTER_FLAG = JITTER_GAUSS_FLAG;
 
 // how long should the error and success tones be presented?
@@ -140,7 +140,7 @@ declare int RWRD_DELAY_MEAN = 600;
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
-declare int RWRD_DELAY_SPREAD = 25;
+declare int RWRD_DELAY_SPREAD = 100;
 declare int RWRD_JITTER_FLAG = JITTER_UNIFORM_FLAG;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
@@ -173,11 +173,11 @@ declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_MIN_SSHT[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_TONE_HZ = 200;
-declare int          CANCELLED_TONE_HZ     = 600;
-declare int          GO_CORRECT_TONE_HZ    = 600;
-declare int          GO_ERROR_TONE_HZ      = 1000;
-declare int          NOGO_ERROR_TONE_HZ    = 1000;
+declare int          NON_CANCELLED_TONE_HZ = 400;
+declare int          CANCELLED_TONE_HZ     = 1000;
+declare int          GO_CORRECT_TONE_HZ    = 1000;
+declare int          GO_ERROR_TONE_HZ      = 100;
+declare int          NOGO_ERROR_TONE_HZ    = 100;
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
 declare int          CORRECT_TRIALS_PER_BLOCK = 5;

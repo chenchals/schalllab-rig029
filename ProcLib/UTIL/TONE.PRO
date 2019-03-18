@@ -33,7 +33,7 @@ process TONE(int frequency, int duration)
     declare int internalClock = 10000000;
     spawn SEND_EVT(EVT_AUDIO_START_);
     mio_fout(internalClock / frequency);
-	  nexttick duration;
+	nexttick duration;
     spawn SEND_EVT(EVT_AUDIO_END_);
     mio_fout(0);
 }
