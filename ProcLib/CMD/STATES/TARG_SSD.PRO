@@ -134,13 +134,13 @@ process PROC_TARG_SSD()
         if (I_FIX)
         {
             TRL_CANCEL_TIME = time();
-            spawn SEND_EVT(Cancel_);
+            spawn SEND_EVT(EVT_CANCEL_);
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TONE_SSD;
 
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: Cancel_[%d],Time [%d]\n", STAT_TARG_SSD, Cancel_, TRL_CANCEL_TIME);
-            printf("****STAT_TARG_SSD[%d]: OK (Cancel_ in)[%d]/[%d](TRL_USE_SSD_VR_COUNT + TRL_USE_SSD_CANCEL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TEMP_DELY_PLUS_DURATION);
+            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_CANCEL_TIME);
+            printf("****STAT_TARG_SSD[%d]: OK (EVT_CANCEL_ in)[%d]/[%d](TRL_USE_SSD_VR_COUNT + TRL_USE_SSD_CANCEL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TEMP_DELY_PLUS_DURATION);
             spawn PRINT_MSG();
         }
         else

@@ -152,9 +152,9 @@ process PROC_RWRD_SSD()
         if (TRL_REWARD_OFF_TIME <= 0)
         {
             TRL_REWARD_OFF_TIME = time();
-            spawn SEND_EVT(TRL_REWARD_OFF_);
+            spawn SEND_EVT(EVT_REWARD_OFF_);
 
-            printf("****STAT_RWRD_SSD[%d]: OK sent Event: TRL_REWARD_OFF_[%d]\n", STAT_RWRD_SSD, TRL_REWARD_OFF_);
+            printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_OFF_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_OFF_);
         }
         if (TRL_IS_XTRA_HOLD_DONE <= 0)
         {
