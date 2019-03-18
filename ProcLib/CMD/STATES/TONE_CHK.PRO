@@ -72,6 +72,8 @@ process PROC_TONE_CHK()
         printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_START_);
         TRL_XTRA_HOLD_DURATION = 0;
         TRL_IS_XTRA_HOLD_DONE  = 0;
+		printf("******* TEMP_XTRA_HOLD_TIME [%d], STAT_ALLOWED_T [%d] ***********\n",TEMP_XTRA_HOLD_TIME,STAT_ALLOWED_T);
+		
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 

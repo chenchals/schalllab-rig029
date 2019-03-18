@@ -41,7 +41,7 @@ process PROC_TARG_HOLD()
         TRL_MIN_THT_START_TIME = time();
         spawn SEND_EVT(EVT_MIN_THT_START_);
 
-        printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_START_);
+        printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_START_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_START_);
 
         TRL_MIN_THT_DURATION = 1;
         TRL_IS_MIN_THT       = 0;

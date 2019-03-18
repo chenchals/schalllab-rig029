@@ -25,8 +25,8 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 100.0;
-declare float        STOP_WEIGHT   = 0.0;
+declare float        GO_WEIGHT     = 50.0;
+declare float        STOP_WEIGHT   = 50.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
@@ -77,7 +77,7 @@ declare int FIXED_TRIAL_DURATION = 5000;
 declare int BASE_ITI_TIME = 500;
 //========== GO TRIAL TARG HOLD TIME ======================
 // after saccade subject must hold gaze on target for this long
-declare int TARG_HOLD_MEAN   = 200;
+declare int TARG_HOLD_MEAN   = 300;
 declare int TARG_HOLD_SPREAD = 50;
 declare int TARG_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 
@@ -141,7 +141,7 @@ declare int RWRD_DELAY_MEAN = 600;
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
 declare int RWRD_DELAY_SPREAD = 100;
-declare int RWRD_JITTER_FLAG = JITTER_UNIFORM_FLAG;
+declare int RWRD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_USE_RWRD_DURATION

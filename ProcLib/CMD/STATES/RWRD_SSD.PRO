@@ -63,18 +63,6 @@ process PROC_RWRD_SSD()
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }
 
-    if (TRL_XTRA_HOLD_DURATION >= TEMP_XTRA_HOLD_TIME)
-    {
-        TRL_IS_XTRA_HOLD_DONE = 1;
-		if (TRL_XTRA_HOLD_END_TIME <=0)
-		{
-        TRL_XTRA_HOLD_END_TIME = time();
-        spawn SEND_EVT(EVT_XTRA_HOLD_END_);
-
-        printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_END_);			
-		}
-    }
-
     // Reward delay
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
@@ -150,12 +138,17 @@ process PROC_RWRD_SSD()
 
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_OFF_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_OFF_);
         }
-        if (TRL_IS_XTRA_HOLD_DONE <= 0)
-        {
-            printf("****STAT_RWRD_SSD[%d]: ********WARNING*******TRL_IS_XTRA_HOLD_DONE is not SET****WARNING**********\n", STAT_RWRD_SSD);
-            printf("****STAT_RWRD_SSD[%d]: ********WARNING*******TRL_IS_XTRA_HOLD_DONE SHOULD BE SET BUT IS NOT****WARNING**********\n", STAT_RWRD_SSD);
-        }
-        printf("****STAT_RWRD_SSD[%d]: OK (*SUCCESS**XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
+		
+		// if you reached here xtra-hold is done
+        TRL_IS_XTRA_HOLD_DONE = 1;
+		if (TRL_XTRA_HOLD_END_TIME <=0)
+		{
+			TRL_XTRA_HOLD_END_TIME = time();
+			spawn SEND_EVT(EVT_XTRA_HOLD_END_);
+
+			printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_END_);			
+		}        
+		printf("****STAT_RWRD_SSD[%d]: OK (*SUCCESS**XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
                STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
