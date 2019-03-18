@@ -222,13 +222,13 @@ process IDLE() enabled
 				dsendf("vp %d\n", PG_BLANK);
 
 				TRL_START_INFOS_TIME = time();
-				spawn SEND_EVT(EVT_START_INFOS_);
+				spawn SEND_EVT(EVT_INFOS_START_);
 				printf("****CMD_TSK: Sending Infos: SEND_INFOS()\n");
 				spawn SEND_INFOS();
 				waitforprocess SEND_INFOS;
 
 				TRL_END_INFOS_TIME = time();
-				spawn SEND_EVT(EVT_END_INFOS_);
+				spawn SEND_EVT(EVT_INFOS_END_);
 				TRL_TASK_END_TIME = time();
 				spawn SEND_EVT(EVT_TASK_END_);
 				printf("****CMD_TSK: OK (Ending Task) sent Event: EVT_TASK_END_[%d]\n", EVT_TASK_END_);

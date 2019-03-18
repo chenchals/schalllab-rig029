@@ -141,11 +141,15 @@ declare int TRL_ACQUIRE_FIX_ERROR_TIME;
 // when was gaze held on fixspot for fix hold duration achieved
 declare int TRL_FIXATE_TIME;
 // when was gaze broken during fixation but before target was on
-declare int TRL_FIX_BRK_TIME;
+declare int TRL_FIX_BREAK_TIME;
 // when show target page command sent to vdosync
 declare int TRL_TARGET_PRE_TIME;
 // when was target shown as detected by PD signal
 declare int TRL_TARGET_TIME;
+// when did min target hold time start
+declare int TRL_TARGET_HOLD_TIME;
+// when did min target hold time break gaze
+declare int TRL_TARGET_BREAK_TIME;
 // when was fix-spot turned off (as soon as target was on - by default)
 declare int TRL_FIX_SPOT_OFF_TIME;
 // when was gaze on target or in target window
@@ -227,7 +231,7 @@ declare int TRL_GET_READY_DURATION;
 declare int TRL_FIX_HOLD_DURATION;
 // how long target was on
 declare int TRL_TARG_ON_DURATION;
-// how long more was gaze held (GO: on target or STOP: on Fix/signal) during the reinforcement time 
+// how long more was gaze held (GO: on target or STOP: on Fix/signal) during the reinforcement time
 declare int TRL_XTRA_HOLD_DURATION;
 // how long did it take for saccade from start to finish
 declare int TRL_SACC_DURATION;
@@ -847,9 +851,11 @@ process INIT_VARS_REPEAT_TRL()
     TRL_ACQUIRE_FIX_TIME           = -1;
     TRL_ACQUIRE_FIX_ERROR_TIME     = -1;
     TRL_FIXATE_TIME                = -1;
-    TRL_FIX_BRK_TIME               = -1;
+    TRL_FIX_BREAK_TIME             = -1;
     TRL_TARGET_PRE_TIME            = -1;
     TRL_TARGET_TIME                = -1;
+    TRL_TARGET_HOLD_TIME           = -1;
+    TRL_TARGET_BREAK_TIME          = -1;
     TRL_FIX_SPOT_OFF_TIME          = -1;
     TRL_TARGET_ACQUIRED_TIME       = -1;
     TRL_DECIDE_TIME                = -1;
@@ -932,9 +938,11 @@ process INIT_TRL_VARS()
     TRL_ACQUIRE_FIX_TIME             = -1;
     TRL_ACQUIRE_FIX_ERROR_TIME       = -1;
     TRL_FIXATE_TIME                  = -1;
-    TRL_FIX_BRK_TIME                 = -1;
+    TRL_FIX_BREAK_TIME               = -1;
     TRL_TARGET_PRE_TIME              = -1;
     TRL_TARGET_TIME                  = -1;
+    TRL_TARGET_HOLD_TIME             = -1;
+    TRL_TARGET_BREAK_TIME            = -1;
     TRL_FIX_SPOT_OFF_TIME            = -1;
     TRL_TARGET_ACQUIRED_TIME         = -1;
     TRL_DECIDE_TIME                  = -1;

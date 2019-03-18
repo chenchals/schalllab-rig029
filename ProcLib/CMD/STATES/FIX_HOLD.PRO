@@ -63,10 +63,10 @@ process PROC_FIX_HOLD()
     {
         if (!I_FIX)
         {
-            TRL_FIX_BRK_TIME = time();
-            spawn SEND_EVT(EVT_FIX_BRK_);
+            TRL_FIX_BREAK_TIME = time();
+            spawn SEND_EVT(EVT_FIX_BREAK_);
 
-            printf("****STAT_FIX_HOLD[%d]: ERR sent Event: EVT_FIX_BRK_[%d]\n", STAT_FIX_HOLD, EVT_FIX_BRK_);
+            printf("****STAT_FIX_HOLD[%d]: ERR sent Event: EVT_FIX_BREAK_[%d]\n", STAT_FIX_HOLD, EVT_FIX_BREAK_);
             printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (TRL_FIX_HOLD)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
