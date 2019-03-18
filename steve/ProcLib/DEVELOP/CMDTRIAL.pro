@@ -266,7 +266,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 
 					dsendf("vp %d\n",signal);								// ...and flip the pg to the signal without pd marker.
 
-					Event_fifo[Set_event] = StopSignal_;										// queue strobe
+					Event_fifo[Set_event] = EVT_STOP_SIGNAL_;										// queue strobe
 					Set_event = (Set_event + 1) % Event_fifo_N;								// incriment event queue
 
 					stop_sig_time = targ_time +

@@ -271,7 +271,7 @@ hashAddNamtab: ADDED 'PlacOn_' at iOffset=168618
 hashAddNamtab: ADDED 'EVT_TARGET_' at iOffset=168626
 hashAddNamtab: ADDED 'TargetOff_' at iOffset=168634
 hashAddNamtab: ADDED 'EVT_FIX_SPOT_OFF_' at iOffset=168646
-hashAddNamtab: ADDED 'StopSignal_' at iOffset=168658
+hashAddNamtab: ADDED 'EVT_STOP_SIGNAL_' at iOffset=168658
 hashAddNamtab: ADDED 'EVT_TRIAL_START_' at iOffset=168670
 hashAddNamtab: ADDED 'FixError_' at iOffset=168682
 hashAddNamtab: ADDED 'GoEVT_SACCADE_' at iOffset=168692
@@ -289,7 +289,7 @@ hashAddNamtab: ADDED 'BreakTFix_' at iOffset=168836
 hashAddNamtab: ADDED 'EVT_EARLY_SACCADE_' at iOffset=168848
 hashAddNamtab: ADDED 'Reward_' at iOffset=168862
 hashAddNamtab: ADDED 'Tone_' at iOffset=168870
-hashAddNamtab: ADDED 'PunishEnd_' at iOffset=168876
+hashAddNamtab: ADDED 'EVT_TIMEOUT_END_' at iOffset=168876
 hashAddNamtab: ADDED 'Error_tone' at iOffset=168888
 hashAddNamtab: ADDED 'Reward_tone' at iOffset=168900
 hashAddNamtab: ADDED 'Error_sacc' at iOffset=168912
@@ -297,7 +297,7 @@ hashAddNamtab: ADDED 'Correct_sacc' at iOffset=168924
 hashAddNamtab: ADDED 'ExtraReward_' at iOffset=168938
 hashAddNamtab: ADDED 'SoundOnReward_' at iOffset=168952
 hashAddNamtab: ADDED 'SoundNoReward_' at iOffset=168968
-hashAddNamtab: ADDED 'Eot_' at iOffset=168984
+hashAddNamtab: ADDED 'EVT_EOT_' at iOffset=168984
 hashAddNamtab: ADDED 'EVT_CMAN_HEADER_' at iOffset=168990
 hashAddNamtab: ADDED 'MemHeader_' at iOffset=169002
 hashAddNamtab: ADDED 'GONOGOHeader_' at iOffset=169014
@@ -4438,7 +4438,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
  992: 41666     0     0 long CONS PROC      INIT HDDN           DECL  END_TRL =68 (0x00000044)
  993: 41708     0     0 long CONS           INIT      HIDE      DECL  EVT_END_INFOS_ =2999 (0x00000BB7)
  994: 41750     0     0 long CONS           INIT      HIDE      DECL  EndStim_ =667 (0x0000029B)
- 995: 41792     0     0 long CONS           INIT      HIDE      DECL  Eot_ =1667 (0x00000683)
+ 995: 41792     0     0 long CONS           INIT      HIDE      DECL  EVT_EOT_ =1667 (0x00000683)
  996: 41834    27     0 flot                INIT      HIDE      DECL  equalTol@CHECK_PA =0.010000 (0x3C23D70A)
  997: 41876    28   996 flot                INIT                DECL  equalTol@SET_CONG =0.010000 (0x3C23D70A)
  998: 41918    29   997 flot                INIT                DECL  equalTol@A_DIFFS =0.010000 (0x3C23D70A)
@@ -5011,7 +5011,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 1565: 65732     0     0 long                                    DECL  PulseGap =0 (0x00000000)
 1566: 65774     0     0 long                                    DECL  Punish_time =0 (0x00000000)
 1567: 65816    67  1566 long                                    DECL  punish_time@FAILURE =0 (0x00000000)
-1568: 65858     0     0 long CONS           INIT      HIDE      DECL  PunishEnd_ =2002 (0x000007D2)
+1568: 65858     0     0 long CONS           INIT      HIDE      DECL  EVT_TIMEOUT_END_ =2002 (0x000007D2)
 1569: 65900     0     0 long CONS PROC      INIT HDDN           DECL  QUE_TTL =78 (0x0000004E)
 1570: 65942     0     0 long                                    DECL  R1_d10_angle =0 (0x00000000)
 1571: 65984     0     0 long                                    DECL  R1_d10_ecc =0 (0x00000000)
@@ -5552,7 +5552,7 @@ iSYM  iNAM  Proc  Scope Type                Attributes                Symbol
 2106: 88454    56  2105 flot                                    DECL  stop_weight@SETMGTRL =0.000000 (0x00000000)
 2107: 88496    59  2106 flot                                    DECL  stop_weight@SETS_TRL =0.000000 (0x00000000)
 2108: 88538     0     0 long CONS           INIT      HIDE      DECL  StopOn_ =2654 (0x00000A5E)
-2109: 88580     0     0 long CONS           INIT      HIDE      DECL  StopSignal_ =2653 (0x00000A5D)
+2109: 88580     0     0 long CONS           INIT      HIDE      DECL  EVT_STOP_SIGNAL_ =2653 (0x00000A5D)
 2110: 88622     0     0 flot                          HIDE      DECL  Subj_dist =0.000000 (0x00000000)
 2111: 88664     7  2110 flot                                    DECL  subj_dist@SET_COOR =0.000000 (0x00000000)
 2112: 88706     0  2118 long CONS PROC      INIT HDDN           DECL  SUCCESS =66 (0x00000042)
@@ -17086,7 +17086,7 @@ PROCESS  64: ABORT (Args=0 CtrlBlk=33FA:2764 Size=344  iOp=2-345 iCache=108872-1
  33FA:4012 37FB:0002     0: Event_fifo:1002[Set_event:1990] = Abort_:655
  33FA:401A 37FB:000A     8: #L0:155 = Set_event:1990 + #I1:17
  33FA:4028 37FB:0018    22: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:4036 37FB:0026    36: Event_fifo:1002[Set_event:1990] = Eot_:995
+ 33FA:4036 37FB:0026    36: Event_fifo:1002[Set_event:1990] = EVT_EOT_:995
  33FA:403E 37FB:002E    44: #L0:155 = Set_event:1990 + #I1:17
  33FA:404C 37FB:003C    58: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:405A 37FB:004A    72: SPAWN INFOS:1214(with 0 args)
@@ -17163,7 +17163,7 @@ PROCESS  66: SUCCESS (Args=7 CtrlBlk=33FA:27BC Size=876  iOp=2-877 iCache=109260
  33FA:413C 37FB:012C   298: Event_fifo:1002[Set_event:1990] = Reward_:1868
  33FA:4144 37FB:0134   306: #L0:155 = Set_event:1990 + #I1:17
  33FA:4152 37FB:0142   320: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:4160 37FB:0150   334: Event_fifo:1002[Set_event:1990] = Eot_:995
+ 33FA:4160 37FB:0150   334: Event_fifo:1002[Set_event:1990] = EVT_EOT_:995
  33FA:4168 37FB:0158   342: #L0:155 = Set_event:1990 + #I1:17
  33FA:4176 37FB:0166   356: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4184 37FB:0174   370: GOTO .+108 (goto 478)
@@ -17174,7 +17174,7 @@ PROCESS  66: SUCCESS (Args=7 CtrlBlk=33FA:27BC Size=876  iOp=2-877 iCache=109260
  33FA:41A8 37FB:0198   406: Event_fifo:1002[Set_event:1990] = Reward_:1868
  33FA:41B0 37FB:01A0   414: #L0:155 = Set_event:1990 + #I1:17
  33FA:41BE 37FB:01AE   428: Set_event:1990 = #L0:155 % Event_fifo_N:1003
- 33FA:41CC 37FB:01BC   442: Event_fifo:1002[Set_event:1990] = Eot_:995
+ 33FA:41CC 37FB:01BC   442: Event_fifo:1002[Set_event:1990] = EVT_EOT_:995
  33FA:41D4 37FB:01C4   450: #L0:155 = Set_event:1990 + #I1:17
  33FA:41E2 37FB:01D2   464: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:41F0 37FB:01E0   478: SPAWN INFOS:1214(with 0 args)
@@ -17241,7 +17241,7 @@ PROCESS  67: FAILURE (Args=6 CtrlBlk=33FA:27E8 Size=788  iOp=2-789 iCache=110136
  33FA:4094 37FB:0084   130: #L0:155 = Set_event:1990 + #I1:17
  33FA:40A2 37FB:0092   144: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:40B0 37FB:00A0   158: trl_end_time = CALL0 time()
- 33FA:40B6 37FB:00A6   164: Event_fifo:1002[Set_event:1990] = Eot_:995
+ 33FA:40B6 37FB:00A6   164: Event_fifo:1002[Set_event:1990] = EVT_EOT_:995
  33FA:40BE 37FB:00AE   172: #L0:155 = Set_event:1990 + #I1:17
  33FA:40CC 37FB:00BC   186: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:40DA 37FB:00CA   200: IFnot (fixed_trl_length@67:1115) GOTO .+74 (goto 274)
@@ -17260,7 +17260,7 @@ PROCESS  67: FAILURE (Args=6 CtrlBlk=33FA:27E8 Size=788  iOp=2-789 iCache=110136
  33FA:414E 37FB:013E   316: NEXTTICK1
  33FA:4150 37FB:0140   318: GOTO .-44 (goto 274)
  33FA:4154 37FB:0144   322: #L0 = CALL2 dSendf(#S314:520,#I0:16)
- 33FA:415E 37FB:014E   332: Event_fifo:1002[Set_event:1990] = PunishEnd_:1568
+ 33FA:415E 37FB:014E   332: Event_fifo:1002[Set_event:1990] = EVT_TIMEOUT_END_:1568
  33FA:4166 37FB:0156   340: #L0:155 = Set_event:1990 + #I1:17
  33FA:4174 37FB:0164   354: Set_event:1990 = #L0:155 % Event_fifo_N:1003
  33FA:4182 37FB:0172   368: #L0 = CALL0 time()
@@ -18970,7 +18970,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  279      0    0    0 ""
  280      0    0    0 ""
  281      0    0    0 ""
- 282 168984  995    0 "Eot_"
+ 282 168984  995    0 "EVT_EOT_"
  283 188920 1244    0 "KEY_T_UP"
  284      0    0    0 ""
  285 173048  151    0 "#I90"
@@ -19258,7 +19258,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  567      0    0    0 ""
  568      0    0    0 ""
  569      0    0    0 ""
- 570 168658 2109    0 "StopSignal_"
+ 570 168658 2109    0 "EVT_STOP_SIGNAL_"
  571      0    0    0 ""
  572      0    0    0 ""
  573      0    0    0 ""
@@ -19479,7 +19479,7 @@ iHSH  iNAM  iSYM iNXT Symbol
  788 178776  631    0 "#S81"
  789 178790  632    0 "#S82"
  790 173938  142 1509 "#I750"
- 791 168876 1568 1510 "PunishEnd_"
+ 791 168876 1568 1510 "EVT_TIMEOUT_END_"
  792 178836  635    0 "#S85"
  793 178870  636    0 "#S86"
  794 178884  637 2052 "#S87"
@@ -21830,7 +21830,7 @@ NAME TABLE
  41666  992 "END_TRL"
  41708  993 "EVT_END_INFOS_"
  41750  994 "EndStim_"
- 41792  995 "Eot_"
+ 41792  995 "EVT_EOT_"
  41834  996 "equalTol"
  41876  997 "equalTol"
  41918  998 "equalTol"
@@ -22403,7 +22403,7 @@ NAME TABLE
  65732 1565 "PulseGap"
  65774 1566 "Punish_time"
  65816 1567 "punish_time"
- 65858 1568 "PunishEnd_"
+ 65858 1568 "EVT_TIMEOUT_END_"
  65900 1569 "QUE_TTL"
  65942 1570 "R1_d10_angle"
  65984 1571 "R1_d10_ecc"
@@ -22944,7 +22944,7 @@ NAME TABLE
  88454 2106 "stop_weight"
  88496 2107 "stop_weight"
  88538 2108 "StopOn_"
- 88580 2109 "StopSignal_"
+ 88580 2109 "EVT_STOP_SIGNAL_"
  88622 2110 "Subj_dist"
  88664 2111 "subj_dist"
  88706 2112 "SUCCESS"
@@ -23229,7 +23229,7 @@ NAME TABLE
 168626 "EVT_TARGET_"
 168634 "TargetOff_"
 168646 "EVT_FIX_SPOT_OFF_"
-168658 "StopSignal_"
+168658 "EVT_STOP_SIGNAL_"
 168670 "EVT_TRIAL_START_"
 168682 "FixError_"
 168692 "GoEVT_SACCADE_"
@@ -23247,7 +23247,7 @@ NAME TABLE
 168848 "EVT_EARLY_SACCADE_"
 168862 "Reward_"
 168870 "Tone_"
-168876 "PunishEnd_"
+168876 "EVT_TIMEOUT_END_"
 168888 "Error_tone"
 168900 "Reward_tone"
 168912 "Error_sacc"
@@ -23255,7 +23255,7 @@ NAME TABLE
 168938 "ExtraReward_"
 168952 "SoundOnReward_"
 168968 "SoundNoReward_"
-168984 "Eot_"
+168984 "EVT_EOT_"
 168990 "EVT_CMAN_HEADER_"
 169002 "MemHeader_"
 169014 "GONOGOHeader_"

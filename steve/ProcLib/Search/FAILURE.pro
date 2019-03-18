@@ -44,7 +44,7 @@ process FAILURE(int trial_length,									// see DEFAULT.pro and ALL_VARS.pro fo
 	
 	trl_end_time = time();											// record the time b/c the trial is now over
 	
-	Event_fifo[Set_event] = Eot_;									// ...queue strobe... for end of trial
+	Event_fifo[Set_event] = EVT_EOT_;									// ...queue strobe... for end of trial
 	Set_event = (Set_event + 1) % Event_fifo_N;						// ...incriment event queue...
 	
 	
@@ -62,7 +62,7 @@ process FAILURE(int trial_length,									// see DEFAULT.pro and ALL_VARS.pro fo
 			nexttick;                                               // ...and wait until time is up + timeout.
 			}
 			dsendf("vp %d\n",0);
-			Event_fifo[Set_event] = PunishEnd_;
+			Event_fifo[Set_event] = EVT_TIMEOUT_END_;
 			Set_event = (Set_event + 1) % Event_fifo_N;
 		while (time() < trl_end_time + inter_trl_int + punish_time) // Then watch the time since trial end...
 			{                                                       

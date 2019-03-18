@@ -241,11 +241,11 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 		spawn SEND_EVT(OutcomeFixBreak_);
 		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: OutcomeFixBreak_ [%d]; (TRL_FIX_BRK_TIME - ERR) \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, OutcomeFixBreak_);
 	}
-	else if (TRL_NOGO_ERLY_SACC_TIME)
+	else if (TRL_NOGO_EARLY_SACCADE_TIME)
 	{
 		TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[nogoIdx];
 		spawn SEND_EVT(OutcomeNoGoError_);
-		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; (TRL_NOGO_ERLY_SACC_TIME - ERR) \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, OutcomeNoGoError_);
+		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; (TRL_NOGO_EARLY_SACCADE_TIME - ERR) \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, OutcomeNoGoError_);
 	}
 	else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
 	{
@@ -253,7 +253,7 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 		spawn SEND_EVT(OutcomeNoGoError_);
 		printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: OutcomeNoGoError_ [%d]; STOP Trial; (TRL_ACQUIRE_TARGET_ERROR_TIME - ERR) \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, OutcomeNoGoError_);
 	}
-	else if (TRL_NOGO_LATE_SACC_TIME)
+	else if (TRL_NOGO_LATE_SACCADE_TIME)
 	{
 		TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[nogoIdx];
 		spawn SEND_EVT(OutcomeNoGoError_);

@@ -66,29 +66,29 @@ process PROC_ITI_CHK()
             TRL_IS_RUNNING          = 1;
             CURR_STAT            = STAT_TIM_OUT;
             TRL_EOT_TIME = time();
-            spawn SEND_EVT(Eot_);
-            printf("****STAT_ITI_CHK[%d]: **Going to TIME_OUT State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
+            spawn SEND_EVT(EVT_EOT_);
+            printf("****STAT_ITI_CHK[%d]: **Going to TIME_OUT State** sent Event: EVT_EOT_[%d]\n", STAT_ITI_CHK, EVT_EOT_);
         }
         else if (TRL_ITI_START_TIME <= 0)
         {
             TRL_ITI_START_TIME = time();
-            spawn SEND_EVT(ITIStart_);
+            spawn SEND_EVT(EVT_ITI_START_);
 
-            printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIStart_[%d]\n", STAT_ITI_CHK, ITIStart_);
+            printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_START_[%d]\n", STAT_ITI_CHK, EVT_ITI_START_);
         }
     }
     else
     {
         TRL_ITI_END_TIME = time();
-        spawn SEND_EVT(ITIEnd_);
+        spawn SEND_EVT(EVT_ITI_END_);
 
-        printf("****STAT_ITI_CHK[%d]: OK sent Event: ITIEnd_[%d]\n", STAT_ITI_CHK, ITIEnd_);
+        printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_END_[%d]\n", STAT_ITI_CHK, EVT_ITI_END_);
 
         PROCESS_STATE = 1;
         TRL_IS_RUNNING   = 1;
         CURR_STAT     = STAT_IDLE;
         TRL_EOT_TIME = time();
-        spawn SEND_EVT(Eot_);
-        printf("****STAT_ITI_CHK[%d]: **Going to IDLE State** sent Event: Eot_[%d]\n", STAT_ITI_CHK, Eot_);
+        spawn SEND_EVT(EVT_EOT_);
+        printf("****STAT_ITI_CHK[%d]: **Going to IDLE State** sent Event: EVT_EOT_[%d]\n", STAT_ITI_CHK, EVT_EOT_);
     }
 } /* PROC_ITI_CHK */

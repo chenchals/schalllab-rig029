@@ -133,15 +133,15 @@ declare constant int STAT_TIM_OUT = 11;
 //        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 // Check:
 //   case 0: TRL_USE_SSD_VR_COUNT has not expired
-//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEVT_EARLY_SACCADE_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> EVT_NOGO_EARLY_SACCADE_, goto STAT_OUTCOME
 //                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoEVT_SACCADE_, goto STAT_TARG_ACQ
-//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateEVT_SACCADE_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> EVT_NOGO_LATE_SACCADE_, goto STAT_OUTCOME
 //   case 1: TRL_USE_SSD_VR_COUNT has expired and TRL_USE_SSD_CANCEL_DURATION has not expired
 //   [Stop Signal ON] show PG_SIGNAL_PD (PD on RIGHT) for 1 screen refresh and switch to PG_SIGNAL(PD on LEFT)
-//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> NoGoEVT_EARLY_SACCADE_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN before MIN_SACC_TIME --> EVT_NOGO_EARLY_SACCADE_, goto STAT_OUTCOME
 //                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoEVT_SACCADE_, goto STAT_TARG_ACQ
 //   [Stop Signal OFF] switch page from PG_SIGNAL to PG_TARGET_PD (do nto show stop signal)
-//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> NoGoLateEVT_SACCADE_, goto STAT_OUTCOME
+//                   if gaze out of FIX-WIN after MAX_SACC_TIME --> EVT_NOGO_LATE_SACCADE_, goto STAT_OUTCOME
 declare constant int STAT_TARG_SSD = 40;
 
 // Signal is ON Target is ON:

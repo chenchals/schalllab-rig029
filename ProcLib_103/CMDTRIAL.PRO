@@ -253,7 +253,7 @@ process CMDTRIAL(allowed_fix_time,
             spawnwait ACQ_RIGHT_PD();
 
             dsendf("vp %d\n", signal);
-            spawn SEND_EVT(StopSignal_);
+            spawn SEND_EVT(EVT_STOP_SIGNAL_);
 
             actualSsdTime   = time() - targ_time;
             expectedSsdTime = round(curr_ssd * 1000.0 / Refresh_rate);

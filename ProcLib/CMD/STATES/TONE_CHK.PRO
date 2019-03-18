@@ -98,7 +98,7 @@ process PROC_TONE_CHK()
     {
         TRL_IS_XTRA_HOLD_DONE = 0;
     }
-    
+
     // Tone delay
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
@@ -168,13 +168,12 @@ process PROC_TONE_CHK()
     }
     else     // eye in Target win until TEMP_XTRA_HOLD_TIME, or TEMP_XTRA_HOLD_TIME is greater than TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION
     {
-        printf("\n");
         TRL_TONE_OFF_TIME = time();
         spawn SEND_EVT(EVT_TONE_OFF_);
 
         printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_OFF_[%d]\n", STAT_TONE_CHK, EVT_TONE_OFF_);
-        printf("****STAT_TONE_CHK[%d]: OK (*Tone*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_CHK,
-               TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+        printf("****STAT_TONE_CHK[%d]: OK (*Tone*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n",
+               STAT_TONE_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_RWRD_CHK;
     }

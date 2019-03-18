@@ -201,13 +201,13 @@ declare int TRL_CANCEL_TIME;
 // when did fixation break during SSD_CANCEL_DURATION (STOP trial)
 declare int TRL_BRK_CANCEL_TIME;
 // when did gaze leave Fix window between min, max saccade time pre-ssd (STOP trial)
-declare int TRL_NOGO_SACC_PRE_SSD_TIME;
+declare int TRL_NOGO_SACCADE_PRE_SSD_TIME;
 // when did gaze leave Fix window between min, max saccade time post-ssd (STOP trial)
-declare int TRL_NOGO_SACC_POST_SSD_TIME;
+declare int TRL_NOGO_SACCADE_POST_SSD_TIME;
 // when did gaze leave Fix window before min saccade time (STOP trial)
-declare int TRL_NOGO_ERLY_SACC_TIME;
+declare int TRL_NOGO_EARLY_SACCADE_TIME;
 // when did gaze leave Fix window after max saccade time (STOP trial)
-declare int TRL_NOGO_LATE_SACC_TIME;
+declare int TRL_NOGO_LATE_SACCADE_TIME;
 // when did solenoid open for extra reward (or manual reward)
 declare int TRL_XTRA_RWRD_ON_TIME;
 // when did solenoid close for extra reward (or manual reward)
@@ -872,10 +872,10 @@ process INIT_VARS_REPEAT_TRL()
     TRL_STOP_SIGNAL_TIME          = -1;
     TRL_CANCEL_TIME               = -1;
     TRL_BRK_CANCEL_TIME           = -1;
-    TRL_NOGO_SACC_PRE_SSD_TIME    = -1;
-    TRL_NOGO_SACC_POST_SSD_TIME   = -1;
-    TRL_NOGO_ERLY_SACC_TIME       = -1;
-    TRL_NOGO_LATE_SACC_TIME       = -1;
+    TRL_NOGO_SACCADE_PRE_SSD_TIME    = -1;
+    TRL_NOGO_SACCADE_POST_SSD_TIME   = -1;
+    TRL_NOGO_EARLY_SACCADE_TIME       = -1;
+    TRL_NOGO_LATE_SACCADE_TIME       = -1;
     TRL_XTRA_RWRD_ON_TIME         = -1;
     TRL_XTRA_RWRD_OFF_TIME        = -1;
     TRL_TASK_END_TIME             = -1;
@@ -955,10 +955,10 @@ process INIT_TRL_VARS()
     TRL_STOP_SIGNAL_TIME             = -1;
     TRL_CANCEL_TIME                  = -1;
     TRL_BRK_CANCEL_TIME              = -1;
-    TRL_NOGO_SACC_PRE_SSD_TIME       = -1;
-    TRL_NOGO_SACC_POST_SSD_TIME      = -1;
-    TRL_NOGO_ERLY_SACC_TIME          = -1;
-    TRL_NOGO_LATE_SACC_TIME          = -1;
+    TRL_NOGO_SACCADE_PRE_SSD_TIME       = -1;
+    TRL_NOGO_SACCADE_POST_SSD_TIME      = -1;
+    TRL_NOGO_EARLY_SACCADE_TIME          = -1;
+    TRL_NOGO_LATE_SACCADE_TIME          = -1;
     TRL_XTRA_RWRD_ON_TIME            = -1;
     TRL_XTRA_RWRD_OFF_TIME           = -1;
     TRL_TASK_END_TIME                = -1;

@@ -52,9 +52,9 @@ process PROC_TIMEOUT_CHK()
         if (TRL_TIMEOUT_START_TIME<=0)
         {
             TRL_TIMEOUT_START_TIME = time();
-            spawn SEND_EVT(PunishStart_);
+            spawn SEND_EVT(EVT_TIMEOUT_START_);
 
-            printf("****STAT_ITI_CHK[%d]: OK sent Event: PunishStart_[%d]\n", STAT_ITI_CHK, PunishStart_);
+            printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_TIMEOUT_START_[%d]\n", STAT_ITI_CHK, EVT_TIMEOUT_START_);
 
             //spawn PLAY_WHITE_NOISE(TRL_USE_TONE_DURATION);
             spawn TONE(TRL_USE_TONE_FREQ, TRL_USE_TONE_DURATION);
@@ -63,9 +63,9 @@ process PROC_TIMEOUT_CHK()
     else
     {
         TRL_TIMEOUT_END_TIME = time();
-        spawn SEND_EVT(PunishEnd_);
+        spawn SEND_EVT(EVT_TIMEOUT_END_);
 
-        printf("****STAT_TIM_OUT[%d]: ERR sent Event: PunishEnd_[%d]\n", STAT_TIM_OUT, PunishEnd_);
+        printf("****STAT_TIM_OUT[%d]: ERR sent Event: EVT_TIMEOUT_END_[%d]\n", STAT_TIM_OUT, EVT_TIMEOUT_END_);
         printf("****STAT_TIM_OUT[%d]: ERR  TRL_USE_TIMEOUT_DURATION[%d] / TRL_USE_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_USE_TIMEOUT_DURATION, TRL_USE_TONE_DURATION);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_IDLE;

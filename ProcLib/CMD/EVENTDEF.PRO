@@ -48,15 +48,15 @@ declare constant EVT_TASK_END_       = 1602;
 declare constant EVT_TRIAL_GET_READY_ = 1610;
 declare constant EVT_TRIAL_READY_    = 1612;
 declare constant EVT_TRIAL_START_    = 1620;
-declare constant Eot_           = 1622;
+declare constant EVT_EOT_           = 1622;
 
 // Coded from 2000-2299
 declare constant Tone_        = 2000;
 declare constant Reward_      = 2010;
-declare constant ITIStart_    = 2124;
-declare constant ITIEnd_      = 2126;
-declare constant PunishStart_ = 2130;
-declare constant PunishEnd_   = 2132;
+declare constant EVT_ITI_START_    = 2124;
+declare constant EVT_ITI_END_      = 2126;
+declare constant EVT_TIMEOUT_START_ = 2130;
+declare constant EVT_TIMEOUT_END_   = 2132;
 declare constant PunishTone_  = 2134;
 declare constant ExtraRWRD_   = 2140;
 
@@ -66,7 +66,7 @@ declare constant EVT_FIX_SPOT_OFF_      = 2302;
 declare constant EVT_TARGET_PRE_       = 2310;
 declare constant EVT_TARGET_          = 2320;
 declare constant TargetOff_       = 2330;
-declare constant StopSignal_      = 2340;
+declare constant EVT_STOP_SIGNAL_      = 2340;
 declare constant ZeroEyePosition_ = 2395;
 
 // Codes 2400-2699
@@ -103,10 +103,10 @@ declare constant MouthBegin_   = 2550;
 declare constant MouthEnd_     = 2552;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460
 // after TARG_ON
-declare constant NoGoEVT_EARLY_SACCADE_   = 2600;
-declare constant NoGoSaccadePreSSD_  = 2602;
-declare constant NoGoSaccadePostSSD_ = 2604;
-declare constant NoGoLateEVT_SACCADE_    = 2606;
+declare constant EVT_NOGO_EARLY_SACCADE_   = 2600;
+declare constant EVT_NOGO_SACCADE_PRE_SSD_  = 2602;
+declare constant EVT_NOGO_SACCADE_POST_SSD_ = 2604;
+declare constant EVT_NOGO_LATE_SACCADE_    = 2606;
 declare constant FixHoldBrkPreTone_  = 2630;
 declare constant FixHoldBrkTone_     = 2632;
 declare constant FixHoldBrkPreRwrd_  = 2634;

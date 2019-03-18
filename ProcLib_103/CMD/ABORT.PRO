@@ -17,7 +17,7 @@ process ABORT()
 	declare hide int run_anti_sess = 9;
 
 	spawn SEND_EVT(Abort_);
-	spawn SEND_EVT(Eot_);
+	spawn SEND_EVT(EVT_EOT_);
 
 	nexttick 2;
 

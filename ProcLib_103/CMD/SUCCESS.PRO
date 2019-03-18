@@ -69,7 +69,7 @@ process SUCCESS(int trial_length,						// see DEFAULT.pro and ALL_VARS.pro for e
 
 			spawn SEND_EVT(Reward_);
 
-			spawn SEND_EVT(Eot_);
+			spawn SEND_EVT(EVT_EOT_);
 			}
 		}
 
@@ -80,7 +80,7 @@ process SUCCESS(int trial_length,						// see DEFAULT.pro and ALL_VARS.pro for e
 
 		spawn SEND_EVT(Reward_);
 
-		spawn SEND_EVT(Eot_);
+		spawn SEND_EVT(EVT_EOT_);
 		}
 
 	nexttick 2;								// Give TEMPO a chance to catch its breath before attempting..

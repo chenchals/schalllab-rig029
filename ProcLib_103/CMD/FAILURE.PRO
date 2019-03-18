@@ -43,7 +43,7 @@ process FAILURE(int trial_length,									// see DEFAULT.pro and ALL_VARS.pro fo
 
 	trl_end_time = time();											// record the time b/c the trial is now over
 
-	spawn SEND_EVT(Eot_);
+	spawn SEND_EVT(EVT_EOT_);
 
 	if (Trl_Outcome == 16)
 		{
@@ -65,7 +65,7 @@ process FAILURE(int trial_length,									// see DEFAULT.pro and ALL_VARS.pro fo
 			nexttick;
 			}
 			dsendf("vp %d\n",0);
-			spawn SEND_EVT(PunishEnd_);
+			spawn SEND_EVT(EVT_TIMEOUT_END_);
 		while (time() < trl_end_time + inter_trl_int + punish_time) // Then watch the time since trial end...
 			{
 			nexttick;                                               // ...and wait until time is up + timeout.

@@ -57,7 +57,7 @@ process PROC_TARG_ACQ()
 
             PROCESS_STATE = 1;
             // process speparately for STOP / GO trials
-            if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME > 0)
+            if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACCADE_TIME > 0)
             {
                 CURR_STAT = STAT_OUTCOME;
             }

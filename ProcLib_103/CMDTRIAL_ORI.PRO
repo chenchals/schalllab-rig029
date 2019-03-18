@@ -312,7 +312,7 @@ process CMDTRIAL(allowed_fix_time,
 						nexttick;
 					}
 					spawn TRACE_FLOW(trl_type,12);
-					spawn SEND_EVT(StopSignal_);
+					spawn SEND_EVT(EVT_STOP_SIGNAL_);
 					new_curr_ssd = time() - targ_time;
 					// ...and flip the pg to the signal without pd marker.
 					dsendf("vp %d\n", signal);

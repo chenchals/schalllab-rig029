@@ -270,7 +270,7 @@ process CMDTRIAL(allowed_fix_time, 		// see ALL_VARS.pro and DEFAULT.pro
 					printf("time after target after signal_pd = %d\n",tempTime);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 					printf("ssd in # refresh = %d\n",curr_ssd);														// (Even so, sometimes we will accidentally wait n+1 retraces. Such is vdosync.)
 
-					spawn SEND_EVT(StopSignal_);
+					spawn SEND_EVT(EVT_STOP_SIGNAL_);
 
 					stop_sig_time = targ_time + 
 						(round(curr_ssd * (1000.0 / Refresh_rate))); 		// ...record TEMPO time of presentation...
