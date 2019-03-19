@@ -148,7 +148,7 @@ process PROC_RWRD_CHK()
 
         printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);			
 		}        
-		printf("****STAT_RWRD_CHK[%d]: OK (*SUCCESS**XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
+		printf("****STAT_RWRD_CHK[%d]: OK (*XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
                STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;

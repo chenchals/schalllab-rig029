@@ -25,8 +25,8 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 50.0;
-declare float        STOP_WEIGHT   = 50.0;
+declare float        GO_WEIGHT     = 33.0;
+declare float        STOP_WEIGHT   = 67.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
@@ -111,7 +111,7 @@ declare int SSD_STEP_DOWN = 3;
 declare int SSD_CANCEL_DURATION = 1500;
 // after TRL_USE_SSD_VR_COUNT, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int TRL_USE_XTRA_HOLD_DURATION;// evt: FixHoldMinSSHT_
+// evt: FixHoldMinSSHT_
 // Turn fix spot back on for stop trial when:
 // FIX_REIGNITE_FLAG == 1 *AND*
 // saccade is made to target within PRE_SSD_FIX_ON_DELAY or

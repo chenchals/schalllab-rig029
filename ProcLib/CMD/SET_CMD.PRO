@@ -378,6 +378,7 @@ process SET_CMD_TRL()
         printf("****************REPEAT LOW-REWARD ERROR TRIAL***********************\n");
         // Repeat the complete trial. Do not initialize *all* variables, but only those needed for Repeat
         spawnwait INIT_VARS_REPEAT_TRL();
+		TRL_USE_TONE_DURATION = TONE_DURATION;
     }
     else
     {
@@ -637,20 +638,12 @@ process PICK_TRL_SSD()
     declare int tempCount;
 
     tempCount = 0;
-    N_SSD     = 0;
-    while (tempCount < N_SSD_MAX)
-    {
-        if (SSD_ARRY[tempCount] > 0)
-        {
-            N_SSD = N_SSD + 1;
-        }
-        tempCount = tempCount + 1;
-        nexttick;
-    }
+    spawnwait SET_MIN_MAX_SSD();
+	nexttick;
     // must get from SSD_ARRY; use staircasing....
     spawnwait STAIRCASE_NEXT_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
 
-    TRL_USE_SSD_IDX      = TRL_IS_STAIRCASE_SSD;
+    TRL_USE_SSD_IDX      = STAIRCASE_NEXT_SSD_IDX;
     TRL_USE_SSD_VR_COUNT = SSD_ARRY[TRL_USE_SSD_IDX];
     TRL_LAST_SSD_IDX     = TRL_USE_SSD_IDX;
     if (DEBUG_CONSOLE)

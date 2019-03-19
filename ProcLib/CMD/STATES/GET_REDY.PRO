@@ -41,7 +41,7 @@ process PROC_GET_REDY()
     }
 
     TRL_GET_READY_DURATION = TRL_GET_READY_DURATION + 1;
-    if (STAT_DLTA_T <= STAT_ALLOWED_T)
+    if (STAT_DLTA_T <= STAT_ALLOWED_T && TRL_TRIAL_NUMBER > 1)
     {
         if (I_FIX || I_FIX_WIDE)
         {
