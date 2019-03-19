@@ -18,6 +18,8 @@ declare AUTO_EYE_FIXATE();
 declare AUTO_EYE_TARG_ON();
 declare AUTO_EYE_TARG_ACQ();
 declare AUTO_EYE_TARG_SSD();
+declare AUTO_GO_TRIAL();
+
 
 // Utils for eye pos
 declare AUTO_EYE_POS_ACQ_TARG();
@@ -145,6 +147,7 @@ process AUTO_EYE_TARG_SSD()
     declare int out;
 	// just fixate, no saccade
 	spawnwait AUTO_EYE_POS_FIX();
+  // 3 outcomes
 	out = random(3);
 	if (STAT_DLTA_T > (random(50) * random(10))+1)
 	{
@@ -162,6 +165,14 @@ process AUTO_EYE_TARG_SSD()
 		}
 	}
 }
+
+process AUTO_GO_TRIAL()
+{
+  declare int out;
+  // 2 outcomes
+  out = random(2);
+}
+
 
 // State TARG_ON
 process AUTO_EYE_TARG_ON()
@@ -204,7 +215,6 @@ process AUTO_EYE_TARG_ON()
         }
     }
 }
-
 
 // State TARG_ACQ
 process AUTO_EYE_TARG_ACQ()
