@@ -152,13 +152,9 @@ process SEND_INFOS()
 process SEND_INFO_EVT(int evtVal)
 {
     N_INFOS = N_INFOS + 1;
-    if (evtVal == -1)
+    if (evtVal <=0)
     {
-        evtVal = 32768 + 1;
-    }
-    else if (evtVal == 0)
-    {
-        evtVal = 32768;
+      evtVal = 32768 - evtVal;
     }
     spawn SEND_EVT(INFOS_ZERO + evtVal);
 
@@ -168,24 +164,26 @@ process SEND_INFO_EVT(int evtVal)
 
 process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
 {
+    declare int temp;
+
     N_INFOS = N_INFOS + 1;
-    if (evtVal == -1)
+    if (evtVal == 0)
     {
-        evtVal = 32768 + 1;
+      temp = 0;
     }
-    else if (evtVal == 0)
+    else if (evtVal == -1)
     {
-        evtVal = 32768;
+      temp = -1;
     }
-    else if (evtVal > offsetVal)
+    else
     {
-        evtVal = evtVal - offsetVal;
+        temp = evtVal - offsetVal;
     }
-    else if (evtVal < offsetVal)
+    if (temp <= 0)
     {
-        evtVal = 32768 + (offsetVal - evtVal);
+        temp = 32768 - temp;
     }
-    spawn SEND_EVT(INFOS_ZERO + evtVal);
+    spawn SEND_EVT(INFOS_ZERO + temp);
 
     nexttick;
 }
