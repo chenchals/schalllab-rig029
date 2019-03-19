@@ -154,7 +154,7 @@ process SEND_INFO_EVT(int evtVal)
     N_INFOS = N_INFOS + 1;
     if (evtVal <=0)
     {
-      evtVal = 32768 - evtVal;
+      evtVal = 32768 - INFOS_ZERO - evtVal;
     }
     spawn SEND_EVT(INFOS_ZERO + evtVal);
 
@@ -181,7 +181,7 @@ process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
     }
     if (temp <= 0)
     {
-        temp = 32768 - temp;
+        temp = 32768 - INFOS_ZERO - temp;
     }
     spawn SEND_EVT(INFOS_ZERO + temp);
 
