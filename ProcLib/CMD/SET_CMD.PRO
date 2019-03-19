@@ -452,7 +452,7 @@ process COMPUTE_TRIAL_DURATION()
     // Add max ssd delay as this will be the longest TRL duration
     TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + ceil(MAX_SSD * REFRESH_RATE);
     // add min-target hold time
-    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TRL_USE_MIN_THT_DURATION;
+    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TARG_HOLD_MEAN + TARG_HOLD_SPREAD;
     // check for extra hold time based on user set flag
     if (TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG == 1)
     {
