@@ -65,6 +65,10 @@ process PROC_TONE_CHK()
             TRL_USE_TONE_FREQ = GO_CORRECT_TONE_HZ;
             printf("****STAT_TONE_CHK[%d]: Processing Tone times; GO Trial: %d Hz\n", STAT_TONE_CHK, TRL_USE_TONE_FREQ);
         }
+        spawn SEND_EVT(EVT_TONE_ON_);
+
+        printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_ON_[%d]\n", STAT_TONE_CHK, EVT_TONE_ON_);
+
         // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_XTRA_HOLD_START_TIME = time();
         spawn SEND_EVT(EVT_XTRA_HOLD_START_);
@@ -72,8 +76,7 @@ process PROC_TONE_CHK()
         printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_START_);
         TRL_XTRA_HOLD_DURATION = 0;
         TRL_IS_XTRA_HOLD_DONE  = 0;
-		printf("******* TEMP_XTRA_HOLD_TIME [%d], STAT_ALLOWED_T [%d] ***********\n",TEMP_XTRA_HOLD_TIME,STAT_ALLOWED_T);
-		
+        printf("******* TEMP_XTRA_HOLD_TIME [%d], STAT_ALLOWED_T [%d] ***********\n", TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T);
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -132,9 +135,6 @@ process PROC_TONE_CHK()
         {
             TRL_TONE_ON_TIME = time();
             spawn TONE(TRL_USE_TONE_FREQ, TEMP_TONE_DURATION);
-            spawn SEND_EVT(EVT_TONE_ON_);
-
-            printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_ON_[%d]\n", STAT_TONE_CHK, EVT_TONE_ON_);
         }
         if (!I_TARG && TRL_IS_XTRA_HOLD_DONE <= 0)
         {
