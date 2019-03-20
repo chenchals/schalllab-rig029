@@ -54,6 +54,10 @@ process PROC_RWRD_CHK()
         // This is incremented in the CMD_TSK.PRO --> state flow controller
         TEMP_XTRA_HOLD_TIME     = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_DURATION;
+        
+        spawn SEND_EVT(EVT_REWARD_ON_);
+
+        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_ON_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_ON_);
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -99,9 +103,6 @@ process PROC_RWRD_CHK()
         {
             TRL_REWARD_ON_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
-            spawn SEND_EVT(EVT_REWARD_ON_);
-
-            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_ON_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_ON_);
         }
 
         if (!I_TARG && TRL_IS_XTRA_HOLD_DONE <= 0)
@@ -146,8 +147,8 @@ process PROC_RWRD_CHK()
         TRL_XTRA_HOLD_END_TIME = time();
         spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);			
-		}        
+        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);
+		}
 		printf("****STAT_RWRD_CHK[%d]: OK (*XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
                STAT_RWRD_CHK, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
         PROCESS_STATE = 1;
