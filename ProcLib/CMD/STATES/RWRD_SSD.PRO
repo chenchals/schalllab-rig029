@@ -63,7 +63,6 @@ process PROC_RWRD_SSD()
 
     if (I_FIX)
     {
-        TRL_FIX_HOLD_DURATION  = TRL_FIX_HOLD_DURATION + 1;
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }
 
@@ -78,8 +77,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_BREAK_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY), STAT_DLTA_T [%d]\n",
-                       STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_RWRD_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -89,8 +88,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(EVT_PRE_RWRD_BREAK_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: EVT_PRE_RWRD_BREAK_[%d]\n", STAT_RWRD_SSD, EVT_PRE_RWRD_BREAK_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*Pre-Reward*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY), STAT_DLTA_T [%d]\n",
-                       STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*Pre-Reward*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_RWRD_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -112,8 +111,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_BREAK_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation*--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-                       STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation*--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_RWRD_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -123,8 +122,8 @@ process PROC_RWRD_SSD()
                 spawn SEND_EVT(EVT_RWRD_BREAK_);
 
                 printf("****STAT_RWRD_SSD[%d]: ERR sent Event: EVT_RWRD_BREAK_[%d][%d]\n", STAT_RWRD_SSD, EVT_RWRD_BREAK_);
-                printf("****STAT_RWRD_SSD[%d]: ERR (*During-Reward*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-                       STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_RWRD_SSD[%d]: ERR (*During-Reward*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_RWRD_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -149,8 +148,8 @@ process PROC_RWRD_SSD()
 
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_END_);
         }
-        printf("****STAT_RWRD_SSD[%d]: OK (*XTRA_HOLD* Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_RWRD_DELAY+TRL_USE_RWRD_DURATION), STAT_DLTA_T [%d]\n",
-               STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+        printf("****STAT_RWRD_SSD[%d]: OK (*XTRA_HOLD* Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+               STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
     }
