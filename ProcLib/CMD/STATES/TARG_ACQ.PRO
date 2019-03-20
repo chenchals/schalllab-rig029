@@ -39,7 +39,7 @@ process PROC_TARG_ACQ()
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    //TRL_I_IN_FLIGHT  should be true
+    //TRL_IS_I_IN_FLIGHT  should be true
     // Acquire target
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
@@ -47,29 +47,29 @@ process PROC_TARG_ACQ()
         if (I_TARG)
         {
             TRL_IS_TARG_ACQUIRED   = 1;
-            TRL_TARG_ACQ_TIME      = time();
+            TRL_TARGET_ACQUIRED_TIME      = time();
             TRL_DECIDE_TIME        = time();
-            spawn SEND_EVT(AcquireTarget_);
-            spawn SEND_EVT(Decide_);
+            spawn SEND_EVT(EVT_TARGET_ACQUIRED_);
+            spawn SEND_EVT(EVT_DECIDE_);
 
-            printf("****STAT_TARG_ACQ[%d]: OK sent Event: AcquireTarget_[%d], Decide_[%d]\n", STAT_TARG_ACQ, AcquireTarget_, Decide_);
-            printf("****STAT_TARG_ACQ[%d]: OK (AcquireTarget_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
+            printf("****STAT_TARG_ACQ[%d]: OK sent Event: EVT_TARGET_ACQUIRED_[%d], EVT_DECIDE_[%d]\n", STAT_TARG_ACQ, EVT_TARGET_ACQUIRED_, EVT_DECIDE_);
+            printf("****STAT_TARG_ACQ[%d]: OK (EVT_TARGET_ACQUIRED_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
             // process speparately for STOP / GO trials
-            if (TRL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACC_TIME > 0)
+            if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACCADE_TIME > 0)
             {
                 CURR_STAT = STAT_OUTCOME;
             }
             else
             {
-              if(TRL_TYPE == TRIAL_TYPE_STOP && TRL_FIX_REIGNITE_FLAG > 0)
+              if(TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_IS_FIX_REIGNITE > 0)
               {
                 // change the display to PG_SIGNAL_PD to turn the signal back on
                 dsendf("vp %d\n", PG_SIGNAL_PD);
-                printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial-Saccade-Turn-on-Signal*)\n", STAT_TARG_ACQ);
+                printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial Saccade happened; Turn-on-Signal*)\n", STAT_TARG_ACQ);
               }
-                CURR_STAT = STAT_TONE_CHK;
+                CURR_STAT = STAT_TARG_HOLD;
             }
         }
     }
@@ -78,14 +78,14 @@ process PROC_TARG_ACQ()
         if (!I_TARG)
         {
             TRL_IS_TARG_ACQUIRED    = 0;
-            TRL_STAIRCASE_SSD_FLAG  = 0;
-            TRL_TARG_ACQ_ERROR_TIME = time();
-            spawn SEND_EVT(AcquireTargetError_);
+            TRL_IS_STAIRCASE_SSD  = 0;
+            TRL_ACQUIRE_TARGET_ERROR_TIME = time();
+            spawn SEND_EVT(EVT_ACQUIRE_TARGET_ERROR_);
 
             //spawn SEND_EVT(GoError_);
 
             // Error saccade?
-            printf("****STAT_TARG_ACQ[%d]: ERR sent Event: AcquireTargetError_[%d]\n", STAT_TARG_ACQ, AcquireTargetError_);
+            printf("****STAT_TARG_ACQ[%d]: ERR sent Event: EVT_ACQUIRE_TARGET_ERROR_[%d]\n", STAT_TARG_ACQ, EVT_ACQUIRE_TARGET_ERROR_);
             printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;

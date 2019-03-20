@@ -7,340 +7,170 @@
 //   Date: 2019-03-07
 //==========================================================================
 declare SEND_INFOS();
-declare WAIT_INFOS();
+declare SEND_INFO_EVT(int evtVal);
+declare SEND_INFO_REL_TIME(int evtVal, int offsetVal);
 
 declare constant int INFOS_ZERO = 3000;
 declare int          N_INFOS;
-declare int          DONE_INFOS = 0;
+
 
 process SEND_INFOS()
 {
+    declare int TRL_RAND_NEG_NUMBER_TEST;
+
     N_INFOS = 0;
     printf("****INFOS.PRO: Sending infos....\n");
-
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_NUMBER);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TYPE);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_RUNNING);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_VR_COUNT_DURATION - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_TARG_ON_FLAG);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_TARG_ACQUIRED);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_FIX_ACQUIRED);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_I_IN_FLIGHT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_TARG_MIN_THT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_TIMEOUT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_STOP_SIGNAL_ON);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_STOP_SIGNAL_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_STOP_SIGNAL_DELAY_IDX);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_STOP_SIGNAL_DELAY);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_STOP_SIGNAL_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_NON_CANCELLED);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_CANCELLED);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_CUM_DURATION - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_START_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_END_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_GET_READY_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_READY_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_GET_READY_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_ON_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_ACQ_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_ACQ_ERROR_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_HOLD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIXATED_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_FIX_HOLD_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_PRE_TARG_ON_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_ON_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_ON_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_DECIDE_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_SACC_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_ERLY_SACC_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_LATE_SACC_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_NO_SACC_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_STAIRCASE_SSD_FLAG);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_ACQ_ERROR_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_SACC_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_ACQ_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_HOLD_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TIMEOUT_START_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TIMEOUT_END_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TIMEOUT_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_MIN_THT_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_PRE_TONE_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_TONE_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_PRE_RWRD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_RWRD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_POST_RWRD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_BRK_MIN_THT_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_NOGO_SACC_PRE_SSD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_NOGO_SACC_POST_SSD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_NOGO_ERLY_SACC_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_NOGO_LATE_SACC_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_FIX_HOLD_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_MIN_SSHT_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_PRE_TONE_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_TONE_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_PRE_RWRD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_RWRD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_POST_RWRD_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_FIX_BRK_MIN_SSHT_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_CANCEL_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_FIX_REIGNITE_FLAG);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_PRE_SSD_DELAY_FIX_REIGNITE);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_POST_SSD_DELAY_FIX_REIGNITE);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_FIX_MIN_SSHT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TONE_DELAY);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TONE_FREQ);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TONE_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TONE_ON_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TONE_OFF_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_RWRD_DELAY);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_RWRD_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_RWRD_ON_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_RWRD_OFF_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_XTRA_RWRD_ON_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_XTRA_RWRD_OFF_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_ITI_START_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_ITI_END_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_ITI_DURATION);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_START_INFOS_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_END_INFOS_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_REACTION_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_ABORT_TIME - TRL_START_TIME));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_FIX_VRT_RFRSH_COUNT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_VRT_RFRSH_COUNT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_SSD_VRT_RFRSH_COUNT);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_LAST_STOP_OUTCOME_EVNTCODE);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_LAST_GO_OUTCOME_EVNTCODE);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_LAST_SSD_IDX);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_BLOCK_NUM);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_IS_LO_RWRD);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_LO_RWRD_TARG_IDX);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_IDX);
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_SIZE * 100));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_ANGLE * 100));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + int(TRL_TARG_ECCENTRICITY * 100));
-    spawnwait WAIT_INFOS();
-
-    spawnwait SEND_EVT(INFOS_ZERO + TRL_TARG_COLOR_IDX);
-    spawnwait WAIT_INFOS();
-
+    TRL_RAND_NEG_NUMBER_TEST = -((random(5000) + 1) * 2);
+		spawnwait SEND_INFO_EVT(TRL_RAND_NEG_NUMBER_TEST);
+    spawnwait SEND_INFO_EVT(TRL_TRIAL_NUMBER);
+    spawnwait SEND_INFO_EVT(TRL_BLOCK_NUM);
+    spawnwait SEND_INFO_EVT(TRL_TRIAL_TYPE);
+    spawnwait SEND_INFO_EVT(TRL_IS_RUNNING);
+    spawnwait SEND_INFO_EVT(TRL_IS_I_IN_FLIGHT);
+    spawnwait SEND_INFO_EVT(TRL_IS_FIX_ON);
+    spawnwait SEND_INFO_EVT(TRL_IS_FIX_ACQUIRED);
+    spawnwait SEND_INFO_EVT(TRL_IS_TARG_ON);
+    spawnwait SEND_INFO_EVT(TRL_IS_TARG_ACQUIRED);
+    spawnwait SEND_INFO_EVT(TRL_IS_STOP_SIGNAL_ON);
+    spawnwait SEND_INFO_EVT(TRL_IS_XTRA_HOLD_DONE);
+    spawnwait SEND_INFO_EVT(TRL_IS_TIMEOUT);
+    spawnwait SEND_INFO_EVT(TRL_IS_NON_CANCELLED);
+    spawnwait SEND_INFO_EVT(TRL_IS_CANCELLED);
+    spawnwait SEND_INFO_EVT(TRL_IS_LO_RWRD);
+    spawnwait SEND_INFO_EVT(TRL_IS_FIX_REIGNITE);
+    spawnwait SEND_INFO_EVT(TRL_IS_STAIRCASE_SSD);
+    spawnwait SEND_INFO_REL_TIME(TRL_TASK_START_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TRIAL_START_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_EOT_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_GET_READY_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_READY_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ABORT_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_FIX_ON_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ACQUIRE_FIX_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ACQUIRE_FIX_ERROR_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_FIXATE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_FIX_BREAK_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TARGET_PRE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TARGET_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TARGET_ACQUIRED_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_DECIDE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_SACCADE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ERLY_SACCADE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_LATE_SACC_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_NO_SACCADE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ACQUIRE_TARGET_ERROR_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_XTRA_HOLD_END_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_BRK_XTRA_HOLD_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_BRK_PRE_TONE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_BRK_TONE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_BRK_PRE_RWRD_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_BRK_RWRD_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TONE_ON_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TONE_OFF_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_REWARD_ON_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_REWARD_OFF_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ITI_START_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_ITI_END_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_START_INFOS_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_END_INFOS_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TIMEOUT_START_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TIMEOUT_END_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_STOP_SIGNAL_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_CANCEL_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_BRK_CANCEL_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_NOGO_SACCADE_PRE_SSD_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_NOGO_SACCADE_POST_SSD_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_NOGO_EARLY_SACCADE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_NOGO_LATE_SACCADE_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_XTRA_RWRD_ON_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_XTRA_RWRD_OFF_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_REL_TIME(TRL_TASK_END_TIME, TRL_TRIAL_START_TIME);
+    spawnwait SEND_INFO_EVT(TRL_CUM_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_GET_READY_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_FIX_HOLD_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_FIX_HOLD_ADJUST);
+    spawnwait SEND_INFO_EVT(TRL_TARG_ON_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_SACC_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_TARG_HOLD_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_STOP_SIGNAL_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_TARG_VR_COUNT);
+    spawnwait SEND_INFO_EVT(TRL_SSD_VR_COUNT);
+    spawnwait SEND_INFO_EVT(TRL_USE_TRIAL_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_SSD_IDX);
+    spawnwait SEND_INFO_EVT(TRL_USE_STAIRCASE);
+    spawnwait SEND_INFO_EVT(TRL_USE_SSD_STEP_UP);
+    spawnwait SEND_INFO_EVT(TRL_USE_SSD_STEP_DOWN);
+    spawnwait SEND_INFO_EVT(TRL_USE_IS_TRL_LENGTH_FIXED);
+    spawnwait SEND_INFO_EVT(TRL_USE_SSD_VR_COUNT);
+    spawnwait SEND_INFO_EVT(TRL_USE_FIX_HOLD_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_MIN_THT_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_SSD_CANCEL_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_PRE_SSD_FIX_ON_DELAY);
+    spawnwait SEND_INFO_EVT(TRL_USE_POST_SSD_FIX_ON_DELAY);
+    spawnwait SEND_INFO_EVT(TRL_USE_TONE_DELAY);
+    spawnwait SEND_INFO_EVT(TRL_USE_TONE_FREQ);
+    spawnwait SEND_INFO_EVT(TRL_USE_TONE_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_RWRD_DELAY);
+    spawnwait SEND_INFO_EVT(TRL_USE_RWRD_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_ITI_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_TIMEOUT_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_CORRECT_TRIALS_PER_BLOCK);
+    spawnwait SEND_INFO_EVT(TRL_USE_REPEAT_LO_RWRD_ERROR_TRL);
+    spawnwait SEND_INFO_EVT(TRL_USE_REPEAT_MAX);
+    spawnwait SEND_INFO_EVT(TRL_USE_XTRA_HOLD_DURATION);
+    spawnwait SEND_INFO_EVT(TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG);
+    spawnwait SEND_INFO_EVT(TRL_CURR_TARG_IDX);
+    spawnwait SEND_INFO_EVT(int(TRL_CURR_TARG_SIZE) *100);
+    spawnwait SEND_INFO_EVT(int(TRL_CURR_TARG_ANGLE) *100);
+    spawnwait SEND_INFO_EVT(int(TRL_CURR_TARG_ECCENTRICITY) *100);
+    spawnwait SEND_INFO_EVT(TRL_CURR_TARG_COLOR_IDX);
+    spawnwait SEND_INFO_EVT(TRL_LO_RWRD_TARG_IDX);
+    spawnwait SEND_INFO_EVT(TRL_REPEAT_COUNT);
+    spawnwait SEND_INFO_EVT(TRL_LAST_STOP_OUTCOME_EVNTCODE);
+    spawnwait SEND_INFO_EVT(TRL_LAST_GO_OUTCOME_EVNTCODE);
+    spawnwait SEND_INFO_EVT(TRL_LAST_SSD_IDX);
     // Last info code
-	spawnwait WAIT_INFOS();
-    spawnwait SEND_EVT(INFOS_ZERO + N_INFOS);
-
-    DONE_INFOS = 1;
+    spawnwait SEND_INFO_EVT(N_INFOS);
 } /* SEND_INFOS */
 
 
-process WAIT_INFOS()
+process SEND_INFO_EVT(int evtVal)
 {
     N_INFOS = N_INFOS + 1;
+    if (evtVal == -1)
+    {
+        evtVal = 32768 + 1;
+    }
+    else if (evtVal == 0)
+    {
+        evtVal = 32768;
+    }
+    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
+
+    nexttick;
+}
+
+
+process SEND_INFO_REL_TIME(int evtVal, int offsetVal)
+{
+    N_INFOS = N_INFOS + 1;
+    if (evtVal == -1)
+    {
+        evtVal = 32768 + 1;
+    }
+    else if (evtVal == 0)
+    {
+        evtVal = 32768;
+    }
+    else if (evtVal > offsetVal)
+    {
+        evtVal = evtVal - offsetVal;
+    }
+    else if (evtVal < offsetVal)
+    {
+        evtVal = 32768 + (offsetVal - evtVal);
+    }
+    spawnwait SEND_EVT(INFOS_ZERO + evtVal);
+
     nexttick;
 }

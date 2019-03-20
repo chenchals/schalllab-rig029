@@ -19,112 +19,91 @@
 //       appropriate locations.
 // 002: 2019/01/08 chenchal subravtei
 //      Added/modified event codes:
-//      PDTriggerLeft_  = 2990 and
-//      PDTriggerRight_ = 2991
+//      EVT_PD_TRIGGER_LEFT_  = 2990 and
+//      EVT_PD_TRIGGER_RIGHT_ = 2991
 //
 // Codes from 1500 - 1520
-declare constant Identify_Room_ = 1500;
-declare constant CmanHeader_    = 1501;
-declare constant MemHeader_     = 1502;
-declare constant GONOGOHeader_  = 1503;
-declare constant DelayedHeader_ = 1504;
-declare constant SearchHeader_  = 1507;
-declare constant CaptureHeader_ = 1508;
-declare constant AntiHeader_    = 1509;
+declare constant EVT_IDENTIFY_ROOM_ = 1500;
+declare constant EVT_CMAN_HEADER_   = 1501;
 
 // Codes from 1550-1599
-declare constant OutcomeFixError_       = 1550;
-declare constant OutcomeFixBreak_       = 1552;
-declare constant OutcomeGoCorrect_      = 1560;
-declare constant OutcomeGoError_        = 1562;
-declare constant OutcomeNoGoCancelled_  = 1570;
-declare constant OutcomeNoGoError_      = 1572;
-declare constant OutcomeNoGoNonCancelled_  = 1574;
+declare constant EVT_OUTCOME_FIX_ERROR_          = 1550;
+declare constant EVT_OUTCOME_FIX_BREAK_          = 1552;
+declare constant EVT_OUTCOME_GO_CORRECT_         = 1560;
+declare constant EVT_OUTCOME_GO_ERROR_           = 1562;
+declare constant EVT_OUTCOME_NOGO_CANCELLED_     = 1570;
+declare constant EVT_OUTCOME_NOGO_ERROR_         = 1572;
+declare constant EVT_OUTCOME_NOGO_NON_CANCELLED_ = 1574;
 
 
 // Codes from 1600-1999
-declare constant TaskStart_     = 1600;
-declare constant TaskEnd_       = 1602;
-declare constant TrialGetReady_ = 1610;
-declare constant TrialReady_    = 1612;
-declare constant TrialStart_    = 1620;
-declare constant Eot_           = 1622;
+declare constant EVT_TASK_START_      = 1600;
+declare constant EVT_TASK_END_        = 1602;
+declare constant EVT_TRIAL_GET_READY_ = 1610;
+declare constant EVT_TRIAL_READY_     = 1612;
+declare constant EVT_TRIAL_START_     = 1620;
+declare constant EVT_EOT_             = 1622;
 
 // Coded from 2000-2299
-declare constant Tone_        = 2000;
-declare constant Reward_      = 2010;
-declare constant ITIStart_    = 2124;
-declare constant ITIEnd_      = 2126;
-declare constant PunishStart_ = 2130;
-declare constant PunishEnd_   = 2132;
-declare constant PunishTone_  = 2134;
-declare constant ExtraRWRD_   = 2140;
+declare constant EVT_ITI_START_     = 2124;
+declare constant EVT_ITI_END_       = 2126;
+declare constant EVT_TIMEOUT_START_ = 2130;
+declare constant EVT_TIMEOUT_END_   = 2132;
 
 // Codes 2300-2399
-declare constant FixSpotOn_       = 2300;
-declare constant FixSpotOff_      = 2302;
-declare constant TargetPre_       = 2310;
-declare constant Target_          = 2320;
-declare constant TargetOff_       = 2330;
-declare constant StopSignal_      = 2340;
-declare constant ZeroEyePosition_ = 2395;
+declare constant EVT_FIX_SPOT_ON_  = 2300;
+declare constant EVT_FIX_SPOT_OFF_ = 2302;
+declare constant EVT_TARGET_PRE_   = 2310;
+declare constant EVT_TARGET_       = 2320;
+declare constant EVT_STOP_SIGNAL_  = 2340;
 
 // Codes 2400-2699
-declare constant AcquireFix_         = 2400;
-declare constant AcquireFixError_    = 2402;
-declare constant Fixate_             = 2404;
-declare constant BreakFix_           = 2406;
-declare constant ReturnToFix_        = 2410;
-declare constant AcquireTarget_      = 2420;
-declare constant AcquireTargetError_ = 2422;
-// For GO trials 2430-2460, cf. STOP trials 2630-2660
-declare constant TargHoldBrkPreTone_  = 2430;
-declare constant TargHoldBrkTone_     = 2432;
-declare constant TargHoldBrkPreRwrd_  = 2434;
-declare constant TargHoldBrkRwrd_     = 2438;
-declare constant TargHoldBrkPostRwrd_ = 2440;
-declare constant TargHoldMinTHT_      = 2450;
-declare constant TargHoldBrkMinTHT_   = 2452;
-declare constant Decide_              = 2460;
+declare constant EVT_ACQUIRE_FIX_          = 2400;
+declare constant EVT_ACQUIRE_FIX_ERROR_    = 2402;
+declare constant EVT_FIXATE_               = 2404;
+declare constant EVT_FIX_BREAK_            = 2406;
+declare constant EVT_RETURN_TO_FIX_        = 2410;
+declare constant EVT_TARGET_ACQUIRED_      = 2420;
+declare constant EVT_ACQUIRE_TARGET_ERROR_ = 2422;
+declare constant EVT_TARGET_HOLD_          = 2424;
+declare constant EVT_TARGET_BREAK_         = 2426;
+
+declare constant EVT_PRE_TONE_BREAK_  = 2430;
+declare constant EVT_TONE_BREAK_      = 2432;
+declare constant EVT_PRE_RWRD_BREAK_  = 2434;
+declare constant EVT_RWRD_BREAK_      = 2438;
+declare constant EVT_XTRA_HOLD_START_ = 2450;
+declare constant EVT_XTRA_HOLD_END_   = 2452;
+declare constant EVT_XTRA_HOLD_BREAK_ = 2454;
+declare constant EVT_DECIDE_          = 2460;
+
+declare constant EVT_MIN_SSHT_START_ = 2470;
+declare constant EVT_MIN_SSHT_END_   = 2472;
+declare constant EVT_MIN_THT_START_  = 2480;
+declare constant EVT_MIN_THT_END_    = 2482;
+
 // Saccade reward and reinforcement
-declare constant EarlySaccade_ = 2500;
-declare constant Saccade_      = 2502;
-declare constant LateSaccade_  = 2504;
-declare constant NoSaccade_    = 2506;
-declare constant ToneOn_       = 2510;
-declare constant ToneOff_      = 2512;
-declare constant SoundStart_   = 2520;
-declare constant SoundEnd_     = 2522;
-declare constant RewardOn_     = 2530;
-declare constant RewardOff_    = 2532;
-declare constant JuiceStart_   = 2540;
-declare constant JuiceEnd_     = 2542;
-declare constant MouthBegin_   = 2550;
-declare constant MouthEnd_     = 2552;
+declare constant EVT_EARLY_SACCADE_ = 2500;
+declare constant EVT_SACCADE_       = 2502;
+declare constant EVT_NO_SACCADE_    = 2506;
+declare constant EVT_TONE_ON_       = 2510;
+declare constant EVT_TONE_OFF_      = 2512;
+declare constant EVT_AUDIO_START_   = 2514;
+declare constant EVT_AUDIO_END_     = 2516;
+declare constant EVT_REWARD_ON_     = 2520;
+declare constant EVT_REWARD_OFF_    = 2522;
+declare constant EVT_JUICE_START_   = 2524;
+declare constant EVT_JUICE_END_     = 2526;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460
 // after TARG_ON
-declare constant NoGoEarlySaccade_   = 2600;
-declare constant NoGoSaccadePreSSD_  = 2602;
-declare constant NoGoSaccadePostSSD_ = 2604;
-declare constant NoGoLateSaccade_    = 2606;
-declare constant FixHoldBrkPreTone_  = 2630;
-declare constant FixHoldBrkTone_     = 2632;
-declare constant FixHoldBrkPreRwrd_  = 2634;
-declare constant FixHoldBrkRwrd_     = 2638;
-declare constant FixHoldBrkPostRwrd_ = 2640;
-declare constant FixHoldMinSSHT_     = 2650;
-declare constant FixHoldBrkMinSSHT_  = 2652;
-declare constant Cancel_             = 2660;
-
-// Codes 2700-2899
-declare constant Staircase_         = 2700;
-declare constant Neg2Reinforcement_ = 2710;
-declare constant Feedback_          = 2720;
+declare constant EVT_NOGO_EARLY_SACCADE_    = 2600;
+declare constant EVT_NOGO_SACCADE_PRE_SSD_  = 2602;
+declare constant EVT_NOGO_SACCADE_POST_SSD_ = 2604;
+declare constant EVT_NOGO_LATE_SACCADE_     = 2606;
+declare constant EVT_CANCEL_                = 2660;
 
 // Codes 2900-3000
-declare constant TrialInBlock    = 2900;
-declare constant PDTriggerLeft_  = 2990;
-declare constant PDTriggerRight_ = 2992;
-declare constant StartInfos_     = 2998;
-declare constant EndInfos_       = 2999;
-declare constant InfosZero       = 3000;
+declare constant EVT_PD_TRIGGER_LEFT_  = 2990;
+declare constant EVT_PD_TRIGGER_RIGHT_ = 2992;
+declare constant EVT_INFOS_START_      = 2998;
+declare constant EVT_INFOS_END_        = 2999;

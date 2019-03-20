@@ -32,15 +32,15 @@ process PROC_TARG_ON()
     if (PROCESS_STATE)
     {
         printf("****STAT_TARG_ON[%d]: Processing Target On\n", STAT_TARG_ON);
-        TRL_PRE_TARG_ON_TIME = time();
-        spawn SEND_EVT(TargetPre_);
+        TRL_TARGET_PRE_TIME = time();
+        spawn SEND_EVT(EVT_TARGET_PRE_);
 
         dsendf("vp %d\n", PG_TARGET_PD);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
         spawn GRAF_SHOW_TARG(GRAF_SHOW);
 
         PROCESS_STATE   = 0;
-        STAT_STRT_T     = TRL_PRE_TARG_ON_TIME;
+        STAT_STRT_T     = TRL_TARGET_PRE_TIME;
         STAT_DLTA_T     = 0;
         STAT_I_DURATION = MIN_SACC_TIME * TIME_DILATE_FACTOR;
         STAT_ALLOWED_T  = MAX_SACC_TIME * TIME_DILATE_FACTOR;
@@ -48,26 +48,28 @@ process PROC_TARG_ON()
 
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (TRL_TARG_VRT_RFRSH_COUNT == 1 && TRL_TARG_ON_TIME<=0)
+    if (TRL_TARG_VR_COUNT == 1 && TRL_TARGET_TIME<=0)
     {
-        TRL_TARG_ON_TIME = time();
-        spawn SEND_EVT(Target_);
+        TRL_TARGET_TIME = time();
+        spawn SEND_EVT(EVT_TARGET_);
 
-        printf("****STAT_TARG_ON[%d]: Sending Event Target_[%d]\n", STAT_TARG_ON, Target_);
+        printf("****STAT_TARG_ON[%d]: Sending Event EVT_TARGET_[%d]\n", STAT_TARG_ON, EVT_TARGET_);
 
-        printf("****STAT_TARG_ON[%d]: Sending Event FixSpotOff_[%d]\n", STAT_TARG_ON, FixSpotOff_);
-        spawn SEND_EVT(FixSpotOff_);
+        TRL_FIX_SPOT_OFF_TIME = time();
+        spawn SEND_EVT(EVT_FIX_SPOT_OFF_);
+
+        printf("****STAT_TARG_ON[%d]: Sending Event EVT_FIX_SPOT_OFF_[%d]\n", STAT_TARG_ON, EVT_FIX_SPOT_OFF_);
     }
     // Before MIN_SACCADE_TIME
     if (STAT_DLTA_T <= STAT_I_DURATION)
     {
         if (!I_FIX)
         {
-            TRL_I_IN_FLIGHT    = 1;
-            TRL_ERLY_SACC_TIME = time();
-            spawn SEND_EVT(EarlySaccade_);
+            TRL_IS_I_IN_FLIGHT    = 1;
+            TRL_ERLY_SACCADE_TIME = time();
+            spawn SEND_EVT(EVT_EARLY_SACCADE_);
 
-            printf("****STAT_TARG_ON[%d]: ERR sent Event: EarlySaccade_[%d]\n", STAT_TARG_ON, EarlySaccade_);
+            printf("****STAT_TARG_ON[%d]: ERR sent Event: EVT_EARLY_SACCADE_[%d]\n", STAT_TARG_ON, EVT_EARLY_SACCADE_);
             printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
@@ -77,11 +79,11 @@ process PROC_TARG_ON()
     {
         if (!I_FIX)
         {
-            TRL_I_IN_FLIGHT = 1;
-            TRL_SACC_TIME   = time();
-            spawn SEND_EVT(Saccade_);
+            TRL_IS_I_IN_FLIGHT = 1;
+            TRL_SACCADE_TIME   = time();
+            spawn SEND_EVT(EVT_SACCADE_);
 
-            printf("****STAT_TARG_ON[%d]: OK sent Event: Saccade_[%d]\n", STAT_TARG_ON, Saccade_);
+            printf("****STAT_TARG_ON[%d]: OK sent Event: EVT_SACCADE_[%d]\n", STAT_TARG_ON, EVT_SACCADE_);
             printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]/([%d],[%d]) (MAX_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TARG_ACQ;
@@ -91,13 +93,13 @@ process PROC_TARG_ON()
     {
         if (I_FIX)
         {
-            TRL_I_IN_FLIGHT  = 0;
-            TRL_NO_SACC_TIME = time();
-            spawn SEND_EVT(NoSaccade_);
+            TRL_IS_I_IN_FLIGHT  = 0;
+            TRL_NO_SACCADE_TIME = time();
+            spawn SEND_EVT(EVT_NO_SACCADE_);
 
             //spawn SEND_EVT(GoError_);
 
-            printf("****STAT_TARG_ON[%d]: ERR sent Event: NoSaccade_[%d]\n", STAT_TARG_ON, NoSaccade_);
+            printf("****STAT_TARG_ON[%d]: ERR sent Event: EVT_NO_SACCADE_[%d]\n", STAT_TARG_ON, EVT_NO_SACCADE_);
             printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]/[%d] (MAX_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;

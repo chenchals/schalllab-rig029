@@ -4,9 +4,9 @@
 //                The computed value is written to a global variable JITTER_INT.
 //
 //   Inputs:
-//          GAUSS_JITTER(int meanT, float varianceT):
-//          UNIFORM_JITTER(int meanT, int diffT);:
-//          EXPONENT_JITTER(int meanT, int diffT);:
+//          GAUSS_JITTER(int meanT, int spreadT):
+//          UNIFORM_JITTER(int meanT, int spreadT);:
+//          EXPONENT_JITTER(int meanT, int spreadT);:
 //   Output:
 //         Global variable: JITTER_INT (int)
 //
@@ -18,9 +18,9 @@
 //   Date: 2019-03-05
 //==========================================================================
 
-declare GAUSS_JITTER(int meanT, int varianceT);
-declare UNIFORM_JITTER(int meanT, int diffT);
-declare EXPONENT_JITTER(int meanT, int diffT);
+declare GAUSS_JITTER(int meanT, int spreadT);
+declare UNIFORM_JITTER(int meanT, int spreadT);
+declare EXPONENT_JITTER(int meanT, int spreadT);
 
 declare constant int JITTER_NONE             = 0;
 declare constant int JITTER_GAUSS_FLAG       = 1;
@@ -30,30 +30,38 @@ declare constant int JITTER_EXPONENTIAL_FLAG = 3;
 declare int          JITTER_INT;
 
 
-process JITTER(int meanT, int varianceT, int jitterFlag)
+process JITTER(int meanT, int spreadT, int jitterFlag)
 {
 
-    if (jitterFlag == JITTER_NONE)
+    if(meanT <= 0)
+    {
+      JITTER_INT = 0;
+    }
+    else if (meanT > 0 && spreadT <=0)
+    {
+      JITTER_INT = meanT;
+    }
+    else if (jitterFlag == JITTER_NONE)
     {
       JITTER_INT = meanT;
     }
     else if (jitterFlag == JITTER_GAUSS_FLAG)
     {
-      spawnwait GAUSS_JITTER(meanT,  varianceT);
+      spawnwait GAUSS_JITTER(meanT,  spreadT);
     }
     else if (jitterFlag == JITTER_UNIFORM_FLAG)
     {
-      spawnwait UNIFORM_JITTER(meanT,  varianceT);
+      spawnwait UNIFORM_JITTER(meanT,  spreadT);
     }
     else if (jitterFlag == JITTER_EXPONENTIAL_FLAG)
     {
-      spawnwait EXPONENT_JITTER(meanT,  varianceT);
+      spawnwait EXPONENT_JITTER(meanT,  spreadT);
     }
 }
 
 
 // Gaussian distribution
-process GAUSS_JITTER(int meanT, int varianceT)
+process GAUSS_JITTER(int meanT, int spreadT)
 {
     // Box-Muller transform
     //Using: https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
@@ -67,30 +75,30 @@ process GAUSS_JITTER(int meanT, int varianceT)
     z1 = sqrt(-2.0 * ln(u1)) * cosrad(u2 * twoPi);
     //z1 = sqrt(-2.0 * ln(u1)) * sinrad(u2 * twoPi);
 
-    JITTER_INT = round(z1 * sqrt(varianceT)) + meanT;
+    JITTER_INT = round(z1 * spreadT) + meanT;
 }
 
 
 // Random uniform distribution
-process UNIFORM_JITTER(int meanT, int diffT)
+process UNIFORM_JITTER(int meanT, int spreadT)
 {
     if (random(2) > 0)
     {
-        JITTER_INT = meanT + random(ceil(diffT / 2));
+        JITTER_INT = meanT + random(spreadT);
     }
     else
     {
-        JITTER_INT = meanT - random(ceil(diffT / 2));
+        JITTER_INT = meanT - random(spreadT);
     }
 }
 
 
 // Exponential distribution
-process EXPONENT_JITTER(int meanT, int diffT)
+process EXPONENT_JITTER(int meanT, int spreadT)
 {
     declare float jitter;
 
     jitter     = (random(1001)) / 1000.0;
     jitter     = exp(-1.0 * jitter / 0.25);
-    JITTER_INT = round(jitter * diffT + meanT);
+    JITTER_INT = round(jitter * spreadT + meanT);
 }

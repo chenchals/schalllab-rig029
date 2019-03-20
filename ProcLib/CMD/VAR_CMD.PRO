@@ -9,43 +9,41 @@
 //==========================================================================
 //  Revision History:
 //  002: 2019-02-08 chenchal subraveti
-//       Compute MIN_TARG_HOLD_TIME using USE_TONE_AND_REWRD_FOR_MIN_THT
-//       if 0: then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
-//       if 1: then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+BASE_TARG_HOLD_TIME
-//       MIN_TARG_HOLD_TIME:
+//       Compute TRL_USE_XTRA_HOLD_DURATION using USE_TONE_AND_REWRD_FOR_MIN_THT
+//       if 0: then TRL_USE_XTRA_HOLD_DURATION =
+//       if 1: then TRL_USE_XTRA_HOLD_DURATION = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+
+//       TRL_USE_XTRA_HOLD_DURATION:
 //       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE / JUICE given
 //       if gaze ob target ==> NO TIMEOUT_TIME
+//
+// 003: 2019-03-13 chenchal subraveti
+//       TRL_USE_XTRA_HOLD_DURATION = determined by the vars below
+//       TARG_HOLD_MEAN, TARG_HOLD_SPREAD, TARG_HOLD_JITTER_FLAG
 //
 
 //===========Trial types and distributions======================
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
-// Are these used / useful????
-declare constant int NOGO_CANCELLED_TRIAL     = 1;
-declare constant int NOGO_NON_CANCELLED_TRIAL = 2;
-declare constant int NOGO_ERROR_TRIAL         = 3;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 50.0;
-declare float        STOP_WEIGHT   = 50.0;
+declare float        GO_WEIGHT     = 33.0;
+declare float        STOP_WEIGHT   = 67.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
-declare int          REPEAT_MAX = -1;
+declare int REPEAT_MAX = 2;
 //==========Jitter flags and definitions=========================
 // See UTIL/JITTER.PRO
 // declare constant int JITTER_NONE             = 0;
 // declare constant int JITTER_GAUSS_FLAG       = 1;
 // declare constant int JITTER_UNIFORM_FLAG     = 2;
 // declare constant int JITTER_EXPONENTIAL_FLAG = 3;
-declare int          TONE_JITTER_FLAG        = JITTER_GAUSS_FLAG;
-declare int          RWRD_JITTER_FLAG        = JITTER_UNIFORM_FLAG;
 // temporary globals to be used in state processing
-declare int          TEMP_MIN_THT;
-declare int          TEMP_MIN_SSHT;
-declare int          TEMP_DELY_PLUS_DURATION;
+declare int TEMP_XTRA_HOLD_TIME;
+declare int TEMP_XTRA_HOLD_TIME;
+declare int TEMP_DELY_PLUS_DURATION;
 
 //============= Timing variables    ===================
 // Time dialation factor to multiply all times for manual operation
@@ -59,10 +57,13 @@ declare int ALLOWED_FIX_TIME = 1000;
 declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int FIX_JITTER_FLAG = JITTER_EXPONENTIAL_FLAG;
-// minimum - maximum time after fixation before target presentation
-declare int MIN_MAX_FIX_HOLD_TIME[2] = { 500, 1000 };
+// fix hold mean time
+declare int FIX_HOLD_MEAN = 750;
+// fix hold spread mean +/- spread
+declare int FIX_HOLD_SPREAD      = 250;
+declare int FIX_HOLD_JITTER_FLAG = JITTER_UNIFORM_FLAG;
 // min-max saccade time is same for Go and STOP trials
-declare int MIN_SACC_TIME = 100;
+declare int MIN_SACC_TIME = 150;
 declare int MAX_SACC_TIME = 800;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
@@ -71,19 +72,22 @@ declare int MAX_SACC_DURATION = 150;
 // 1 for fixed trial length, 0 for fixed inter trial intervals
 declare int IS_TRL_LENGTH_FIXED = 1;
 // fixed at this value (only works if Fixed_trl_length == 1)
-declare int FIXED_TRL_LENGTH_TIME = 5000;
+declare int FIXED_TRIAL_DURATION = 5000;
 // how long between trials (only works if Fixed_trl_length == 0)
 declare int BASE_ITI_TIME = 500;
 //========== GO TRIAL TARG HOLD TIME ======================
-// Base Minimum time subject should hold gaze on TARGET
-declare int BASE_TARG_HOLD_TIME = 0;
-// Use TONE_DELAY and RWRD_DELAY for computing MIN_TARGETTIME
-// if = 0, then MIN_TARG_HOLD_TIME = BASE_TARG_HOLD_TIME
-// if = 1, then MIN_TARG_HOLD_TIME = TONE_DELAY+TONE_DURATION+RWRD_DELAY+RWRD_DURATION+BASE_TARG_HOLD_TIME
-declare int USE_TONE_AND_RWRD_FOR_MIN_THT = 1;
 // after saccade subject must hold gaze on target for this long
-// if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int MIN_TARG_HOLD_TIME;
+declare int TARG_HOLD_MEAN   = 300;
+declare int TARG_HOLD_SPREAD = 50;
+declare int TARG_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
+
+// Stay in window (TARG for GO/ FIX for STOP) till reward is given
+declare int XTRA_HOLD_TONE_RWRD_FLAG = 1;
+// compute xtra hold time if XTRA_HOLD_TONE_RWRD_FLAG = 0;
+declare int XTRA_HOLD_MEAN   = 200;
+declare int XTRA_HOLD_SPREAD = 0;
+declare int XTRA_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
+
 //========== STOP TASK SPECIFIC =============================
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 30;
@@ -96,53 +100,51 @@ declare int   MIN_SSD;
 declare int   MAX_SSD;
 // do we select the next SSD based on a staircasing algorithm
 // No coding for setting of '0' :-)
-declare int DO_STAIRCASE_NEXT_SSD = 1;
+declare int STAIRCASE_SSD = 1;
 // Step up max index for increasing SSD. current idx + (random(3) +1)
 declare int SSD_STEP_UP = 3;
 // Step down max index for decreasin SSD. current idx - (random(3) +1)
 declare int SSD_STEP_DOWN = 3;
 // Minimum time *after* stop signal that subject has to fixate
 // in order for trial to be considered as Cancel trial
-// Relative to TRL_STOP_SIGNAL_DELAY
-declare int SSD_CANCEL_TIME = 1500;
-declare int FIX_HOLD_FOR_CANCEL;
-// Base Minimum time subject should hold gaze on FIXSPOT *After* TRL_STOP_SIGNAL_DELAY
-declare int BASE_STOP_SIGNAL_HOLD_TIME = 0;
-// after TRL_STOP_SIGNAL_DELAY, subject must hold gaze on FIXSPOT for this long
+// Relative to TRL_USE_SSD_VR_COUNT (equivalent to TRL_USE_XTRA_HOLD_DURATION for GO trials)
+declare int SSD_CANCEL_DURATION = 1500;
+// after TRL_USE_SSD_VR_COUNT, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
-declare int MIN_STOP_SIGNAL_HOLD_TIME;
+// evt: FixHoldMinSSHT_
 // Turn fix spot back on for stop trial when:
 // FIX_REIGNITE_FLAG == 1 *AND*
-// saccade is made to target within PRE_SSD_DELAY_FIX_REIGNITE or
-// saccade is made to target within POST_SSD_DELAY_FIX_REIGNITE
-declare int FIX_REIGNITE_FLAG           = 1;
-declare int PRE_SSD_DELAY_FIX_REIGNITE  = 0;
-declare int POST_SSD_DELAY_FIX_REIGNITE = 5000;
+// saccade is made to target within PRE_SSD_FIX_ON_DELAY or
+// saccade is made to target within POST_SSD_FIX_ON_DELAY
+declare int FIX_REIGNITE_FLAG     = 1;
+declare int PRE_SSD_FIX_ON_DELAY  = 0;
+declare int POST_SSD_FIX_ON_DELAY = 5000;
 
 //============= TONE and REWARD periods =========================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int TONE_DELAY_MEAN = 600;
 // Variance to the delay: See UTIL/JITTER.PRO
-// if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, variance)
-// if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, variance)
-// if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, variance)
-declare int TONE_DELAY_VARIANCE = 175;
+// if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
+// if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
+// if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
+declare int TONE_DELAY_SPREAD = 100;
+declare int TONE_JITTER_FLAG = JITTER_GAUSS_FLAG;
+
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
-// Actual used will be TRL_TONE_DURATION, TRL_TONE_FREQ
+// Actual used will be TRL_USE_TONE_DURATION, TRL_USE_TONE_FREQ
 declare int TONE_DURATION = 30;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
 declare int RWRD_DELAY_MEAN = 600;
 // Variance to the delay: See UTIL/JITTER.PRO
-// if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, variance)
-// if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, variance)
-// if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, variance)
-declare int RWRD_DELAY_VARIANCE = 175;
+// if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
+// if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
+// if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
+declare int RWRD_DELAY_SPREAD = 100;
+declare int RWRD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
-// Actual used will be TRL_RWRD_DURATION
-declare int RWRD_DURATION = 50;
-
+// Actual used will be TRL_USE_RWRD_DURATION
 //===========================Reward and punishment======================
 // timeout time for punishment computed
 declare int TIMEOUT_DURATION;
@@ -150,7 +152,7 @@ declare int TIMEOUT_TONE;
 // See ProcLib/DOC/CmdOutcomes.xlsx
 // Extra punish time for diferent outcomes in number of Trial lengths
 // The value must be an integer
-// TIMEOUT_TIME = TRL_DURATION (see SET_CMD.PRO) * XTRA_TIMEOUT
+// TIMEOUT_TIME = TRL_USE_TRIAL_DURATION (see SET_CMD.PRO) * XTRA_TIMEOUT
 // GoTrial = TIMEOUT_xxx[0]
 // NoGoTrial_pre_SSD = TIMEOUT_xxx[1]
 // NoGoTrial_post_SSD = TIMEOUT_xxx[2]
@@ -164,6 +166,7 @@ declare int          TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
 declare int          TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
@@ -171,18 +174,18 @@ declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_MIN_SSHT[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_TONE_HZ = 200;
-declare int          CANCELLED_TONE_HZ     = 600;
-declare int          GO_CORRECT_TONE_HZ    = 600;
-declare int          GO_ERROR_TONE_HZ      = 1000;
-declare int          NOGO_ERROR_TONE_HZ    = 1000;
+declare int          NON_CANCELLED_TONE_HZ = 400;
+declare int          CANCELLED_TONE_HZ     = 1000;
+declare int          GO_CORRECT_TONE_HZ    = 1000;
+declare int          GO_ERROR_TONE_HZ      = 100;
+declare int          NOGO_ERROR_TONE_HZ    = 100;
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
 declare int          CORRECT_TRIALS_PER_BLOCK = 5;
 declare constant int RWRD_LO_IDX              = 0;
 declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_MEAN[2]       = { 25, 500 };
-declare int          RWRD_LO_HI_VARIANCE[2]   = { 4, 25 };
+declare int          RWRD_LO_HI_MEAN[2]       = { 30, 60 };
+declare int          RWRD_LO_HI_SPREAD[2]     = { 4, 4 };
 declare int          RWRD_DURATION_JITTER     = JITTER_GAUSS_FLAG;
 
 //==========================Additional Timeouts======================
