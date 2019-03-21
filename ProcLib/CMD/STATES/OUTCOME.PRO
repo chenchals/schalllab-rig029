@@ -156,42 +156,42 @@ process PROC_GO_OUTCOMES()
         SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
         BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
     }
-    else if (TRL_FIX_BREAK_TIME)
+    else if (TRL_FIX_BREAK_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_FIX_BRK[GO_IDX];
         spawnwait PROC_FIX_BREAK();
     }
-    else if (TRL_ERLY_SACCADE_TIME)
+    else if (TRL_ERLY_SACCADE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[GO_IDX];
         spawnwait PROC_GO_ERR();
     }
-    else if (TRL_NO_SACCADE_TIME)
+    else if (TRL_NO_SACCADE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[GO_IDX];
         spawnwait PROC_GO_ERR();
     }
-    else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
+    else if (TRL_ACQUIRE_TARGET_ERROR_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[GO_IDX];
         spawnwait PROC_GO_ERR();
     }
-    else if (TRL_BRK_PRE_TONE_TIME)
+    else if (TRL_BRK_PRE_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[GO_IDX];
         spawnwait PROC_GO_ERR();
     }
-    else if (TRL_BRK_TONE_TIME)
+    else if (TRL_BRK_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_TONE[GO_IDX];
         spawnwait PROC_GO_ERR();
     }
-    else if (TRL_BRK_PRE_RWRD_TIME)
+    else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
-        spawnwait PROC_GO_ERR();
+       spawnwait PROC_GO_ERR();
     }
-    else if (TRL_BRK_RWRD_TIME)
+    else if (TRL_BRK_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
         spawnwait PROC_GO_ERR();
@@ -214,7 +214,7 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
     declare int nogoIdx;
 
-    if (TRL_IS_STOP_SIGNAL_ON)
+    if (TRL_IS_STOP_SIGNAL_ON )
     {
         nogoIdx = NOGO_POST_SSD_IDX;
         printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
@@ -241,44 +241,44 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
         // Adjust initial assumption that this was a non-cancelled error trial
         SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
     }
-    else if (TRL_FIX_BREAK_TIME)
+    else if (TRL_FIX_BREAK_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_FIX_BRK[nogoIdx];
         spawnwait PROC_FIX_BREAK();
     }
-    else if (TRL_NOGO_EARLY_SACCADE_TIME)
+    else if (TRL_NOGO_EARLY_SACCADE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_ERLY_SACC[nogoIdx];
         spawnwait PROC_NOGO_ERR();
     }
-    else if (TRL_ACQUIRE_TARGET_ERROR_TIME)
+    else if (TRL_ACQUIRE_TARGET_ERROR_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_TARG_ACQ_ERROR[nogoIdx];
         spawnwait PROC_NOGO_ERR();
     }
-    else if (TRL_NOGO_LATE_SACCADE_TIME)
+    else if (TRL_NOGO_LATE_SACCADE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_LATE_NO_SACC[nogoIdx];
         spawnwait PROC_NOGO_ERR();
     }
-    else if (TRL_BRK_PRE_TONE_TIME)
+    else if (TRL_BRK_PRE_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
         spawnwait PROC_NON_CANCELLED_ERR();
     }
-    else if (TRL_BRK_TONE_TIME)
+    else if (TRL_BRK_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
         spawnwait PROC_NON_CANCELLED_ERR();
     }
-    else if (TRL_BRK_PRE_RWRD_TIME)
+    else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-        spawnwait PROC_NON_CANCELLED_ERR();
+       spawnwait PROC_NON_CANCELLED_ERR();
     }
-    else if (TRL_BRK_RWRD_TIME)
+    else if (TRL_BRK_RWRD_TIME > 0)
     {
-        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
+        TIMEOUT_DURATION = TIMEOUT_BRK_RWRD[nogoIdx];
         spawnwait PROC_NON_CANCELLED_ERR();
     }
     else if (TRL_IS_MIN_THT <= 0)
@@ -318,24 +318,24 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
         SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
         BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
     }
-    else if (TRL_BRK_PRE_TONE_TIME)
+    else if (TRL_BRK_PRE_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
         spawnwait PROC_CANCELLED_ERR();
     }
-    else if (TRL_BRK_TONE_TIME)
+    else if (TRL_BRK_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
         spawnwait PROC_CANCELLED_ERR();
     }
-    else if (TRL_BRK_PRE_RWRD_TIME)
+    else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
         spawnwait PROC_CANCELLED_ERR();
     }
-    else if (TRL_BRK_RWRD_TIME)
+    else if (TRL_BRK_RWRD_TIME > 0)
     {
-        TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
+        TIMEOUT_DURATION = TIMEOUT_BRK_RWRD[nogoIdx];
         spawnwait PROC_CANCELLED_ERR();
     }
     else if (TRL_IS_CANCEL <= 0)

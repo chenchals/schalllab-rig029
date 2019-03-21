@@ -135,7 +135,7 @@ declare int TONE_JITTER_FLAG = JITTER_GAUSS_FLAG;
 // Actual used will be TRL_USE_TONE_DURATION, TRL_USE_TONE_FREQ
 declare int TONE_DURATION = 30;
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 600;
+declare int RWRD_DELAY_MEAN = 1200;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -169,7 +169,8 @@ declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
+declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 1, 2, 3 };
+declare int          TIMEOUT_BRK_RWRD[3]       = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
@@ -184,7 +185,7 @@ declare int          NOGO_ERROR_TONE_HZ    = 100;
 declare int          CORRECT_TRIALS_PER_BLOCK = 5;
 declare constant int RWRD_LO_IDX              = 0;
 declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_MEAN[2]       = { 30, 60 };
+declare int          RWRD_LO_HI_MEAN[2]       = { 30, 300 };
 declare int          RWRD_LO_HI_SPREAD[2]     = { 4, 4 };
 declare int          RWRD_DURATION_JITTER     = JITTER_GAUSS_FLAG;
 

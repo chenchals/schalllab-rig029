@@ -148,7 +148,7 @@ process PROC_TONE_SSD()
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_TONE_BREAK_);
                 printf("****STAT_TONE_SSD[%d]: ERR (*During-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-                       STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME;
+                       STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
