@@ -109,10 +109,18 @@ declare int TRL_IS_MIN_THT;
 declare int TRL_IS_MIN_SSHT;
 // did current trial lead to a timeout situation
 declare int TRL_IS_TIMEOUT;
+// is correct GO trial
+declare int TRL_IS_GO_CORRECT;
+// is error GO trial
+declare int TRL_IS_GO_ERR;
 // is the current STOP trail non-cancelled (GO trial value = -1)
 declare int TRL_IS_NON_CANCELLED;
 // is the current STOP trail cancelled (GO trial value = -1)
 declare int TRL_IS_CANCELLED;
+// is the current STOP trail non-cancelled target min-tht, then broke target(GO trial value = -1)
+declare int TRL_IS_NON_CANCELLED_ERR;
+// is the current STOP trail is an error - gaze out fo fix, but not on target or bad saccade (GO trial value = -1)
+declare int TRL_IS_NOGO_ERR;
 // is the trial a low reward trial (for the current block)
 declare int TRL_IS_LO_RWRD;
 // should the fix spot turn on for STOP trial as saccade occured within specified limits
@@ -349,6 +357,8 @@ declare int SESS_N_STOP_TRLS;
 declare int SESS_N_CANCEL_TRLS;
 // number of STOP non-cancelled trials in session - cumulative count
 declare int SESS_N_NON_CANCEL_TRLS;
+// number of STOP non-cancelled trials, target fixated min-tht in session - cumulative count
+declare int SESS_N_NON_CANCEL_ERR_TRLS;
 // number of STOP error trials in session - cumulative count
 declare int SESS_N_NOGO_ERROR_TRLS;
 
@@ -848,8 +858,12 @@ process INIT_VARS_REPEAT_TRL()
     TRL_IS_XTRA_HOLD_DONE          = -1;
     TRL_IS_MIN_SSHT                = -1;
     TRL_IS_TIMEOUT                 = -1;
+    TRL_IS_GO_CORRECT              = -1;
+    TRL_IS_GO_ERR                  = -1;
     TRL_IS_NON_CANCELLED           = -1;
     TRL_IS_CANCELLED               = -1;
+    TRL_IS_NON_CANCELLED_ERR       = -1;
+    TRL_IS_NOGO_ERR                = -1;
     TRL_IS_LO_RWRD                 = -1;
     TRL_IS_FIX_REIGNITE            = -1;
     TRL_IS_STAIRCASE_SSD           = -1;
@@ -941,8 +955,12 @@ process INIT_TRL_VARS()
     TRL_IS_XTRA_HOLD_DONE            = -1;
     TRL_IS_MIN_SSHT                  = -1;
     TRL_IS_TIMEOUT                   = -1;
+    TRL_IS_GO_CORRECT                = -1;
+    TRL_IS_GO_ERR                    = -1;
     TRL_IS_NON_CANCELLED             = -1;
     TRL_IS_CANCELLED                 = -1;
+    TRL_IS_NON_CANCELLED_ERR         = -1;
+    TRL_IS_NOGO_ERR                  = -1;
     TRL_IS_LO_RWRD                   = -1;
     TRL_IS_FIX_REIGNITE              = -1;
     TRL_IS_STAIRCASE_SSD             = -1;

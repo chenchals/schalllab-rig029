@@ -27,13 +27,22 @@ declare constant EVT_IDENTIFY_ROOM_ = 1500;
 declare constant EVT_CMAN_HEADER_   = 1501;
 
 // Codes from 1550-1599
-declare constant EVT_OUTCOME_FIX_ERROR_          = 1550;
+// did not acquire fixation
+declare constant EVT_OUTCOME_FIX_ERR_          = 1550;
+// did not hold gaze for fix hold time
 declare constant EVT_OUTCOME_FIX_BREAK_          = 1552;
+// Go trial - held fixation on target through reward
 declare constant EVT_OUTCOME_GO_CORRECT_         = 1560;
-declare constant EVT_OUTCOME_GO_ERROR_           = 1562;
-declare constant EVT_OUTCOME_NOGO_CANCELLED_     = 1570;
-declare constant EVT_OUTCOME_NOGO_ERROR_         = 1572;
-declare constant EVT_OUTCOME_NOGO_NON_CANCELLED_ = 1574;
+// Go trial - after acquiring target, broke gaze on target
+declare constant EVT_OUTCOME_GO_ERR_           = 1562;
+// Stop trial - held gaze on fix/signal till reward
+declare constant EVT_OUTCOME_NOGO_CANCEL_     = 1570;
+// Stop trial - after target on, gaze elsewhere or incorrect saccade or no min-target-hold
+declare constant EVT_OUTCOME_NOGO_ERR_         = 1572;
+// Stop trial - after target on, gaze on target through tone and reward
+declare constant EVT_OUTCOME_NOGO_NON_CANCEL_ = 1574;
+// Stop trial - after target on, gaze on target, but broke gaze during tone + reward period
+declare constant EVT_OUTCOME_NOGO_NON_CANCEL_ERR_ = 1576;
 
 
 // Codes from 1600-1999

@@ -17,8 +17,8 @@ process STAIRCASE_SSD_TEST() enabled
   declare int nTrials = 2000;
   declare int trlNo;
   declare int nogoErrorRunCount = 4;
-  declare int stopOutcomes[3] = {EVT_OUTCOME_NOGO_CANCELLED_, EVT_OUTCOME_NOGO_NON_CANCELLED_, EVT_OUTCOME_NOGO_ERROR_};
-  declare int goOutcomes[2] = {EVT_OUTCOME_GO_CORRECT_, EVT_OUTCOME_GO_ERROR_};
+  declare int stopOutcomes[3] = {EVT_OUTCOME_NOGO_CANCEL_, EVT_OUTCOME_NOGO_NON_CANCEL_, EVT_OUTCOME_NOGO_ERR_};
+  declare int goOutcomes[2] = {EVT_OUTCOME_GO_CORRECT_, EVT_OUTCOME_GO_ERR_};
   SSD_STEP_UP = 3;
   SSD_STEP_DOWN = 3;
   N_SSD = 10;
