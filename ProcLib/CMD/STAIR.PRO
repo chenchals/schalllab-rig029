@@ -17,47 +17,66 @@
 declare STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD);
 
 declare int STAIRCASE_NEXT_SSD_IDX;
+// pick a random SSD index for very first stop trial
+declare int IS_FIRST_STOP_TRIAL;
 
 process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD)
 {
-  // nSSDs should have been set here : see SET_CMD.PRO/PICK_TRL_SSD
-  declare int tempVar;
-  if(DEBUG_CONSOLE)
-  {
-	printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastStopOutcomeEvntCode [%d], lastSsdIdx [%d], stepUpMax [%d], stepDownMax [%d], nSSD [%d]",
-		lastStopOutcomeEvntCode,lastSsdIdx,stepUpMax,stepDownMax,nSSD );
-  }
-  if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_)
-  {
-    STAIRCASE_NEXT_SSD_IDX = lastSsdIdx + random(stepUpMax) + 1;
-    printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: LastStopOutcome [%d - EVT_OUTCOME_NOGO_CANCEL_],lastSssdIdx [%d], --> ", EVT_OUTCOME_NOGO_CANCEL_, lastSsdIdx);
-  }
-  else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_NON_CANCEL_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_NON_CANCEL_ERR_)
-  {
-    STAIRCASE_NEXT_SSD_IDX = lastSsdIdx - (random(stepDownMax) + 1);
-    printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: LastStopOutcome [%d - EVT_OUTCOME_NOGO_NON_CANCEL_],lastSssdIdx [%d], --> ", EVT_OUTCOME_NOGO_NON_CANCEL_, lastSsdIdx);
-  }
-  else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_ERR_)
-  {
-    STAIRCASE_NEXT_SSD_IDX = lastSsdIdx;
-    printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: LastStopOutcome [%d - EVT_OUTCOME_NOGO_ERR_],lastSssdIdx [%d], -->  ", EVT_OUTCOME_NOGO_ERR_, lastSsdIdx);
-  }
-  else
-  {
-    STAIRCASE_NEXT_SSD_IDX = random(nSSD);
-    printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: **TRIAL NO = 1????***LastStopOutcome [**UNKNOWN**],lastSssdIdx [**UNKNOWN**]*****, random- ");
-	printf("++++++++++++++++++++ERROR IF APPEARS MORE THAN ONCE++++++++++++++++\n");
-  }
-  // Check limits
-  if(STAIRCASE_NEXT_SSD_IDX <= 0)
-  {
-    STAIRCASE_NEXT_SSD_IDX = 0;
-  }
-  else if (STAIRCASE_NEXT_SSD_IDX >= nSSD)
-  {
-    STAIRCASE_NEXT_SSD_IDX = nSSD - 1;
-  }
+    // nSSDs should have been set here : see SET_CMD.PRO/PICK_TRL_SSD
+    declare int tempVar;
 
-  printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: STAIRCASE_NEXT_SSD [%d]\n",STAIRCASE_NEXT_SSD_IDX);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastStopOutcomeEvntCode [%d], lastSsdIdx [%d], stepUpMax [%d], stepDownMax [%d], nSSD [%d]",
+               lastStopOutcomeEvntCode, lastSsdIdx, stepUpMax, stepDownMax, nSSD);
+    }
+    if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_ERR_)
+    {
+        STAIRCASE_NEXT_SSD_IDX = lastSsdIdx + random(stepUpMax) + 1;
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****STEP-UP****\n");
+        printf("*********LastStopOutcome [%d] is (EVT_OUTCOME_NOGO_CANCEL_ [%d] or EVT_OUTCOME_NOGO_CANCEL_ERR_ [%d]), lastSssdIdx [%d], --> ",
+               lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_CANCEL_, EVT_OUTCOME_NOGO_CANCEL_ERR_, lastSsdIdx);
+    }
+    else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_NON_CANCEL_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_NON_CANCEL_ERR_)
+    {
+        STAIRCASE_NEXT_SSD_IDX = lastSsdIdx - (random(stepDownMax) + 1);
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****STEP-DOWN****\n");
+        printf("*********LastStopOutcome [%d] is (EVT_OUTCOME_NOGO_NON_CANCEL_[%d] or EVT_OUTCOME_NOGO_NON_CANCEL_ERR_ [%d]), lastSssdIdx [%d], --> ",
+               lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_NON_CANCEL_, EVT_OUTCOME_NOGO_NON_CANCEL_ERR_, lastSsdIdx);
+    }
+    else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_ERR_)
+    {
+        STAIRCASE_NEXT_SSD_IDX = lastSsdIdx;
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****NO-CHANGE****\n");
+        printf("*********LastStopOutcome [%d] is EVT_OUTCOME_NOGO_ERR_ []%d], lastSssdIdx [%d], -->  ",
+               lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_ERR_, lastSsdIdx);
+    }
+    else
+    {
+        STAIRCASE_NEXT_SSD_IDX = random(nSSD);
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****RANDOM****\n");
 
+        if (IS_FIRST_STOP_TRIAL <= 0)
+        {
+          IS_FIRST_STOP_TRIAL = 1;
+          printf("*********LastStopOutcome *UNKNOWN* TRL_NUMBER = [%d], lastssdIdx [first-stop-trial], --> ");
+        }
+        else
+        {
+          printf("++++++++++++++++++++ERROR IN STAIRCASING AFTER FIRST STOP TRIAL++++++++++++++++\n");
+          printf("++++++++++++++++++++ERROR LastStopOutcome [%d] UNKNOWN, lastssdIdx [%d]++++++++++++++++ --> ",
+                 lastStopOutcomeEvntCode, lastSsdIdx);
+        }
+    }
+    // Check limits
+    if (STAIRCASE_NEXT_SSD_IDX <= 0)
+    {
+        STAIRCASE_NEXT_SSD_IDX = 0;
+    }
+    else if (STAIRCASE_NEXT_SSD_IDX >= nSSD)
+    {
+        STAIRCASE_NEXT_SSD_IDX = nSSD - 1;
+    }
+
+    printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: STAIRCASE_NEXT_SSD [%d]\n", STAIRCASE_NEXT_SSD_IDX);
 }/* STAIRCASE_NEXT_SSD */

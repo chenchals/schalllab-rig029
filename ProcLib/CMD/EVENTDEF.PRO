@@ -28,21 +28,23 @@ declare constant EVT_CMAN_HEADER_   = 1501;
 
 // Codes from 1550-1599
 // did not acquire fixation
-declare constant EVT_OUTCOME_FIX_ERR_          = 1550;
+declare constant EVT_OUTCOME_FIX_ERR_ = 1550;
 // did not hold gaze for fix hold time
-declare constant EVT_OUTCOME_FIX_BREAK_          = 1552;
+declare constant EVT_OUTCOME_FIX_BREAK_ = 1552;
 // Go trial - held fixation on target through reward
-declare constant EVT_OUTCOME_GO_CORRECT_         = 1560;
+declare constant EVT_OUTCOME_GO_CORRECT_ = 1560;
 // Go trial - after acquiring target, broke gaze on target
-declare constant EVT_OUTCOME_GO_ERR_           = 1562;
+declare constant EVT_OUTCOME_GO_ERR_ = 1562;
 // Stop trial - held gaze on fix/signal till reward
-declare constant EVT_OUTCOME_NOGO_CANCEL_     = 1570;
-// Stop trial - after target on, gaze elsewhere or incorrect saccade or no min-target-hold
-declare constant EVT_OUTCOME_NOGO_ERR_         = 1572;
+declare constant EVT_OUTCOME_NOGO_CANCEL_ = 1570;
+// Stop trial - held gaze on fix/signal till cancel time + xtra-hold-time, then broke fix/signal
+declare constant EVT_OUTCOME_NOGO_CANCEL_ERR_ = 1572;
 // Stop trial - after target on, gaze on target through tone and reward
 declare constant EVT_OUTCOME_NOGO_NON_CANCEL_ = 1574;
-// Stop trial - after target on, gaze on target, but broke gaze during tone + reward period
+// Stop trial - after target on, gaze on target till xtra-hold-time, then broke target
 declare constant EVT_OUTCOME_NOGO_NON_CANCEL_ERR_ = 1576;
+// Stop trial - after target on, gaze elsewhere or incorrect saccade or broke min-target-hold/xtra-hold-time
+declare constant EVT_OUTCOME_NOGO_ERR_ = 1578;
 
 
 // Codes from 1600-1999
@@ -86,8 +88,8 @@ declare constant EVT_XTRA_HOLD_END_   = 2452;
 declare constant EVT_XTRA_HOLD_BREAK_ = 2454;
 declare constant EVT_DECIDE_          = 2460;
 
-declare constant EVT_MIN_SSHT_START_ = 2470;
-declare constant EVT_MIN_SSHT_END_   = 2472;
+declare constant EVT_CANCEL_START_ = 2470;
+declare constant EVT_CANCEL_END_   = 2472;
 declare constant EVT_MIN_THT_START_  = 2480;
 declare constant EVT_MIN_THT_END_    = 2482;
 
