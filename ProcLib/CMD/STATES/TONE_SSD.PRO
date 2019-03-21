@@ -52,34 +52,42 @@ process PROC_TONE_SSD()
         // Tone already given, during tone check gaze
         TEMP_TONE_DURATION = TRL_USE_TONE_DURATION * TIME_DILATE_FACTOR;
 
-        TRL_FIX_HOLD_DURATION   = 1;
         TEMP_XTRA_HOLD_TIME     = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_TONE_DURATION;
 
         TRL_USE_TONE_FREQ = CANCELLED_TONE_HZ;
         printf("****STAT_TONE_SSD[%d]: Processing Tone times; STOP Trial: %d Hz\n", STAT_TONE_SSD, TRL_USE_TONE_FREQ);
-		
+
+        spawn SEND_EVT(EVT_TONE_ON_);
+
+        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_ON_[%d]\n", STAT_TONE_SSD, EVT_TONE_ON_);
+
+        // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
+        TRL_XTRA_HOLD_START_TIME = time();
+        spawn SEND_EVT(EVT_XTRA_HOLD_START_);
+
+        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_START_);
+
         TRL_XTRA_HOLD_DURATION = 0;
-		TRL_IS_XTRA_HOLD_DONE = 0;
+        TRL_IS_XTRA_HOLD_DONE  = 0;
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
     if (I_FIX)
     {
-        TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }
 
     if (TRL_XTRA_HOLD_DURATION >= TEMP_XTRA_HOLD_TIME)
     {
         TRL_IS_XTRA_HOLD_DONE = 1;
-		if (TRL_XTRA_HOLD_END_TIME <=0)
-		{
-        TRL_XTRA_HOLD_END_TIME = time();
-        spawn SEND_EVT(EVT_XTRA_HOLD_END_);
+        if (TRL_XTRA_HOLD_END_TIME <= 0)
+        {
+            TRL_XTRA_HOLD_END_TIME = time();
+            spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_END_);			
-		}
+            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_END_);
+        }
     }
 
     // Tone delay
@@ -93,8 +101,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_BREAK_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d] (TRL_USE_TONE_DELAY), STAT_DLTA_T [%d]\n",
-                       STAT_TONE_SSD, TRL_FIX_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -104,8 +112,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(EVT_PRE_TONE_BREAK_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_PRE_TONE_BREAK_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*Pre-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY), STAT_DLTA_T [%d]\n",
-                       STAT_TONE_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*Pre-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -119,9 +127,6 @@ process PROC_TONE_SSD()
         {
             TRL_TONE_ON_TIME = time();
             spawn TONE(TRL_USE_TONE_FREQ, TEMP_TONE_DURATION);
-            spawn SEND_EVT(EVT_TONE_ON_);
-
-            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_ON_[%d]\n", STAT_TONE_SSD, EVT_TONE_ON_);
         }
         if (!I_FIX && TRL_IS_XTRA_HOLD_DONE <= 0)
         {
@@ -131,8 +136,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_BREAK_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n",
-                       STAT_TONE_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -142,8 +147,8 @@ process PROC_TONE_SSD()
                 spawn SEND_EVT(EVT_TONE_BREAK_);
 
                 printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_TONE_BREAK_);
-                printf("****STAT_TONE_SSD[%d]: ERR (*During-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d](TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n",
-                       STAT_TONE_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+                printf("****STAT_TONE_SSD[%d]: ERR (*During-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                       STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
             }
@@ -155,8 +160,8 @@ process PROC_TONE_SSD()
         spawn SEND_EVT(EVT_TONE_OFF_);
 
         printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_OFF_[%d]\n", STAT_TONE_SSD, EVT_TONE_OFF_);
-        printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_XTRA_HOLD_TIME),[%d] (TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION), STAT_DLTA_T [%d]\n", STAT_TONE_SSD,
-               TRL_FIX_HOLD_DURATION, TEMP_XTRA_HOLD_TIME, TEMP_DELY_PLUS_DURATION, STAT_DLTA_T);
+        printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n", STAT_TONE_SSD,
+               TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_RWRD_SSD;
     }

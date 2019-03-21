@@ -83,9 +83,9 @@ process PROC_FIX_ON()
             dsendf("vp %d\n", PG_BLANK);
             spawn GRAF_HIDE_FIX_TARG();
 
-            spawn SEND_EVT(EVT_OUTCOME_FIX_ERROR_);
+            spawn SEND_EVT(EVT_OUTCOME_FIX_ERR_);
 
-            printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_OUTCOME_FIX_ERROR_[%d]\n", STAT_FIX_ON, EVT_OUTCOME_FIX_ERROR_);
+            printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_OUTCOME_FIX_ERR_[%d]\n", STAT_FIX_ON, EVT_OUTCOME_FIX_ERR_);
             printf("****STAT_FIX_ON[%d]: Waiting for FIX_NOT_ACQ_WAIT_TIME [%d] before going to STAT_IDLE\n", STAT_FIX_ON, FIX_NOT_ACQ_WAIT_TIME);
             wait(FIX_NOT_ACQ_WAIT_TIME);
             PROCESS_STATE  = 1;
