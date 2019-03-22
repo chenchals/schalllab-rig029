@@ -39,7 +39,7 @@ process PROC_ITI_CHK()
         dsendf("vp %d\n", PG_BLANK);
         spawn GRAF_HIDE_FIX_TARG();
 
-        TRL_IS_TARG_ON = 0;
+        INCEMENT_TARG_DURATION_FLAG = 0;
         if (!IS_TRL_LENGTH_FIXED)
         {
             TRL_USE_ITI_DURATION = BASE_ITI_TIME * TIME_DILATE_FACTOR;
@@ -57,10 +57,18 @@ process PROC_ITI_CHK()
         STAT_ALLOWED_T = TRL_USE_ITI_DURATION;
     }
 
+    if(TRL_ITI_START_TIME > 0)
+    {
+      TRL_ITI_DURATION = TRL_ITI_DURATION + 1;
+    }
+
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         if (TRL_IS_TIMEOUT)
         {
+           // initialize durations
+            TRL_TIMEOUT_DURATION = 0;
+
 						TIMEOUT_DURATION = TIMEOUT_DURATION + TRL_USE_ITI_DURATION;
             PROCESS_STATE        = 1;
             TRL_IS_RUNNING          = 1;
@@ -73,7 +81,8 @@ process PROC_ITI_CHK()
         {
             TRL_ITI_START_TIME = time();
             spawn SEND_EVT(EVT_ITI_START_);
-
+            // initialize durations
+            TRL_ITI_DURATION = 0;
             printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_START_[%d]\n", STAT_ITI_CHK, EVT_ITI_START_);
         }
     }

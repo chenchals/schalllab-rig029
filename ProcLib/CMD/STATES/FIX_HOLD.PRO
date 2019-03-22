@@ -56,6 +56,8 @@ process PROC_FIX_HOLD()
         }
 
         STAT_ALLOWED_T = TRL_USE_FIX_HOLD_DURATION * TIME_DILATE_FACTOR;
+        // initialize durations
+        TRL_FIX_HOLD_DURATION = 0;
     }
 
     TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;

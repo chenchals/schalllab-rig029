@@ -33,7 +33,7 @@ process PROC_TARG_ACQ()
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = MAX_SACC_DURATION * TIME_DILATE_FACTOR;
-
+        // initialize durations
         TRL_SACC_DURATION      = 0;
         TRL_TARG_HOLD_DURATION = 0;
     }

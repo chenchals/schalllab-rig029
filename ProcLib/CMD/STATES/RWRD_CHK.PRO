@@ -132,12 +132,12 @@ process PROC_RWRD_CHK()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (TRL_REWARD_OFF_TIME <= 0)
+        if (TRL_REWARD_DELAY_OFF_TIME <= 0)
         {
-            TRL_REWARD_OFF_TIME = time();
-            spawn SEND_EVT(EVT_REWARD_OFF_);
+            TRL_REWARD_DELAY_OFF_TIME = time();
+            spawn SEND_EVT(EVT_REWARD_DELAY_OFF_);
 
-            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_OFF_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_OFF_);
+            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_OFF_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_OFF_);
         }
         // if you reached here xtra-hold is done
         TRL_IS_XTRA_HOLD_DONE = 1;

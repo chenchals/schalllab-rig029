@@ -36,13 +36,13 @@ declare constant EVT_OUTCOME_GO_CORRECT_ = 1560;
 // Go trial - after acquiring target, broke gaze on target
 declare constant EVT_OUTCOME_GO_ERR_ = 1562;
 // Stop trial - held gaze on fix/signal till reward
-declare constant EVT_OUTCOME_NOGO_CANCEL_ = 1570;
+declare constant EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ = 1570;
 // Stop trial - held gaze on fix/signal till cancel time + xtra-hold-time, then broke fix/signal
-declare constant EVT_OUTCOME_NOGO_CANCEL_ERR_ = 1572;
+declare constant EVT_OUTCOME_NOGO_CANCEL_BRK_ = 1572;
 // Stop trial - after target on, gaze on target through tone and reward
-declare constant EVT_OUTCOME_NOGO_NON_CANCEL_ = 1574;
+declare constant EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_ = 1574;
 // Stop trial - after target on, gaze on target till xtra-hold-time, then broke target
-declare constant EVT_OUTCOME_NOGO_NON_CANCEL_ERR_ = 1576;
+declare constant EVT_OUTCOME_NOGO_NON_CANCEL_BRK_ = 1576;
 // Stop trial - after target on, gaze elsewhere or incorrect saccade or broke min-target-hold/xtra-hold-time
 declare constant EVT_OUTCOME_NOGO_ERR_ = 1578;
 
@@ -97,12 +97,12 @@ declare constant EVT_MIN_THT_END_    = 2482;
 declare constant EVT_EARLY_SACCADE_ = 2500;
 declare constant EVT_SACCADE_       = 2502;
 declare constant EVT_NO_SACCADE_    = 2506;
-declare constant EVT_TONE_ON_       = 2510;
-declare constant EVT_TONE_OFF_      = 2512;
+declare constant EVT_TONE_DELAY_ON_       = 2510;
+declare constant EVT_TONE_DELAY_OFF_      = 2512;
 declare constant EVT_AUDIO_START_   = 2514;
 declare constant EVT_AUDIO_END_     = 2516;
 declare constant EVT_REWARD_ON_     = 2520;
-declare constant EVT_REWARD_OFF_    = 2522;
+declare constant EVT_REWARD_DELAY_OFF_    = 2522;
 declare constant EVT_JUICE_START_   = 2524;
 declare constant EVT_JUICE_END_     = 2526;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460

@@ -131,12 +131,12 @@ process PROC_RWRD_SSD()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (TRL_REWARD_OFF_TIME <= 0)
+        if (TRL_REWARD_DELAY_OFF_TIME <= 0)
         {
-            TRL_REWARD_OFF_TIME = time();
-            spawn SEND_EVT(EVT_REWARD_OFF_);
+            TRL_REWARD_DELAY_OFF_TIME = time();
+            spawn SEND_EVT(EVT_REWARD_DELAY_OFF_);
 
-            printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_OFF_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_OFF_);
+            printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_DELAY_OFF_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_DELAY_OFF_);
         }
 
         // if you reached here xtra-hold is done

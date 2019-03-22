@@ -38,6 +38,8 @@ process PROC_GET_REDY()
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
+        // initialize durations
+        TRL_GET_READY_DURATION = 0;
     }
 
     TRL_GET_READY_DURATION = TRL_GET_READY_DURATION + 1;

@@ -175,7 +175,7 @@ declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_TONE_HZ = 400;
+declare int          NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 400;
 declare int          CANCELLED_TONE_HZ     = 1000;
 declare int          GO_CORRECT_TONE_HZ    = 1000;
 declare int          GO_ERROR_TONE_HZ      = 100;

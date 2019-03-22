@@ -58,9 +58,9 @@ process PROC_TONE_SSD()
         TRL_USE_TONE_FREQ = CANCELLED_TONE_HZ;
         printf("****STAT_TONE_SSD[%d]: Processing Tone times; STOP Trial: %d Hz\n", STAT_TONE_SSD, TRL_USE_TONE_FREQ);
 
-        spawn SEND_EVT(EVT_TONE_ON_);
+        spawn SEND_EVT(EVT_TONE_DELAY_ON_);
 
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_ON_[%d]\n", STAT_TONE_SSD, EVT_TONE_ON_);
+        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_DELAY_ON_[%d]\n", STAT_TONE_SSD, EVT_TONE_DELAY_ON_);
 
         // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_XTRA_HOLD_START_TIME = time();
@@ -123,9 +123,9 @@ process PROC_TONE_SSD()
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // Reach here give GOOD tone, if entered this condition
-        if (TRL_TONE_ON_TIME <= 0)
+        if (TRL_TONE_DELAY_ON_TIME <= 0)
         {
-            TRL_TONE_ON_TIME = time();
+            TRL_TONE_DELAY_ON_TIME = time();
             spawn TONE(TRL_USE_TONE_FREQ, TEMP_TONE_DURATION);
         }
         if (!I_FIX && TRL_IS_XTRA_HOLD_DONE <= 0)
@@ -156,10 +156,10 @@ process PROC_TONE_SSD()
     }
     else     // eye in Fix win until TEMP_XTRA_HOLD_TIME, or TEMP_XTRA_HOLD_TIME is greater than  TRL_USE_TONE_DELAY+TRL_USE_TONE_DURATION
     {
-        TRL_TONE_OFF_TIME = time();
-        spawn SEND_EVT(EVT_TONE_OFF_);
+        TRL_TONE_DELAY_OFF_TIME = time();
+        spawn SEND_EVT(EVT_TONE_DELAY_OFF_);
 
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_OFF_[%d]\n", STAT_TONE_SSD, EVT_TONE_OFF_);
+        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_DELAY_OFF_[%d]\n", STAT_TONE_SSD, EVT_TONE_DELAY_OFF_);
         printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n", STAT_TONE_SSD,
                TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;

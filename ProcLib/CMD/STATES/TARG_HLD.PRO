@@ -34,8 +34,6 @@ process PROC_TARG_HOLD()
         STAT_DLTA_T   = 0;
 
         STAT_ALLOWED_T = TRL_USE_MIN_THT_DURATION * TIME_DILATE_FACTOR;
-        // as target was already acquired in previous state
-        TRL_TARG_HOLD_DURATION = 1;
 
         // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_MIN_THT_START_TIME = time();
@@ -43,7 +41,9 @@ process PROC_TARG_HOLD()
 
         printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_START_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_START_);
 
-        TRL_MIN_THT_DURATION = 1;
+        // initialize durations
+        TRL_TARG_HOLD_DURATION = 0;
+        TRL_MIN_THT_DURATION = 0;
         TRL_IS_MIN_THT       = 0;
     }
     if (I_TARG)

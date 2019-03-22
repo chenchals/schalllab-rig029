@@ -96,7 +96,7 @@ declare int TRL_IS_FIX_ON;
 // did eye *just-land* in fixation window
 declare int TRL_IS_FIX_ACQUIRED;
 // was the target shown in the screen (detected by PD signal)
-declare int TRL_IS_TARG_ON;
+declare int TRL_IS_TARGET_ON;
 // did eye *just-land* in target window
 declare int TRL_IS_TARG_ACQUIRED;
 // was the stop-signal page shown (detected by PD signal)
@@ -114,13 +114,13 @@ declare int TRL_IS_GO_CORRECT;
 // is error GO trial
 declare int TRL_IS_GO_ERR;
 // is the current STOP trail cancelled (GO trial value = -1)
-declare int TRL_IS_CANCELLED;
+declare int TRL_IS_CANCELLED_NO_BRK;
 // is the current STOP trail broke gaze after cancel and xtra-hold-time (GO trial value = -1)
-declare int TRL_IS_CANCELLED_ERR;
+declare int TRL_IS_CANCELLED_BRK;
 // is the current STOP trail non-cancelled, maintainf target gaze till reward/xtra-hold-time (GO trial value = -1)
-declare int TRL_IS_NON_CANCELLED;
+declare int TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK;
 // is the current STOP trail non-cancelled target min-tht, then broke target(GO trial value = -1)
-declare int TRL_IS_NON_CANCELLED_ERR;
+declare int TRL_IS_NON_CANCELLED_BRK;
 // is the current STOP trail is an error - gaze out fo fix, but not on target or bad saccade (GO trial value = -1)
 declare int TRL_IS_NOGO_ERR;
 // is the trial a low reward trial (for the current block)
@@ -200,13 +200,13 @@ declare int TRL_BRK_PRE_RWRD_TIME;
 // when did gaze break during reward duration (after xtra-hold-eye-ms if any)
 declare int TRL_BRK_RWRD_TIME;
 // when did tone duration start
-declare int TRL_TONE_ON_TIME;
+declare int TRL_TONE_DELAY_ON_TIME;
 // when did tone duration end
-declare int TRL_TONE_OFF_TIME;
+declare int TRL_TONE_DELAY_OFF_TIME;
 // when did juice solenoid open
 declare int TRL_REWARD_ON_TIME;
 // when did juice solenoid close
-declare int TRL_REWARD_OFF_TIME;
+declare int TRL_REWARD_DELAY_OFF_TIME;
 // when did inter-trial-interval start
 declare int TRL_ITI_START_TIME;
 // when did inter-trial-interval end
@@ -261,7 +261,10 @@ declare int TRL_SACC_DURATION;
 declare int TRL_TARG_HOLD_DURATION;
 // how long did it take from PD detected first for target-page till PD deceted for stop-signal-page
 declare int TRL_STOP_SIGNAL_DURATION;
-
+// how long was ITI duration
+declare int TRL_ITI_DURATION;
+// how long was timeout duration
+declare int TRL_TIMEOUT_DURATION;
 //=========== TRIAL COUTNS - counting of PD signal (keep track of screen refreshe)=======
 // number of vertical refreshs TARGET with PD was on
 declare int TRL_TARG_VR_COUNT;
@@ -346,6 +349,7 @@ declare int TRL_LAST_STOP_OUTCOME_EVNTCODE;
 declare int TRL_LAST_GO_OUTCOME_EVNTCODE;
 declare int TRL_LAST_SSD_IDX;
 
+declare int INCEMENT_TARG_DURATION_FLAG;
 //========= Operational variables not externalalized ===============
 // number of GO trials in session - cumulative count
 declare int SESS_N_GO_TRLS;
@@ -356,13 +360,13 @@ declare int SESS_N_GO_ERROR_TRLS;
 // number of STOP trials in session - cumulative count
 declare int SESS_N_STOP_TRLS;
 // number of STOP cancelled trials in session - cumulative count
-declare int SESS_N_CANCEL_TRLS;
+declare int SESS_N_CANCEL_NO_BRK_TRLS;
 // number of STOP gaze broke fix after cancel + xtra-hold-time - cumulative count
-declare int SESS_N_CANCEL_ERR_TRLS;
+declare int SESS_N_CANCEL_BRK_TRLS;
 // number of STOP non-cancelled trials in session - cumulative count
-declare int SESS_N_NON_CANCEL_TRLS;
+declare int SESS_N_NON_CANCEL_NO_BRK_TRLS;
 // number of STOP non-cancelled trials, target fixated min-tht in session - cumulative count
-declare int SESS_N_NON_CANCEL_ERR_TRLS;
+declare int SESS_N_NON_CANCEL_BRK_TRLS;
 // number of STOP error trials in session - cumulative count
 declare int SESS_N_NOGO_ERROR_TRLS;
 
@@ -447,7 +451,7 @@ process SET_CMD_TRL()
 
 process COMPUTE_TRIAL_DURATION()
 {
-    declare int tempVar;
+    declare int tempCancelTime;
 
     declare int tonePlusReward;
 
@@ -458,15 +462,25 @@ process COMPUTE_TRIAL_DURATION()
     {
         printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Computing MAX TRL_USE_TRIAL_DURATION and Checking user setting for FIXED TRL LENGTH\n");
     }
+    // Add max ssd delay as this will be the longest TRL duration
+    spawnwait SET_MIN_MAX_SSD();
+
+    // Add Cancel duration,
+    if (TRL_USE_SSD_CANCEL_DURATION <= 0)
+    {
+        spawnwait SET_CANCEL_TIME();
+
+        tempCancelTime = TRL_USE_SSD_CANCEL_DURATION;
+        //reset since the trial may be a GO trial
+        TRL_USE_SSD_CANCEL_DURATION = -1;
+    }
 
     // TRL_USE_TRIAL_DURATION is computed *after* Fixation is acquired, using all max times
     // same for GO/STOP
     TRL_USE_TRIAL_DURATION = FIX_HOLD_MEAN + FIX_HOLD_SPREAD + BASE_ITI_TIME;
     // Since TRL_USE_SSD_CANCEL_DURATION must be => MAX_SACC_TIME + MAXS_SACC_DURATION
-    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TRL_USE_SSD_CANCEL_DURATION;
-    // Add max ssd delay as this will be the longest TRL duration
-    spawnwait SET_MIN_MAX_SSD();
-
+    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + tempCancelTime;
+    // add max SSD time
     TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + ceil(MAX_SSD * REFRESH_RATE);
     // add min-target hold time
     TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TARG_HOLD_MEAN + TARG_HOLD_SPREAD;
@@ -479,6 +493,7 @@ process COMPUTE_TRIAL_DURATION()
     {
         TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TRL_USE_XTRA_HOLD_DURATION;
     }
+
     // now check for the longest time of the following
     if (IS_TRL_LENGTH_FIXED)
     {
@@ -854,94 +869,96 @@ process SET_BLOCK_NUM()
 
 process INIT_VARS_REPEAT_TRL()
 {
-    PROCESS_STATE                  = 0;
-    TRL_IS_RUNNING                 = 0;
-    TRL_IS_I_IN_FLIGHT             = -1;
-    TRL_IS_FIX_ON                  = -1;
-    TRL_IS_FIX_ACQUIRED            = -1;
-    TRL_IS_TARG_ON                 = -1;
-    TRL_IS_TARG_ACQUIRED           = -1;
-    TRL_IS_STOP_SIGNAL_ON          = -1;
-    TRL_IS_XTRA_HOLD_DONE          = -1;
-    TRL_IS_CANCEL                = -1;
-    TRL_IS_TIMEOUT                 = -1;
-    TRL_IS_GO_CORRECT              = -1;
-    TRL_IS_GO_ERR                  = -1;
-    TRL_IS_CANCELLED               = -1;
-    TRL_IS_CANCELLED_ERR           = -1;
-    TRL_IS_NON_CANCELLED           = -1;
-    TRL_IS_NON_CANCELLED_ERR       = -1;
-    TRL_IS_NOGO_ERR                = -1;
-    TRL_IS_LO_RWRD                 = -1;
-    TRL_IS_FIX_REIGNITE            = -1;
-    TRL_IS_STAIRCASE_SSD           = -1;
-    TRL_TASK_START_TIME            = -1;
-    TRL_TRIAL_START_TIME           = -1;
-    TRL_EOT_TIME                   = -1;
-    TRL_GET_READY_TIME             = -1;
-    TRL_READY_TIME                 = -1;
-    TRL_ABORT_TIME                 = -1;
-    TRL_FIX_ON_TIME                = -1;
-    TRL_ACQUIRE_FIX_TIME           = -1;
-    TRL_ACQUIRE_FIX_ERROR_TIME     = -1;
-    TRL_MIN_THT_START_TIME         = -1;
-    TRL_MIN_THT_END_TIME           = -1;
-    TRL_CANCEL_START_TIME        = -1;
-    TRL_CANCEL_END_TIME          = -1;
-    TRL_FIXATE_TIME                = -1;
-    TRL_FIX_BREAK_TIME             = -1;
-    TRL_TARGET_PRE_TIME            = -1;
-    TRL_TARGET_TIME                = -1;
-    TRL_TARGET_HOLD_TIME           = -1;
-    TRL_TARGET_BREAK_TIME          = -1;
-    TRL_FIX_SPOT_OFF_TIME          = -1;
-    TRL_TARGET_ACQUIRED_TIME       = -1;
-    TRL_DECIDE_TIME                = -1;
-    TRL_SACCADE_TIME               = -1;
-    TRL_ERLY_SACCADE_TIME          = -1;
-    TRL_LATE_SACC_TIME             = -1;
-    TRL_NO_SACCADE_TIME            = -1;
-    TRL_ACQUIRE_TARGET_ERROR_TIME  = -1;
-    TRL_XTRA_HOLD_START_TIME       = -1;
-    TRL_XTRA_HOLD_END_TIME         = -1;
-    TRL_BRK_XTRA_HOLD_TIME         = -1;
-    TRL_BRK_PRE_TONE_TIME          = -1;
-    TRL_BRK_TONE_TIME              = -1;
-    TRL_BRK_PRE_RWRD_TIME          = -1;
-    TRL_BRK_RWRD_TIME              = -1;
-    TRL_TONE_ON_TIME               = -1;
-    TRL_TONE_OFF_TIME              = -1;
-    TRL_REWARD_ON_TIME             = -1;
-    TRL_REWARD_OFF_TIME            = -1;
-    TRL_ITI_START_TIME             = -1;
-    TRL_ITI_END_TIME               = -1;
-    TRL_START_INFOS_TIME           = -1;
-    TRL_END_INFOS_TIME             = -1;
-    TRL_TIMEOUT_START_TIME         = -1;
-    TRL_TIMEOUT_END_TIME           = -1;
-    TRL_STOP_SIGNAL_TIME           = -1;
-    TRL_CANCEL_TIME                = -1;
-    TRL_BRK_CANCEL_TIME            = -1;
-    TRL_NOGO_SACCADE_PRE_SSD_TIME  = -1;
-    TRL_NOGO_SACCADE_POST_SSD_TIME = -1;
-    TRL_NOGO_EARLY_SACCADE_TIME    = -1;
-    TRL_NOGO_LATE_SACCADE_TIME     = -1;
-    TRL_XTRA_RWRD_ON_TIME          = -1;
-    TRL_XTRA_RWRD_OFF_TIME         = -1;
-    TRL_TASK_END_TIME              = -1;
-    TRL_CUM_DURATION               = 0;
-    TRL_GET_READY_DURATION         = 0;
-    TRL_FIX_HOLD_DURATION          = 0;
-    TRL_CANCEL_DURATION          = 0;
-    TRL_MIN_THT_DURATION           = 0;
-    TRL_TARG_ON_DURATION           = 0;
-    TRL_XTRA_HOLD_DURATION         = 0;
-    TRL_SACC_DURATION              = 0;
-    TRL_TARG_HOLD_DURATION         = 0;
-    TRL_STOP_SIGNAL_DURATION       = 0;
-    TRL_TARG_VR_COUNT              = 0;
-    TRL_SSD_VR_COUNT               = 0;
-    TRL_REPEAT_COUNT               = TRL_REPEAT_COUNT + 1;
+    PROCESS_STATE                      = 0;
+    TRL_IS_RUNNING                     = 0;
+    TRL_IS_I_IN_FLIGHT                 = -1;
+    TRL_IS_FIX_ON                      = -1;
+    TRL_IS_FIX_ACQUIRED                = -1;
+    TRL_IS_TARGET_ON                   = -1;
+    TRL_IS_TARG_ACQUIRED               = -1;
+    TRL_IS_STOP_SIGNAL_ON              = -1;
+    TRL_IS_XTRA_HOLD_DONE              = -1;
+    TRL_IS_CANCEL                      = -1;
+    TRL_IS_TIMEOUT                     = -1;
+    TRL_IS_GO_CORRECT                  = -1;
+    TRL_IS_GO_ERR                      = -1;
+    TRL_IS_CANCELLED_NO_BRK            = -1;
+    TRL_IS_CANCELLED_BRK               = -1;
+    TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK = -1;
+    TRL_IS_NON_CANCELLED_BRK           = -1;
+    TRL_IS_NOGO_ERR                    = -1;
+    TRL_IS_LO_RWRD                     = -1;
+    TRL_IS_FIX_REIGNITE                = -1;
+    TRL_IS_STAIRCASE_SSD               = -1;
+    TRL_TASK_START_TIME                = -1;
+    TRL_TRIAL_START_TIME               = -1;
+    TRL_EOT_TIME                       = -1;
+    TRL_GET_READY_TIME                 = -1;
+    TRL_READY_TIME                     = -1;
+    TRL_ABORT_TIME                     = -1;
+    TRL_FIX_ON_TIME                    = -1;
+    TRL_ACQUIRE_FIX_TIME               = -1;
+    TRL_ACQUIRE_FIX_ERROR_TIME         = -1;
+    TRL_MIN_THT_START_TIME             = -1;
+    TRL_MIN_THT_END_TIME               = -1;
+    TRL_CANCEL_START_TIME              = -1;
+    TRL_CANCEL_END_TIME                = -1;
+    TRL_FIXATE_TIME                    = -1;
+    TRL_FIX_BREAK_TIME                 = -1;
+    TRL_TARGET_PRE_TIME                = -1;
+    TRL_TARGET_TIME                    = -1;
+    TRL_TARGET_HOLD_TIME               = -1;
+    TRL_TARGET_BREAK_TIME              = -1;
+    TRL_FIX_SPOT_OFF_TIME              = -1;
+    TRL_TARGET_ACQUIRED_TIME           = -1;
+    TRL_DECIDE_TIME                    = -1;
+    TRL_SACCADE_TIME                   = -1;
+    TRL_ERLY_SACCADE_TIME              = -1;
+    TRL_LATE_SACC_TIME                 = -1;
+    TRL_NO_SACCADE_TIME                = -1;
+    TRL_ACQUIRE_TARGET_ERROR_TIME      = -1;
+    TRL_XTRA_HOLD_START_TIME           = -1;
+    TRL_XTRA_HOLD_END_TIME             = -1;
+    TRL_BRK_XTRA_HOLD_TIME             = -1;
+    TRL_BRK_PRE_TONE_TIME              = -1;
+    TRL_BRK_TONE_TIME                  = -1;
+    TRL_BRK_PRE_RWRD_TIME              = -1;
+    TRL_BRK_RWRD_TIME                  = -1;
+    TRL_TONE_DELAY_ON_TIME             = -1;
+    TRL_TONE_DELAY_OFF_TIME            = -1;
+    TRL_REWARD_ON_TIME                 = -1;
+    TRL_REWARD_DELAY_OFF_TIME          = -1;
+    TRL_ITI_START_TIME                 = -1;
+    TRL_ITI_END_TIME                   = -1;
+    TRL_START_INFOS_TIME               = -1;
+    TRL_END_INFOS_TIME                 = -1;
+    TRL_TIMEOUT_START_TIME             = -1;
+    TRL_TIMEOUT_END_TIME               = -1;
+    TRL_STOP_SIGNAL_TIME               = -1;
+    TRL_CANCEL_TIME                    = -1;
+    TRL_BRK_CANCEL_TIME                = -1;
+    TRL_NOGO_SACCADE_PRE_SSD_TIME      = -1;
+    TRL_NOGO_SACCADE_POST_SSD_TIME     = -1;
+    TRL_NOGO_EARLY_SACCADE_TIME        = -1;
+    TRL_NOGO_LATE_SACCADE_TIME         = -1;
+    TRL_XTRA_RWRD_ON_TIME              = -1;
+    TRL_XTRA_RWRD_OFF_TIME             = -1;
+    TRL_TASK_END_TIME                  = -1;
+    TRL_CUM_DURATION                   = -1;
+    TRL_GET_READY_DURATION             = -1;
+    TRL_FIX_HOLD_DURATION              = -1;
+    TRL_CANCEL_DURATION                = -1;
+    TRL_MIN_THT_DURATION               = -1;
+    TRL_TARG_ON_DURATION               = -1;
+    TRL_XTRA_HOLD_DURATION             = -1;
+    TRL_SACC_DURATION                  = -1;
+    TRL_TARG_HOLD_DURATION             = -1;
+    TRL_STOP_SIGNAL_DURATION           = -1;
+    TRL_ITI_DURATION                   = -1;
+    TRL_TIMEOUT_DURATION               = -1;
+    TRL_TARG_VR_COUNT                  = 0;
+    TRL_SSD_VR_COUNT                   = 0;
+    TRL_REPEAT_COUNT                   = TRL_REPEAT_COUNT + 1;
     if (DEBUG_CONSOLE)
     {
         printf("****SET_CMD/INIT_VARS_REPEAT_TRL: REPEAT_COUNT [%d],****\n", TRL_REPEAT_COUNT);
@@ -951,116 +968,118 @@ process INIT_VARS_REPEAT_TRL()
 
 process INIT_TRL_VARS()
 {
-    PROCESS_STATE                    = 0;
-    TRL_TRIAL_TYPE                   = -1;
-    TRL_IS_RUNNING                   = 0;
-    TRL_IS_I_IN_FLIGHT               = -1;
-    TRL_IS_FIX_ON                    = -1;
-    TRL_IS_FIX_ACQUIRED              = -1;
-    TRL_IS_TARG_ON                   = -1;
-    TRL_IS_TARG_ACQUIRED             = -1;
-    TRL_IS_STOP_SIGNAL_ON            = -1;
-    TRL_IS_XTRA_HOLD_DONE            = -1;
-    TRL_IS_CANCEL                  = -1;
-    TRL_IS_TIMEOUT                   = -1;
-    TRL_IS_GO_CORRECT                = -1;
-    TRL_IS_GO_ERR                    = -1;
-    TRL_IS_CANCELLED                 = -1;
-    TRL_IS_CANCELLED_ERR             = -1;
-    TRL_IS_NON_CANCELLED             = -1;
-    TRL_IS_NON_CANCELLED_ERR         = -1;
-    TRL_IS_NOGO_ERR                  = -1;
-    TRL_IS_LO_RWRD                   = -1;
-    TRL_IS_FIX_REIGNITE              = -1;
-    TRL_IS_STAIRCASE_SSD             = -1;
-    TRL_TASK_START_TIME              = -1;
-    TRL_TRIAL_START_TIME             = -1;
-    TRL_EOT_TIME                     = -1;
-    TRL_GET_READY_TIME               = -1;
-    TRL_READY_TIME                   = -1;
-    TRL_ABORT_TIME                   = -1;
-    TRL_FIX_ON_TIME                  = -1;
-    TRL_ACQUIRE_FIX_TIME             = -1;
-    TRL_ACQUIRE_FIX_ERROR_TIME       = -1;
-    TRL_MIN_THT_START_TIME           = -1;
-    TRL_MIN_THT_END_TIME             = -1;
-    TRL_CANCEL_START_TIME          = -1;
-    TRL_CANCEL_END_TIME            = -1;
-    TRL_FIXATE_TIME                  = -1;
-    TRL_FIX_BREAK_TIME               = -1;
-    TRL_TARGET_PRE_TIME              = -1;
-    TRL_TARGET_TIME                  = -1;
-    TRL_TARGET_HOLD_TIME             = -1;
-    TRL_TARGET_BREAK_TIME            = -1;
-    TRL_FIX_SPOT_OFF_TIME            = -1;
-    TRL_TARGET_ACQUIRED_TIME         = -1;
-    TRL_DECIDE_TIME                  = -1;
-    TRL_SACCADE_TIME                 = -1;
-    TRL_ERLY_SACCADE_TIME            = -1;
-    TRL_LATE_SACC_TIME               = -1;
-    TRL_NO_SACCADE_TIME              = -1;
-    TRL_ACQUIRE_TARGET_ERROR_TIME    = -1;
-    TRL_XTRA_HOLD_START_TIME         = -1;
-    TRL_XTRA_HOLD_END_TIME           = -1;
-    TRL_BRK_XTRA_HOLD_TIME           = -1;
-    TRL_BRK_PRE_TONE_TIME            = -1;
-    TRL_BRK_TONE_TIME                = -1;
-    TRL_BRK_PRE_RWRD_TIME            = -1;
-    TRL_BRK_RWRD_TIME                = -1;
-    TRL_TONE_ON_TIME                 = -1;
-    TRL_TONE_OFF_TIME                = -1;
-    TRL_REWARD_ON_TIME               = -1;
-    TRL_REWARD_OFF_TIME              = -1;
-    TRL_ITI_START_TIME               = -1;
-    TRL_ITI_END_TIME                 = -1;
-    TRL_START_INFOS_TIME             = -1;
-    TRL_END_INFOS_TIME               = -1;
-    TRL_TIMEOUT_START_TIME           = -1;
-    TRL_TIMEOUT_END_TIME             = -1;
-    TRL_STOP_SIGNAL_TIME             = -1;
-    TRL_CANCEL_TIME                  = -1;
-    TRL_BRK_CANCEL_TIME              = -1;
-    TRL_NOGO_SACCADE_PRE_SSD_TIME    = -1;
-    TRL_NOGO_SACCADE_POST_SSD_TIME   = -1;
-    TRL_NOGO_EARLY_SACCADE_TIME      = -1;
-    TRL_NOGO_LATE_SACCADE_TIME       = -1;
-    TRL_XTRA_RWRD_ON_TIME            = -1;
-    TRL_XTRA_RWRD_OFF_TIME           = -1;
-    TRL_TASK_END_TIME                = -1;
-    TRL_CUM_DURATION                 = 0;
-    TRL_GET_READY_DURATION           = 0;
-    TRL_FIX_HOLD_DURATION            = 0;
-    TRL_CANCEL_DURATION            = 0;
-    TRL_MIN_THT_DURATION             = 0;
-    TRL_TARG_ON_DURATION             = 0;
-    TRL_XTRA_HOLD_DURATION           = 0;
-    TRL_SACC_DURATION                = 0;
-    TRL_TARG_HOLD_DURATION           = 0;
-    TRL_STOP_SIGNAL_DURATION         = 0;
-    TRL_TARG_VR_COUNT                = 0;
-    TRL_SSD_VR_COUNT                 = 0;
-    TRL_USE_TRIAL_DURATION           = 0;
-    TRL_USE_SSD_IDX                  = 0;
-    TRL_USE_SSD_VR_COUNT             = 0;
-    TRL_USE_FIX_HOLD_DURATION        = 0;
-    TRL_USE_FIX_HOLD_ADJUST          = 0;
-    TRL_USE_SSD_CANCEL_DURATION      = 0;
-    TRL_USE_PRE_SSD_FIX_ON_DELAY     = 0;
-    TRL_USE_POST_SSD_FIX_ON_DELAY    = 0;
-    TRL_USE_TONE_DELAY               = 0;
-    TRL_USE_TONE_FREQ                = 0;
-    TRL_USE_TONE_DURATION            = 0;
-    TRL_USE_RWRD_DELAY               = 0;
-    TRL_USE_RWRD_DURATION            = 0;
-    TRL_USE_ITI_DURATION             = 0;
-    TRL_USE_TIMEOUT_DURATION         = 0;
-    TRL_USE_CORRECT_TRIALS_PER_BLOCK = 0;
-    TRL_CURR_TARG_IDX                = -1;
-    TRL_CURR_TARG_SIZE               = -1;
-    TRL_CURR_TARG_ANGLE              = -1;
-    TRL_CURR_TARG_ECCENTRICITY       = -1;
-    TRL_CURR_TARG_COLOR_IDX          = -1;
-    TRL_REPEAT_COUNT                 = 0;
+    PROCESS_STATE                      = 0;
+    TRL_IS_RUNNING                     = 0;
+    TRL_TRIAL_TYPE                     = -1;
+    TRL_IS_I_IN_FLIGHT                 = -1;
+    TRL_IS_FIX_ON                      = -1;
+    TRL_IS_FIX_ACQUIRED                = -1;
+    TRL_IS_TARGET_ON                   = -1;
+    TRL_IS_TARG_ACQUIRED               = -1;
+    TRL_IS_STOP_SIGNAL_ON              = -1;
+    TRL_IS_XTRA_HOLD_DONE              = -1;
+    TRL_IS_CANCEL                      = -1;
+    TRL_IS_TIMEOUT                     = -1;
+    TRL_IS_GO_CORRECT                  = -1;
+    TRL_IS_GO_ERR                      = -1;
+    TRL_IS_CANCELLED_NO_BRK            = -1;
+    TRL_IS_CANCELLED_BRK               = -1;
+    TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK = -1;
+    TRL_IS_NON_CANCELLED_BRK           = -1;
+    TRL_IS_NOGO_ERR                    = -1;
+    TRL_IS_LO_RWRD                     = -1;
+    TRL_IS_FIX_REIGNITE                = -1;
+    TRL_IS_STAIRCASE_SSD               = -1;
+    TRL_TASK_START_TIME                = -1;
+    TRL_TRIAL_START_TIME               = -1;
+    TRL_EOT_TIME                       = -1;
+    TRL_GET_READY_TIME                 = -1;
+    TRL_READY_TIME                     = -1;
+    TRL_ABORT_TIME                     = -1;
+    TRL_FIX_ON_TIME                    = -1;
+    TRL_ACQUIRE_FIX_TIME               = -1;
+    TRL_ACQUIRE_FIX_ERROR_TIME         = -1;
+    TRL_MIN_THT_START_TIME             = -1;
+    TRL_MIN_THT_END_TIME               = -1;
+    TRL_CANCEL_START_TIME              = -1;
+    TRL_CANCEL_END_TIME                = -1;
+    TRL_FIXATE_TIME                    = -1;
+    TRL_FIX_BREAK_TIME                 = -1;
+    TRL_TARGET_PRE_TIME                = -1;
+    TRL_TARGET_TIME                    = -1;
+    TRL_TARGET_HOLD_TIME               = -1;
+    TRL_TARGET_BREAK_TIME              = -1;
+    TRL_FIX_SPOT_OFF_TIME              = -1;
+    TRL_TARGET_ACQUIRED_TIME           = -1;
+    TRL_DECIDE_TIME                    = -1;
+    TRL_SACCADE_TIME                   = -1;
+    TRL_ERLY_SACCADE_TIME              = -1;
+    TRL_LATE_SACC_TIME                 = -1;
+    TRL_NO_SACCADE_TIME                = -1;
+    TRL_ACQUIRE_TARGET_ERROR_TIME      = -1;
+    TRL_XTRA_HOLD_START_TIME           = -1;
+    TRL_XTRA_HOLD_END_TIME             = -1;
+    TRL_BRK_XTRA_HOLD_TIME             = -1;
+    TRL_BRK_PRE_TONE_TIME              = -1;
+    TRL_BRK_TONE_TIME                  = -1;
+    TRL_BRK_PRE_RWRD_TIME              = -1;
+    TRL_BRK_RWRD_TIME                  = -1;
+    TRL_TONE_DELAY_ON_TIME             = -1;
+    TRL_TONE_DELAY_OFF_TIME            = -1;
+    TRL_REWARD_ON_TIME                 = -1;
+    TRL_REWARD_DELAY_OFF_TIME          = -1;
+    TRL_ITI_START_TIME                 = -1;
+    TRL_ITI_END_TIME                   = -1;
+    TRL_START_INFOS_TIME               = -1;
+    TRL_END_INFOS_TIME                 = -1;
+    TRL_TIMEOUT_START_TIME             = -1;
+    TRL_TIMEOUT_END_TIME               = -1;
+    TRL_STOP_SIGNAL_TIME               = -1;
+    TRL_CANCEL_TIME                    = -1;
+    TRL_BRK_CANCEL_TIME                = -1;
+    TRL_NOGO_SACCADE_PRE_SSD_TIME      = -1;
+    TRL_NOGO_SACCADE_POST_SSD_TIME     = -1;
+    TRL_NOGO_EARLY_SACCADE_TIME        = -1;
+    TRL_NOGO_LATE_SACCADE_TIME         = -1;
+    TRL_XTRA_RWRD_ON_TIME              = -1;
+    TRL_XTRA_RWRD_OFF_TIME             = -1;
+    TRL_TASK_END_TIME                  = -1;
+    TRL_CUM_DURATION                   = -1;
+    TRL_GET_READY_DURATION             = -1;
+    TRL_FIX_HOLD_DURATION              = -1;
+    TRL_CANCEL_DURATION                = -1;
+    TRL_MIN_THT_DURATION               = -1;
+    TRL_TARG_ON_DURATION               = -1;
+    TRL_XTRA_HOLD_DURATION             = -1;
+    TRL_SACC_DURATION                  = -1;
+    TRL_TARG_HOLD_DURATION             = -1;
+    TRL_STOP_SIGNAL_DURATION           = -1;
+    TRL_ITI_DURATION                   = -1;
+    TRL_TIMEOUT_DURATION               = -1;
+    TRL_TARG_VR_COUNT                  = -1;
+    TRL_SSD_VR_COUNT                   = -1;
+    TRL_USE_TRIAL_DURATION             = -1;
+    TRL_USE_SSD_IDX                    = -1;
+    TRL_USE_SSD_VR_COUNT               = -1;
+    TRL_USE_FIX_HOLD_DURATION          = -1;
+    TRL_USE_FIX_HOLD_ADJUST            = -1;
+    TRL_USE_SSD_CANCEL_DURATION        = -1;
+    TRL_USE_PRE_SSD_FIX_ON_DELAY       = -1;
+    TRL_USE_POST_SSD_FIX_ON_DELAY      = -1;
+    TRL_USE_TONE_DELAY                 = -1;
+    TRL_USE_TONE_FREQ                  = -1;
+    TRL_USE_TONE_DURATION              = -1;
+    TRL_USE_RWRD_DELAY                 = -1;
+    TRL_USE_RWRD_DURATION              = -1;
+    TRL_USE_ITI_DURATION               = -1;
+    TRL_USE_TIMEOUT_DURATION           = -1;
+    TRL_USE_CORRECT_TRIALS_PER_BLOCK   = -1;
+    TRL_CURR_TARG_IDX                  = -1;
+    TRL_CURR_TARG_SIZE                 = -1;
+    TRL_CURR_TARG_ANGLE                = -1;
+    TRL_CURR_TARG_ECCENTRICITY         = -1;
+    TRL_CURR_TARG_COLOR_IDX            = -1;
+    TRL_REPEAT_COUNT                   = 0;
     if (TRL_TRIAL_NUMBER == 0)
     {
         TRL_BLOCK_NUM                  = 0;

@@ -38,11 +38,11 @@ process PROC_TIMEOUT_CHK()
         TRL_USE_TIMEOUT_DURATION = 1;
         TRL_USE_TONE_DURATION    = TIMEOUT_DURATION;
         TRL_USE_TONE_FREQ        = TIMEOUT_TONE;
-        if (TRL_IS_TARG_ON)
+        if (INCEMENT_TARG_DURATION_FLAG)
         {
             dsendf("vp %d\n", PG_BLANK);
             spawn GRAF_HIDE_FIX_TARG();
-            TRL_IS_TARG_ON = 0;
+            INCEMENT_TARG_DURATION_FLAG = 0;
         }
     }
 
