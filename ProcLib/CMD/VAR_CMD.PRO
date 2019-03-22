@@ -58,10 +58,10 @@ declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int FIX_JITTER_FLAG = JITTER_EXPONENTIAL_FLAG;
 // fix hold mean time
-declare int FIX_HOLD_MEAN = 1000;
+declare int FIX_HOLD_MEAN = 5000;
 // fix hold spread mean +/- spread
 declare int FIX_HOLD_SPREAD      = 250;
-declare int FIX_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
+declare int FIX_HOLD_JITTER_FLAG = JITTER_NONE;
 // min-max saccade time is same for Go and STOP trials
 declare int MIN_SACC_TIME = 150;
 declare int MAX_SACC_TIME = 800;

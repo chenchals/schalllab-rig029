@@ -11,7 +11,7 @@ declare PROC_WRITE_RAW_I_DATA();
 
 process PROC_WRITE_RAW_I_DATA()
 {
-    declare int tickInterval = 5;
+    declare int tickInterval = 2;
     declare int write2File   = 1;
     declare int currTime;
 	currTime = time();
