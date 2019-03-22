@@ -34,7 +34,7 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 
-#include C:/TEMPO/WATCH/RITE_EYE.PRO
+#include C:/TEMPO/ProcLib/WATCH/RITE_EYE.PRO
 declare int writeRawEyeData = 1;
 
 //==========================================================================

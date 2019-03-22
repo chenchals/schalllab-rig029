@@ -25,8 +25,8 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 33.0;
-declare float        STOP_WEIGHT   = 67.0;
+declare float        GO_WEIGHT     = 100.0;
+declare float        STOP_WEIGHT   = 0.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
@@ -58,10 +58,10 @@ declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int FIX_JITTER_FLAG = JITTER_EXPONENTIAL_FLAG;
 // fix hold mean time
-declare int FIX_HOLD_MEAN = 750;
+declare int FIX_HOLD_MEAN = 1000;
 // fix hold spread mean +/- spread
 declare int FIX_HOLD_SPREAD      = 250;
-declare int FIX_HOLD_JITTER_FLAG = JITTER_UNIFORM_FLAG;
+declare int FIX_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 // min-max saccade time is same for Go and STOP trials
 declare int MIN_SACC_TIME = 150;
 declare int MAX_SACC_TIME = 800;
