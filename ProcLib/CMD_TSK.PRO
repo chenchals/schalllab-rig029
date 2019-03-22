@@ -33,6 +33,10 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/ITI_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
+
+#include C:/TEMPO/WATCH/RITE_EYE.PRO
+declare int writeRawEyeData = 1;
+
 //==========================================================================
 declare IDLE();
 declare UPD8_MSG();
@@ -89,6 +93,12 @@ process IDLE() enabled
 
     printf("Setting WTCH_SCHMITT\n");
     spawn WTCH_SCHMITT();
+
+    if (writeRawEyeData)
+    {
+        printf("*******************WRITING RAW EYE DATA TO FILE*****************\n");
+        spawn PROC_WRITE_RAW_I_DATA();
+    }
 
     printf("waiting for all processes to start...\n");
     nexttick 1000;

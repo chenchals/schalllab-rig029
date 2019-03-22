@@ -17,12 +17,12 @@ declare LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg);
 declare COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg);
 declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc);
 
-    declare int   writeIToFile = 0;
-    declare int   wroteIHeader = 0;
+declare int writeIToFile = 0;
+declare int wroteIHeader = 0;
+
 
 process WTCH_EYE()
 {
-
     declare int   xVal, yVal;
     declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
     declare int   lasttime, eyeXpixels, eyeYpixels;
@@ -49,11 +49,11 @@ process WTCH_EYE()
             CENTER_EYE_NOW = 0;
         }
 
-        spawn GRAF_UPD8_EYE( eyeXdeg, eyeYdeg);
+        spawn GRAF_UPD8_EYE(eyeXdeg, eyeYdeg);
 
         if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
         {
-            spawn LOCATE_EYE(EYE_X_VOLTS,EYE_Y_VOLTS,eyeXdeg, eyeYdeg);
+            spawn LOCATE_EYE(EYE_X_VOLTS, EYE_Y_VOLTS, eyeXdeg, eyeYdeg);
 
             // why should this be with screen refresh?
             if (time() > lasttime + 16)
@@ -199,25 +199,24 @@ process COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
         CURR_EYE_ANGLE = 9999999;        //undefined;
     }
     CURR_EYE_ECC = sqrt((iYDeg * iYDeg) + (iXDeg * iXDeg));
-    spawnwait WRITE_I_TO_FILE(iXVolts, iYVolts, iXDeg, iYDeg, CURR_EYE_ANGLE, CURR_EYE_ECC);
+    spawn WRITE_I_TO_FILE(iXVolts, iYVolts, iXDeg, iYDeg, CURR_EYE_ANGLE, CURR_EYE_ECC);
 } /* COMPUTE_EYE_POS */
-
 
 process WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc)
 {
-	declare int tempInterval = 5;
+    declare int tempInterval = 5;
 
     if (writeIToFile)
     {
-		if((time() % tempInterval) == 0)
-		{
-        if (!wroteIHeader)
+        if ((time() % tempInterval) == 0)
         {
-            wroteIHeader = 1;
-            writef("eyeVals.csv iXVolts,iYVolts,iXDeg,iYDeg,iAngle,iEcc\n");
+            if (!wroteIHeader)
+            {
+                wroteIHeader = 1;
+                writef("eyeVals.csv iXVolts,iYVolts,iXDeg,iYDeg,iAngle,iEcc\n");
+            }
+            //printf("EyeVals: %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
+            writef("eyeVals.csv %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
         }
-        //printf("EyeVals: %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
-        writef("eyeVals.csv %8.4d,%8.4d,%8.4d,%8.4d,%8.4d,%8.4d\n", iXVolts, iYVolts, iXDeg, iYDeg, iAngle, iEcc);
-		}
     }
 }
