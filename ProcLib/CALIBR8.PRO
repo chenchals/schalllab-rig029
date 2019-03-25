@@ -22,6 +22,7 @@ declare PROC_CALIB_PGS();
 process PROC_CLIBRATE()
 {
     printf("Eye Clibration in progress...\n");
+    spawnwait SET_RIG(RIG_ID);
 
     while (CALIBRATING)
     {
