@@ -15,6 +15,7 @@
 #include C:/TEMPO/ProcLib/UTIL/TONE.PRO
 #include C:/TEMPO/ProcLib/UTIL/JUICE.PRO
 #include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
+#include C:/TEMPO/ProcLib/CALIBR8.PRO
 
 // State flow
 #include C:/TEMPO/ProcLib/CMD/STATES/GET_REDY.PRO
@@ -46,7 +47,9 @@ declare USER_SUMMARY();
 declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER       = 0;
 declare int TEST               = 100;
+declare int RUN_TASK = 0;
 declare int SHOW_PAGES         = 0;
+declare int CALIBRATE_EYE = 0;
 
 
 process IDLE() enabled
@@ -54,6 +57,7 @@ process IDLE() enabled
     declare int tempCount;
     declare int infosStartT;
     declare int infosDuration;
+	declare int doOnce;
 
     seed1(time());
     // activate seed by drawing a number from some distribution
@@ -102,20 +106,12 @@ process IDLE() enabled
 
     printf("waiting for all processes to start...\n");
     nexttick 1000;
-
-    printf("Sending EVT_IDENTIFY_ROOM_\n");
-    spawn SEND_EVT(EVT_IDENTIFY_ROOM_);
-
-    printf("Sending RIG_ID\n");
-    spawn SEND_EVT(RIG_ID);
+	
+	doOnce = 0;
 
     while (1)
     {
         //===============For each Trial=====================
-        printf("=============Setting TRIAL variables\n==================");
-        spawnwait SET_CMD_TRL();
-
-        printf("Done Setting TRIAL variables\n");
         if (SHOW_PAGES)
         {
             TRL_IS_RUNNING = 0;
@@ -130,8 +126,26 @@ process IDLE() enabled
             dsendf("vp %d\n", 0);
             printf("****Done showing Virtual Pages for COUNTERMANDING TASK\n\n");
         }
-        else
+		else if (CALIBRATE_EYE)
+		{
+			spawnwait PROC_CALIBRATE();
+		}
+        else if (RUN_TASK)
         {
+			printf("=============Setting TRIAL variables\n==================");
+			spawnwait SET_CMD_TRL();
+
+			printf("Done Setting TRIAL variables\n");
+
+			if(doOnce == 0)
+			{
+				printf("Sending EVT_IDENTIFY_ROOM_\n");
+				spawn SEND_EVT(EVT_IDENTIFY_ROOM_);
+
+				printf("Sending RIG_ID\n");
+				spawn SEND_EVT(RIG_ID);
+				doOnce = 1;
+			}
             PROCESS_STATE  = 1;
             TRL_IS_RUNNING = 1;
             printf("Trial running....\n");
@@ -272,10 +286,12 @@ process IDLE() enabled
             }
             nexttick;
         }         /*while(TRL_IS_RUNNING)*/
-        spawnwait WRITE_TO_FILE();
-        spawnwait USER_SUMMARY();
-
-        printf("============================NEXT TRIAL========================\n");
+		if (RUN_TASK > 0)
+		{
+			spawnwait WRITE_TO_FILE();
+			spawnwait USER_SUMMARY();
+			printf("============================NEXT TRIAL========================\n");
+		}
         nexttick;
     }         /*while(1)*/
 } /*IDLE()*/
