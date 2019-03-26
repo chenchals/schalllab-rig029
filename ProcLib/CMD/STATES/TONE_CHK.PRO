@@ -80,7 +80,7 @@ process PROC_TONE_CHK()
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (I_TARG)
+    if (I_TARG && TRL_IS_XTRA_HOLD_DONE <= 0)
     {
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }

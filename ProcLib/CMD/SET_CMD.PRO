@@ -451,6 +451,7 @@ process SET_CMD_TRL()
 
 process COMPUTE_TRIAL_DURATION()
 {
+    declare int maxTrialDuration;
     declare int tempCancelTime;
 
     declare int tonePlusReward;
@@ -475,49 +476,57 @@ process COMPUTE_TRIAL_DURATION()
         TRL_USE_SSD_CANCEL_DURATION = -1;
     }
 
-    // TRL_USE_TRIAL_DURATION is computed *after* Fixation is acquired, using all max times
+    // maxTrialDuration is computed *after* Fixation is acquired, using all max times
     // same for GO/STOP
-    TRL_USE_TRIAL_DURATION = FIX_HOLD_MEAN + FIX_HOLD_SPREAD + BASE_ITI_TIME;
+    maxTrialDuration = FIX_HOLD_MEAN + FIX_HOLD_SPREAD + BASE_ITI_TIME;
     // Since TRL_USE_SSD_CANCEL_DURATION must be => MAX_SACC_TIME + MAXS_SACC_DURATION
-    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + tempCancelTime;
+    maxTrialDuration = maxTrialDuration + tempCancelTime;
     // add max SSD time
-    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + ceil(MAX_SSD * REFRESH_RATE);
+    maxTrialDuration = maxTrialDuration + ceil(MAX_SSD * REFRESH_RATE);
     // add min-target hold time
-    TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TARG_HOLD_MEAN + TARG_HOLD_SPREAD;
+    maxTrialDuration = maxTrialDuration + TARG_HOLD_MEAN + TARG_HOLD_SPREAD;
     // check for extra hold time based on user set flag
     if (TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG == 1)
     {
-        TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + tonePlusReward;
+        maxTrialDuration = maxTrialDuration + tonePlusReward;
     }
     else
     {
-        TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION + TRL_USE_XTRA_HOLD_DURATION;
+        maxTrialDuration = maxTrialDuration + TRL_USE_XTRA_HOLD_DURATION;
     }
 
     // now check for the longest time of the following
-    if (IS_TRL_LENGTH_FIXED)
+    if (IS_TRL_LENGTH_FIXED && maxTrialDuration > FIXED_TRIAL_DURATION)
     {
-        if (TRL_USE_TRIAL_DURATION > FIXED_TRIAL_DURATION)
+        TRL_USE_TRIAL_DURATION = maxTrialDuration;
+        // error alert user that for fixed trial length duration,
+        // the computed trial duration > than user specified FIXED_TRIAL_DURATION
+        // and adjust the trial duration to computed trial duration
+        if (DEBUG_CONSOLE)
         {
-            TRL_USE_TRIAL_DURATION = TRL_USE_TRIAL_DURATION;
-            // error alert user that for fixed trial length duration,
-            // the computed trial duration > than user specified FIXED_TRIAL_DURATION
-            // and adjust the trial duration to computed trial duration
-            if (DEBUG_CONSOLE)
-            {
-                printf("**********FIXED_TRIAL_DURATION CHANGE ALERT********************\n");
-                printf("****SET_CMD/COMPUTE_TRIAL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
-                printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Computed trial length time[%d] exceeds FIXED_TRIAL_DURATION [%d]****\n", TRL_USE_TRIAL_DURATION, FIXED_TRIAL_DURATION);
-                printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms for computing ITI (as IS_TRL_LENGTH_FIXED = 1)****\n", TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED);
-            }
+            printf("**********FIXED_TRIAL_DURATION CHANGE ALERT********************\n");
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Computed trial length time[%d] exceeds FIXED_TRIAL_DURATION [%d]****\n", TRL_USE_TRIAL_DURATION, FIXED_TRIAL_DURATION);
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as IS_TRL_LENGTH_FIXED = [%d], and maxTrialDuration [%d] > FIXED_TRIAL_DURATION [%d])\n",
+                   TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED, maxTrialDuration, FIXED_TRIAL_DURATION);
         }
-        else
+    }
+    else if (IS_TRL_LENGTH_FIXED && maxTrialDuration <= FIXED_TRIAL_DURATION)
+    {
+        TRL_USE_TRIAL_DURATION = FIXED_TRIAL_DURATION;
+        if (DEBUG_CONSOLE)
         {
-            TRL_USE_TRIAL_DURATION = FIXED_TRIAL_DURATION;
-            if (DEBUG_CONSOLE)
-            {
-                printf("****SET_CMD/COMPUTE_TRIAL_DURATION:  Using TRL_USE_TRIAL_DURATION of [%d] ms set by user\n", FIXED_TRIAL_DURATION);
-            }
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as IS_TRL_LENGTH_FIXED = [%d], and maxTrialDuration [%d] <= FIXED_TRIAL_DURATION [%d])****\n",
+                   TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED, maxTrialDuration, FIXED_TRIAL_DURATION);
+        }
+    }
+    else // IS_TRL_LENGTH_FIXED = 0
+    {
+        TRL_USE_TRIAL_DURATION = maxTrialDuration;
+        if (DEBUG_CONSOLE)
+        {
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as IS_TRL_LENGTH_FIXED = [%d] and maxTrialDuration [%d])****\n",
+                   TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED, maxTrialDuration);
         }
     }
 } /* COMPUTE_TRIAL_DURATION */
@@ -924,9 +933,9 @@ process INIT_VARS_REPEAT_TRL()
     TRL_BRK_TONE_TIME                  = -1;
     TRL_BRK_PRE_RWRD_TIME              = -1;
     TRL_BRK_RWRD_TIME                  = -1;
-    TRL_TONE_DELAY_START_TIME             = -1;
+    TRL_TONE_DELAY_START_TIME          = -1;
     TRL_TONE_DELAY_END_TIME            = -1;
-    TRL_REWARD_DELAY_START_TIME                 = -1;
+    TRL_REWARD_DELAY_START_TIME        = -1;
     TRL_REWARD_DELAY_END_TIME          = -1;
     TRL_ITI_START_TIME                 = -1;
     TRL_ITI_END_TIME                   = -1;
@@ -1024,9 +1033,9 @@ process INIT_TRL_VARS()
     TRL_BRK_TONE_TIME                  = -1;
     TRL_BRK_PRE_RWRD_TIME              = -1;
     TRL_BRK_RWRD_TIME                  = -1;
-    TRL_TONE_DELAY_START_TIME             = -1;
+    TRL_TONE_DELAY_START_TIME          = -1;
     TRL_TONE_DELAY_END_TIME            = -1;
-    TRL_REWARD_DELAY_START_TIME                 = -1;
+    TRL_REWARD_DELAY_START_TIME        = -1;
     TRL_REWARD_DELAY_END_TIME          = -1;
     TRL_ITI_START_TIME                 = -1;
     TRL_ITI_END_TIME                   = -1;

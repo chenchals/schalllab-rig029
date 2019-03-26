@@ -73,7 +73,7 @@ process PROC_TONE_SSD()
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (I_FIX)
+    if (I_FIX && TRL_IS_XTRA_HOLD_DONE <= 0)
     {
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }

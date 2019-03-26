@@ -61,7 +61,7 @@ process PROC_RWRD_SSD()
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (I_FIX)
+    if (I_FIX && TRL_IS_XTRA_HOLD_DONE <= 0)
     {
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }
@@ -149,7 +149,7 @@ process PROC_RWRD_SSD()
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_END_);
         }
         printf("****STAT_RWRD_SSD[%d]: OK (*XTRA_HOLD* Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-               STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+               STAT_RWRD_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
     }
