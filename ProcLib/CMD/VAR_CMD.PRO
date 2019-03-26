@@ -25,15 +25,15 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 0.0;
-declare float        STOP_WEIGHT   = 100.0;
+declare float        GO_WEIGHT     = 70.0;
+declare float        STOP_WEIGHT   = 30.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
-declare int REPEAT_MAX = 4;
+declare int REPEAT_MAX = 3;
 //==========Jitter flags and definitions=========================
 // See UTIL/JITTER.PRO
 // declare constant int JITTER_NONE             = 0;
@@ -112,15 +112,15 @@ declare int POST_SSD_FIX_ON_DELAY = 5000;
 // the trial_duration_to_use for computing ITI and Timeout depends on IS_TRL_LENGTH_FIXED flag:
 // Case 0 : trial_duration_to_use = Max_trial_duration
 // Case 1 : trial_duration_to_use = max(Max_trial_duration,FIXED_TRIAL_DURATION)
-declare int IS_TRL_LENGTH_FIXED = 0;
+declare int IS_TRL_LENGTH_FIXED = 1;
 // Use this value if IS_TRL_LENGTH_FIXED == 1 && this value is greater than Max_trial_duration
 declare int FIXED_TRIAL_DURATION = 5000;
 // Use this duration for computing Max_trial_duration
-declare int BASE_ITI_TIME = 5000;
+declare int BASE_ITI_TIME = 500;
 
 //================= Fix/Targ hold duration ===========================
 // Stay in window (TARG for GO/ FIX for STOP) till reward is given
-declare int XTRA_HOLD_TONE_RWRD_FLAG = 0;
+declare int XTRA_HOLD_TONE_RWRD_FLAG = 1;
 // compute xtra hold time if XTRA_HOLD_TONE_RWRD_FLAG = 0;
 declare int XTRA_HOLD_MEAN   = 500;
 declare int XTRA_HOLD_SPREAD = 0;
@@ -128,12 +128,12 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 
 //================= Tone variables =================================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 1500;
+declare int TONE_DELAY_MEAN = 800;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
-declare int TONE_DELAY_SPREAD = 100;
+declare int TONE_DELAY_SPREAD = 0;
 declare int TONE_JITTER_FLAG = JITTER_GAUSS_FLAG;
 
 // how long should the error and success tones be presented?
@@ -143,12 +143,12 @@ declare int TONE_DURATION = 30;
 
 //================= Reward variables =================================
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 1200;
+declare int RWRD_DELAY_MEAN = 800;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
-declare int RWRD_DELAY_SPREAD = 100;
+declare int RWRD_DELAY_SPREAD = 0;
 declare int RWRD_JITTER_FLAG = JITTER_GAUSS_FLAG;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
@@ -187,7 +187,7 @@ declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 1, 2, 3 };
+declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 1, 2, 1 };
 declare int          TIMEOUT_BRK_RWRD[3]       = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
