@@ -60,6 +60,7 @@ process RIG_029()
     //  STIM_CHANNEL  = 1;
     EYE_X_CHANNEL       = 1;
     EYE_Y_CHANNEL       = 2;
+	EYE_PUPIL_CHANNEL   = 5;
     PHOTOCELL_L_CHANNEL = 4;
     PHOTOCELL_R_CHANNEL = 3;
     MAX_VOLTAGE         = 10;     //look at das_gain and das_polarity in kped (setup tn)

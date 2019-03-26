@@ -2,7 +2,7 @@
 ; Copyright 1997-2019 Reflective Computing.  All Rights Reserved.
 ; This file was created by TEMPO and should not be edited directly by the user.
 ; The commands in this file are undocumented and subject to change in future releases.
-; Mon Mar 25 14:27:40 2019
+; Tue Mar 26 11:32:32 2019
 ; DLOAD C:\tempo\ProcLib\CMD_TSK.dcf
 
 ; DIALOGS
@@ -12,7 +12,7 @@ SCREENRES 1280,768,32,1,0,0
 DIAPAGE 0,"CMD_Task_Menu"
 DIAPOS   0,0,0,0,-1,-1,14,55,373,503,0
 DIAONENTRY 0,"quiet RIG_ID=RIG_029_ID;\r\nquiet MONK_ID=JOULE_ID;;\r\nquiet SHOW_PAGES = 0;\r\n"
-DIAONEXIT 0,"quiet SHOW_PAGES = 0;\r\n"
+DIAONEXIT 0,"\r\n"
 DIAOBJ   0,0,1,59,6,247,29,"","Countermanding Task Menu"
 DIAOBJ   0,1,2,9,382,117,406,"Main_Menu","STOP;\r\nCCLEAR;\r\nCLOAD C:/TEMPO/PROCLIB/MAIN_MENU.pcf;\r\n"
 DIAOBJ   0,2,2,122,382,230,406,"Cancel","DPOP"

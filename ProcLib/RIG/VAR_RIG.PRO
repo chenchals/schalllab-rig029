@@ -84,6 +84,7 @@ declare int JUICE_CHANNEL;
 declare int STIM_CHANNEL;
 declare int EYE_X_CHANNEL;
 declare int EYE_Y_CHANNEL;
+declare int EYE_PUPIL_CHANNEL;
 declare int PHOTOCELL_L_CHANNEL;
 declare int PHOTOCELL_R_CHANNEL;
 //Check das_gain and das_polarity in kped (setup tn)

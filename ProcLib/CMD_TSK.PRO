@@ -36,7 +36,7 @@
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 
 #include C:/TEMPO/ProcLib/WATCH/RITE_EYE.PRO
-declare int writeRawEyeData = 0;
+declare int writeRawEyeData = 1;
 
 //==========================================================================
 declare IDLE();

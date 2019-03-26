@@ -25,8 +25,8 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 100.0;
-declare float        STOP_WEIGHT   = 0.0;
+declare float        GO_WEIGHT     = 0.0;
+declare float        STOP_WEIGHT   = 100.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
@@ -58,7 +58,7 @@ declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int FIX_JITTER_FLAG = JITTER_EXPONENTIAL_FLAG;
 // fix hold mean time
-declare int FIX_HOLD_MEAN = 5000;
+declare int FIX_HOLD_MEAN = 800;
 // fix hold spread mean +/- spread
 declare int FIX_HOLD_SPREAD      = 250;
 declare int FIX_HOLD_JITTER_FLAG = JITTER_NONE;
@@ -68,26 +68,18 @@ declare int MAX_SACC_TIME = 800;
 // subject has this long to saccade to the target
 //declare int MAX_SACCADE_TIME = 700;
 // once the eyes leave fixation they must be in the target before this time is up
-declare int MAX_SACC_DURATION = 150;
+declare int MAX_SACC_DURATION = 150; 
 // 1 for fixed trial length, 0 for fixed inter trial intervals
-declare int IS_TRL_LENGTH_FIXED = 1;
+declare int IS_TRL_LENGTH_FIXED = 0;
 // fixed at this value (only works if Fixed_trl_length == 1)
 declare int FIXED_TRIAL_DURATION = 5000;
 // how long between trials (only works if Fixed_trl_length == 0)
-declare int BASE_ITI_TIME = 500;
+declare int BASE_ITI_TIME = 5000;
 //========== GO TRIAL TARG HOLD TIME ======================
 // after saccade subject must hold gaze on target for this long
 declare int TARG_HOLD_MEAN   = 300;
 declare int TARG_HOLD_SPREAD = 50;
 declare int TARG_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
-
-// Stay in window (TARG for GO/ FIX for STOP) till reward is given
-declare int XTRA_HOLD_TONE_RWRD_FLAG = 1;
-// compute xtra hold time if XTRA_HOLD_TONE_RWRD_FLAG = 0;
-declare int XTRA_HOLD_MEAN   = 200;
-declare int XTRA_HOLD_SPREAD = 0;
-declare int XTRA_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
-
 //========== STOP TASK SPECIFIC =============================
 // maximum number of stop signal delays
 declare int   N_SSD_MAX = 30;
@@ -121,8 +113,15 @@ declare int PRE_SSD_FIX_ON_DELAY  = 0;
 declare int POST_SSD_FIX_ON_DELAY = 5000;
 
 //============= TONE and REWARD periods =========================
+// Stay in window (TARG for GO/ FIX for STOP) till reward is given
+declare int XTRA_HOLD_TONE_RWRD_FLAG = 0;
+// compute xtra hold time if XTRA_HOLD_TONE_RWRD_FLAG = 0;
+declare int XTRA_HOLD_MEAN   = 500;
+declare int XTRA_HOLD_SPREAD = 0;
+declare int XTRA_HOLD_JITTER_FLAG = JITTER_GAUSS_FLAG;
+
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 600;
+declare int TONE_DELAY_MEAN = 1500;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
