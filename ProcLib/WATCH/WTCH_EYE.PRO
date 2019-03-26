@@ -19,6 +19,9 @@ declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, 
 
 declare int writeIToFile = 0;
 declare int wroteIHeader = 0;
+// in TEMPO ADC units for Eyleink MISSING DATA VALUES, to know "blink"
+declare int I_INVALID_THRESHOLD = -16000;
+declare int I_INVALID_DURATION;
 
 
 process WTCH_EYE()
@@ -84,8 +87,19 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     // I_TARG, I_TARG_WIDE
     // I_TARG_ANTI, I_TARG_ANTI_WIDE
     // Check Eye pos in FIX window area
-    if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
-       && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
+    I_INVALID = 0;
+    if (iXVolts <= I_INVALID_THRESHOLD && iYVolts <= I_INVALID_THRESHOLD)
+    {
+        I_INVALID        = 1;
+        I_FIX            = 0;
+        I_FIX_WIDE       = 0;
+        I_TARG           = 0;
+        I_TARG_WIDE      = 0;
+        I_TARG_ANTI      = 0;
+        I_TARG_ANTI_WIDE = 0;
+    }
+    else if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
+            && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
     {
         I_FIX            = 1;
         I_FIX_WIDE       = 0;
@@ -158,6 +172,24 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
         I_TARG_ANTI      = 0;
         I_TARG_ANTI_WIDE = 0;
     }
+    // send event and update invalid duration as apprpriate
+    if (I_INVALID)
+    {
+      if(I_INVALID_DURATION == 0)
+      {
+        spawn SEND_EVT(EVT_I_INVALID_START_);
+      }
+        I_INVALID_DURATION = I_INVALID_DURATION + 1;
+    }
+    else
+    {
+      if(I_INVALID_DURATION > 0)
+      {
+        spawn SEND_EVT(EVT_I_INVALID_END_);
+      }
+        I_INVALID_DURATION = 0;
+    }
+
     // We want to pass this, since the Global var
     // could change while coputation is done
     spawn COMPUTE_EYE_POS(iXVolts, iYVolts, iXDeg, iYDeg);
@@ -201,6 +233,7 @@ process COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     CURR_EYE_ECC = sqrt((iYDeg * iYDeg) + (iXDeg * iXDeg));
     spawn WRITE_I_TO_FILE(iXVolts, iYVolts, iXDeg, iYDeg, CURR_EYE_ANGLE, CURR_EYE_ECC);
 } /* COMPUTE_EYE_POS */
+
 
 process WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, float iAngle, float iEcc)
 {

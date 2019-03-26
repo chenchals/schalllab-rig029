@@ -14,13 +14,15 @@ process PROC_WRITE_RAW_I_DATA()
     declare int tickInterval = 2;
     declare int write2File   = 0;
     declare int currTime;
-	currTime = time();
+
+    currTime = time();
+    writef("rawIVals.csv relTimeMs,xADC,yADC,iInvalid,iInvalidDuration\n");
     while (1)
     {
         if (write2File)
         {
             //rawIVals.csv relTimeMs,xADC,yADC\n"
-            writef("rawIVals.csv %d,%d,%d\n", time()-currTime,atable(EYE_X_CHANNEL),atable(EYE_Y_CHANNEL));
+            writef("rawIVals.csv %d,%d,%d,%d,%d\n", time() - currTime, EYE_X_VOLTS, EYE_Y_VOLTS, I_INVALID, I_INVALID_DURATION);
         }
         nexttick tickInterval;
     }

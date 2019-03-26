@@ -68,6 +68,8 @@ declare int I_TARG;
 declare int I_TARG_ANTI;
 declare int I_TARG_WIDE;
 declare int I_TARG_ANTI_WIDE;
+declare int I_INVALID;
+
 
 // For dynamically centering the Eye position
 // Add these to .pcf file

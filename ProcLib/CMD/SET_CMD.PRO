@@ -200,13 +200,13 @@ declare int TRL_BRK_PRE_RWRD_TIME;
 // when did gaze break during reward duration (after xtra-hold-eye-ms if any)
 declare int TRL_BRK_RWRD_TIME;
 // when did tone duration start
-declare int TRL_TONE_DELAY_ON_TIME;
+declare int TRL_TONE_DELAY_START_TIME;
 // when did tone duration end
-declare int TRL_TONE_DELAY_OFF_TIME;
+declare int TRL_TONE_DELAY_END_TIME;
 // when did juice solenoid open
-declare int TRL_REWARD_ON_TIME;
+declare int TRL_REWARD_DELAY_START_TIME;
 // when did juice solenoid close
-declare int TRL_REWARD_DELAY_OFF_TIME;
+declare int TRL_REWARD_DELAY_END_TIME;
 // when did inter-trial-interval start
 declare int TRL_ITI_START_TIME;
 // when did inter-trial-interval end
@@ -924,10 +924,10 @@ process INIT_VARS_REPEAT_TRL()
     TRL_BRK_TONE_TIME                  = -1;
     TRL_BRK_PRE_RWRD_TIME              = -1;
     TRL_BRK_RWRD_TIME                  = -1;
-    TRL_TONE_DELAY_ON_TIME             = -1;
-    TRL_TONE_DELAY_OFF_TIME            = -1;
-    TRL_REWARD_ON_TIME                 = -1;
-    TRL_REWARD_DELAY_OFF_TIME          = -1;
+    TRL_TONE_DELAY_START_TIME             = -1;
+    TRL_TONE_DELAY_END_TIME            = -1;
+    TRL_REWARD_DELAY_START_TIME                 = -1;
+    TRL_REWARD_DELAY_END_TIME          = -1;
     TRL_ITI_START_TIME                 = -1;
     TRL_ITI_END_TIME                   = -1;
     TRL_START_INFOS_TIME               = -1;
@@ -1024,10 +1024,10 @@ process INIT_TRL_VARS()
     TRL_BRK_TONE_TIME                  = -1;
     TRL_BRK_PRE_RWRD_TIME              = -1;
     TRL_BRK_RWRD_TIME                  = -1;
-    TRL_TONE_DELAY_ON_TIME             = -1;
-    TRL_TONE_DELAY_OFF_TIME            = -1;
-    TRL_REWARD_ON_TIME                 = -1;
-    TRL_REWARD_DELAY_OFF_TIME          = -1;
+    TRL_TONE_DELAY_START_TIME             = -1;
+    TRL_TONE_DELAY_END_TIME            = -1;
+    TRL_REWARD_DELAY_START_TIME                 = -1;
+    TRL_REWARD_DELAY_END_TIME          = -1;
     TRL_ITI_START_TIME                 = -1;
     TRL_ITI_END_TIME                   = -1;
     TRL_START_INFOS_TIME               = -1;

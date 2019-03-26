@@ -88,23 +88,23 @@ declare constant EVT_XTRA_HOLD_END_   = 2452;
 declare constant EVT_XTRA_HOLD_BREAK_ = 2454;
 declare constant EVT_DECIDE_          = 2460;
 
-declare constant EVT_CANCEL_START_ = 2470;
-declare constant EVT_CANCEL_END_   = 2472;
-declare constant EVT_MIN_THT_START_  = 2480;
-declare constant EVT_MIN_THT_END_    = 2482;
+declare constant EVT_CANCEL_START_  = 2470;
+declare constant EVT_CANCEL_END_    = 2472;
+declare constant EVT_MIN_THT_START_ = 2480;
+declare constant EVT_MIN_THT_END_   = 2482;
 
 // Saccade reward and reinforcement
-declare constant EVT_EARLY_SACCADE_ = 2500;
-declare constant EVT_SACCADE_       = 2502;
-declare constant EVT_NO_SACCADE_    = 2506;
-declare constant EVT_TONE_DELAY_ON_       = 2510;
-declare constant EVT_TONE_DELAY_OFF_      = 2512;
-declare constant EVT_AUDIO_START_   = 2514;
-declare constant EVT_AUDIO_END_     = 2516;
-declare constant EVT_REWARD_ON_     = 2520;
-declare constant EVT_REWARD_DELAY_OFF_    = 2522;
-declare constant EVT_JUICE_START_   = 2524;
-declare constant EVT_JUICE_END_     = 2526;
+declare constant EVT_EARLY_SACCADE_      = 2500;
+declare constant EVT_SACCADE_            = 2502;
+declare constant EVT_NO_SACCADE_         = 2506;
+declare constant EVT_TONE_DELAY_START_   = 2510;
+declare constant EVT_TONE_DELAY_END_     = 2512;
+declare constant EVT_AUDIO_START_        = 2514;
+declare constant EVT_AUDIO_END_          = 2516;
+declare constant EVT_REWARD_DELAY_START_ = 2520;
+declare constant EVT_REWARD_DELAY_END_   = 2522;
+declare constant EVT_JUICE_START_        = 2524;
+declare constant EVT_JUICE_END_          = 2526;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460
 // after TARG_ON
 declare constant EVT_NOGO_EARLY_SACCADE_    = 2600;
@@ -113,7 +113,9 @@ declare constant EVT_NOGO_SACCADE_POST_SSD_ = 2604;
 declare constant EVT_NOGO_LATE_SACCADE_     = 2606;
 declare constant EVT_CANCEL_                = 2660;
 
-// Codes 2900-3000
+// Codes 2800-3000
+declare constant EVT_I_INVALID_START_  = 2980;
+declare constant EVT_I_INVALID_END_    = 2982;
 declare constant EVT_PD_TRIGGER_LEFT_  = 2990;
 declare constant EVT_PD_TRIGGER_RIGHT_ = 2992;
 declare constant EVT_INFOS_START_      = 2998;

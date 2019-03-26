@@ -55,9 +55,9 @@ process PROC_RWRD_CHK()
         TEMP_XTRA_HOLD_TIME     = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + STAT_I_DURATION;
 
-        spawn SEND_EVT(EVT_REWARD_ON_);
+        spawn SEND_EVT(EVT_REWARD_DELAY_START_);
 
-        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_ON_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_ON_);
+        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_START_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_START_);
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -98,9 +98,9 @@ process PROC_RWRD_CHK()
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
         // DO not give juice for NOGO trial
-        if (TRL_REWARD_ON_TIME <= 0 && TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
+        if (TRL_REWARD_DELAY_START_TIME <= 0 && TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
         {
-            TRL_REWARD_ON_TIME = time();
+            TRL_REWARD_DELAY_START_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
         }
 
@@ -132,12 +132,12 @@ process PROC_RWRD_CHK()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (TRL_REWARD_DELAY_OFF_TIME <= 0)
+        if (TRL_REWARD_DELAY_END_TIME <= 0)
         {
-            TRL_REWARD_DELAY_OFF_TIME = time();
-            spawn SEND_EVT(EVT_REWARD_DELAY_OFF_);
+            TRL_REWARD_DELAY_END_TIME = time();
+            spawn SEND_EVT(EVT_REWARD_DELAY_END_);
 
-            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_OFF_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_OFF_);
+            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_END_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_END_);
         }
         // if you reached here xtra-hold is done
         TRL_IS_XTRA_HOLD_DONE = 1;
