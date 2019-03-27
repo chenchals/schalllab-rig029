@@ -156,21 +156,15 @@ process IDLE() enabled
             CURR_STAT   = STAT_GET_READY;
             STAT_DLTA_T = 0;
         }
-        //CURR_STAT=STAT_TEST;
+        CURR_STAT=STAT_TEST;
         while (TRL_IS_RUNNING)
         {
             while (CURR_STAT == STAT_TEST)
             {
                 CURR_STAT = STAT_TEST;
-                dsendf("vp %d\n", PG_TARGET_PD);
-                nexttick 64;
-                dsendf("vp %d\n", PG_SIGNAL_PD);
-                dsendf("vw 1\n");
-                nexttick 4;
-                dsendf("vp %d\n", PG_BLANK);
-
+                dsendf("vp %d\n", PG_FIXATION_PD);
                 TRL_IS_RUNNING = 0;
-                nexttick 1000;
+                nexttick 100000;
             }
 
             //================= State = STAT_GET_READY===============
