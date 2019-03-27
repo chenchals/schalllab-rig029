@@ -20,7 +20,7 @@ declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, 
 declare int writeIToFile = 0;
 declare int wroteIHeader = 0;
 // in TEMPO ADC units for Eyleink MISSING DATA VALUES, to know "blink"
-declare int I_INVALID_THRESHOLD = -16000;
+declare int I_INVALID_THRESHOLD = 15000;
 declare int I_INVALID_DURATION;
 
 
@@ -88,15 +88,17 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     // I_TARG_ANTI, I_TARG_ANTI_WIDE
     // Check Eye pos in FIX window area
     I_INVALID = 0;
-    if (iXVolts <= I_INVALID_THRESHOLD && iYVolts <= I_INVALID_THRESHOLD)
+    if (abs(iXVolts) >= I_INVALID_THRESHOLD && abs(iYVolts) >= I_INVALID_THRESHOLD)
     {
         I_INVALID        = 1;
+        /*
         I_FIX            = 0;
         I_FIX_WIDE       = 0;
         I_TARG           = 0;
         I_TARG_WIDE      = 0;
         I_TARG_ANTI      = 0;
         I_TARG_ANTI_WIDE = 0;
+        */
     }
     else if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
             && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
