@@ -156,7 +156,7 @@ process IDLE() enabled
             CURR_STAT   = STAT_GET_READY;
             STAT_DLTA_T = 0;
         }
-        CURR_STAT=STAT_TEST;
+        //CURR_STAT=STAT_TEST;
         while (TRL_IS_RUNNING)
         {
             while (CURR_STAT == STAT_TEST)
