@@ -896,7 +896,6 @@ process INIT_VARS_REPEAT_TRL()
     TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK = -1;
     TRL_IS_NON_CANCELLED_BRK           = -1;
     TRL_IS_NOGO_ERR                    = -1;
-    TRL_IS_LO_RWRD                     = -1;
     TRL_IS_FIX_REIGNITE                = -1;
     TRL_IS_STAIRCASE_SSD               = -1;
     TRL_TASK_START_TIME                = -1;
@@ -996,7 +995,6 @@ process INIT_TRL_VARS()
     TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK = -1;
     TRL_IS_NON_CANCELLED_BRK           = -1;
     TRL_IS_NOGO_ERR                    = -1;
-    TRL_IS_LO_RWRD                     = -1;
     TRL_IS_FIX_REIGNITE                = -1;
     TRL_IS_STAIRCASE_SSD               = -1;
     TRL_TASK_START_TIME                = -1;

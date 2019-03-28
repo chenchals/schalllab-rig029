@@ -20,7 +20,7 @@ declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, 
 declare int writeIToFile = 0;
 declare int wroteIHeader = 0;
 // in TEMPO ADC units for Eyleink MISSING DATA VALUES, to know "blink"
-declare int I_INVALID_THRESHOLD = 15000;
+declare int I_INVALID_THRESHOLD = 150000;
 declare int I_INVALID_DURATION;
 
 
