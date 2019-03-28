@@ -95,7 +95,7 @@ declare int SSD_STEP_DOWN = 3;
 // Minimum time *after* stop signal that subject has to fixate
 // in order for trial to be considered as Cancel trial
 // Relative to TRL_USE_SSD_VR_COUNT (equivalent to TRL_USE_XTRA_HOLD_DURATION for GO trials)
-declare int SSD_CANCEL_DURATION = 1000;
+declare int SSD_CANCEL_DURATION = 1200;
 // after TRL_USE_SSD_VR_COUNT, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 // evt: FixHoldMinSSHT_
@@ -128,7 +128,7 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 5;
+declare int TONE_DELAY_MEAN = 600;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -143,7 +143,7 @@ declare int TONE_DURATION = 30;
 
 //================= Reward variables =================================
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 50;
+declare int RWRD_DELAY_MEAN = 600;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -156,12 +156,12 @@ declare int RWRD_JITTER_FLAG = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int          CORRECT_TRIALS_PER_BLOCK = 5;
+declare int          CORRECT_TRIALS_PER_BLOCK = 20;
 declare constant int RWRD_LO_IDX              = 0;
 declare constant int RWRD_HI_IDX              = 1;
 declare int          RWRD_LO_HI_MEAN[2]       = { 30, 300 };
-declare int          RWRD_LO_HI_SPREAD[2]     = { 4, 4 };
-declare int          RWRD_DURATION_JITTER     = JITTER_GAUSS_FLAG;
+declare int          RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
+declare int          RWRD_DURATION_JITTER     = JITTER_NONE;
 
 //=========================== Timeout variables ======================
 // timeout time for punishment computed

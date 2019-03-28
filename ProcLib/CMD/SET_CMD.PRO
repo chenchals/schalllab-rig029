@@ -118,7 +118,7 @@ declare int TRL_IS_CANCELLED_NO_BRK;
 // is the current STOP trail broke gaze after cancel and xtra-hold-time (GO trial value = -1)
 declare int TRL_IS_CANCELLED_BRK;
 // is the current STOP trail non-cancelled, maintainf target gaze till reward/xtra-hold-time (GO trial value = -1)
-declare int TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK;
+declare int TRL_IS_NON_CANCELLED_NO_BRK;
 // is the current STOP trail non-cancelled target min-tht, then broke target(GO trial value = -1)
 declare int TRL_IS_NON_CANCELLED_BRK;
 // is the current STOP trail is an error - gaze out fo fix, but not on target or bad saccade (GO trial value = -1)
@@ -893,7 +893,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_IS_GO_ERR                      = -1;
     TRL_IS_CANCELLED_NO_BRK            = -1;
     TRL_IS_CANCELLED_BRK               = -1;
-    TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK = -1;
+    TRL_IS_NON_CANCELLED_NO_BRK = -1;
     TRL_IS_NON_CANCELLED_BRK           = -1;
     TRL_IS_NOGO_ERR                    = -1;
     TRL_IS_FIX_REIGNITE                = -1;
@@ -992,7 +992,7 @@ process INIT_TRL_VARS()
     TRL_IS_GO_ERR                      = -1;
     TRL_IS_CANCELLED_NO_BRK            = -1;
     TRL_IS_CANCELLED_BRK               = -1;
-    TRL_IS_NON_CANCELLED_NO_BRK_NO_BRK = -1;
+    TRL_IS_NON_CANCELLED_NO_BRK = -1;
     TRL_IS_NON_CANCELLED_BRK           = -1;
     TRL_IS_NOGO_ERR                    = -1;
     TRL_IS_FIX_REIGNITE                = -1;
