@@ -106,7 +106,7 @@ process IDLE() enabled
 
     printf("waiting for all processes to start...\n");
     nexttick 1000;
-	
+
 	doOnce = 0;
 
     while (1)
@@ -296,8 +296,8 @@ process USER_SUMMARY()
     printf("**********************************\n");
     printf("Trial Number: [%d]\n", TRL_TRIAL_NUMBER);
     printf("GO/CANCELLED/NON-CANCELLED [%d]/[%d]/[%d] \n",
-           SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_NO_BRK_TRLS, SESS_N_NON_CANCEL_NO_BRK_TRLS, SESS_N_NON_CANCEL_BRK_TRLS);
-    printf("CANCELLED_ERR/NON_CANCELLED_BRK [%d]/[%d] \n",
+           SESS_N_GO_CORRECT_TRLS, SESS_N_CANCEL_NO_BRK_TRLS, SESS_N_NON_CANCEL_NO_BRK_TRLS);
+    printf("CANCELLED_BRK/NON_CANCELLED_BRK [%d]/[%d] \n",
            SESS_N_CANCEL_BRK_TRLS, SESS_N_NON_CANCEL_BRK_TRLS);
     printf("GO ERROR/ NOGO_ERROR: [%d]/[%d] \n",
            SESS_N_GO_ERROR_TRLS, SESS_N_NOGO_ERROR_TRLS);

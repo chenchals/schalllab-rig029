@@ -92,16 +92,10 @@ process PROC_TRL_OUTCOME()
             doOnce = 0;
             if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
             {
-                // Assume it is an error and adjust if not
-                TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERR_;
-                SESS_N_GO_ERROR_TRLS         = SESS_N_GO_ERROR_TRLS + 1;
                 spawn PROC_GO_OUTCOMES();
             }
             else if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
             {
-                // Assume it is a non-cancelled error trial and adjust if not
-                TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERR_;
-                SESS_N_NOGO_ERROR_TRLS         = SESS_N_NOGO_ERROR_TRLS + 1;
                 if (TRL_CANCEL_TIME > 0)
                 {
                     spawn PROC_NOGO_POST_CANCEL_OUTCOMES();
@@ -152,8 +146,6 @@ process PROC_GO_OUTCOMES()
                STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
 
         SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
-        // Adjust initial assumption that this was a error trial
-        SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
         BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
     }
     else if (TRL_FIX_BREAK_TIME > 0)
@@ -238,8 +230,6 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
                STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
 
         SESS_N_NON_CANCEL_NO_BRK_TRLS = SESS_N_NON_CANCEL_NO_BRK_TRLS + 1;
-        // Adjust initial assumption that this was a non-cancelled error trial
-        SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
     }
     else if (TRL_FIX_BREAK_TIME > 0)
     {
@@ -314,8 +304,6 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
                STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
 
         SESS_N_CANCEL_NO_BRK_TRLS = SESS_N_CANCEL_NO_BRK_TRLS + 1;
-        // Adjust initial assumption that this was a non-cancelled error trial
-        SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
         BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
     }
     else if (TRL_BRK_PRE_TONE_TIME > 0)
@@ -365,9 +353,11 @@ process PROC_GO_ERR()
     TRL_IS_GO_ERR = 1;
     spawn SEND_EVT(EVT_OUTCOME_GO_ERR_);
 
+    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERR_;
     printf("---GO-ERR------GO-ERR------GO-ERR------GO-ERR------GO-ERR---\n");
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERR_ [%d]; Go Trial\n",
            STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERR_);
+    SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
 }
 
 
@@ -380,10 +370,7 @@ process PROC_CANCELLED_BRK()
     printf("---CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR---\n");
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_CANCEL_BRK_** [%d];STOP Trial\n",
            STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_BRK_);
-
     SESS_N_CANCEL_BRK_TRLS = SESS_N_CANCEL_BRK_TRLS + 1;
-    // Adjust initial assumption that this was a non-cancelled error trial
-    SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
 }
 
 
@@ -396,10 +383,7 @@ process PROC_NON_CANCELLED_BRK()
     printf("---NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR---\n");
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_BRK_** [%d];STOP Trial\n",
            STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_BRK_);
-
     SESS_N_NON_CANCEL_BRK_TRLS = SESS_N_NON_CANCEL_BRK_TRLS + 1;
-    // Adjust initial assumption that this was a non-cancelled error trial
-    SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
 }
 
 
@@ -408,6 +392,8 @@ process PROC_NOGO_ERR()
     TRL_IS_NOGO_ERR = 1;
     spawn SEND_EVT(EVT_OUTCOME_NOGO_ERR_);
 
+    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERR_;
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERR_ [%d]; STOP Trial\n",
            STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERR_);
+    SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
 }
