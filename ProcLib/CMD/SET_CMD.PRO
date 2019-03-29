@@ -34,8 +34,6 @@
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 // Setup event defs so events can be sent
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
-// for using staircase method for SSD
-#include C:/TEMPO/ProcLib/CMD/STAIR.PRO
 
 //=====Now do monk specific========
 // Load all constants and related gobal vars

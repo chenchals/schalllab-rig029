@@ -14,6 +14,8 @@
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 #include C:/TEMPO/ProcLib/UTIL/TONE.PRO
 #include C:/TEMPO/ProcLib/UTIL/JUICE.PRO
+// for using staircase method for SSD
+#include C:/TEMPO/ProcLib/CMD/STAIR.PRO
 #include C:/TEMPO/ProcLib/CLEAR_VDO.PRO
 #include C:/TEMPO/ProcLib/CALIBR8.PRO
 
