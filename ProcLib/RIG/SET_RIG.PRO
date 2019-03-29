@@ -23,7 +23,7 @@
 declare int RIG_029_ID = 29;
 
 declare SET_RIG(int id);
-
+declare INIT_PORTS_AND_VDOSYNC();
 
 process SET_RIG(int id)
 {
@@ -34,5 +34,22 @@ process SET_RIG(int id)
     {
         spawnwait RIG_029();
     }
+		spawnwait INIT_PORTS_AND_VDOSYNC();
     spawnwait SET_SCRN();
+}
+
+
+process INIT_PORTS_AND_VDOSYNC()
+{
+	printf("Initializing VDOSYNC to mode to [%d] \n",VDO_SYNC_MODE);
+	dsendf("vi %d;",VDO_SYNC_MODE);
+	dsend("ca");
+	printf("Setting PORTS...\n");
+	dioSetMode(0, PORTA|PORTB|PORTC);
+	printf("Resetting juice channel...\n");
+	mio_dig_set(JUICE_CHANNEL,0);
+	printf("Resetting audio...\n");
+	mio_fout(0);
+	// for clearing videomode
+	nexttick 8000;
 }

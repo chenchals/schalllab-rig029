@@ -19,8 +19,9 @@ declare constant PORTC = 0x4;
 
 //==========================================================================
 // Screen width and height in pixels
-declare int   SCRN_PIX_X;
-declare int   SCRN_PIX_Y;
+declare constant int VDO_SYNC_MODE;
+declare constant int   SCRN_PIX_X;
+declare constant int   SCRN_PIX_Y;
 // Screen width and height in mm
 declare float SCRN_MM_X;
 declare float SCRN_MM_Y;

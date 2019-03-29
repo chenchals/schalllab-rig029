@@ -21,7 +21,10 @@ process RIG_029()
     RIG_ID = 29;
     // Screen Params
     //==========================================================================
-    // Screen width and height in pixels
+    // VideoSYNC mode and Screen width and height in pixels are related
+    // See TEMPO manual
+    // 256 = pixels:640 x 400; colors:256; pages:16; bitsPerPixel:8
+    VDO_SYNC_MODE = 256;
     SCRN_PIX_X = 640;
     SCRN_PIX_Y = 400;
     // Screen width and height in mm

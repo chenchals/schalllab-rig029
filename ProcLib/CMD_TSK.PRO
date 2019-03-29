@@ -47,9 +47,9 @@ declare USER_SUMMARY();
 declare int WRITE_TO_FILE_FLAG = 0;
 declare int WROTE_HEADER       = 0;
 declare int TEST               = 100;
-declare int RUN_TASK = 0;
+declare int RUN_TASK           = 0;
 declare int SHOW_PAGES         = 0;
-declare int CALIBRATE_EYE = 0;
+declare int CALIBRATE_EYE      = 0;
 
 
 process IDLE() enabled
@@ -57,7 +57,7 @@ process IDLE() enabled
     declare int tempCount;
     declare int infosStartT;
     declare int infosDuration;
-	declare int doOnce;
+    declare int doOnce;
 
     seed1(time());
     // activate seed by drawing a number from some distribution
@@ -69,13 +69,14 @@ process IDLE() enabled
     printf("Setting SET_RIG\n");
     spawnwait SET_RIG(RIG_ID);
 
-    spawnwait CLEAR_VDO();
-
-    printf("flushing video memory please wait...\n");
-    nexttick 8000;
-
-    spawnwait SET_RIG(RIG_ID);
-
+    /*
+     * spawnwait CLEAR_VDO();
+     *
+     * printf("flushing video memory please wait...\n");
+     * nexttick 8000;
+     *
+     * spawnwait SET_RIG(RIG_ID);
+     */
     printf("Setting SET_CLRS\n");
     spawnwait SET_CLRS();
 
@@ -107,7 +108,7 @@ process IDLE() enabled
     printf("waiting for all processes to start...\n");
     nexttick 1000;
 
-	doOnce = 0;
+    doOnce = 0;
 
     while (1)
     {
@@ -115,6 +116,7 @@ process IDLE() enabled
         if (SHOW_PAGES)
         {
             TRL_IS_RUNNING = 0;
+            spawnwait CMD_PGS(1.0, random(2)*180.0, 12, 1);
             printf("Showing Virtual Pages for COUNTERMANDING TASK\n");
             tempCount = 0;
             while (tempCount <= PG_MAX_PAGE_IDX)
@@ -126,26 +128,27 @@ process IDLE() enabled
             dsendf("vp %d\n", 0);
             printf("****Done showing Virtual Pages for COUNTERMANDING TASK\n\n");
         }
-		else if (CALIBRATE_EYE)
-		{
-			spawnwait PROC_CALIBRATE();
-		}
+        else if (CALIBRATE_EYE)
+        {
+            spawnwait PROC_CALIBRATE();
+        }
         else if (RUN_TASK)
         {
-			printf("=============Setting TRIAL variables\n==================");
-			spawnwait SET_CMD_TRL();
+            printf("=============Setting TRIAL variables\n==================");
+            spawnwait SET_CMD_TRL();
 
-			printf("Done Setting TRIAL variables\n");
+            printf("Done Setting TRIAL variables\n");
 
-			if(doOnce == 0)
-			{
-				printf("Sending EVT_IDENTIFY_ROOM_\n");
-				spawn SEND_EVT(EVT_IDENTIFY_ROOM_);
+            if (doOnce == 0)
+            {
+                printf("Sending EVT_IDENTIFY_ROOM_\n");
+                spawn SEND_EVT(EVT_IDENTIFY_ROOM_);
 
-				printf("Sending RIG_ID\n");
-				spawn SEND_EVT(RIG_ID);
-				doOnce = 1;
-			}
+                printf("Sending RIG_ID\n");
+                spawn SEND_EVT(RIG_ID);
+
+                doOnce = 1;
+            }
             PROCESS_STATE  = 1;
             TRL_IS_RUNNING = 1;
             printf("Trial running....\n");
@@ -280,12 +283,13 @@ process IDLE() enabled
             }
             nexttick;
         }         /*while(TRL_IS_RUNNING)*/
-		if (RUN_TASK > 0)
-		{
-			spawnwait WRITE_TO_FILE();
-			spawnwait USER_SUMMARY();
-			printf("============================NEXT TRIAL========================\n");
-		}
+        if (RUN_TASK > 0)
+        {
+            spawnwait WRITE_TO_FILE();
+            spawnwait USER_SUMMARY();
+
+            printf("============================NEXT TRIAL========================\n");
+        }
         nexttick;
     }         /*while(1)*/
 } /*IDLE()*/
