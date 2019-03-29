@@ -34,7 +34,8 @@
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 // Setup event defs so events can be sent
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
-
+// for using staircase method for SSD
+#include C:/TEMPO/ProcLib/CMD/STAIR.PRO
 //=====Now do monk specific========
 // Load all constants and related gobal vars
 #include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
@@ -682,7 +683,7 @@ process PICK_TRL_SSD()
     nexttick;
     // must get from SSD_ARRY; use staircasing....
     TRL_IS_STAIRCASE_SSD = STAIRCASE_SSD;
-    spawnwait STAIRCASE_NEXT_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
+    spawnwait STAIRCASE_NEXT_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD, TRL_IS_STAIRCASE_SSD);
 
     TRL_USE_SSD_IDX      = STAIRCASE_NEXT_SSD_IDX;
     TRL_USE_SSD_VR_COUNT = SSD_ARRY[TRL_USE_SSD_IDX];

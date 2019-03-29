@@ -14,13 +14,13 @@
 //   Date: 2014-01
 //==========================================================================
 
-declare STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD);
+declare STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD, int staircaseFlag);
 
 declare int STAIRCASE_NEXT_SSD_IDX;
 // pick a random SSD index for very first stop trial
 declare int IS_FIRST_STOP_TRIAL;
 
-process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD)
+process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD, int staircaseFlag)
 {
     // nSSDs should have been set here : see SET_CMD.PRO/PICK_TRL_SSD
     declare int tempVar;
@@ -30,7 +30,7 @@ process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int step
         printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastStopOutcomeEvntCode [%d], lastSsdIdx [%d], stepUpMax [%d], stepDownMax [%d], nSSD [%d]",
                lastStopOutcomeEvntCode, lastSsdIdx, stepUpMax, stepDownMax, nSSD);
     }
-    if (TRL_IS_STAIRCASE_SSD==0)
+    if (staircaseFlag==0)
     {
         STAIRCASE_NEXT_SSD_IDX = random(nSSD);
         printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****TRL_IS_STAIRCASE_SSD [%d]****\n",TRL_IS_STAIRCASE_SSD);
