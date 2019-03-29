@@ -683,6 +683,7 @@ process PICK_TRL_SSD()
 
     nexttick;
     // must get from SSD_ARRY; use staircasing....
+    TRL_IS_STAIRCASE_SSD = STAIRCASE_SSD;
     spawnwait STAIRCASE_NEXT_SSD(TRL_LAST_STOP_OUTCOME_EVNTCODE, TRL_LAST_SSD_IDX, SSD_STEP_UP, SSD_STEP_DOWN, N_SSD);
 
     TRL_USE_SSD_IDX      = STAIRCASE_NEXT_SSD_IDX;
@@ -897,7 +898,6 @@ process INIT_VARS_REPEAT_TRL()
     TRL_IS_NON_CANCELLED_BRK           = -1;
     TRL_IS_NOGO_ERR                    = -1;
     TRL_IS_FIX_REIGNITE                = -1;
-    TRL_IS_STAIRCASE_SSD               = -1;
     TRL_TASK_START_TIME                = -1;
     TRL_TRIAL_START_TIME               = -1;
     TRL_EOT_TIME                       = -1;
