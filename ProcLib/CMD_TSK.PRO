@@ -36,7 +36,7 @@
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 
 #include C:/TEMPO/ProcLib/WATCH/RITE_EYE.PRO
-declare int writeRawEyeData = 1;
+declare int WRITE_RAW_EYE_DATA = 0;
 
 //==========================================================================
 declare IDLE();
@@ -50,7 +50,8 @@ declare int TEST               = 100;
 declare int RUN_TASK           = 0;
 declare int SHOW_PAGES         = 0;
 declare int CALIBRATE_EYE      = 0;
-
+declare int RIG_IS_SET         = 0;
+declare int MONK_IS_SET        = 0;
 
 process IDLE() enabled
 {
@@ -66,49 +67,38 @@ process IDLE() enabled
     // ========== Call once =============
     //RIG_ID = 29;
     //MONK_ID = JOULE_ID;
-    printf("Setting SET_RIG\n");
-    spawnwait SET_RIG(RIG_ID);
 
-    /*
-     * spawnwait CLEAR_VDO();
-     *
-     * printf("flushing video memory please wait...\n");
-     * nexttick 8000;
-     *
-     * spawnwait SET_RIG(RIG_ID);
-     */
-    printf("Setting SET_CLRS\n");
-    spawnwait SET_CLRS();
+        printf("Setting SET_RIG\n");
+        spawnwait SET_RIG(RIG_ID);
+ 
+            printf("Setting SET_CLRS\n");
+            spawnwait SET_CLRS();
 
-    printf("Setting SET_DEFAULT_STIM_VARS\n");
-    spawnwait SET_DEFAULT_STIM_VARS();
+            printf("Setting SET_DEFAULT_STIM_VARS\n");
+            spawnwait SET_DEFAULT_STIM_VARS();
 
-    printf("Setting monkID\n");
-    spawnwait SET_MONK(MONK_ID);
+            printf("Setting monkID\n");
+            spawnwait SET_MONK(MONK_ID);
 
-    // Setup WATCHES
-    printf("Setting GRAPHS\n");
-    spawn GRAPHS();
+            // Setup WATCHES
+            printf("Setting GRAPHS\n");
+            spawn GRAPHS();
 
-    printf("Setting QUE_TTL\n");
-    spawn QUE_TTL();
+            printf("Setting QUE_TTL\n");
+            spawn QUE_TTL();
 
-    printf("Setting WTCH_EYE\n");
-    spawn WTCH_EYE();
+            printf("Setting WTCH_EYE\n");
+            spawn WTCH_EYE();
 
-    printf("Setting WTCH_SCHMITT\n");
-    spawn WTCH_SCHMITT();
+            printf("Setting WTCH_SCHMITT\n");
+            spawn WTCH_SCHMITT();
 
-    if (writeRawEyeData)
-    {
-        printf("*******************WRITING RAW EYE DATA TO FILE*****************\n");
-        spawn PROC_WRITE_RAW_I_DATA();
-    }
-
-    printf("waiting for all processes to start...\n");
-    nexttick 1000;
-
-    doOnce = 0;
+            if (WRITE_RAW_EYE_DATA)
+            {
+                printf("*******************WRITING RAW EYE DATA TO FILE*****************\n");
+                spawn PROC_WRITE_RAW_I_DATA();
+            }
+            doOnce = 0;
 
     while (1)
     {
@@ -116,7 +106,7 @@ process IDLE() enabled
         if (SHOW_PAGES)
         {
             TRL_IS_RUNNING = 0;
-            spawnwait CMD_PGS(1.0, random(2)*180.0, 12, 1);
+            spawnwait CMD_PGS(1.0, random(2)*180.0, 12.0, 1);
             printf("Showing Virtual Pages for COUNTERMANDING TASK\n");
             tempCount = 0;
             while (tempCount <= PG_MAX_PAGE_IDX)

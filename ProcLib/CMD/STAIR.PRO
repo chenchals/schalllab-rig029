@@ -27,13 +27,13 @@ process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int step
 
     if (DEBUG_CONSOLE)
     {
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastStopOutcomeEvntCode [%d], lastSsdIdx [%d], stepUpMax [%d], stepDownMax [%d], nSSD [%d]",
-               lastStopOutcomeEvntCode, lastSsdIdx, stepUpMax, stepDownMax, nSSD);
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastStopOutcomeEvntCode [%d], lastSsdIdx [%d], stepUpMax [%d], stepDownMax [%d], nSSD [%d], staircaseFlag [%d]\n",
+               lastStopOutcomeEvntCode, lastSsdIdx, stepUpMax, stepDownMax, nSSD, staircaseFlag);
     }
     if (staircaseFlag==0)
     {
         STAIRCASE_NEXT_SSD_IDX = random(nSSD);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****TRL_IS_STAIRCASE_SSD [%d]****\n",TRL_IS_STAIRCASE_SSD);
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****staircaseFlag [%d]****\n",staircaseFlag);
         printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastSssdIdx [%d], --> next: RANDOM ",lastSsdIdx);
     }
     else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_BRK_)

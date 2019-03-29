@@ -12,7 +12,7 @@ declare PROC_WRITE_RAW_I_DATA();
 process PROC_WRITE_RAW_I_DATA()
 {
     declare int tickInterval = 2;
-    declare int write2File   = 1;
+    declare int writeEye2File   = 1;
     declare int currTime;
 	declare int pupil;
 	declare int relTimeMs;
@@ -21,7 +21,7 @@ process PROC_WRITE_RAW_I_DATA()
     //writef("rawIVals.csv relTimeMs,xADC,yADC,iInvalid,iInvalidDuration,iPupil\n");
     while (1)
     {
-        if (write2File)
+        if (writeEye2File)
         {
             //rawIVals.csv relTimeMs,xADC,yADC\n"
 			pupil = atable(EYE_PUPIL_CHANNEL);
