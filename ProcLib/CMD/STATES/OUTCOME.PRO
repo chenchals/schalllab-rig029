@@ -2,36 +2,7 @@
 // OUTCOME.PRO
 //  Description: Determine trial outcome and appropriate EXTRA_TIMEOUT_DURATION in ms
 //
-// See CmdOutcomes.xls file in DOC folder
-// EVT_ACQUIRE_FIX_ERROR_ does not result in timeout. This outcome is sent in STATES/FIX_ON.PRO
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| DEF_TRL_TIME_VAR	             | TRL_TIME_VAR_not_0	       | EVENT_SENT	    | OUTCOME_GO_TRIAL | OUTCOME_NOGO_TRIAL_NO_SS | OUTCOME_NOGO_TRIAL_SS |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win before allowed time    |	TRL_ACQUIRE_FIX_ERROR_TIME	     | *EVT_ACQUIRE_FIX_ERROR_	| *EVT_OUTCOME_FIX_ERR_	| *EVT_OUTCOME_FIX_ERR_	    | *EVT_OUTCOME_FIX_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win for fix hold time	   | TRL_FIX_BREAK_TIME	       | EVT_FIX_BREAK_	    | EVT_OUTCOME_FIX_BREAK_	| EVT_OUTCOME_FIX_BREAK_	    | EVT_OUTCOME_FIX_BREAK_    |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze out of Fix win before Min sac time	   | TRL_ERLY_SACCADE_TIME	       | EVT_EARLY_SACCADE_	  | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in Fix win after Max sac time	     | TRL_NO_SACCADE_TIME	       | EVT_NO_SACCADE_	    | EVT_OUTCOME_GO_ERR_	| *trial still evolving*  | *trial still evolving* |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Targ win before max sac duration | TRL_ACQUIRE_TARGET_ERROR_TIME	     | EVT_ACQUIRE_TARGET_ERROR_ | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone delay	   | TRL_BRK_PRE_TONE_TIME    | EVT_PRE_TONE_BREAK_ | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone duration	 | TRL_BRK_TONE_TIME	     | EVT_TONE_BREAK_   | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward delay	  | TRL_BRK_PRE_RWRD_TIME	 | EVT_PRE_RWRD_BREAK_ | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward duration	 | TRL_BRK_RWRD_TIME	     | EVT_RWRD_BREAK_   | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win after reward duration  |                 |           |          |             |            |
-//| min target hold time is greater than     | TRL_TARG_BRK_POST_RWRD_TIME   | TargHoldBrkPostRwrd_ | EVT_OUTCOME_GO_ERR_  | EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//| tone + reward times.	           |                 |           |          |             |            |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in targ win for min target hold time	 | TRL_XTRA_HOLD_END_TIME	     | EVT_XTRA_HOLD_END_   | EVT_OUTCOME_GO_CORRECT_ | OutcomeNoGoWrongEarly_  | OutcomeNoGoWrong_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//
+// See CmdOutcomes.xls file in DOC folder - not updated
 //        All Global variables and the following state variables are available to monitor state progress
 //        1. PROCESS_STATE : Setup state processing, will be done once per call
 //        1. CURR_STAT :

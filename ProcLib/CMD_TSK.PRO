@@ -60,9 +60,9 @@ process IDLE() enabled
     declare int infosDuration;
     declare int doOnce;
 
-    seed1(time());
+    seed1(timeus());
     // activate seed by drawing a number from some distribution
-    random(5);
+    mormal(1);
 
     // ========== Call once =============
     //RIG_ID = 29;
@@ -70,7 +70,7 @@ process IDLE() enabled
 
         printf("Setting SET_RIG\n");
         spawnwait SET_RIG(RIG_ID);
- 
+
             printf("Setting SET_CLRS\n");
             spawnwait SET_CLRS();
 
