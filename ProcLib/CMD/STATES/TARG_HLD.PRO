@@ -74,7 +74,7 @@ process PROC_TARG_HOLD()
             printf("****STAT_TARG_HOLD[%d]: ERR sent Event: EVT_TARGET_BREAK_[%d]\n", STAT_TARG_HOLD, EVT_TARGET_BREAK_);
             printf("****STAT_TARG_HOLD[%d]:ERR (Broke target fixation)[%d]/[%d] (TRL_USE_MIN_THT_DURATION)\n", STAT_TARG_HOLD, TRL_MIN_THT_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_OUTCOME;
+            CURR_STAT     = STAT_REFIX_CHK;
         }
     }
     else

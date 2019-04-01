@@ -87,6 +87,7 @@ declare constant EVT_XTRA_HOLD_START_ = 2450;
 declare constant EVT_XTRA_HOLD_END_   = 2452;
 declare constant EVT_XTRA_HOLD_BREAK_ = 2454;
 declare constant EVT_DECIDE_          = 2460;
+declare constant EVT_REFIX_           = 2462;
 
 declare constant EVT_CANCEL_START_  = 2470;
 declare constant EVT_CANCEL_END_    = 2472;

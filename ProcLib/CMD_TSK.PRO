@@ -33,6 +33,7 @@
 #include C:/TEMPO/ProcLib/CMD/STATES/OUTCOME.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/ITI_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/STATES/TIME_OUT.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/RFIX_CHK.PRO
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 
 #include C:/TEMPO/ProcLib/WATCH/RITE_EYE.PRO
@@ -223,6 +224,11 @@ process IDLE() enabled
             if (CURR_STAT == STAT_RWRD_SSD)
             {
                 spawnwait PROC_RWRD_SSD();
+            }
+            //================= State = STAT_REFIX_CHK===============
+            if (CURR_STAT == STAT_REFIX_CHK)
+            {
+                spawnwait PROC_REFIX_CHK();
             }
             //================= State = STAT_OUTCOME===============
             if (CURR_STAT == STAT_OUTCOME)

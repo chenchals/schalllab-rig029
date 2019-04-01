@@ -111,7 +111,7 @@ process PROC_TONE_CHK()
                 printf("****STAT_TONE_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_OUTCOME;
+                CURR_STAT     = STAT_REFIX_CHK;
             }
             else if (TEMP_XTRA_HOLD_TIME > STAT_ALLOWED_T)
             {
@@ -122,7 +122,7 @@ process PROC_TONE_CHK()
                 printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_OUTCOME;
+                CURR_STAT     = STAT_REFIX_CHK;
             }
         }
     }
@@ -146,7 +146,7 @@ process PROC_TONE_CHK()
                 printf("****STAT_TONE_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_OUTCOME;
+                CURR_STAT     = STAT_REFIX_CHK;
             }
             else if (TEMP_XTRA_HOLD_TIME > TEMP_DELY_PLUS_DURATION)
             {
@@ -157,7 +157,7 @@ process PROC_TONE_CHK()
                 printf("****STAT_TONE_CHK[%d]: ERR (*During-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
-                CURR_STAT     = STAT_OUTCOME;
+                CURR_STAT     = STAT_REFIX_CHK;
             }
         }
     }
