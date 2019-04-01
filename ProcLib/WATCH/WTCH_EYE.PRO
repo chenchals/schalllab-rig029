@@ -37,13 +37,13 @@ process WTCH_EYE()
         if (MONK_ID == AUTO_ID)
         {
             // Convert to possible voltage value that we would get from atable[EYE_X_CHANNEL]
-            EYE_X_VOLTS = (AUTO_EYE_X_DEG + EYE_X_OFFSET) / ((EYE_X_GAIN * MAX_VOLTAGE * 2.0) / ANALOG_UNITS);
+            EYE_X_VOLTS = (AUTO_EYE_X_DEG + EYE_X_OFFSET)/((EYE_X_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
             // Convert to possible voltage value that we would get from atable[EYE_Y_CHANNEL]
-            EYE_Y_VOLTS = (AUTO_EYE_Y_DEG + EYE_Y_OFFSET) / ((EYE_Y_GAIN * MAX_VOLTAGE * 2.0) / ANALOG_UNITS);
+            EYE_Y_VOLTS = (AUTO_EYE_Y_DEG + EYE_Y_OFFSET)/((EYE_Y_GAIN * MAX_VOLTAGE * 2.0)/ANALOG_UNITS);
         }
 
-        eyeXdeg = (EYE_X_VOLTS * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
-        eyeYdeg = (EYE_Y_VOLTS * ((MAX_VOLTAGE * 2.0) / ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
+        eyeXdeg = (EYE_X_VOLTS * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_X_GAIN) - EYE_X_OFFSET;
+        eyeYdeg = (EYE_Y_VOLTS * ((MAX_VOLTAGE * 2.0)/ANALOG_UNITS) * EYE_Y_GAIN) - EYE_Y_OFFSET;
 
         if (CENTER_EYE_NOW)
         {
@@ -90,20 +90,20 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     I_INVALID = 0;
     if (fabs(iXVolts) >= I_INVALID_THRESHOLD && fabs(iYVolts) >= I_INVALID_THRESHOLD)
     {
-        I_INVALID        = 1;
+        I_INVALID = 1;
         /*
-        I_FIX            = 0;
-        I_FIX_WIDE       = 0;
-        I_TARG           = 0;
-        I_TARG_WIDE      = 0;
-        I_TARG_ANTI      = 0;
-        I_TARG_ANTI_WIDE = 0;
-        */
+         * I_FIX            = 0;
+         * I_FIX_WIDE       = 0;
+         * I_TARG           = 0;
+         * I_TARG_WIDE      = 0;
+         * I_TARG_ANTI      = 0;
+         * I_TARG_ANTI_WIDE = 0;
+         */
     }
-    if(I_INVALID == 0)
+    if (I_INVALID == 0)
     {
         if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
-                && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
+           && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
         {
             I_FIX            = 1;
             I_FIX_WIDE       = 0;
@@ -180,7 +180,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     // send event and update invalid duration as apprpriate
     if (I_INVALID)
     {
-        if(I_INVALID_DURATION == 0)
+        if (I_INVALID_DURATION == 0)
         {
             spawn SEND_EVT(EVT_I_INVALID_START_);
         }
@@ -188,7 +188,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     }
     else
     {
-        if(I_INVALID_DURATION > 0)
+        if (I_INVALID_DURATION > 0)
         {
             spawn SEND_EVT(EVT_I_INVALID_END_);
         }
@@ -206,31 +206,32 @@ process COMPUTE_EYE_POS(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     // Write code to do arctan2d
     // see https://en.wikipedia.org/wiki/Atan2 (expression)
     declare float atanVal;
-    if(I_INVALID == 0)
+
+    if (I_INVALID == 0)
     {
         CURR_EYE_X_DEG = iXDeg;
         CURR_EYE_Y_DEG = iYDeg;
 
-        atanVal = atan(iYDeg / iXDeg);
+        atanVal = atan(iYDeg/iXDeg);
         if (iXDeg > 0)
         {
             CURR_EYE_ANGLE = rad2deg(atanVal);
         }
         else if (iXDeg < 0 && iYDeg >= 0)
         {
-            CURR_EYE_ANGLE = rad2deg(atanVal + 22 / 7);
+            CURR_EYE_ANGLE = rad2deg(atanVal + 22/7);
         }
         else if (iXDeg < 0 && iYDeg < 0)
         {
-            CURR_EYE_ANGLE = rad2deg(atanVal - 22 / 7);
+            CURR_EYE_ANGLE = rad2deg(atanVal - 22/7);
         }
         else if (iXDeg == 0 && iYDeg > 0)
         {
-            CURR_EYE_ANGLE = rad2deg(22 / (7 / 2));
+            CURR_EYE_ANGLE = rad2deg(22/(7/2));
         }
         else if (iXDeg == 0 && iYDeg < 0)
         {
-            CURR_EYE_ANGLE = rad2deg(-22 / (7 * 2));
+            CURR_EYE_ANGLE = rad2deg(-22/(7 * 2));
         }
         else if (iXDeg == 0 && iYDeg == 0)
         {

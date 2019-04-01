@@ -38,10 +38,10 @@ process DRW_RECT(float sizeX, float sizeY, float targAngle, float targEcc, int c
     stim_ecc_y = sin(targAngle) * targEcc;
 
     // find locations of upper left and lower right corners based on location of center and TRL_CURR_TARG_SIZE
-    ulx = round((stim_ecc_x - sizeX / 2) * DEG_2_PIX_X);
-    uly = round((stim_ecc_y + sizeY / 2) * DEG_2_PIX_Y);
-    lrx = round((stim_ecc_x + sizeX / 2) * DEG_2_PIX_X);
-    lry = round((stim_ecc_y - sizeY / 2) * DEG_2_PIX_Y);
+    ulx = round((stim_ecc_x - sizeX/2) * DEG_2_PIX_X);
+    uly = round((stim_ecc_y + sizeY/2) * DEG_2_PIX_Y);
+    lrx = round((stim_ecc_x + sizeX/2) * DEG_2_PIX_X);
+    lry = round((stim_ecc_y - sizeY/2) * DEG_2_PIX_Y);
 
     //printf("DRW_RECT: COLOR_INDEX %d\n", colorIndex);
     //printf("DRW_RECT: sizeX %0.2d, sizeY %0.2d, targAngle %0.2d, targEcc %0.2d, colorIndex %d, fillFlag %d\n",sizeX, sizeY, targAngle, targEcc, colorIndex, fillFlag);

@@ -22,6 +22,7 @@
 
 declare PROC_GET_REDY();
 
+
 process PROC_GET_REDY()
 {
     if (PROCESS_STATE)
@@ -32,6 +33,7 @@ process PROC_GET_REDY()
         TRL_GET_READY_DURATION = 0;
         spawn SEND_EVT(EVT_TRIAL_GET_READY_);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
+
         printf("****STAT_GET_READY[%d]: TRL_TRIAL_NUMBER[%d]\n", STAT_GET_READY, TRL_TRIAL_NUMBER);
 
         PROCESS_STATE  = 0;
@@ -63,4 +65,4 @@ process PROC_GET_REDY()
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FIX_ON;
     }
-}
+} /* PROC_GET_REDY */

@@ -43,8 +43,8 @@ process PROC_TARG_HOLD()
 
         // initialize durations
         TRL_TARG_HOLD_DURATION = 0;
-        TRL_MIN_THT_DURATION = 0;
-        TRL_IS_MIN_THT       = 0;
+        TRL_MIN_THT_DURATION   = 0;
+        TRL_IS_MIN_THT         = 0;
     }
     if (I_TARG)
     {

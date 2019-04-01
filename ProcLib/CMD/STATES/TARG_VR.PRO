@@ -40,8 +40,8 @@ process CHECK_TARG_VERT_RFRSH()
     {
         if (TRL_TARG_VR_COUNT <= 0)
         {
-            INCEMENT_TARG_DURATION_FLAG    = 1;
-            TRL_TARG_VR_COUNT = 1;
+            INCEMENT_TARG_DURATION_FLAG = 1;
+            TRL_TARG_VR_COUNT           = 1;
         }
         else if ((STAT_DLTA_T - PD_WIDTH_DURATION) > trigWidth)
         {

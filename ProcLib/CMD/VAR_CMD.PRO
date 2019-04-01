@@ -13,7 +13,7 @@
 //       if 0: then TRL_USE_XTRA_HOLD_DURATION =
 //       if 1: then TRL_USE_XTRA_HOLD_DURATION = TONE_DELAY+TONE_DURATION+RWRD_DURATION+RWRD_DELAY+
 //       TRL_USE_XTRA_HOLD_DURATION:
-//       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE / JUICE given
+//       if break gaze on target  ==> Punish, Always do TIMEOUT_TIME regardless of TONE/JUICE given
 //       if gaze ob target ==> NO TIMEOUT_TIME
 //
 // 003: 2019-03-13 chenchal subraveti
@@ -71,8 +71,8 @@ declare int MAX_SACC_DURATION = 150;
 
 //========== GO TRIAL TARG HOLD TIME ======================
 // after saccade subject must hold gaze on target for this long
-declare int TARG_HOLD_MEAN   = 200;
-declare int TARG_HOLD_SPREAD = 0;
+declare int TARG_HOLD_MEAN        = 200;
+declare int TARG_HOLD_SPREAD      = 0;
 declare int TARG_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //========== STOP TASK SPECIFIC =============================
@@ -122,8 +122,8 @@ declare int BASE_ITI_TIME = 1000;
 // Stay in window (TARG for GO/ FIX for STOP) till reward is given
 declare int XTRA_HOLD_TONE_RWRD_FLAG = 1;
 // compute xtra hold time if XTRA_HOLD_TONE_RWRD_FLAG = 0;
-declare int XTRA_HOLD_MEAN   = 500;
-declare int XTRA_HOLD_SPREAD = 0;
+declare int XTRA_HOLD_MEAN        = 500;
+declare int XTRA_HOLD_SPREAD      = 0;
 declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
@@ -134,7 +134,7 @@ declare int TONE_DELAY_MEAN = 600;
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
 declare int TONE_DELAY_SPREAD = 0;
-declare int TONE_JITTER_FLAG = JITTER_GAUSS_FLAG;
+declare int TONE_JITTER_FLAG  = JITTER_GAUSS_FLAG;
 
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
@@ -149,7 +149,7 @@ declare int RWRD_DELAY_MEAN = 600;
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if RWRD_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
 declare int RWRD_DELAY_SPREAD = 0;
-declare int RWRD_JITTER_FLAG = JITTER_NONE;
+declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 // how long will the juice solenoid remain open (monkeys are very interested in this varaible)
 // this will be recomputed during trial
 // Actual used will be TRL_USE_RWRD_DURATION
@@ -194,10 +194,10 @@ declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 declare int          TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
 declare int          NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 400;
-declare int          CANCELLED_TONE_HZ     = 1000;
-declare int          GO_CORRECT_TONE_HZ    = 1000;
-declare int          GO_ERROR_TONE_HZ      = 100;
-declare int          NOGO_ERROR_TONE_HZ    = 100;
+declare int          CANCELLED_TONE_HZ                   = 1000;
+declare int          GO_CORRECT_TONE_HZ                  = 1000;
+declare int          GO_ERROR_TONE_HZ                    = 100;
+declare int          NOGO_ERROR_TONE_HZ                  = 100;
 
 //==========================Additional Timeouts======================
 // additive timeout imposed for each body movement

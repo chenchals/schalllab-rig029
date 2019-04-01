@@ -49,7 +49,7 @@ process SET_DEFAULT_STIM_VARS()
         // Default all eccentricities to be same
         TARG_ECCENTRICITY_ARRY[tempCounter] = 12.0;
         // clockwise: 45, 90, 135, ...
-        TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0 / N_TARG_POS);
+        TARG_ANGLE_ARRY[tempCounter] = tempCounter * (360.0/N_TARG_POS);
         tempCounter                  = tempCounter + 1;
         nexttick;
     }

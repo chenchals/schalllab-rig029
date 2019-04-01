@@ -20,6 +20,7 @@ declare int STAIRCASE_NEXT_SSD_IDX;
 // pick a random SSD index for very first stop trial
 declare int IS_FIRST_STOP_TRIAL;
 
+
 process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int stepUpMax, int stepDownMax, int nSSD, int staircaseFlag)
 {
     // nSSDs should have been set here : see SET_CMD.PRO/PICK_TRL_SSD
@@ -30,11 +31,11 @@ process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int step
         printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastStopOutcomeEvntCode [%d], lastSsdIdx [%d], stepUpMax [%d], stepDownMax [%d], nSSD [%d], staircaseFlag [%d]\n",
                lastStopOutcomeEvntCode, lastSsdIdx, stepUpMax, stepDownMax, nSSD, staircaseFlag);
     }
-    if (staircaseFlag==0)
+    if (staircaseFlag == 0)
     {
         STAIRCASE_NEXT_SSD_IDX = random(nSSD);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****staircaseFlag [%d]****\n",staircaseFlag);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastSssdIdx [%d], --> next: RANDOM ",lastSsdIdx);
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****staircaseFlag [%d]****\n", staircaseFlag);
+        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastSssdIdx [%d], --> next: RANDOM ", lastSsdIdx);
     }
     else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_BRK_)
     {
@@ -64,14 +65,14 @@ process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int step
 
         if (IS_FIRST_STOP_TRIAL <= 0)
         {
-          IS_FIRST_STOP_TRIAL = 1;
-          printf("*********LastStopOutcome *UNKNOWN* TRL_NUMBER = [%d], lastssdIdx [first-stop-trial], --> ");
+            IS_FIRST_STOP_TRIAL = 1;
+            printf("*********LastStopOutcome *UNKNOWN* TRL_NUMBER = [%d], lastssdIdx [first-stop-trial], --> ");
         }
         else
         {
-          printf("++++++++++++++++++++ERROR IN STAIRCASING AFTER FIRST STOP TRIAL++++++++++++++++\n");
-          printf("++++++++++++++++++++ERROR LastStopOutcome [%d] UNKNOWN, lastssdIdx [%d]++++++++++++++++ --> ",
-                 lastStopOutcomeEvntCode, lastSsdIdx);
+            printf("++++++++++++++++++++ERROR IN STAIRCASING AFTER FIRST STOP TRIAL++++++++++++++++\n");
+            printf("++++++++++++++++++++ERROR LastStopOutcome [%d] UNKNOWN, lastssdIdx [%d]++++++++++++++++ --> ",
+                   lastStopOutcomeEvntCode, lastSsdIdx);
         }
     }
     // Check limits

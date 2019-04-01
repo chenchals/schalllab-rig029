@@ -46,16 +46,15 @@ process PROC_TARG_ON()
         STAT_ALLOWED_T  = MAX_SACC_TIME * TIME_DILATE_FACTOR;
 
         //
-        TRL_IS_TARGET_ON  = 0;
-
+        TRL_IS_TARGET_ON = 0;
     }
 
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (TRL_TARG_VR_COUNT == 1 && TRL_TARGET_TIME<=0)
+    if (TRL_TARG_VR_COUNT == 1 && TRL_TARGET_TIME <= 0)
     {
-        TRL_IS_TARGET_ON  = 1;
-        TRL_TARGET_TIME = time();
+        TRL_IS_TARGET_ON = 1;
+        TRL_TARGET_TIME  = time();
         spawn SEND_EVT(EVT_TARGET_);
 
         printf("****STAT_TARG_ON[%d]: Sending Event EVT_TARGET_[%d]\n", STAT_TARG_ON, EVT_TARGET_);

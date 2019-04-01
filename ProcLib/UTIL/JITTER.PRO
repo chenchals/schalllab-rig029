@@ -32,30 +32,29 @@ declare int          JITTER_INT;
 
 process JITTER(int meanT, int spreadT, int jitterFlag)
 {
-
-    if(meanT <= 0)
+    if (meanT <= 0)
     {
-      JITTER_INT = 0;
+        JITTER_INT = 0;
     }
-    else if (meanT > 0 && spreadT <=0)
+    else if (meanT > 0 && spreadT <= 0)
     {
-      JITTER_INT = meanT;
+        JITTER_INT = meanT;
     }
     else if (jitterFlag == JITTER_NONE)
     {
-      JITTER_INT = meanT;
+        JITTER_INT = meanT;
     }
     else if (jitterFlag == JITTER_GAUSS_FLAG)
     {
-      spawnwait GAUSS_JITTER(meanT,  spreadT);
+        spawnwait GAUSS_JITTER(meanT, spreadT);
     }
     else if (jitterFlag == JITTER_UNIFORM_FLAG)
     {
-      spawnwait UNIFORM_JITTER(meanT,  spreadT);
+        spawnwait UNIFORM_JITTER(meanT, spreadT);
     }
     else if (jitterFlag == JITTER_EXPONENTIAL_FLAG)
     {
-      spawnwait EXPONENT_JITTER(meanT,  spreadT);
+        spawnwait EXPONENT_JITTER(meanT, spreadT);
     }
 }
 
@@ -66,11 +65,11 @@ process GAUSS_JITTER(int meanT, int spreadT)
     // Box-Muller transform
     //Using: https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
     declare float u1, u2, z1, tol;
-    declare float twoPi = 2.0 * 22 / 7;
+    declare float twoPi = 2.0 * 22/7;
 
     // uniform random number (0 < u1 < 1)
-    u1 = (random(65535) + 1.0) / 65536.0;
-    u2 = (random(65535) + 1.0) / 65536.0;
+    u1 = (random(65535) + 1.0)/65536.0;
+    u2 = (random(65535) + 1.0)/65536.0;
 
     z1 = sqrt(-2.0 * ln(u1)) * cosrad(u2 * twoPi);
     //z1 = sqrt(-2.0 * ln(u1)) * sinrad(u2 * twoPi);
@@ -98,7 +97,7 @@ process EXPONENT_JITTER(int meanT, int spreadT)
 {
     declare float jitter;
 
-    jitter     = (random(1001)) / 1000.0;
-    jitter     = exp(-1.0 * jitter / 0.25);
+    jitter     = (random(1001))/1000.0;
+    jitter     = exp(-1.0 * jitter/0.25);
     JITTER_INT = round(jitter * spreadT + meanT);
 }

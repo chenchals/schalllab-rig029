@@ -69,15 +69,15 @@ process JOULE()
         else
         {
             TARG_SIZE_ARRY[tempVar]         = 0.5;
-            TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0 / N_TARG_POS);
+            TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0/N_TARG_POS);
             TARG_ECCENTRICITY_ARRY[tempVar] = 15.0;
         }
-		FIX_WIN_SIZE = 8;
-		FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
-		
-		TARG_WIN_SIZE = 12;
-		TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;		
-		
+        FIX_WIN_SIZE       = 8;
+        FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
+
+        TARG_WIN_SIZE       = 12;
+        TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
+
         tempVar = tempVar + 1;
     }
 } /* JOULE */

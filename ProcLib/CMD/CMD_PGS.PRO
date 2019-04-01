@@ -13,13 +13,13 @@
 #include C:/TEMPO/ProcLib/UTIL/DRW_RECT.PRO
 
 // Virtual Page indices
-declare int PG_BLANK       = 0;
-declare int PG_FIXATION_PD = 1;
-declare int PG_FIXATION    = 2;
-declare int PG_TARGET_PD   = 3;
-declare int PG_TARGET      = 4;
-declare int PG_SIGNAL_PD   = 5;
-declare int PG_SIGNAL      = 6;
+declare int PG_BLANK        = 0;
+declare int PG_FIXATION_PD  = 1;
+declare int PG_FIXATION     = 2;
+declare int PG_TARGET_PD    = 3;
+declare int PG_TARGET       = 4;
+declare int PG_SIGNAL_PD    = 5;
+declare int PG_SIGNAL       = 6;
 declare int PG_MAX_PAGE_IDX = 6;
 
 declare CMD_PGS(float targSize, float targAngle, float targEccentricity, int targColorIdx);
@@ -122,7 +122,8 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
     //printf("drawing left PD\n");
     // Draw **left** PD marker
     spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
-    nexttick ;
+
+    nexttick;
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 0 BLANK (draw last so it is displayed as default))
     //printf("CMD_PGS: page %d PG_BLANK\n", PG_BLANK);

@@ -28,13 +28,13 @@ process PROC_TIMEOUT_CHK()
     {
         printf("****STAT_TIM_OUT[%d]: Processing Timeout interval\n", STAT_TIM_OUT);
         // Keep independent of previous state times if any.
-        PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
-        STAT_DLTA_T    = 0;
-				// Already adjusted for TIME_DILATE_FACTOR
+        PROCESS_STATE = 0;
+        STAT_STRT_T   = time();
+        STAT_DLTA_T   = 0;
+        // Already adjusted for TIME_DILATE_FACTOR
         STAT_ALLOWED_T = TIMEOUT_DURATION;
         printf("****STAT_TIM_OUT[%d]: TIMEOUT_DURATION[%d]\n", STAT_TIM_OUT, TIMEOUT_DURATION);
-				// spent 1 tick in ITI_CHK.PRO
+        // spent 1 tick in ITI_CHK.PRO
         TRL_USE_TIMEOUT_DURATION = 1;
         TRL_USE_TONE_DURATION    = TIMEOUT_DURATION;
         TRL_USE_TONE_FREQ        = TIMEOUT_TONE;
@@ -42,6 +42,7 @@ process PROC_TIMEOUT_CHK()
         {
             dsendf("vp %d\n", PG_BLANK);
             spawn GRAF_HIDE_FIX_TARG();
+
             INCEMENT_TARG_DURATION_FLAG = 0;
         }
     }
@@ -49,7 +50,7 @@ process PROC_TIMEOUT_CHK()
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
     {
         TRL_USE_TIMEOUT_DURATION = TRL_USE_TIMEOUT_DURATION + 1;
-        if (TRL_TIMEOUT_START_TIME<=0)
+        if (TRL_TIMEOUT_START_TIME <= 0)
         {
             TRL_TIMEOUT_START_TIME = time();
             spawn SEND_EVT(EVT_TIMEOUT_START_);
@@ -66,10 +67,10 @@ process PROC_TIMEOUT_CHK()
         spawn SEND_EVT(EVT_TIMEOUT_END_);
 
         printf("****STAT_TIM_OUT[%d]: ERR sent Event: EVT_TIMEOUT_END_[%d]\n", STAT_TIM_OUT, EVT_TIMEOUT_END_);
-        printf("****STAT_TIM_OUT[%d]: ERR  TRL_USE_TIMEOUT_DURATION[%d] / TRL_USE_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_USE_TIMEOUT_DURATION, TRL_USE_TONE_DURATION);
-        PROCESS_STATE = 1;
-        CURR_STAT     = STAT_IDLE;
-        TRL_IS_RUNNING   = 1;
+        printf("****STAT_TIM_OUT[%d]: ERR  TRL_USE_TIMEOUT_DURATION[%d]/TRL_USE_TONE_DURATION [%d] \n", STAT_TIM_OUT, TRL_USE_TIMEOUT_DURATION, TRL_USE_TONE_DURATION);
+        PROCESS_STATE  = 1;
+        CURR_STAT      = STAT_IDLE;
+        TRL_IS_RUNNING = 1;
         printf(":-)\n");
     }
 }/*PROC_TIMEOUT_CHK*/

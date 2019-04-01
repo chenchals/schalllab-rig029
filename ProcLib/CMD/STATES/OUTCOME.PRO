@@ -47,8 +47,8 @@ process PROC_TRL_OUTCOME()
         STAT_ALLOWED_T = 5;
         dsendf("vp %d\n", PG_BLANK);
 
-        INCEMENT_TARG_DURATION_FLAG   = 0;
-        TIMEOUT_DURATION = 0;
+        INCEMENT_TARG_DURATION_FLAG = 0;
+        TIMEOUT_DURATION            = 0;
         // set this as default and change to
         // TRL_IS_TIMEOUT = 0; when not error
         TRL_IS_TIMEOUT = 1;
@@ -117,7 +117,7 @@ process PROC_GO_OUTCOMES()
                STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
 
         SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
-        BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
+        BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
     }
     else if (TRL_FIX_BREAK_TIME > 0)
     {
@@ -152,7 +152,7 @@ process PROC_GO_OUTCOMES()
     else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
-       spawnwait PROC_GO_ERR();
+        spawnwait PROC_GO_ERR();
     }
     else if (TRL_BRK_RWRD_TIME > 0)
     {
@@ -177,7 +177,7 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
     declare int nogoIdx;
 
-    if (TRL_IS_STOP_SIGNAL_ON )
+    if (TRL_IS_STOP_SIGNAL_ON)
     {
         nogoIdx = NOGO_POST_SSD_IDX;
         printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
@@ -191,8 +191,8 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
     if (TRL_IS_MIN_THT > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
     {
         TRL_IS_NON_CANCELLED_NO_BRK = 1;
-        TIMEOUT_DURATION     = 0;
-        TRL_IS_TIMEOUT       = 0;
+        TIMEOUT_DURATION            = 0;
+        TRL_IS_TIMEOUT              = 0;
         spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_);
 
         TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_;
@@ -235,7 +235,7 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
     else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-       spawnwait PROC_NON_CANCELLED_BRK();
+        spawnwait PROC_NON_CANCELLED_BRK();
     }
     else if (TRL_BRK_RWRD_TIME > 0)
     {
@@ -265,8 +265,8 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
     if (TRL_IS_CANCEL > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
     {
         TRL_IS_CANCELLED_NO_BRK = 1;
-        TIMEOUT_DURATION = 0;
-        TRL_IS_TIMEOUT   = 0;
+        TIMEOUT_DURATION        = 0;
+        TRL_IS_TIMEOUT          = 0;
         spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_NO_BRK_);
 
         TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_NO_BRK_;
@@ -275,7 +275,7 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
                STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
 
         SESS_N_CANCEL_NO_BRK_TRLS = SESS_N_CANCEL_NO_BRK_TRLS + 1;
-        BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
+        BLOCK_N_CORRECT_TRLS      = BLOCK_N_CORRECT_TRLS + 1;
     }
     else if (TRL_BRK_PRE_TONE_TIME > 0)
     {

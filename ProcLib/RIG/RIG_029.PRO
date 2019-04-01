@@ -25,15 +25,15 @@ process RIG_029()
     // See TEMPO manual
     // 256 = pixels:640 x 400; colors:256; pages:16; bitsPerPixel:8
     VDO_SYNC_MODE = 256;
-    SCRN_PIX_X = 640;
-    SCRN_PIX_Y = 400;
+    SCRN_PIX_X    = 640;
+    SCRN_PIX_Y    = 400;
     // Screen width and height in mm
     SCRN_MM_X = 375.0;
     SCRN_MM_Y = 275.0;
     // Distance from center of Subject'seyeball to screen
     SUBJ_DIST_MM = 570.0;
 
-    REFRESH_RATE = 1000.0 / 60;
+    REFRESH_RATE = 1000.0/60;
 
     // ISOLUMINANT colors
     //==========================================================================
@@ -63,7 +63,7 @@ process RIG_029()
     //  STIM_CHANNEL  = 1;
     EYE_X_CHANNEL       = 1;
     EYE_Y_CHANNEL       = 2;
-	EYE_PUPIL_CHANNEL   = 5;
+    EYE_PUPIL_CHANNEL   = 5;
     PHOTOCELL_L_CHANNEL = 4;
     PHOTOCELL_R_CHANNEL = 3;
     MAX_VOLTAGE         = 10;     //look at das_gain and das_polarity in kped (setup tn)

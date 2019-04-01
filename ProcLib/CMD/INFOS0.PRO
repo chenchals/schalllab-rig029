@@ -21,7 +21,7 @@ process SEND_INFOS()
     N_INFOS = 0;
     printf("****INFOS.PRO: Sending infos....\n");
     TRL_RAND_NEG_NUMBER_TEST = -((random(5000) + 1) * 2);
-		spawnwait SEND_INFO_EVT(TRL_RAND_NEG_NUMBER_TEST);
+    spawnwait SEND_INFO_EVT(TRL_RAND_NEG_NUMBER_TEST);
     spawnwait SEND_INFO_EVT(TRL_TRIAL_NUMBER);
     spawnwait SEND_INFO_EVT(TRL_BLOCK_NUM);
     spawnwait SEND_INFO_EVT(TRL_TRIAL_TYPE);
@@ -129,6 +129,7 @@ process SEND_INFOS()
     spawnwait SEND_INFO_EVT(TRL_LAST_STOP_OUTCOME_EVNTCODE);
     spawnwait SEND_INFO_EVT(TRL_LAST_GO_OUTCOME_EVNTCODE);
     spawnwait SEND_INFO_EVT(TRL_LAST_SSD_IDX);
+
     // Last info code
     spawnwait SEND_INFO_EVT(N_INFOS);
 } /* SEND_INFOS */
