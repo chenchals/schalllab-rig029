@@ -107,16 +107,16 @@ declare int FIX_REIGNITE_FLAG     = 0;
 declare int PRE_SSD_FIX_ON_DELAY  = 0;
 declare int POST_SSD_FIX_ON_DELAY = 5000;
 
-//============= Trial duration for ITI and Timeout =========================
-// Max_trial_duration = compute max duration for longest STOP trial, including BASE_ITI_TIME
-// the trial_duration_to_use for computing ITI and Timeout depends on IS_TRL_LENGTH_FIXED flag:
-// Case 0 : trial_duration_to_use = Max_trial_duration
-// Case 1 : trial_duration_to_use = max(Max_trial_duration,FIXED_TRIAL_DURATION)
-declare int IS_TRL_LENGTH_FIXED = 0;
-// Use this value if IS_TRL_LENGTH_FIXED == 1 && this value is greater than Max_trial_duration
-declare int FIXED_TRIAL_DURATION = 4000;
+//============= Trial duration for computing ITI and Timeout =========================
+// Max_trial_duration = compute max duration for longest STOP trial, including BASE_ITI_FOR_AUTO_TRL_DURATION
+// the trial_duration_to_use for computing ITI and Timeout depends on USE_PROVIDED_TRL_LENGTH flag:
+// Case 0 : trial_duration_to_use = Compute max trial duration (include the base ITI in computation)
+// Case 1 : trial_duration_to_use = max(Max_trial_duration,PROVIDED_TRL_LENGTH)
+declare int USE_PROVIDED_TRL_LENGTH = 0;
+// Use this value if USE_PROVIDED_TRL_LENGTH == 1 && this value is greater than Max_trial_duration
+declare int PROVIDED_TRL_LENGTH = 4000;
 // Use this duration for computing Max_trial_duration
-declare int BASE_ITI_TIME = 1000;
+declare int BASE_ITI_FOR_AUTO_TRL_DURATION = 1000;
 
 //================= Fix/Targ hold duration ===========================
 // Stay in window (TARG for GO/ FIX for STOP) till reward is given

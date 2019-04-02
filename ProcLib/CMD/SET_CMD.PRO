@@ -15,40 +15,40 @@
 //
 
 // Load all constants and related gobal vars
-#include C: / TEMPO / ProcLib / CONSTNTS.PRO
+#include C:/TEMPO/ProcLib/CONSTNTS.PRO
 // Jitter utils
-#include C: / TEMPO / ProcLib / UTIL / JITTER.PRO
+#include C:/TEMPO/ProcLib/UTIL/JITTER.PRO
 // CMD Vars only...?
-#include C: / TEMPO / ProcLib / CMD / VAR_CMD.PRO
+#include C:/TEMPO/ProcLib/CMD/VAR_CMD.PRO
 // State defs
-#include C: / TEMPO / ProcLib / CMD / STATES / CMD_STAT.PRO
+#include C:/TEMPO/ProcLib/CMD/STATES/CMD_STAT.PRO
 // Rig specific vars for colors, mainly
-#include C: / TEMPO / ProcLib / RIG / VAR_RIG.PRO
+#include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
 // Stimulus Variables: fixation, target, photodiode
-#include C: / TEMPO / ProcLib / CMD / VAR_STIM.PRO
+#include C:/TEMPO/ProcLib/CMD/VAR_STIM.PRO
 // Set palatte colors and color indices
-#include C: / TEMPO / ProcLib / CMD / SET_CLRS.PRO
+#include C:/TEMPO/ProcLib/CMD/SET_CLRS.PRO
 // Setup GRAPHS - referenced by _PGS
-#include C: / TEMPO / ProcLib / GRAFS / GRAPHS.PRO
+#include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
 // set pages to load CMD_PGS.PRO?
-#include C: / TEMPO / ProcLib / CMD / CMD_PGS.PRO
+#include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
 // Setup event defs so events can be sent
-#include C: / TEMPO / ProcLib / CMD / EVENTDEF.PRO
+#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 // for using staircase method for SSD
-#include C: / TEMPO / ProcLib / CMD / STAIR.PRO
+#include C:/TEMPO/ProcLib/CMD/STAIR.PRO
 //=====Now do monk specific========
 // Load all constants and related gobal vars
-#include C: / TEMPO / ProcLib / RIG / SET_RIG.PRO
+#include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
 // Set monk
-#include C: / TEMPO / ProcLib / MONK / SET_MONK.PRO
+#include C:/TEMPO/ProcLib/MONK/SET_MONK.PRO
 
 //========other utils=============
 // Send event processes
-#include C: / TEMPO / ProcLib / UTIL / SEND_EVT.PRO
+#include C:/TEMPO/ProcLib/UTIL/SEND_EVT.PRO
 // Set up watches
-#include C: / TEMPO / ProcLib / WATCH / WTCH_EYE.PRO
+#include C:/TEMPO/ProcLib/WATCH/WTCH_EYE.PRO
 // Set up watches
-#include C: / TEMPO / ProcLib / WATCH / WTCH_PD.PRO
+#include C:/TEMPO/ProcLib/WATCH/WTCH_PD.PRO
 
 declare SET_CMD_TRL();
 declare INIT_TRL_VARS();
@@ -288,7 +288,7 @@ declare int TRL_USE_SSD_STEP_UP;
 // user/system set - when using staircase method, if decrease SSD then: curr-ssd-idx - (random(step-up) + 1)
 declare int TRL_USE_SSD_STEP_DOWN;
 // user/system set - should fixed trial length be used to compute inter-trial-interval
-declare int TRL_USE_IS_TRL_LENGTH_FIXED;
+declare int TRL_USE_USE_PROVIDED_TRL_LENGTH;
 // how many vertical refreshes should the target-page be ON before stop-signal-page will be shown
 declare int TRL_USE_SSD_VR_COUNT;
 // system set - fix hold time for this trial (computed from min, max fix hold time)
@@ -387,7 +387,7 @@ process SET_CMD_TRL()
     TRL_USE_STAIRCASE                = STAIRCASE_SSD;
     TRL_USE_SSD_STEP_UP              = SSD_STEP_UP;
     TRL_USE_SSD_STEP_DOWN            = SSD_STEP_DOWN;
-    TRL_USE_IS_TRL_LENGTH_FIXED      = IS_TRL_LENGTH_FIXED;
+    TRL_USE_USE_PROVIDED_TRL_LENGTH      = USE_PROVIDED_TRL_LENGTH;
     TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG = XTRA_HOLD_TONE_RWRD_FLAG;
     //============================================================================
     if (DEBUG_CONSOLE)
@@ -483,7 +483,7 @@ process COMPUTE_TRIAL_DURATION()
 
     // maxTrialDuration is computed *after* Fixation is acquired, using all max times
     // same for GO/STOP
-    maxTrialDuration = FIX_HOLD_MEAN + FIX_HOLD_SPREAD + BASE_ITI_TIME;
+    maxTrialDuration = FIX_HOLD_MEAN + FIX_HOLD_SPREAD + BASE_ITI_FOR_AUTO_TRL_DURATION;
     // Since TRL_USE_SSD_CANCEL_DURATION must be => MAX_SACC_TIME + MAXS_SACC_DURATION
     maxTrialDuration = maxTrialDuration + tempCancelTime;
     // add max SSD time
@@ -499,39 +499,41 @@ process COMPUTE_TRIAL_DURATION()
     {
         maxTrialDuration = maxTrialDuration + TRL_USE_XTRA_HOLD_DURATION;
     }
+    // maxTrialDuration to the nearest higher 100ms
+    maxTrialDuration = ciel(maxTrialDuration/100.0)*100;
 
     // now check for the longest time of the following
-    if (IS_TRL_LENGTH_FIXED && maxTrialDuration > FIXED_TRIAL_DURATION)
+    if (USE_PROVIDED_TRL_LENGTH && maxTrialDuration > PROVIDED_TRL_LENGTH)
     {
         TRL_USE_TRIAL_DURATION = maxTrialDuration;
         // error alert user that for fixed trial length duration,
-        // the computed trial duration > than user specified FIXED_TRIAL_DURATION
+        // the computed trial duration > than user specified PROVIDED_TRL_LENGTH
         // and adjust the trial duration to computed trial duration
         if (DEBUG_CONSOLE)
         {
-            printf("**********FIXED_TRIAL_DURATION CHANGE ALERT********************\n");
-            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: IS_TRL_LENGTH_FIXED [%d]****\n", IS_TRL_LENGTH_FIXED);
-            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Computed trial length time[%d] exceeds FIXED_TRIAL_DURATION [%d]****\n", TRL_USE_TRIAL_DURATION, FIXED_TRIAL_DURATION);
-            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as IS_TRL_LENGTH_FIXED = [%d], and maxTrialDuration [%d] > FIXED_TRIAL_DURATION [%d])\n",
-                   TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED, maxTrialDuration, FIXED_TRIAL_DURATION);
+            printf("**********PROVIDED_TRL_LENGTH CHANGE ALERT********************\n");
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: USE_PROVIDED_TRL_LENGTH [%d]****\n", USE_PROVIDED_TRL_LENGTH);
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Computed trial length time[%d] exceeds PROVIDED_TRL_LENGTH [%d]****\n", TRL_USE_TRIAL_DURATION, PROVIDED_TRL_LENGTH);
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as USE_PROVIDED_TRL_LENGTH = [%d], and maxTrialDuration [%d] > PROVIDED_TRL_LENGTH [%d])\n",
+                   TRL_USE_TRIAL_DURATION, USE_PROVIDED_TRL_LENGTH, maxTrialDuration, PROVIDED_TRL_LENGTH);
         }
     }
-    else if (IS_TRL_LENGTH_FIXED && maxTrialDuration <= FIXED_TRIAL_DURATION)
+    else if (USE_PROVIDED_TRL_LENGTH && maxTrialDuration <= PROVIDED_TRL_LENGTH)
     {
-        TRL_USE_TRIAL_DURATION = FIXED_TRIAL_DURATION;
+        TRL_USE_TRIAL_DURATION = PROVIDED_TRL_LENGTH;
         if (DEBUG_CONSOLE)
         {
-            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as IS_TRL_LENGTH_FIXED = [%d], and maxTrialDuration [%d] <= FIXED_TRIAL_DURATION [%d])****\n",
-                   TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED, maxTrialDuration, FIXED_TRIAL_DURATION);
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as USE_PROVIDED_TRL_LENGTH = [%d], and maxTrialDuration [%d] <= PROVIDED_TRL_LENGTH [%d])****\n",
+                   TRL_USE_TRIAL_DURATION, USE_PROVIDED_TRL_LENGTH, maxTrialDuration, PROVIDED_TRL_LENGTH);
         }
     }
-    else // IS_TRL_LENGTH_FIXED = 0
+    else // USE_PROVIDED_TRL_LENGTH = 0
     {
         TRL_USE_TRIAL_DURATION = maxTrialDuration;
         if (DEBUG_CONSOLE)
         {
-            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as IS_TRL_LENGTH_FIXED = [%d] and maxTrialDuration [%d])****\n",
-                   TRL_USE_TRIAL_DURATION, IS_TRL_LENGTH_FIXED, maxTrialDuration);
+            printf("****SET_CMD/COMPUTE_TRIAL_DURATION: Using TRL_USE_TRIAL_DURATION of [%d] ms (as USE_PROVIDED_TRL_LENGTH = [%d] and maxTrialDuration [%d])****\n",
+                   TRL_USE_TRIAL_DURATION, USE_PROVIDED_TRL_LENGTH, maxTrialDuration);
         }
     }
 } /* COMPUTE_TRIAL_DURATION */
@@ -724,39 +726,39 @@ process SET_WINS()
     }
     // Compute fix win size
     // Fix spot center is at 0,0, so we do not need to compute
-    FIX_WIN[LEFT]  = -FIX_WIN_SIZE / 2;
-    FIX_WIN[RIGHT] = FIX_WIN_SIZE / 2;
-    FIX_WIN[UP]    = -FIX_WIN_SIZE / 2;
-    FIX_WIN[DOWN]  = FIX_WIN_SIZE / 2;
+    FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
+    FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
+    FIX_WIN[UP]    = -FIX_WIN_SIZE/2;
+    FIX_WIN[DOWN]  = FIX_WIN_SIZE/2;
     // Larger fix win - For inaccurate eye position
-    FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE / 2;
-    FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE / 2;
-    FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE / 2;
-    FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE / 2;
+    FIX_WIN_LARGE[LEFT]  = -FIX_WIN_SIZE_LARGE/2;
+    FIX_WIN_LARGE[RIGHT] = FIX_WIN_SIZE_LARGE/2;
+    FIX_WIN_LARGE[UP]    = -FIX_WIN_SIZE_LARGE/2;
+    FIX_WIN_LARGE[DOWN]  = FIX_WIN_SIZE_LARGE/2;
     // Compute TARG_WIN and TARG_WIN_LARGE
     eccX            = cos(TARG_ANGLE_ARRY[TRL_CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[TRL_CURR_TARG_IDX];
     eccY            = -sin(TARG_ANGLE_ARRY[TRL_CURR_TARG_IDX]) * TARG_ECCENTRICITY_ARRY[TRL_CURR_TARG_IDX];
-    TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE / 2;
-    TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE / 2;
-    TARG_WIN[UP]    = eccY - TARG_WIN_SIZE / 2;
-    TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE / 2;
+    TARG_WIN[LEFT]  = eccX - TARG_WIN_SIZE/2;
+    TARG_WIN[RIGHT] = eccX + TARG_WIN_SIZE/2;
+    TARG_WIN[UP]    = eccY - TARG_WIN_SIZE/2;
+    TARG_WIN[DOWN]  = eccY + TARG_WIN_SIZE/2;
     // Larger target window - For inaccurate eye position
-    TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE / 2;
-    TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE / 2;
-    TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE / 2;
-    TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
     // Compute TARG_WIN_ANTI and TARG_WIN_LARGE_ANTI
     eccX                 = cos(TARG_ANGLE_ARRY[TRL_CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[TRL_CURR_TARG_IDX];
     eccY                 = -sin(TARG_ANGLE_ARRY[TRL_CURR_TARG_IDX] + 180) * TARG_ECCENTRICITY_ARRY[TRL_CURR_TARG_IDX];
-    TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE / 2;
-    TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE / 2;
-    TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE / 2;
-    TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE / 2;
+    TARG_WIN_ANTI[LEFT]  = eccX - TARG_WIN_SIZE/2;
+    TARG_WIN_ANTI[RIGHT] = eccX + TARG_WIN_SIZE/2;
+    TARG_WIN_ANTI[UP]    = eccY - TARG_WIN_SIZE/2;
+    TARG_WIN_ANTI[DOWN]  = eccY + TARG_WIN_SIZE/2;
     // Larget ANTI target window - For inaccurate Eye position
-    TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE / 2;
-    TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE / 2;
-    TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE / 2;
-    TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE / 2;
+    TARG_WIN_ANTI_LARGE[LEFT]  = eccX - TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_ANTI_LARGE[RIGHT] = eccX + TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_ANTI_LARGE[UP]    = eccY - TARG_WIN_SIZE_LARGE/2;
+    TARG_WIN_ANTI_LARGE[DOWN]  = eccY + TARG_WIN_SIZE_LARGE/2;
 } /* SET_WINS */
 
 
@@ -846,7 +848,7 @@ process PICK_TRIAL_TYPE()
 {
     declare float trlType;
 
-    trlType = (1.0 + random(9999)) / 100.0;
+    trlType = (1.0 + random(9999))/100.0;
     if (trlType <= GO_WEIGHT)
     {
         TRL_TRIAL_TYPE = TRIAL_TYPE_GO;

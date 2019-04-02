@@ -1,8 +1,8 @@
 //==========================================================================
 // ITI_CHK.PRO
-//   Description: Process ITI state. Compute the TRL_USE_ITI_DURATION based on IS_TRL_LENGTH_FIXED
-//                if IS_TRL_LENGTH_FIXED = 1 : Use TRL_USE_TRIAL_DURATION and TRL_CUM_DURATION
-//                if IS_TRL_LENGTH_FIXED = 0 : Use BASE_ITI_TIME
+//   Description: Process ITI state. Compute the TRL_USE_ITI_DURATION based on USE_PROVIDED_TRL_LENGTH
+//                if USE_PROVIDED_TRL_LENGTH = 1 : Use TRL_USE_TRIAL_DURATION and TRL_CUM_DURATION
+//                if USE_PROVIDED_TRL_LENGTH = 0 : Use BASE_ITI_FOR_AUTO_TRL_DURATION
 //
 //                if TRL_IS_TIMEOUT = 0 : Continue processing until TRL_USE_ITI_DURATION expires
 //                If TRL_IS_TIMEOUT = 1 : Add TRL_USE_ITI_DURATION to TIMEOUT_DURATION (from OUTCOME.PRO)
@@ -40,21 +40,14 @@ process PROC_ITI_CHK()
         spawn GRAF_HIDE_FIX_TARG();
 
         INCEMENT_TARG_DURATION_FLAG = 0;
-        if (!IS_TRL_LENGTH_FIXED)
-        {
-            TRL_USE_ITI_DURATION = BASE_ITI_TIME * TIME_DILATE_FACTOR;
-            printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
-            printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_USE_ITI_DURATION[%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED, TRL_USE_ITI_DURATION);
-        }
-        else
-        {
-            printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
-            printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_DURATION\n");
-            TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) - TRL_CUM_DURATION;
-            printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION [%d] = (%d * %d) - %d\n", STAT_ITI_CHK, TRL_USE_ITI_DURATION, TRL_USE_TRIAL_DURATION, TIME_DILATE_FACTOR, TRL_CUM_DURATION);
-            printf("****STAT_ITI_CHK[%d]: OK IS_TRL_LENGTH_FIXED [%d]; TRL_USE_ITI_DURATION[%d]\n", STAT_ITI_CHK, IS_TRL_LENGTH_FIXED, TRL_USE_ITI_DURATION);
-        }
+
+        printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
+        printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_DURATION\n");
+        TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) - TRL_CUM_DURATION;
+        printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION [%d] = (%d * %d) - %d\n", STAT_ITI_CHK, TRL_USE_ITI_DURATION, TRL_USE_TRIAL_DURATION, TIME_DILATE_FACTOR, TRL_CUM_DURATION);
+
         STAT_ALLOWED_T = TRL_USE_ITI_DURATION;
+        TRL_ITI_DURATION = 0;
     }
 
     if (TRL_ITI_START_TIME > 0)
