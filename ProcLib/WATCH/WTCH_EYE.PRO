@@ -20,8 +20,9 @@ declare WRITE_I_TO_FILE(float iXVolts, float iYVolts, float iXDeg, float iYDeg, 
 declare int writeIToFile = 0;
 declare int wroteIHeader = 0;
 // in TEMPO ADC units for Eyleink MISSING DATA VALUES, to know "blink"
-declare int I_INVALID_THRESHOLD = 150000;
+declare int I_INVALID_THRESHOLD = 15000;
 declare int I_INVALID_DURATION;
+declare constant USE_BLINK = 0;
 
 
 process WTCH_EYE()
@@ -91,16 +92,19 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     if (fabs(iXVolts) >= I_INVALID_THRESHOLD && fabs(iYVolts) >= I_INVALID_THRESHOLD)
     {
         I_INVALID = 1;
-        /*
-         * I_FIX            = 0;
-         * I_FIX_WIDE       = 0;
-         * I_TARG           = 0;
-         * I_TARG_WIDE      = 0;
-         * I_TARG_ANTI      = 0;
-         * I_TARG_ANTI_WIDE = 0;
-         */
     }
-    if (I_INVALID == 0)
+    
+    if(USE_BLINK && I_INVALID == 1)
+    {
+        // Assume NOt change in I position
+        I_FIX            = I_FIX;
+        I_FIX_WIDE       = I_FIX_WIDE;
+        I_TARG           = I_TARG;
+        I_TARG_WIDE      = I_TARG_WIDE;
+        I_TARG_ANTI      = I_TARG_ANTI;
+        I_TARG_ANTI_WIDE = I_TARG_ANTI_WIDE;
+    }   
+    else
     {
         if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
            && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
@@ -191,8 +195,8 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
         if (I_INVALID_DURATION > 0)
         {
             spawn SEND_EVT(EVT_I_INVALID_END_);
+            I_INVALID_DURATION = 0;
         }
-        I_INVALID_DURATION = 0;
     }
 
     // We want to pass this, since the Global var

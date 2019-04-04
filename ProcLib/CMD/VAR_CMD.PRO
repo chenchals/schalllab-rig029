@@ -25,15 +25,15 @@
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 70.0;
-declare float        STOP_WEIGHT   = 30.0;
+declare float        GO_WEIGHT     = 60.0;
+declare float        STOP_WEIGHT   = 40.0;
 declare float        IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
-declare int          REPEAT_LO_RWRD_ERROR_TRL = 1;
+declare int          REPEAT_LO_RWRD_ERROR_TRL = 0;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
-declare int REPEAT_MAX = 3;
+declare int REPEAT_MAX = 0;
 //==========Jitter flags and definitions=========================
 // See UTIL/JITTER.PRO
 // declare constant int JITTER_NONE             = 0;
@@ -134,7 +134,7 @@ declare int TONE_DELAY_MEAN = 600;
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
 declare int TONE_DELAY_SPREAD = 0;
-declare int TONE_JITTER_FLAG  = JITTER_GAUSS_FLAG;
+declare int TONE_JITTER_FLAG  = JITTER_NONE;
 
 // how long should the error and success tones be presented?
 // this will be recomputed during trial

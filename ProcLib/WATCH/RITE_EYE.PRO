@@ -26,7 +26,7 @@ process PROC_WRITE_RAW_I_DATA()
             //rawIVals.csv relTimeMs,xADC,yADC\n"
             pupil     = atable(EYE_PUPIL_CHANNEL);
             relTimeMs = time() - currTime;
-            writef("rawIVals.csv %d,%d,%d,%d,%d,%d\n", relTimeMs, EYE_X_VOLTS, EYE_Y_VOLTS, I_INVALID, I_INVALID_DURATION, pupil);
+            writef("rawIVals.csv %d,%d,%d,%d,%d,%d\n", relTimeMs, EYE_X_VOLTS, EYE_Y_VOLTS, pupil, I_INVALID, I_INVALID_DURATION);
         }
         nexttick tickInterval;
     }

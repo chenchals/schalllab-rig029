@@ -500,7 +500,7 @@ process COMPUTE_TRIAL_DURATION()
         maxTrialDuration = maxTrialDuration + TRL_USE_XTRA_HOLD_DURATION;
     }
     // maxTrialDuration to the nearest higher 100ms
-    maxTrialDuration = ciel(maxTrialDuration/100.0)*100;
+    maxTrialDuration = ceil(maxTrialDuration/100.0)*100;
 
     // now check for the longest time of the following
     if (USE_PROVIDED_TRL_LENGTH && maxTrialDuration > PROVIDED_TRL_LENGTH)

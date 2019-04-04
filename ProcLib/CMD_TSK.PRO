@@ -64,7 +64,7 @@ process IDLE() enabled
 
     seed1(timeus());
     // activate seed by drawing a number from some distribution
-    mormal(1);
+    normal(1);
 
     // ========== Call once =============
     //RIG_ID = 29;
