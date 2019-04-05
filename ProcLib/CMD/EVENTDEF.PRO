@@ -106,6 +106,8 @@ declare constant EVT_REWARD_DELAY_START_ = 2520;
 declare constant EVT_REWARD_DELAY_END_   = 2522;
 declare constant EVT_JUICE_START_        = 2524;
 declare constant EVT_JUICE_END_          = 2526;
+declare constant EVT_EXTRA_JUICE_START_  = 2528;
+declare constant EVT_EXTRA_JUICE_END_    = 2530;
 // For STOP trials 2620-2660, cf. GO trials 2430-2460
 // after TARG_ON
 declare constant EVT_NOGO_EARLY_SACCADE_    = 2600;

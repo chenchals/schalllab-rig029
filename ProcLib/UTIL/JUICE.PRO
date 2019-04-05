@@ -33,5 +33,14 @@ process JUICE(int channel, int duration)
 
 process JUICE_EXTRA()
 {
-    spawnwait JUICE(JUICE_CHANNEL, 50);
+  declare int channelOpen  = 1;
+  declare int channelClose = 0;
+  declare int duration = 50;
+
+  spawn SEND_EVT(EVT_EXTRA_JUICE_START_);
+  mio_dig_set(channel, channelOpen);
+  wait(duration);
+  mio_dig_set(channel, channelClose);
+  spawn SEND_EVT(EVT_EXTRA_JUICE_END_);
+
 }
