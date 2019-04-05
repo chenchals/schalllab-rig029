@@ -70,12 +70,12 @@ process JOULE()
         {
             TARG_SIZE_ARRY[tempVar]         = 0.5;
             TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0/N_TARG_POS);
-            TARG_ECCENTRICITY_ARRY[tempVar] = 15.0;
+            TARG_ECCENTRICITY_ARRY[tempVar] = 12.0;
         }
-        FIX_WIN_SIZE       = 8;
+        FIX_WIN_SIZE       = 7;
         FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
 
-        TARG_WIN_SIZE       = 12;
+        TARG_WIN_SIZE       = 7;
         TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
 
         tempVar = tempVar + 1;
