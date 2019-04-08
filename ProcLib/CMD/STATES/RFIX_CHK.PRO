@@ -34,7 +34,6 @@ process PROC_REFIX_CHK()
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = MAX_SACC_DURATION * TIME_DILATE_FACTOR;
         // initialize durations
-        TRL_REFIX_SACC_DURATION = 0;
         TRL_IS_REFIX      = 0;
     }
 
@@ -48,15 +47,15 @@ process PROC_REFIX_CHK()
     {
         if (STAT_DLTA_T <= STAT_ALLOWED_T)
         {
-            TRL_REFIX_SACC_DURATION = TRL_REFIX_SACC_DURATION + 1;
             if (I_FIX)
             {
                 TRL_IS_REFIX   = 1;
                 TRL_REFIX_TIME = time();
                 spawn SEND_EVT(EVT_REFIX_);
+                spawn SEND_EVT(EVT_DECIDE_SEC_);
 
-                printf("****STAT_REFIX_CHK[%d]: ERR sent Event: EVT_REFIX_[%d]\n", STAT_REFIX_CHK, EVT_REFIX_);
-                printf("****STAT_REFIX_CHK[%d]: ERR (EVT_REFIX_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_REFIX_CHK, TRL_REFIX_SACC_DURATION, STAT_ALLOWED_T);
+                printf("****STAT_REFIX_CHK[%d]: ERR sent Event: EVT_REFIX_[%d], EVT_DECIDE_SEC_[%d]\n", STAT_REFIX_CHK, EVT_REFIX_,EVT_DECIDE_SEC_);
+                printf("****STAT_REFIX_CHK[%d]: ERR (EVT_REFIX_ in) [%d](MAX_SACC_DURATION)\n", STAT_REFIX_CHK, STAT_ALLOWED_T);
 
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
@@ -64,7 +63,7 @@ process PROC_REFIX_CHK()
         }
         else
         {
-            printf("****STAT_REFIX_CHK[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_REFIX_CHK, TRL_REFIX_SACC_DURATION, STAT_ALLOWED_T);
+            printf("****STAT_REFIX_CHK[%d]: ERR (*Eye elsewhere* in) [%d](MAX_SACC_DURATION)\n", STAT_REFIX_CHK, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;

@@ -93,17 +93,17 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     {
         I_INVALID = 1;
     }
-    
+
     if(USE_BLINK && I_INVALID == 1)
     {
-        // Assume NOt change in I position
+        // Assume NO change in I position
         I_FIX            = I_FIX;
         I_FIX_WIDE       = I_FIX_WIDE;
         I_TARG           = I_TARG;
         I_TARG_WIDE      = I_TARG_WIDE;
         I_TARG_ANTI      = I_TARG_ANTI;
         I_TARG_ANTI_WIDE = I_TARG_ANTI_WIDE;
-    }   
+    }
     else
     {
         if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]

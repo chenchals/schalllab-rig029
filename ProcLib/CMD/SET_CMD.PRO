@@ -260,8 +260,6 @@ declare int TRL_TARG_ON_DURATION;
 declare int TRL_XTRA_HOLD_DURATION;
 // how long did it take for saccade from start to finish
 declare int TRL_SACC_DURATION;
-// how long did it take for 2nd-saccade from start to finish to get to Fix window from target window
-declare int TRL_REFIX_SACC_DURATION;
 // how long eye was on target (GO trial : till outcome is correct, STOP trial: for non-cancelled)
 declare int TRL_TARG_HOLD_DURATION;
 // how long did it take from PD detected first for target-page till PD deceted for stop-signal-page
@@ -969,7 +967,6 @@ process INIT_VARS_REPEAT_TRL()
     TRL_TARG_ON_DURATION           = -1;
     TRL_XTRA_HOLD_DURATION         = -1;
     TRL_SACC_DURATION              = -1;
-    TRL_REFIX_SACC_DURATION        = -1;
     TRL_TARG_HOLD_DURATION         = -1;
     TRL_STOP_SIGNAL_DURATION       = -1;
     TRL_ITI_DURATION               = -1;
@@ -1071,7 +1068,6 @@ process INIT_TRL_VARS()
     TRL_TARG_ON_DURATION             = -1;
     TRL_XTRA_HOLD_DURATION           = -1;
     TRL_SACC_DURATION                = -1;
-    TRL_REFIX_SACC_DURATION          = -1;
     TRL_TARG_HOLD_DURATION           = -1;
     TRL_STOP_SIGNAL_DURATION         = -1;
     TRL_ITI_DURATION                 = -1;

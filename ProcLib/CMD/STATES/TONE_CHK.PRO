@@ -106,8 +106,10 @@ process PROC_TONE_CHK()
             {
                 TRL_BRK_XTRA_HOLD_TIME = time();
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
+                spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_);
+
+                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_,EVT_SACCADE_SEC_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -117,8 +119,9 @@ process PROC_TONE_CHK()
             {
                 TRL_BRK_PRE_TONE_TIME = time();
                 spawn SEND_EVT(EVT_PRE_TONE_BREAK_);
+                spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d]\n", STAT_TONE_CHK, EVT_PRE_TONE_BREAK_);
+                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d], EVT_SACCADE_SEC_[d]\n", STAT_TONE_CHK, EVT_PRE_TONE_BREAK_,EVT_SACCADE_SEC_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -141,8 +144,9 @@ process PROC_TONE_CHK()
             {
                 TRL_BRK_XTRA_HOLD_TIME = time();
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
+                spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_);
+                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_,EVT_SACCADE_SEC_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -152,8 +156,9 @@ process PROC_TONE_CHK()
             {
                 TRL_BRK_TONE_TIME = time();
                 spawn SEND_EVT(EVT_TONE_BREAK_);
+                spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_TONE_BREAK_[%d]\n", STAT_TONE_CHK, EVT_TONE_BREAK_);
+                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_TONE_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_TONE_BREAK_,EVT_SACCADE_SEC_);
                 printf("****STAT_TONE_CHK[%d]: ERR (*During-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;

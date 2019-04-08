@@ -73,7 +73,6 @@ declare constant EVT_ACQUIRE_FIX_          = 2400;
 declare constant EVT_ACQUIRE_FIX_ERROR_    = 2402;
 declare constant EVT_FIXATE_               = 2404;
 declare constant EVT_FIX_BREAK_            = 2406;
-declare constant EVT_RETURN_TO_FIX_        = 2410;
 declare constant EVT_TARGET_ACQUIRED_      = 2420;
 declare constant EVT_ACQUIRE_TARGET_ERROR_ = 2422;
 declare constant EVT_TARGET_HOLD_          = 2424;
@@ -88,6 +87,8 @@ declare constant EVT_XTRA_HOLD_END_   = 2452;
 declare constant EVT_XTRA_HOLD_BREAK_ = 2454;
 declare constant EVT_DECIDE_          = 2460;
 declare constant EVT_REFIX_           = 2462;
+declare constant EVT_SACCADE_SEC_     = 2464;
+declare constant EVT_DECIDE_SEC_      = 2466;
 
 declare constant EVT_CANCEL_START_  = 2470;
 declare constant EVT_CANCEL_END_    = 2472;

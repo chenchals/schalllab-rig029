@@ -53,7 +53,6 @@ process SEND_INFOS()
     spawn SEND_INFO_EVT(TRL_TARG_ON_DURATION);
     spawn SEND_INFO_EVT(TRL_XTRA_HOLD_DURATION);
     spawn SEND_INFO_EVT(TRL_SACC_DURATION);
-    spawn SEND_INFO_EVT(TRL_REFIX_SACC_DURATION);
     spawn SEND_INFO_EVT(TRL_TARG_HOLD_DURATION);
     spawn SEND_INFO_EVT(TRL_STOP_SIGNAL_DURATION);
     spawn SEND_INFO_EVT(TRL_ITI_DURATION);
@@ -98,7 +97,7 @@ process SEND_INFOS()
 
     // Last info code
     spawn SEND_INFO_EVT(N_INFOS);
-    
+
     nexttick;
 } /* SEND_INFOS */
 
