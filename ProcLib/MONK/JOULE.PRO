@@ -21,15 +21,15 @@ process JOULE()
     //SSD list is not set
     // See VAR_CMD.PRO
     SSD_ARRY[0] = 4;
-    SSD_ARRY[1] = 9;
-    SSD_ARRY[2] = 14;
-    SSD_ARRY[3] = 19;
-    SSD_ARRY[4] = 24;
-    SSD_ARRY[5] = 29;
-    SSD_ARRY[6] = 34;
-    SSD_ARRY[7] = 39;
-    SSD_ARRY[8] = 44;
-    SSD_ARRY[9] = 49;
+    SSD_ARRY[1] = 8;
+    SSD_ARRY[2] = 12;
+    SSD_ARRY[3] = 16;
+    SSD_ARRY[4] = 20;
+    SSD_ARRY[5] = 24;
+    SSD_ARRY[6] = 28;
+    SSD_ARRY[7] = 32;
+    SSD_ARRY[8] = 36;
+    SSD_ARRY[9] = 40;
 
     tempVar = 10;
     while (tempVar < N_SSD_MAX)
@@ -72,7 +72,7 @@ process JOULE()
             TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0/N_TARG_POS);
             TARG_ECCENTRICITY_ARRY[tempVar] = 12.0;
         }
-        FIX_WIN_SIZE       = 7;
+        FIX_WIN_SIZE       = 5;
         FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
 
         TARG_WIN_SIZE       = 7;

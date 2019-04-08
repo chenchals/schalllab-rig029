@@ -49,9 +49,9 @@ declare int TEMP_DELY_PLUS_DURATION;
 // 1 = default to be used when running expreriment;
 declare int TIME_DILATE_FACTOR = 1;
 // subject has this long to hang around fix-spot outside FIX_WIN_SIZE_LARGE
-declare int READY_TIME = 1000;
+declare int READY_TIME = 500;
 // subject has this long to acquire fixation before a new trial is initiated
-declare int ALLOWED_FIX_TIME = 1000;
+declare int ALLOWED_FIX_TIME = 3000;
 // subject did not acquire fixation, show blank screen and wait before next trial
 declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
@@ -128,7 +128,7 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 600;
+declare int TONE_DELAY_MEAN = 300;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -143,7 +143,7 @@ declare int TONE_DURATION = 30;
 
 //================= Reward variables =================================
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 600;
+declare int RWRD_DELAY_MEAN = 300;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -193,9 +193,9 @@ declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int          TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 400;
-declare int          CANCELLED_TONE_HZ                   = 1000;
-declare int          GO_CORRECT_TONE_HZ                  = 1000;
+declare int          NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 1000;
+declare int          CANCELLED_TONE_HZ                   = 400;
+declare int          GO_CORRECT_TONE_HZ                  = 400;
 declare int          GO_ERROR_TONE_HZ                    = 100;
 declare int          NOGO_ERROR_TONE_HZ                  = 100;
 
