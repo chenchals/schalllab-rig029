@@ -24,9 +24,10 @@ process TONETEST() enabled
     declare int freq[10] = { 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000 };
     declare int duration = 50;
     declare int temp     = 0;
-	// set tone to off
-	mio_fout(0);
-	
+
+    // set tone to off
+    mio_fout(0);
+
     temp = 0;
     while (temp < 10)
     {
@@ -40,9 +41,10 @@ process TONETEST() enabled
     }
     if (playWhiteNoise)
     {
-      spawnwait PLAY_WHITE_NOISE(2000);
+        spawnwait PLAY_WHITE_NOISE(2000);
     }
 } /* TONETEST */
+
 
 // Play Harry Potter Theme Song:-)
 // Check the file: https://www.instructables.com/id/Arduino-Harry-Potter-Theme-Song/

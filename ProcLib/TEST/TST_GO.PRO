@@ -68,8 +68,8 @@ process TEST_GO()
             if (STAT_DLTA_T <= round(STAT_ALLOWED_T * 0.8))
             {
                 // hold position for half the allowed fix timetime
-                TEST_X_DEG = TEST_X_DEG + random(10) / 10.0;
-                TEST_Y_DEG = TEST_Y_DEG + random(10) / 10.0;
+                TEST_X_DEG = TEST_X_DEG + random(10)/10.0;
+                TEST_Y_DEG = TEST_Y_DEG + random(10)/10.0;
             }
             else       // fixate
             {
@@ -81,8 +81,8 @@ process TEST_GO()
             if (STAT_DLTA_T <= round(STAT_ALLOWED_T * 1.1))
             {
                 // hold fix
-                TEST_X_DEG = random(5) / 10.0;
-                TEST_Y_DEG = random(5) / 10.0;
+                TEST_X_DEG = random(5)/10.0;
+                TEST_Y_DEG = random(5)/10.0;
             }
             else           // break fix
             {

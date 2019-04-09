@@ -19,6 +19,7 @@
 //            (-384)
 //
 declare SET_SCRN();
+
 //==========Derived measurements from global variables=============
 // Screen mm to pixel conversion factor
 declare float constant MM_2_PIX_X = SCRN_PIX_X/SCRN_MM_X;
@@ -42,19 +43,19 @@ declare float SCRN_DEG_Y;
 declare float DEG_2_PIX_X;
 declare float DEG_2_PIX_Y;
 
+
 process SET_SCRN()
 {
+    SCRN_DEG_X = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
+    SCRN_DEG_Y = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));
 
-  SCRN_DEG_X = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
-  SCRN_DEG_Y = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));
+    DEG_2_PIX_X = (SCRN_PIX_X/2)/SCRN_DEG_X;
+    DEG_2_PIX_Y = (SCRN_PIX_Y/2)/SCRN_DEG_Y;
 
-  DEG_2_PIX_X = (SCRN_PIX_X/2)/SCRN_DEG_X;
-  DEG_2_PIX_Y = (SCRN_PIX_Y/2)/SCRN_DEG_Y;
+    printf("SET_SCRN: Deg2Pix_X(DEG_2_PIX_X) %0.4d, Deg2Pix_Y(DEG_2_PIX_Y) %0.4d\n", DEG_2_PIX_X, DEG_2_PIX_Y);
+    printf("SET_SCRN: Unit2Pix_X(MM_2_PIX_X) %0.4d, Unit2Pix_Y(MM_2_PIX_Y) %0.4d\n", MM_2_PIX_X, MM_2_PIX_Y);
+    printf("SET_SCRN: Setting virtual cordinate system for drawing pages to screen buffer\n");
 
-  printf("SET_SCRN: Deg2Pix_X(DEG_2_PIX_X) %0.4d, Deg2Pix_Y(DEG_2_PIX_Y) %0.4d\n",DEG_2_PIX_X,DEG_2_PIX_Y);
-  printf("SET_SCRN: Unit2Pix_X(MM_2_PIX_X) %0.4d, Unit2Pix_Y(MM_2_PIX_Y) %0.4d\n",MM_2_PIX_X,MM_2_PIX_Y);
-  printf("SET_SCRN: Setting virtual cordinate system for drawing pages to screen buffer\n");
-
-  // Set screen virtual coordinate systm for screen
-  dsendf("vc %d, %d, %d, %d\n",SCRN_PIX_X/(-2),SCRN_PIX_X/2,SCRN_PIX_Y/2,SCRN_PIX_Y/(-2));
+    // Set screen virtual coordinate systm for screen
+    dsendf("vc %d, %d, %d, %d\n", SCRN_PIX_X/(-2), SCRN_PIX_X/2, SCRN_PIX_Y/2, SCRN_PIX_Y/(-2));
 }

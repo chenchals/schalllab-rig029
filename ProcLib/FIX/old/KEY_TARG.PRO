@@ -8,35 +8,37 @@
 // process KEY_T_UP()
 // Advance to the next target during the fixation task based on a user button press
 //
-// written by david.c.godlove@vanderbilt.edu 	January, 2011
+// written by david.c.godlove@vanderbilt.edu    January, 2011
 
 declare KEY_T_UP();
 
+
 process KEY_T_UP()
-	{
-	if (State == 2)									// Global which defines which task we are running (2 = fixation)
-		{
-		Fixation_Target = (Fixation_Target + 1) % 9;
-		}
-	}
-	
-	
+{
+    if (State == 2)                                                                     // Global which defines which task we are running (2 = fixation)
+    {
+        Fixation_Target = (Fixation_Target + 1) % 9;
+    }
+}
+
+
 //------------------------------------------------------------------------
 // process KEY_T_DN()
 // Advance to the next target during the fixation task based on a user button press
 //
-// written by david.c.godlove@vanderbilt.edu 	January, 2011
+// written by david.c.godlove@vanderbilt.edu    January, 2011
 
 declare KEY_T_DN();
 
+
 process KEY_T_DN()
-	{
-	if (State == 2)									// Global which defines which task we are running (2 = fixation)
-		{
-		Fixation_Target = Fixation_Target - 1;
-		if (Fixation_Target == -1)
-			{
-			Fixation_Target = 8;
-			}
-		}	
-	}
+{
+    if (State == 2)                                                                     // Global which defines which task we are running (2 = fixation)
+    {
+        Fixation_Target = Fixation_Target - 1;
+        if (Fixation_Target == -1)
+        {
+            Fixation_Target = 8;
+        }
+    }
+}

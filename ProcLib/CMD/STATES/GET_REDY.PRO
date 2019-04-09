@@ -22,6 +22,7 @@
 
 declare PROC_GET_REDY();
 
+
 process PROC_GET_REDY()
 {
     if (PROCESS_STATE)
@@ -32,18 +33,21 @@ process PROC_GET_REDY()
         TRL_GET_READY_DURATION = 0;
         spawn SEND_EVT(EVT_TRIAL_GET_READY_);
         spawn GRAF_SHOW_FIX(GRAF_HIDE);
+
         printf("****STAT_GET_READY[%d]: TRL_TRIAL_NUMBER[%d]\n", STAT_GET_READY, TRL_TRIAL_NUMBER);
 
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
+        // initialize durations
+        TRL_GET_READY_DURATION = 0;
     }
 
     TRL_GET_READY_DURATION = TRL_GET_READY_DURATION + 1;
     if (STAT_DLTA_T <= STAT_ALLOWED_T && TRL_TRIAL_NUMBER > 1)
     {
-        if (I_FIX || I_FIX_WIDE)
+        if (I_FIX)
         {
             //printf("****STAT_GET_READY[%d]: ERR (Not Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
             //printf("****STAT_GET_READY[%d]: ERR (*Resetting TRL_GET_READY_DURATION*)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
@@ -61,4 +65,4 @@ process PROC_GET_REDY()
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FIX_ON;
     }
-}
+} /* PROC_GET_REDY */

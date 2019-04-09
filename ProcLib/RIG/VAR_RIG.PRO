@@ -19,6 +19,7 @@ declare constant PORTC = 0x4;
 
 //==========================================================================
 // Screen width and height in pixels
+declare int   VDO_SYNC_MODE;
 declare int   SCRN_PIX_X;
 declare int   SCRN_PIX_Y;
 // Screen width and height in mm
@@ -68,6 +69,8 @@ declare int I_TARG;
 declare int I_TARG_ANTI;
 declare int I_TARG_WIDE;
 declare int I_TARG_ANTI_WIDE;
+declare int I_INVALID;
+
 
 // For dynamically centering the Eye position
 // Add these to .pcf file
@@ -82,6 +85,7 @@ declare int JUICE_CHANNEL;
 declare int STIM_CHANNEL;
 declare int EYE_X_CHANNEL;
 declare int EYE_Y_CHANNEL;
+declare int EYE_PUPIL_CHANNEL;
 declare int PHOTOCELL_L_CHANNEL;
 declare int PHOTOCELL_R_CHANNEL;
 //Check das_gain and das_polarity in kped (setup tn)

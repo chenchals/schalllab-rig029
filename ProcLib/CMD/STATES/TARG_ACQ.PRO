@@ -33,7 +33,7 @@ process PROC_TARG_ACQ()
         STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = MAX_SACC_DURATION * TIME_DILATE_FACTOR;
-
+        // initialize durations
         TRL_SACC_DURATION      = 0;
         TRL_TARG_HOLD_DURATION = 0;
     }
@@ -46,9 +46,9 @@ process PROC_TARG_ACQ()
         TRL_SACC_DURATION = TRL_SACC_DURATION + 1;
         if (I_TARG)
         {
-            TRL_IS_TARG_ACQUIRED   = 1;
-            TRL_TARGET_ACQUIRED_TIME      = time();
-            TRL_DECIDE_TIME        = time();
+            TRL_IS_TARG_ACQUIRED     = 1;
+            TRL_TARGET_ACQUIRED_TIME = time();
+            TRL_DECIDE_TIME          = time();
             spawn SEND_EVT(EVT_TARGET_ACQUIRED_);
             spawn SEND_EVT(EVT_DECIDE_);
 
@@ -56,19 +56,19 @@ process PROC_TARG_ACQ()
             printf("****STAT_TARG_ACQ[%d]: OK (EVT_TARGET_ACQUIRED_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
-            // process speparately for STOP / GO trials
+            // process speparately for STOP/GO trials
             if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_NOGO_LATE_SACCADE_TIME > 0)
             {
                 CURR_STAT = STAT_OUTCOME;
             }
             else
             {
-              if(TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_IS_FIX_REIGNITE > 0)
-              {
-                // change the display to PG_SIGNAL_PD to turn the signal back on
-                dsendf("vp %d\n", PG_SIGNAL_PD);
-                printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial Saccade happened; Turn-on-Signal*)\n", STAT_TARG_ACQ);
-              }
+                if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP && TRL_IS_FIX_REIGNITE > 0)
+                {
+                    // change the display to PG_SIGNAL_PD to turn the signal back on
+                    dsendf("vp %d\n", PG_SIGNAL_PD);
+                    printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial Saccade happened; Turn-on-Signal*)\n", STAT_TARG_ACQ);
+                }
                 CURR_STAT = STAT_TARG_HOLD;
             }
         }
@@ -77,8 +77,8 @@ process PROC_TARG_ACQ()
     {
         if (!I_TARG)
         {
-            TRL_IS_TARG_ACQUIRED    = 0;
-            TRL_IS_STAIRCASE_SSD  = 0;
+            TRL_IS_TARG_ACQUIRED          = 0;
+            TRL_IS_STAIRCASE_SSD          = 0;
             TRL_ACQUIRE_TARGET_ERROR_TIME = time();
             spawn SEND_EVT(EVT_ACQUIRE_TARGET_ERROR_);
 

@@ -64,15 +64,20 @@ process PROC_TARG_SSD()
         STAT_I_DURATION2 = MAX_SACC_TIME * TIME_DILATE_FACTOR;
         //STAT_ALLOWED_T          = ceil(TRL_USE_SSD_VR_COUNT * REFRESH_RATE * TIME_DILATE_FACTOR);
         // in refresh counts
-        STAT_ALLOWED_T        = TRL_USE_SSD_VR_COUNT * TIME_DILATE_FACTOR;
+        STAT_ALLOWED_T = TRL_USE_SSD_VR_COUNT * TIME_DILATE_FACTOR;
+
+        // TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (TRL_USE_SSD_CANCEL_DURATION * TIME_DILATE_FACTOR);
+        TEMP_DELY_PLUS_DURATION = ceil(TRL_USE_SSD_VR_COUNT * REFRESH_RATE * TIME_DILATE_FACTOR) + (TRL_USE_SSD_CANCEL_DURATION * TIME_DILATE_FACTOR);
+
+        // initialize durations
+        TRL_CANCEL_DURATION      = 0;
+        TRL_STOP_SIGNAL_DURATION = 0;
+
         TRL_TARG_VR_COUNT     = 0;
         queuedStopSignalPage  = 0;
         TRL_IS_STOP_SIGNAL_ON = 0;
-        TRL_IS_CANCEL       = 0;
-        TRL_CANCEL_DURATION = 0;
-
-        //        TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + (TRL_USE_SSD_CANCEL_DURATION * TIME_DILATE_FACTOR);
-        TEMP_DELY_PLUS_DURATION = ceil(TRL_USE_SSD_VR_COUNT * REFRESH_RATE * TIME_DILATE_FACTOR) + (TRL_USE_SSD_CANCEL_DURATION * TIME_DILATE_FACTOR);
+        TRL_IS_CANCEL         = 0;
+        TRL_IS_TARGET_ON      = 0;
     }
 
     spawnwait CHECK_TARG_VERT_RFRSH();
@@ -87,7 +92,8 @@ process PROC_TARG_SSD()
     // keep track of target vertical refresh count
     if (TRL_TARG_VR_COUNT == 1 && TRL_TARGET_TIME <= 0)
     {
-        TRL_TARGET_TIME = time();
+        TRL_IS_TARGET_ON = 1;
+        TRL_TARGET_TIME  = time();
         printf("****STAT_TARG_SSD[%d]: Sending Event EVT_TARGET_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_TARGET_, TRL_TARGET_TIME);
         spawn SEND_EVT(EVT_TARGET_);
 
@@ -145,7 +151,7 @@ process PROC_TARG_SSD()
         if (I_FIX)
         {
             TRL_CANCEL_TIME = time();
-            TRL_IS_CANCEL = 1;
+            TRL_IS_CANCEL   = 1;
 
             spawn SEND_EVT(EVT_CANCEL_);
 

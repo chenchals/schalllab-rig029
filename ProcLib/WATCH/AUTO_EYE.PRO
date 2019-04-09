@@ -86,10 +86,10 @@ process AUTO_EYE()
         {
             spawnwait AUTO_EYE_TARG_ACQ();
         }
-		else if(CURR_STAT == STAT_TARG_SSD)
-		{
-			spawnwait AUTO_EYE_TARG_SSD();
-		}
+        else if (CURR_STAT == STAT_TARG_SSD)
+        {
+            spawnwait AUTO_EYE_TARG_SSD();
+        }
         else
         {
             //freeze
@@ -117,8 +117,8 @@ process AUTO_EYE_FIX_ON()
     if (STAT_DLTA_T <= round(STAT_ALLOWED_T * 0.8))
     {
         // hold position for half the allowed fix timetime
-        AUTO_EYE_X_DEG = AUTO_EYE_X_DEG + random(10) / 10.0;
-        AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG + random(10) / 10.0;
+        AUTO_EYE_X_DEG = AUTO_EYE_X_DEG + random(10)/10.0;
+        AUTO_EYE_Y_DEG = AUTO_EYE_Y_DEG + random(10)/10.0;
     }
     else         // fixate
     {
@@ -133,44 +133,50 @@ process AUTO_EYE_FIXATE()
     if (STAT_DLTA_T <= round(STAT_ALLOWED_T * 1.1))
     {
         // hold fix
-        AUTO_EYE_X_DEG = random(5) / 10.0;
-        AUTO_EYE_Y_DEG = random(5) / 10.0;
+        AUTO_EYE_X_DEG = random(5)/10.0;
+        AUTO_EYE_Y_DEG = random(5)/10.0;
     }
     else         // break fix
     {
         spawnwait AUTO_EYE_POS_FIX_WIDE();
     }
 }
+
+
 // State TARG_SSD
 process AUTO_EYE_TARG_SSD()
 {
     declare int out;
-	// just fixate, no saccade
-	spawnwait AUTO_EYE_POS_FIX();
-  // 3 outcomes
-	out = random(3);
-	if (STAT_DLTA_T > (random(50) * random(10))+1)
-	{
-		if(out ==0)
-		{
-			spawnwait AUTO_EYE_POS_FIX();
-		}
-		else if(out ==1)
-		{
-			spawnwait AUTO_EYE_POS_RAND();
-		}
-		else if(out ==2)
-		{
-			spawnwait AUTO_EYE_POS_TARG();
-		}
-	}
+
+    // just fixate, no saccade
+    spawnwait AUTO_EYE_POS_FIX();
+
+    // 3 outcomes
+    out = random(3);
+    if (STAT_DLTA_T > (random(50) * random(10)) + 1)
+    {
+        if (out == 0)
+        {
+            spawnwait AUTO_EYE_POS_FIX();
+        }
+        else if (out == 1)
+        {
+            spawnwait AUTO_EYE_POS_RAND();
+        }
+        else if (out == 2)
+        {
+            spawnwait AUTO_EYE_POS_TARG();
+        }
+    }
 }
+
 
 process AUTO_GO_TRIAL()
 {
-  declare int out;
-  // 2 outcomes
-  out = random(2);
+    declare int out;
+
+    // 2 outcomes
+    out = random(2);
 }
 
 
@@ -215,6 +221,7 @@ process AUTO_EYE_TARG_ON()
         }
     }
 }
+
 
 // State TARG_ACQ
 process AUTO_EYE_TARG_ACQ()
@@ -311,8 +318,8 @@ process AUTO_EYE_POS_MARCH()
 
 process AUTO_EYE_POS_RAND()
 {
-    AUTO_EYE_X_DEG = random(10) + random(10) / 10.0;
-    AUTO_EYE_Y_DEG = random(10) + random(10) / 10.0;
+    AUTO_EYE_X_DEG = random(10) + random(10)/10.0;
+    AUTO_EYE_Y_DEG = random(10) + random(10)/10.0;
     if (random(2))
     {
         AUTO_EYE_X_DEG = AUTO_EYE_X_DEG * -1;
@@ -326,8 +333,8 @@ process AUTO_EYE_POS_RAND()
 
 process AUTO_EYE_POS_FIX()
 {
-    AUTO_EYE_X_DEG = random(10) / 10.0;
-    AUTO_EYE_Y_DEG = random(10) / 10.0;
+    AUTO_EYE_X_DEG = random(10)/10.0;
+    AUTO_EYE_Y_DEG = random(10)/10.0;
     // for eyeXdeg
     if (random(2))
     {
@@ -347,8 +354,8 @@ process AUTO_EYE_POS_FIX_WIDE()
     declare float randX;
     declare float randY;
 
-    randX = ((FIX_WIN_LARGE[LEFT] + FIX_WIN_LARGE[RIGHT]) / 2.0) + 4.0 + random(10) / 10.0;
-    randY = ((FIX_WIN_LARGE[UP] + FIX_WIN_LARGE[DOWN]) / 2.0) + 4.0 + random(10) / 10.0;
+    randX = ((FIX_WIN_LARGE[LEFT] + FIX_WIN_LARGE[RIGHT])/2.0) + 4.0 + random(10)/10.0;
+    randY = ((FIX_WIN_LARGE[UP] + FIX_WIN_LARGE[DOWN])/2.0) + 4.0 + random(10)/10.0;
     // for eyeXdeg
     if (random(2))
     {
@@ -369,8 +376,8 @@ process AUTO_EYE_POS_TARG()
     declare float randX;
     declare float randY;
 
-    randX = random(10) / 10.0;
-    randY = random(10) / 10.0;
+    randX = random(10)/10.0;
+    randY = random(10)/10.0;
     // for eyeXdeg
     if (random(2))
     {
@@ -381,6 +388,6 @@ process AUTO_EYE_POS_TARG()
     {
         randY = randY * -1.0;
     }
-    AUTO_EYE_X_DEG = (TARG_WIN[LEFT] + TARG_WIN[RIGHT]) / 2.0 + randX;
-    AUTO_EYE_Y_DEG = (TARG_WIN[UP] + TARG_WIN[DOWN]) / 2.0 + randY;
+    AUTO_EYE_X_DEG = (TARG_WIN[LEFT] + TARG_WIN[RIGHT])/2.0 + randX;
+    AUTO_EYE_Y_DEG = (TARG_WIN[UP] + TARG_WIN[DOWN])/2.0 + randY;
 }

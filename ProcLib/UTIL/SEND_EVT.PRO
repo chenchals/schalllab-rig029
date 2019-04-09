@@ -73,10 +73,10 @@ process QUE_TTL()
 {
     while (1)
     {
-		if (n_events_sent >= events_per_cycle)
-		{
-			n_events_sent = 0;
-		}
+        if (n_events_sent >= events_per_cycle)
+        {
+            n_events_sent = 0;
+        }
         while (  n_events_sent < events_per_cycle
               && event_idx != CURR_EVENT_FIFO_IDX)
         {
@@ -116,6 +116,5 @@ process SEND_TTL(int value)
     // Clear ports after sending
     dioSetA(output, ~0xFF);
     dioSetB(output, ~0xFF);
-	spawnwait WAIT_MU(50);
-
+    spawnwait WAIT_MU(50);
 }

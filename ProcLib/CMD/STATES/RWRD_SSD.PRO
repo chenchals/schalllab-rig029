@@ -55,13 +55,13 @@ process PROC_RWRD_SSD()
         TEMP_XTRA_HOLD_TIME     = TRL_USE_XTRA_HOLD_DURATION * TIME_DILATE_FACTOR;
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_RWRD_DURATION;
 
-        spawn SEND_EVT(EVT_REWARD_ON_);
+        spawn SEND_EVT(EVT_REWARD_DELAY_START_);
 
-        printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_ON_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_ON_);
+        printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_DELAY_START_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_DELAY_START_);
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
-    if (I_FIX)
+    if (I_FIX && TRL_IS_XTRA_HOLD_DONE <= 0)
     {
         TRL_XTRA_HOLD_DURATION = TRL_XTRA_HOLD_DURATION + 1;
     }
@@ -98,9 +98,9 @@ process PROC_RWRD_SSD()
     // Reward duration
     else if (STAT_DLTA_T > STAT_ALLOWED_T && STAT_DLTA_T <= TEMP_DELY_PLUS_DURATION)
     {
-        if (TRL_REWARD_ON_TIME <= 0)
+        if (TRL_REWARD_DELAY_START_TIME <= 0)
         {
-            TRL_REWARD_ON_TIME = time();
+            TRL_REWARD_DELAY_START_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
         }
         if (!I_FIX && TRL_IS_XTRA_HOLD_DONE <= 0)
@@ -131,12 +131,12 @@ process PROC_RWRD_SSD()
     }
     else if (STAT_DLTA_T > TEMP_DELY_PLUS_DURATION)   // after reward
     {
-        if (TRL_REWARD_OFF_TIME <= 0)
+        if (TRL_REWARD_DELAY_END_TIME <= 0)
         {
-            TRL_REWARD_OFF_TIME = time();
-            spawn SEND_EVT(EVT_REWARD_OFF_);
+            TRL_REWARD_DELAY_END_TIME = time();
+            spawn SEND_EVT(EVT_REWARD_DELAY_END_);
 
-            printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_OFF_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_OFF_);
+            printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_REWARD_DELAY_END_[%d]\n", STAT_RWRD_SSD, EVT_REWARD_DELAY_END_);
         }
 
         // if you reached here xtra-hold is done
@@ -149,7 +149,7 @@ process PROC_RWRD_SSD()
             printf("****STAT_RWRD_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_SSD, EVT_XTRA_HOLD_END_);
         }
         printf("****STAT_RWRD_SSD[%d]: OK (*XTRA_HOLD* Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-               STAT_RWRD_SSD, TRL_TARG_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+               STAT_RWRD_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
     }

@@ -2,36 +2,7 @@
 // OUTCOME.PRO
 //  Description: Determine trial outcome and appropriate EXTRA_TIMEOUT_DURATION in ms
 //
-// See CmdOutcomes.xls file in DOC folder
-// EVT_ACQUIRE_FIX_ERROR_ does not result in timeout. This outcome is sent in STATES/FIX_ON.PRO
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| DEF_TRL_TIME_VAR	             | TRL_TIME_VAR_not_0	       | EVENT_SENT	    | OUTCOME_GO_TRIAL | OUTCOME_NOGO_TRIAL_NO_SS | OUTCOME_NOGO_TRIAL_SS |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win before allowed time    |	TRL_ACQUIRE_FIX_ERROR_TIME	     | *EVT_ACQUIRE_FIX_ERROR_	| *EVT_OUTCOME_FIX_ERR_	| *EVT_OUTCOME_FIX_ERR_	    | *EVT_OUTCOME_FIX_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win for fix hold time	   | TRL_FIX_BREAK_TIME	       | EVT_FIX_BREAK_	    | EVT_OUTCOME_FIX_BREAK_	| EVT_OUTCOME_FIX_BREAK_	    | EVT_OUTCOME_FIX_BREAK_    |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze out of Fix win before Min sac time	   | TRL_ERLY_SACCADE_TIME	       | EVT_EARLY_SACCADE_	  | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in Fix win after Max sac time	     | TRL_NO_SACCADE_TIME	       | EVT_NO_SACCADE_	    | EVT_OUTCOME_GO_ERR_	| *trial still evolving*  | *trial still evolving* |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Targ win before max sac duration | TRL_ACQUIRE_TARGET_ERROR_TIME	     | EVT_ACQUIRE_TARGET_ERROR_ | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone delay	   | TRL_BRK_PRE_TONE_TIME    | EVT_PRE_TONE_BREAK_ | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone duration	 | TRL_BRK_TONE_TIME	     | EVT_TONE_BREAK_   | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward delay	  | TRL_BRK_PRE_RWRD_TIME	 | EVT_PRE_RWRD_BREAK_ | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward duration	 | TRL_BRK_RWRD_TIME	     | EVT_RWRD_BREAK_   | EVT_OUTCOME_GO_ERR_	| EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win after reward duration  |                 |           |          |             |            |
-//| min target hold time is greater than     | TRL_TARG_BRK_POST_RWRD_TIME   | TargHoldBrkPostRwrd_ | EVT_OUTCOME_GO_ERR_  | EVT_OUTCOME_NOGO_ERR_  | EVT_OUTCOME_NOGO_ERR_   |
-//| tone + reward times.	           |                 |           |          |             |            |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in targ win for min target hold time	 | TRL_XTRA_HOLD_END_TIME	     | EVT_XTRA_HOLD_END_   | EVT_OUTCOME_GO_CORRECT_ | OutcomeNoGoWrongEarly_  | OutcomeNoGoWrong_   |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//
+// See CmdOutcomes.xls file in DOC folder - not updated
 //        All Global variables and the following state variables are available to monitor state progress
 //        1. PROCESS_STATE : Setup state processing, will be done once per call
 //        1. CURR_STAT :
@@ -56,8 +27,8 @@ declare PROC_NOGO_POST_CANCEL_OUTCOMES();
 
 declare PROC_FIX_BREAK();
 declare PROC_GO_ERR();
-declare PROC_CANCELLED_ERR();
-declare PROC_NON_CANCELLED_ERR();
+declare PROC_CANCELLED_BRK();
+declare PROC_NON_CANCELLED_BRK();
 declare PROC_NOGO_ERR();
 
 
@@ -76,8 +47,8 @@ process PROC_TRL_OUTCOME()
         STAT_ALLOWED_T = 5;
         dsendf("vp %d\n", PG_BLANK);
 
-        TRL_IS_TARG_ON   = 0;
-        TIMEOUT_DURATION = 0;
+        INCEMENT_TARG_DURATION_FLAG = 0;
+        TIMEOUT_DURATION            = 0;
         // set this as default and change to
         // TRL_IS_TIMEOUT = 0; when not error
         TRL_IS_TIMEOUT = 1;
@@ -92,16 +63,10 @@ process PROC_TRL_OUTCOME()
             doOnce = 0;
             if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
             {
-                // Assume it is an error and adjust if not
-                TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERR_;
-                SESS_N_GO_ERROR_TRLS         = SESS_N_GO_ERROR_TRLS + 1;
                 spawn PROC_GO_OUTCOMES();
             }
             else if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
             {
-                // Assume it is a non-cancelled error trial and adjust if not
-                TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERR_;
-                SESS_N_NOGO_ERROR_TRLS         = SESS_N_NOGO_ERROR_TRLS + 1;
                 if (TRL_CANCEL_TIME > 0)
                 {
                     spawn PROC_NOGO_POST_CANCEL_OUTCOMES();
@@ -152,9 +117,7 @@ process PROC_GO_OUTCOMES()
                STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
 
         SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
-        // Adjust initial assumption that this was a error trial
-        SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS - 1;
-        BLOCK_N_CORRECT_TRLS = BLOCK_N_CORRECT_TRLS + 1;
+        BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
     }
     else if (TRL_FIX_BREAK_TIME > 0)
     {
@@ -189,7 +152,7 @@ process PROC_GO_OUTCOMES()
     else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[GO_IDX];
-       spawnwait PROC_GO_ERR();
+        spawnwait PROC_GO_ERR();
     }
     else if (TRL_BRK_RWRD_TIME > 0)
     {
@@ -214,7 +177,7 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 {
     declare int nogoIdx;
 
-    if (TRL_IS_STOP_SIGNAL_ON )
+    if (TRL_IS_STOP_SIGNAL_ON)
     {
         nogoIdx = NOGO_POST_SSD_IDX;
         printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
@@ -227,19 +190,17 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
 
     if (TRL_IS_MIN_THT > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
     {
-        TRL_IS_NON_CANCELLED = 1;
-        TIMEOUT_DURATION     = 0;
-        TRL_IS_TIMEOUT       = 0;
-        spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_);
+        TRL_IS_NON_CANCELLED_NO_BRK = 1;
+        TIMEOUT_DURATION            = 0;
+        TRL_IS_TIMEOUT              = 0;
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_);
 
-        TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_;
+        TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_;
         printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_** [%d]; TRL_IS_STAIRCASE_SSD [%d]; STOP Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
-               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_, TRL_IS_STAIRCASE_SSD);
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_** [%d]; TRL_IS_STAIRCASE_SSD [%d]; STOP Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
 
-        SESS_N_NON_CANCEL_TRLS = SESS_N_NON_CANCEL_TRLS + 1;
-        // Adjust initial assumption that this was a non-cancelled error trial
-        SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+        SESS_N_NON_CANCEL_NO_BRK_TRLS = SESS_N_NON_CANCEL_NO_BRK_TRLS + 1;
     }
     else if (TRL_FIX_BREAK_TIME > 0)
     {
@@ -264,22 +225,22 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
     else if (TRL_BRK_PRE_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
-        spawnwait PROC_NON_CANCELLED_ERR();
+        spawnwait PROC_NON_CANCELLED_BRK();
     }
     else if (TRL_BRK_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
-        spawnwait PROC_NON_CANCELLED_ERR();
+        spawnwait PROC_NON_CANCELLED_BRK();
     }
     else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-       spawnwait PROC_NON_CANCELLED_ERR();
+        spawnwait PROC_NON_CANCELLED_BRK();
     }
     else if (TRL_BRK_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_RWRD[nogoIdx];
-        spawnwait PROC_NON_CANCELLED_ERR();
+        spawnwait PROC_NON_CANCELLED_BRK();
     }
     else if (TRL_IS_MIN_THT <= 0)
     {
@@ -303,40 +264,38 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
     if (TRL_IS_CANCEL > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
     {
-        TRL_IS_CANCELLED = 1;
-        TIMEOUT_DURATION = 0;
-        TRL_IS_TIMEOUT   = 0;
-        spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_);
+        TRL_IS_CANCELLED_NO_BRK = 1;
+        TIMEOUT_DURATION        = 0;
+        TRL_IS_TIMEOUT          = 0;
+        spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_NO_BRK_);
 
-        TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_;
+        TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_NO_BRK_;
         printf("---CANCELLED------CANCELLED------SSD [%d, %dms]------CANCELLED------CANCELLED---\n", TRL_USE_SSD_VR_COUNT, TRL_STOP_SIGNAL_DURATION);
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_CANCEL_ [%d]; TRL_IS_STAIRCASE_SSD  [%d]; STOP Trial; (TRL_IS_TARG_IS_CANCEL - OK) \n",
-               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_, TRL_IS_STAIRCASE_SSD);
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ [%d]; TRL_IS_STAIRCASE_SSD  [%d]; STOP Trial; (TRL_IS_TARG_IS_CANCEL - OK) \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
 
-        SESS_N_CANCEL_TRLS = SESS_N_CANCEL_TRLS + 1;
-        // Adjust initial assumption that this was a non-cancelled error trial
-        SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
-        BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
+        SESS_N_CANCEL_NO_BRK_TRLS = SESS_N_CANCEL_NO_BRK_TRLS + 1;
+        BLOCK_N_CORRECT_TRLS      = BLOCK_N_CORRECT_TRLS + 1;
     }
     else if (TRL_BRK_PRE_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_TONE[nogoIdx];
-        spawnwait PROC_CANCELLED_ERR();
+        spawnwait PROC_CANCELLED_BRK();
     }
     else if (TRL_BRK_TONE_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_TONE[nogoIdx];
-        spawnwait PROC_CANCELLED_ERR();
+        spawnwait PROC_CANCELLED_BRK();
     }
     else if (TRL_BRK_PRE_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_PRE_RWRD[nogoIdx];
-        spawnwait PROC_CANCELLED_ERR();
+        spawnwait PROC_CANCELLED_BRK();
     }
     else if (TRL_BRK_RWRD_TIME > 0)
     {
         TIMEOUT_DURATION = TIMEOUT_BRK_RWRD[nogoIdx];
-        spawnwait PROC_CANCELLED_ERR();
+        spawnwait PROC_CANCELLED_BRK();
     }
     else if (TRL_IS_CANCEL <= 0)
     {
@@ -365,41 +324,37 @@ process PROC_GO_ERR()
     TRL_IS_GO_ERR = 1;
     spawn SEND_EVT(EVT_OUTCOME_GO_ERR_);
 
+    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERR_;
     printf("---GO-ERR------GO-ERR------GO-ERR------GO-ERR------GO-ERR---\n");
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERR_ [%d]; Go Trial\n",
            STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERR_);
+    SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
 }
 
 
-process PROC_CANCELLED_ERR()
+process PROC_CANCELLED_BRK()
 {
-    TRL_IS_CANCELLED_ERR = 1;
-    spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_ERR_);
+    TRL_IS_CANCELLED_BRK = 1;
+    spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_BRK_);
 
-    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_ERR_;
+    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_BRK_;
     printf("---CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR---\n");
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_CANCEL_ERR_** [%d];STOP Trial\n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_ERR_);
-
-    SESS_N_CANCEL_ERR_TRLS = SESS_N_CANCEL_ERR_TRLS + 1;
-    // Adjust initial assumption that this was a non-cancelled error trial
-    SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_CANCEL_BRK_** [%d];STOP Trial\n",
+           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_BRK_);
+    SESS_N_CANCEL_BRK_TRLS = SESS_N_CANCEL_BRK_TRLS + 1;
 }
 
 
-process PROC_NON_CANCELLED_ERR()
+process PROC_NON_CANCELLED_BRK()
 {
-    TRL_IS_NON_CANCELLED_ERR = 1;
-    spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_ERR_);
+    TRL_IS_NON_CANCELLED_BRK = 1;
+    spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_BRK_);
 
-    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_ERR_;
+    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_BRK_;
     printf("---NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR---\n");
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_ERR_** [%d];STOP Trial\n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_ERR_);
-
-    SESS_N_NON_CANCEL_ERR_TRLS = SESS_N_NON_CANCEL_ERR_TRLS + 1;
-    // Adjust initial assumption that this was a non-cancelled error trial
-    SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS - 1;
+    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_BRK_** [%d];STOP Trial\n",
+           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_BRK_);
+    SESS_N_NON_CANCEL_BRK_TRLS = SESS_N_NON_CANCEL_BRK_TRLS + 1;
 }
 
 
@@ -408,6 +363,8 @@ process PROC_NOGO_ERR()
     TRL_IS_NOGO_ERR = 1;
     spawn SEND_EVT(EVT_OUTCOME_NOGO_ERR_);
 
+    TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERR_;
     printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERR_ [%d]; STOP Trial\n",
            STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERR_);
+    SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
 }

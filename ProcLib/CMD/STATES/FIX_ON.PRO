@@ -21,6 +21,7 @@
 
 declare PROC_FIX_ON();
 
+
 process PROC_FIX_ON()
 {
     if (PROCESS_STATE)
@@ -41,6 +42,7 @@ process PROC_FIX_ON()
     {
         if (TRL_FIX_ON_TIME <= 0)
         {
+            TRL_IS_FIX_ON   = 1;
             TRL_FIX_ON_TIME = time();
             spawn SEND_EVT(EVT_FIX_SPOT_ON_);
             spawn GRAF_SHOW_FIX(GRAF_SHOW);

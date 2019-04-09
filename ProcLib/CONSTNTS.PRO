@@ -8,8 +8,8 @@
 //  Revision History:
 
 // For debugging and file writing of vars
-declare int DEBUG_CONSOLE  = 0;
-declare int WRITE_FILE = 0;
+declare int          DEBUG_CONSOLE = 0;
+declare int          WRITE_FILE    = 0;
 // Color indexes
 declare constant int R_IDX = 0;
 declare constant int G_IDX = 1;

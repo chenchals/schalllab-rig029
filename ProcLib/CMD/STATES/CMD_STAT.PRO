@@ -89,36 +89,7 @@ declare constant int STAT_TONE_CHK = 7;
 //         if gaze out of TARG_WIN before TRL_USE_XTRA_HOLD_DURATION expires: (reward already delivered) --> goto STAT_TIM_OUT
 declare constant int STAT_RWRD_CHK = 8;
 
-// See CmdOutcomes.xls file in DOC folder
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| DEF_TRL_TIME_VAR	                            | TRL_TIME_VAR_not_0	             | EVENT_SENT	          | OUTCOME_GO_TRIAL  |	OUTCOME_NOGO_TRIAL_NO_SS |  OUTCOME_NOGO_TRIAL_SS |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win before allowed time       |	TRL_ACQUIRE_FIX_ERROR_TIME	         | EVT_ACQUIRE_FIX_ERROR_	    | EVT_OUTCOME_FIX_ERR_	| EVT_OUTCOME_FIX_ERR_	       | EVT_OUTCOME_FIX_ERR_       |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Fix win for fix hold time	        | TRL_FIX_BREAK_TIME	           | EVT_FIX_BREAK_	          | EVT_OUTCOME_FIX_BREAK_	| EVT_OUTCOME_FIX_BREAK_	       | EVT_OUTCOME_FIX_BREAK_       |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze out of Fix win before Min sac time	      | TRL_ERLY_SACCADE_TIME	             | EVT_EARLY_SACCADE_	      | EVT_OUTCOME_GO_ERR_	  | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in Fix win after Max sac time	          | TRL_NO_SACCADE_TIME	               | EVT_NO_SACCADE_	          | EVT_OUTCOME_GO_ERR_	  | *trial still evolving*	 | *trial still evolving* |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in Targ win before max sac duration	| TRL_ACQUIRE_TARGET_ERROR_TIME	         | EVT_ACQUIRE_TARGET_ERROR_  | EVT_OUTCOME_GO_ERR_	  | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone delay	      | TRL_BRK_PRE_TONE_TIME  | EVT_PRE_TONE_BREAK_  | EVT_OUTCOME_GO_ERR_	  | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during tone duration	    | TRL_BRK_TONE_TIME	     | EVT_TONE_BREAK_     | EVT_OUTCOME_GO_ERR_	  | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward delay	    | TRL_BRK_PRE_RWRD_TIME	 | EVT_PRE_RWRD_BREAK_  | EVT_OUTCOME_GO_ERR_	  | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win during reward duration	  | TRL_BRK_RWRD_TIME	     | EVT_RWRD_BREAK_     | EVT_OUTCOME_GO_ERR_	  | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze not in targ win after reward duration    |                                  |                      |                   |                          |                        |
-//| min target hold time is greater than          | TRL_TARG_BRK_POST_RWRD_TIME | TargHoldBrkPostRwrd_ | EVT_OUTCOME_GO_ERR_   | OutcomeNoGoErrorEarly_	 | EVT_OUTCOME_NOGO_ERR_      |
-//| tone + reward times.	                        |                                  |                      |                   |                          |                        |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-//| Gaze in targ win for min target hold time	    | TRL_XTRA_HOLD_END_TIME	     | EVT_XTRA_HOLD_END_      | EVT_OUTCOME_GO_CORRECT_ | OutcomeNoGoWrongEarly_	 | OutcomeNoGoWrong_      |
-//|-----------------------------------------------|----------------------------------|----------------------|-------------------|--------------------------|------------------------|
-
-
+// See CmdOutcomes.xls file in DOC folder - not Updated
 declare constant int STAT_OUTCOME = 9;
 
 //
@@ -126,6 +97,9 @@ declare constant int STAT_ITI_CHK = 10;
 
 //
 declare constant int STAT_TIM_OUT = 11;
+
+//
+declare constant int STAT_REFIX_CHK = 12;
 
 /// Gaze Check:
 // Fixspot is OFF Target is ON:

@@ -34,8 +34,6 @@ process PROC_TARG_HOLD()
         STAT_DLTA_T   = 0;
 
         STAT_ALLOWED_T = TRL_USE_MIN_THT_DURATION * TIME_DILATE_FACTOR;
-        // as target was already acquired in previous state
-        TRL_TARG_HOLD_DURATION = 1;
 
         // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_MIN_THT_START_TIME = time();
@@ -43,8 +41,10 @@ process PROC_TARG_HOLD()
 
         printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_START_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_START_);
 
-        TRL_MIN_THT_DURATION = 1;
-        TRL_IS_MIN_THT       = 0;
+        // initialize durations
+        TRL_TARG_HOLD_DURATION = 0;
+        TRL_MIN_THT_DURATION   = 0;
+        TRL_IS_MIN_THT         = 0;
     }
     if (I_TARG)
     {
@@ -70,11 +70,12 @@ process PROC_TARG_HOLD()
         {
             TRL_TARGET_BREAK_TIME = time();
             spawn SEND_EVT(EVT_TARGET_BREAK_);
+            spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-            printf("****STAT_TARG_HOLD[%d]: ERR sent Event: EVT_TARGET_BREAK_[%d]\n", STAT_TARG_HOLD, EVT_TARGET_BREAK_);
+            printf("****STAT_TARG_HOLD[%d]: ERR sent Event: EVT_TARGET_BREAK_[%d], EVT_SACCADE_SEC_[%d] \n", STAT_TARG_HOLD, EVT_TARGET_BREAK_,EVT_SACCADE_SEC_);
             printf("****STAT_TARG_HOLD[%d]:ERR (Broke target fixation)[%d]/[%d] (TRL_USE_MIN_THT_DURATION)\n", STAT_TARG_HOLD, TRL_MIN_THT_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_OUTCOME;
+            CURR_STAT     = STAT_REFIX_CHK;
         }
     }
     else
