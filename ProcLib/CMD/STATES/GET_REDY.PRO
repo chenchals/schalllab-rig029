@@ -47,7 +47,7 @@ process PROC_GET_REDY()
     TRL_GET_READY_DURATION = TRL_GET_READY_DURATION + 1;
     if (STAT_DLTA_T <= STAT_ALLOWED_T && TRL_TRIAL_NUMBER > 1)
     {
-        if (I_FIX)
+        if (I_FIX || I_FIX_WIDE)
         {
             //printf("****STAT_GET_READY[%d]: ERR (Not Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
             //printf("****STAT_GET_READY[%d]: ERR (*Resetting TRL_GET_READY_DURATION*)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);

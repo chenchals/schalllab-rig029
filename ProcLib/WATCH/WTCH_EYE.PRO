@@ -97,6 +97,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     if(USE_BLINK && I_INVALID == 1)
     {
         // Assume NO change in I position
+        I_FIX_ACQ        = I_FIX_ACQ;
         I_FIX            = I_FIX;
         I_FIX_WIDE       = I_FIX_WIDE;
         I_TARG           = I_TARG;
@@ -106,9 +107,21 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     }
     else
     {
+        if (  iXDeg >= FIX_WIN_ACQ[LEFT] && iXDeg <= FIX_WIN_ACQ[RIGHT]
+           && iYDeg >= FIX_WIN_ACQ[UP] && iYDeg <= FIX_WIN_ACQ[DOWN])
+        {
+            I_FIX_ACQ        = 1;
+            I_FIX            = 0;
+            I_FIX_WIDE       = 0;
+            I_TARG           = 0;
+            I_TARG_WIDE      = 0;
+            I_TARG_ANTI      = 0;
+            I_TARG_ANTI_WIDE = 0;
+        }       
         if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
            && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
         {
+            I_FIX_ACQ        = 0;
             I_FIX            = 1;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
@@ -120,6 +133,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
                 && iYDeg >= FIX_WIN_LARGE[UP] && iYDeg <= FIX_WIN_LARGE[DOWN])
         {
             // INACCURATE Between FIX_WIN_LARGE and FIX_WIN
+            I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 1;
             I_TARG           = 0;
@@ -131,6 +145,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
                 && iYDeg >= TARG_WIN[UP] && iYDeg <= TARG_WIN[DOWN])
         {
             // Check Eye pos in TARGET window area
+            I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 1;
@@ -142,6 +157,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
                 && iYDeg >= TARG_WIN_LARGE[UP] && iYDeg <= TARG_WIN_LARGE[DOWN])
         {
             // INACCURATE Between TARG_WIN_LARGE and TARG_WIN
+            I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
@@ -153,6 +169,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
                 && iYDeg >= TARG_WIN_ANTI[UP] && iYDeg <= TARG_WIN_ANTI[DOWN])
         {
             // Check Eye pos in ANTI - TARGET window area
+            I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
@@ -164,6 +181,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
                 && iYDeg >= TARG_WIN_ANTI_LARGE[UP] && iYDeg <= TARG_WIN_ANTI_LARGE[DOWN])
         {
             // INACCURATE Between TARG_WIN_ANTI_LARGE and I_TARG_ANTI_WIDE
+            I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
@@ -173,6 +191,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
         }
         else
         {
+            I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;

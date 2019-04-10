@@ -49,7 +49,6 @@ process PROC_FIX_HOLD()
         tempVRCount             = (TRL_ACQUIRE_FIX_TIME - TRL_FIX_ON_TIME + TRL_USE_FIX_HOLD_DURATION) * 1.0/REFRESH_RATE;
         TRL_USE_FIX_HOLD_ADJUST = round(round(tempVRCount) * REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_ACQUIRE_FIX_TIME - TRL_USE_FIX_HOLD_DURATION;
         TRL_USE_FIX_HOLD_ADJUST = TRL_USE_FIX_HOLD_ADJUST - offsetForVdoSync;
-		
         if (adjust)
         {
             printf("*************tempVRCount [%8.4d], tempFixHoldAjust = [%d]\n", tempVRCount, TRL_USE_FIX_HOLD_ADJUST);

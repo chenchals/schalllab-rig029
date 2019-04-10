@@ -63,6 +63,7 @@ declare float CURR_EYE_ANGLE;
 declare float CURR_EYE_ECC;
 
 // Eye location flags
+declare int I_FIX_ACQ;
 declare int I_FIX;
 declare int I_FIX_WIDE;
 declare int I_TARG;

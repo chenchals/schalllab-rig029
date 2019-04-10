@@ -21,6 +21,7 @@
 
 declare PROC_REFIX_CHK();
 
+
 process PROC_REFIX_CHK()
 {
     // Target- Eye left target window during targ-hold onwards for Stop trial
