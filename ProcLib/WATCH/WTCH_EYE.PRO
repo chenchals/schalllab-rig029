@@ -23,12 +23,13 @@ declare int wroteIHeader = 0;
 declare int I_INVALID_THRESHOLD = 15000;
 declare int I_INVALID_DURATION;
 declare constant USE_BLINK = 0;
-
+declare int foundLoc = -1;
+declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
 
 process WTCH_EYE()
 {
     declare int   xVal, yVal;
-    declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
+    //declare float eyeXdeg, eyeYdeg, oldXdeg, oldYdeg;
     declare int   lasttime, eyeXpixels, eyeYpixels;
 
     while (1)
@@ -57,7 +58,7 @@ process WTCH_EYE()
 
         if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
         {
-            spawnwait LOCATE_EYE(EYE_X_VOLTS, EYE_Y_VOLTS, eyeXdeg, eyeYdeg);
+            spawn LOCATE_EYE(EYE_X_VOLTS, EYE_Y_VOLTS, eyeXdeg, eyeYdeg);
 
             // why should this be with screen refresh?
             if (time() > lasttime + 16)
@@ -89,6 +90,8 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
     // I_TARG_ANTI, I_TARG_ANTI_WIDE
     // Check Eye pos in FIX window area
     I_INVALID = 0;
+    foundLoc = 0;
+
     if (fabs(iXVolts) >= I_INVALID_THRESHOLD && fabs(iYVolts) >= I_INVALID_THRESHOLD)
     {
         I_INVALID = 1;
@@ -110,18 +113,16 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
         if (  iXDeg >= FIX_WIN_ACQ[LEFT] && iXDeg <= FIX_WIN_ACQ[RIGHT]
            && iYDeg >= FIX_WIN_ACQ[UP] && iYDeg <= FIX_WIN_ACQ[DOWN])
         {
+            foundLoc    = 1;
             I_FIX_ACQ        = 1;
-            I_FIX            = 0;
-            I_FIX_WIDE       = 0;
-            I_TARG           = 0;
-            I_TARG_WIDE      = 0;
-            I_TARG_ANTI      = 0;
-            I_TARG_ANTI_WIDE = 0;
+            I_FIX            = 1;
+
         }
-        if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
+        else if ( iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
            && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
         {
-            I_FIX_ACQ        = 0;
+            foundLoc = 2;
+            I_FIX_ACQ        = 1;
             I_FIX            = 1;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
@@ -129,68 +130,75 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
             I_TARG_ANTI      = 0;
             I_TARG_ANTI_WIDE = 0;
         }
-        else if (  iXDeg >= FIX_WIN_LARGE[LEFT] && iXDeg <= FIX_WIN_LARGE[RIGHT]
+        else if(iXDeg >= FIX_WIN_LARGE[LEFT]  && iXDeg <= FIX_WIN_LARGE[RIGHT]
                 && iYDeg >= FIX_WIN_LARGE[UP] && iYDeg <= FIX_WIN_LARGE[DOWN])
         {
             // INACCURATE Between FIX_WIN_LARGE and FIX_WIN
+            foundLoc = 3;
+            I_FIX_WIDE       = 1;
             I_FIX_ACQ        = 0;
             I_FIX            = 0;
-            I_FIX_WIDE       = 1;
             I_TARG           = 0;
             I_TARG_WIDE      = 0;
             I_TARG_ANTI      = 0;
-            I_TARG_ANTI_WIDE = 0;
+            I_TARG_ANTI_WIDE = 0;        
         }
-        else if (  iXDeg >= TARG_WIN[LEFT] && iXDeg <= TARG_WIN[RIGHT]
-                && iYDeg >= TARG_WIN[UP] && iYDeg <= TARG_WIN[DOWN])
+        // Target
+        if (iXDeg >= TARG_WIN[LEFT] && iXDeg <= TARG_WIN[RIGHT]
+            && iYDeg >= TARG_WIN[UP] && iYDeg <= TARG_WIN[DOWN])
         {
             // Check Eye pos in TARGET window area
+            foundLoc = 4;
+            I_TARG   = 1;
             I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
-            I_TARG           = 1;
             I_TARG_WIDE      = 0;
             I_TARG_ANTI      = 0;
-            I_TARG_ANTI_WIDE = 0;
+            I_TARG_ANTI_WIDE = 0;        
         }
-        else if (  iXDeg >= TARG_WIN_LARGE[LEFT] && iXDeg <= TARG_WIN_LARGE[RIGHT]
+        else if ( iXDeg >= TARG_WIN_LARGE[LEFT] && iXDeg <= TARG_WIN_LARGE[RIGHT]
                 && iYDeg >= TARG_WIN_LARGE[UP] && iYDeg <= TARG_WIN_LARGE[DOWN])
         {
+                foundLoc = 5;
             // INACCURATE Between TARG_WIN_LARGE and TARG_WIN
+            I_TARG_WIDE      = 1;
             I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
-            I_TARG_WIDE      = 1;
             I_TARG_ANTI      = 0;
-            I_TARG_ANTI_WIDE = 0;
+            I_TARG_ANTI_WIDE = 0;      
         }
-        else if (  iXDeg >= TARG_WIN_ANTI[LEFT] && iXDeg <= TARG_WIN_ANTI[RIGHT]
+        if (iXDeg >= TARG_WIN_ANTI[LEFT] && iXDeg <= TARG_WIN_ANTI[RIGHT]
                 && iYDeg >= TARG_WIN_ANTI[UP] && iYDeg <= TARG_WIN_ANTI[DOWN])
         {
-            // Check Eye pos in ANTI - TARGET window area
+                 foundLoc = 6;
+           // Check Eye pos in ANTI - TARGET window area
+            I_TARG_ANTI      = 1;
             I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
             I_TARG_WIDE      = 0;
-            I_TARG_ANTI      = 1;
-            I_TARG_ANTI_WIDE = 0;
+            I_TARG_ANTI_WIDE = 0;       
         }
-        else if (  iXDeg >= TARG_WIN_ANTI_LARGE[LEFT] && iXDeg <= TARG_WIN_ANTI_LARGE[RIGHT]
+        else if (iXDeg >= TARG_WIN_ANTI_LARGE[LEFT] && iXDeg <= TARG_WIN_ANTI_LARGE[RIGHT]
                 && iYDeg >= TARG_WIN_ANTI_LARGE[UP] && iYDeg <= TARG_WIN_ANTI_LARGE[DOWN])
         {
+            foundLoc = 7;
             // INACCURATE Between TARG_WIN_ANTI_LARGE and I_TARG_ANTI_WIDE
+            I_TARG_ANTI_WIDE = 1;
             I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;
             I_TARG           = 0;
             I_TARG_WIDE      = 0;
-            I_TARG_ANTI      = 0;
-            I_TARG_ANTI_WIDE = 1;
+            I_TARG_ANTI      = 0;      
         }
-        else
+        if (!foundLoc)
         {
+            foundLoc = 8;
             I_FIX_ACQ        = 0;
             I_FIX            = 0;
             I_FIX_WIDE       = 0;

@@ -34,7 +34,7 @@ process PROC_FIX_HOLD()
 
     if (PROCESS_STATE)
     {
-        printf("****STAT_FIX_HOLD[%d]: Processing hold fixation\n", STAT_FIX_HOLD);
+         printf("****STAT_FIX_HOLD[%d]: Processing hold fixation\n", STAT_FIX_HOLD);
         // actually TRL_ACQUIRE_FIX_TIME, however the below is practically
         //same and it keeps this state independent of previous state
         PROCESS_STATE = 0;
@@ -61,7 +61,8 @@ process PROC_FIX_HOLD()
     }
 
     TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
-
+    printf("    STAT_DLTA_T [%d], I_FIX [%d], I_FIX_ACQ [%d], xVolt[%10.4d], yVolt[%10.4d], fndLoc[%d], xDeg[%10.5d], yDeg[%10.5d]\n",
+    STAT_DLTA_T,I_FIX,I_FIX_ACQ,EYE_X_VOLTS,EYE_Y_VOLTS,foundLoc,eyeXdeg,eyeYdeg);
     if (STAT_DLTA_T < STAT_ALLOWED_T)
     {
         if (!I_FIX)

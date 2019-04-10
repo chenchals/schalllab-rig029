@@ -14,7 +14,7 @@
 // graph objects for LEFT window
 declare OBJ_EYE;
 declare OBJ_FIX;
-declare OBJ_FIX_ACQ_WIN;
+declare OBJ_FIX_WIN_ACQ;
 declare OBJ_FIX_WIN;
 declare OBJ_FIX_WIN_L;
 declare OBJ_TARG;

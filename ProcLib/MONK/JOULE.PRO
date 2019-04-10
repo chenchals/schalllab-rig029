@@ -72,7 +72,7 @@ process JOULE()
             TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0 / N_TARG_POS);
             TARG_ECCENTRICITY_ARRY[tempVar] = 12.0;
         }
-        FIX_WIN_ACQ_SIZE   = FIX_SIZE_DEG * 2;
+        FIX_WIN_ACQ_SIZE   = FIX_SIZE_DEG * 3;
         FIX_WIN_SIZE       = 5;
         FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
 

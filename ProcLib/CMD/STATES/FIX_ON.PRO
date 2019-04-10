@@ -71,7 +71,7 @@ process PROC_FIX_ON()
     }
     else if (STAT_DLTA_T > STAT_ALLOWED_T)
     {
-        if (!I_FIX_ACQ)
+        if (TRL_IS_FIX_ACQUIRED != 1)
         {
             TRL_IS_FIX_ACQUIRED        = 0;
             TRL_ACQUIRE_FIX_ERROR_TIME = time();
