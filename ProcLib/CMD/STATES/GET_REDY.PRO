@@ -37,7 +37,6 @@ process PROC_GET_REDY()
         printf("****STAT_GET_READY[%d]: TRL_TRIAL_NUMBER[%d]\n", STAT_GET_READY, TRL_TRIAL_NUMBER);
 
         PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = READY_TIME * TIME_DILATE_FACTOR;
         // initialize durations

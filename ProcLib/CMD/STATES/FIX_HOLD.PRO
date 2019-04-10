@@ -38,7 +38,6 @@ process PROC_FIX_HOLD()
         // actually TRL_ACQUIRE_FIX_TIME, however the below is practically
         //same and it keeps this state independent of previous state
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
         STAT_DLTA_T   = 0;
         //STAT_ALLOWED_T = TRL_USE_FIX_HOLD_DURATION* TIME_DILATE_FACTOR;
         // Dynamically adjust TRL_USE_FIX_HOLD_DURATIONsuch that the duration from

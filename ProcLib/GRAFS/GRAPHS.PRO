@@ -14,6 +14,7 @@
 // graph objects for LEFT window
 declare OBJ_EYE;
 declare OBJ_FIX;
+declare OBJ_FIX_ACQ_WIN;
 declare OBJ_FIX_WIN;
 declare OBJ_FIX_WIN_L;
 declare OBJ_TARG;
@@ -64,6 +65,9 @@ process GRAPHS()
     OBJ_FIX_WIN = oCreate(tBOX, gLEFT, 0, 0);
     oSetAttribute(OBJ_FIX_WIN, aUNFILLED);
     oSetAttribute(OBJ_FIX_WIN, aINVISIBLE);
+    OBJ_FIX_WIN_ACQ = oCreate(tBOX, gLEFT, 0, 0);
+    oSetAttribute(OBJ_FIX_WIN_ACQ, aUNFILLED);
+    oSetAttribute(OBJ_FIX_WIN_ACQ, aINVISIBLE);
     OBJ_FIX_WIN_L = oCreate(tBOX, gLEFT, 0, 0);
     oSetAttribute(OBJ_FIX_WIN_L, aUNFILLED);
     oSetAttribute(OBJ_FIX_WIN_L, aINVISIBLE);
@@ -100,6 +104,8 @@ process GRAF_UPD8_FIX()
     oSetAttribute(OBJ_FIX, aSIZE, ceil(FIX_SIZE_DEG * DEG_2_PIX_X), ceil(FIX_SIZE_DEG * DEG_2_PIX_Y));
     oSetAttribute(OBJ_FIX, aINVISIBLE);
     oSetAttribute(OBJ_FIX_WIN, aSIZE, FIX_WIN_SIZE * DEG_2_PIX_X, FIX_WIN_SIZE * DEG_2_PIX_Y);
+    oSetAttribute(OBJ_FIX, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_ACQ, aSIZE, FIX_WIN_ACQ_SIZE * DEG_2_PIX_X, FIX_WIN_ACQ_SIZE * DEG_2_PIX_Y);
     oSetAttribute(OBJ_FIX, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN_L, aSIZE, FIX_WIN_SIZE_LARGE * DEG_2_PIX_X, FIX_WIN_SIZE_LARGE * DEG_2_PIX_Y);
     oSetAttribute(OBJ_FIX, aVISIBLE);
@@ -144,6 +150,7 @@ process GRAF_UPD8_TARG(float targSize, float targAngle, float targEccentricity)
 process GRAF_HIDE_FIX_TARG()
 {
     oSetAttribute(OBJ_FIX, aINVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_ACQ, aINVISIBLE);
     oSetAttribute(OBJ_FIX_WIN, aINVISIBLE);
     oSetAttribute(OBJ_FIX_WIN_L, aINVISIBLE);
 
@@ -156,6 +163,7 @@ process GRAF_HIDE_FIX_TARG()
 process GRAF_SHOW_FIX_TARG()
 {
     oSetAttribute(OBJ_FIX, aVISIBLE);
+    oSetAttribute(OBJ_FIX_WIN_ACQ, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
 
@@ -167,6 +175,7 @@ process GRAF_SHOW_FIX_TARG()
 
 process GRAF_SHOW_FIX_WIN()
 {
+    oSetAttribute(OBJ_FIX_WIN_ACQ, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
     oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
 }
@@ -184,6 +193,7 @@ process GRAF_SHOW_FIX(int showHide)
     if (showHide == GRAF_SHOW)
     {
         oSetAttribute(OBJ_FIX, aVISIBLE);
+        oSetAttribute(OBJ_FIX_WIN_ACQ, aVISIBLE);
         oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
         oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
     }
@@ -191,6 +201,7 @@ process GRAF_SHOW_FIX(int showHide)
     {
         oSetAttribute(OBJ_FIX, aINVISIBLE);
         //fix win still visible
+        oSetAttribute(OBJ_FIX_WIN_ACQ, aVISIBLE);
         oSetAttribute(OBJ_FIX_WIN, aVISIBLE);
         oSetAttribute(OBJ_FIX_WIN_L, aVISIBLE);
     }

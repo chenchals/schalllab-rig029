@@ -33,7 +33,6 @@ process PROC_FIX_ON()
         dsendf("vw 1\n");
 
         PROCESS_STATE  = 0;
-        STAT_STRT_T    = time();
         STAT_DLTA_T    = 0;
         STAT_ALLOWED_T = ALLOWED_FIX_TIME * TIME_DILATE_FACTOR;
     }

@@ -57,7 +57,7 @@ process WTCH_EYE()
 
         if (eyeXdeg != oldXdeg || eyeYdeg != oldYdeg)
         {
-            spawn LOCATE_EYE(EYE_X_VOLTS, EYE_Y_VOLTS, eyeXdeg, eyeYdeg);
+            spawnwait LOCATE_EYE(EYE_X_VOLTS, EYE_Y_VOLTS, eyeXdeg, eyeYdeg);
 
             // why should this be with screen refresh?
             if (time() > lasttime + 16)
@@ -117,7 +117,7 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
             I_TARG_WIDE      = 0;
             I_TARG_ANTI      = 0;
             I_TARG_ANTI_WIDE = 0;
-        }       
+        }
         if (  iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]
            && iYDeg >= FIX_WIN[UP] && iYDeg <= FIX_WIN[DOWN])
         {
