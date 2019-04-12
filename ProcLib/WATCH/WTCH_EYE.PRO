@@ -116,6 +116,11 @@ process LOCATE_EYE(float iXVolts, float iYVolts, float iXDeg, float iYDeg)
             foundLoc    = 1;
             I_FIX_ACQ        = 1;
             I_FIX            = 1;
+            I_FIX_WIDE       = 0;
+            I_TARG           = 0;
+            I_TARG_WIDE      = 0;
+            I_TARG_ANTI      = 0;
+            I_TARG_ANTI_WIDE = 0;
 
         }
         else if ( iXDeg >= FIX_WIN[LEFT] && iXDeg <= FIX_WIN[RIGHT]

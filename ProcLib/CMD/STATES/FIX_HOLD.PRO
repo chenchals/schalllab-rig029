@@ -26,6 +26,10 @@ process PROC_FIX_HOLD()
 {
     declare int   adjust = 1;
     declare float tempVRcount;
+    //if fix break happens within 10 ms of fix acquire, disregard it, 
+    //as we (Amir/Chenchal) observed from data that most of this type of fix breaks 
+    //are as a result of intrinsic noise + eye natural jitter + may be a "slow" sacc?
+    declare int allowFixBreakInitialTime = 10;
 
     // Give enough time for next refresh to occur
     // so that the queued vdosync commnad
@@ -65,7 +69,7 @@ process PROC_FIX_HOLD()
     STAT_DLTA_T,I_FIX,I_FIX_ACQ,EYE_X_VOLTS,EYE_Y_VOLTS,foundLoc,eyeXdeg,eyeYdeg);
     if (STAT_DLTA_T < STAT_ALLOWED_T)
     {
-        if (!I_FIX)
+        if (!I_FIX && STAT_DLTA_T > allowFixBreakInitialTime)
         {
             TRL_FIX_BREAK_TIME = time();
             spawn SEND_EVT(EVT_FIX_BREAK_);
