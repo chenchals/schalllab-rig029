@@ -53,7 +53,7 @@ declare int READY_TIME = 500;
 // subject has this long to acquire fixation before a new trial is initiated
 declare int ALLOWED_FIX_TIME = 3000;
 // subject did not acquire fixation, show blank screen and wait before next trial
-declare int FIX_NOT_ACQ_WAIT_TIME = 1000;
+declare int FIX_NOT_ACQ_WAIT_TIME = 500;
 // defines if exponential holdtime is used or if holdtime is sampled from rectanglular dist.
 declare int FIX_JITTER_FLAG = JITTER_UNIFORM_FLAG;
 // fix hold mean time

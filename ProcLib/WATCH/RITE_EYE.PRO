@@ -12,7 +12,7 @@ declare PROC_WRITE_RAW_I_DATA();
 process PROC_WRITE_RAW_I_DATA()
 {
     declare int tickInterval  = 2;
-    declare int writeEye2File = 1;
+    declare int writeEye2File = 0;
     declare int currTime;
     declare int pupil;
     declare int relTimeMs;

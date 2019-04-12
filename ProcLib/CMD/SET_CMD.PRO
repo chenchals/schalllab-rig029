@@ -723,6 +723,10 @@ process SET_WINS()
         printf("****SET_CMD/SET_WINS: Setting Window sizes for FIX and TARG****\n");
     }
     // Compute fix win size
+    FIX_WIN_ACQ[LEFT]  = -FIX_WIN_ACQ_SIZE/2;
+    FIX_WIN_ACQ[RIGHT] = FIX_WIN_ACQ_SIZE/2;
+    FIX_WIN_ACQ[UP]    = -FIX_WIN_ACQ_SIZE/2;
+    FIX_WIN_ACQ[DOWN]  = FIX_WIN_ACQ_SIZE/2;
     // Fix spot center is at 0,0, so we do not need to compute
     FIX_WIN[LEFT]  = -FIX_WIN_SIZE/2;
     FIX_WIN[RIGHT] = FIX_WIN_SIZE/2;
