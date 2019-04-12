@@ -80,7 +80,7 @@ process PROC_FIX_ON()
             printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_ACQUIRE_FIX_ERROR_[%d]\n", STAT_FIX_ON, EVT_ACQUIRE_FIX_ERROR_);
             printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
 
-            // Show blank page for about 3 secs.....No timeout or any tone
+            // Show blank page for about No timeout or any tone
             dsendf("vp %d\n", PG_BLANK);
             spawn GRAF_HIDE_FIX_TARG();
 

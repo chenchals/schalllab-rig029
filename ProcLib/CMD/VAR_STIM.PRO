@@ -14,7 +14,7 @@ declare float        FIX_WIN_SIZE = 5;
 declare float        FIX_WIN_ACQ[4];
 declare float        FIX_WIN[4];
 declare float        FIX_WIN_ACQ_SIZE = 1.0;
-declare float        FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.5;
+declare float        FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.2;
 declare float        FIX_WIN_LARGE[4];
 // Stimulus - target attributes
 declare constant int MAX_TARG_POS = 12;

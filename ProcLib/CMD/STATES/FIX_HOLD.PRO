@@ -65,8 +65,8 @@ process PROC_FIX_HOLD()
     }
 
     TRL_FIX_HOLD_DURATION = TRL_FIX_HOLD_DURATION + 1;
-    printf("    STAT_DLTA_T [%d], I_FIX [%d], I_FIX_ACQ [%d], xVolt[%10.4d], yVolt[%10.4d], fndLoc[%d], xDeg[%10.5d], yDeg[%10.5d]\n",
-    STAT_DLTA_T,I_FIX,I_FIX_ACQ,EYE_X_VOLTS,EYE_Y_VOLTS,foundLoc,eyeXdeg,eyeYdeg);
+    //printf("    STAT_DLTA_T [%d], I_FIX [%d], I_FIX_ACQ [%d], xVolt[%10.4d], yVolt[%10.4d], fndLoc[%d], xDeg[%10.5d], yDeg[%10.5d]\n",
+    //STAT_DLTA_T,I_FIX,I_FIX_ACQ,EYE_X_VOLTS,EYE_Y_VOLTS,foundLoc,eyeXdeg,eyeYdeg);
     if (STAT_DLTA_T < STAT_ALLOWED_T)
     {
         if (!I_FIX && STAT_DLTA_T > allowFixBreakInitialTime)
@@ -76,8 +76,16 @@ process PROC_FIX_HOLD()
 
             printf("****STAT_FIX_HOLD[%d]: ERR sent Event: EVT_FIX_BREAK_[%d]\n", STAT_FIX_HOLD, EVT_FIX_BREAK_);
             printf("****STAT_FIX_HOLD[%d]:ERR (Broke fixation)[%d]/[%d] (TRL_FIX_HOLD)\n", STAT_FIX_HOLD, TRL_FIX_HOLD_DURATION, STAT_ALLOWED_T);
-            PROCESS_STATE = 1;
-            CURR_STAT     = STAT_OUTCOME;
+            
+             // Show blank page for about No timeout or any tone
+            dsendf("vp %d\n", PG_BLANK);
+            spawn GRAF_HIDE_FIX_TARG();
+
+            printf("****STAT_FIX_HOLD[%d]: Waiting for FIX_NOT_ACQ_WAIT_TIME [%d] before going to STAT_IDLE\n", STAT_FIX_HOLD, FIX_NOT_ACQ_WAIT_TIME);
+            wait(FIX_NOT_ACQ_WAIT_TIME);
+            PROCESS_STATE  = 1;
+            CURR_STAT      = STAT_IDLE;
+            TRL_IS_RUNNING = 0;
         }
     }
     else
