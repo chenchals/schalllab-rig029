@@ -24,12 +24,13 @@
 //===========Trial types and distributions======================
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
+
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 60.0;
-declare float        STOP_WEIGHT   = 40.0;
-declare float        IGNORE_WEIGHT = 0.0;
+declare float GO_WEIGHT     = 60.0;
+declare float STOP_WEIGHT   = 40.0;
+declare float IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
-declare int          REPEAT_LO_RWRD_ERROR_TRL = 0;
+declare int   REPEAT_LO_RWRD_ERROR_TRL = 0;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
@@ -156,12 +157,14 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int          CORRECT_TRIALS_PER_BLOCK = 20;
-declare constant int RWRD_LO_IDX              = 0;
-declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_MEAN[2]       = { 30, 300 };
-declare int          RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
-declare int          RWRD_DURATION_JITTER     = JITTER_NONE;
+declare constant int RWRD_LO_IDX = 0;
+declare constant int RWRD_HI_IDX = 1;
+
+//
+declare int CORRECT_TRIALS_PER_BLOCK = 20;
+declare int RWRD_LO_HI_MEAN[2]       = { 30, 300 };
+declare int RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
+declare int RWRD_DURATION_JITTER     = JITTER_NONE;
 
 //=========================== Timeout variables ======================
 // timeout time for punishment computed
@@ -177,27 +180,29 @@ declare int TIMEOUT_TONE;
 declare constant int GO_IDX            = 0;
 declare constant int NOGO_PRE_SSD_IDX  = 1;
 declare constant int NOGO_POST_SSD_IDX = 2;
+
 //
-declare int          TIMEOUT_FIX_ACQ_ERROR[3]  = { 0, 0, 0 };
-declare int          TIMEOUT_FIX_BRK[3]        = { 0, 0, 0 };
-declare int          TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
-declare int          TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
-declare int          TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_RWRD[3]       = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
+declare int TIMEOUT_REFIX_EXTRA       = 500;
+declare int TIMEOUT_FIX_ACQ_ERROR[3]  = { 0, 0, 0 };
+declare int TIMEOUT_FIX_BRK[3]        = { 0, 0, 0 };
+declare int TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
+declare int TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
+declare int TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
+declare int TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
+declare int TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
+declare int TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
+declare int TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
+declare int TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
+declare int TIMEOUT_BRK_RWRD[3]       = { 0, 0, 0 };
+declare int TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
-declare int          TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
+declare int TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 1000;
-declare int          CANCELLED_TONE_HZ                   = 400;
-declare int          GO_CORRECT_TONE_HZ                  = 400;
-declare int          GO_ERROR_TONE_HZ                    = 100;
-declare int          NOGO_ERROR_TONE_HZ                  = 100;
+declare int NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 1000;
+declare int CANCELLED_TONE_HZ                   = 400;
+declare int GO_CORRECT_TONE_HZ                  = 400;
+declare int GO_ERROR_TONE_HZ                    = 100;
+declare int NOGO_ERROR_TONE_HZ                  = 100;
 
 //==========================Additional Timeouts======================
 // additive timeout imposed for each body movement

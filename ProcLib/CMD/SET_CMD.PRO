@@ -168,6 +168,8 @@ declare int TRL_FIX_SPOT_OFF_TIME;
 declare int TRL_TARGET_ACQUIRED_TIME;
 // when did saccade enter target window (same as target acquied time)
 declare int TRL_DECIDE_TIME;
+// when did second saccade enter fix window (for refix)
+declare int TRL_DECIDE_SEC_TIME;
 // when did saccade enter fix window (after target was acquired)
 declare int TRL_REFIX_TIME;
 // when did gaze leave Fix window between min and max saccade time
@@ -250,6 +252,8 @@ declare int TRL_CUM_DURATION;
 declare int TRL_GET_READY_DURATION;
 // how long gaze was in fix window
 declare int TRL_FIX_HOLD_DURATION;
+// how long gaze was in fix window when REFIX was achieved
+declare int TRL_REFIX_HOLD_DURATION;
 // how long was gaze in fix window *after* stop-signal was on (STOP trial = SSD Cancel duration)
 declare int TRL_CANCEL_DURATION;
 // how long was gaze in target window *after* target was acquired
@@ -930,6 +934,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_FIX_SPOT_OFF_TIME          = -1;
     TRL_TARGET_ACQUIRED_TIME       = -1;
     TRL_DECIDE_TIME                = -1;
+    TRL_DECIDE_SEC_TIME            = -1;
     TRL_REFIX_TIME                 = -1;
     TRL_SACCADE_TIME               = -1;
     TRL_ERLY_SACCADE_TIME          = -1;
@@ -966,6 +971,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_CUM_DURATION               = -1;
     TRL_GET_READY_DURATION         = -1;
     TRL_FIX_HOLD_DURATION          = -1;
+    TRL_REFIX_HOLD_DURATION        = -1;
     TRL_CANCEL_DURATION            = -1;
     TRL_MIN_THT_DURATION           = -1;
     TRL_TARG_ON_DURATION           = -1;
@@ -1031,6 +1037,7 @@ process INIT_TRL_VARS()
     TRL_FIX_SPOT_OFF_TIME            = -1;
     TRL_TARGET_ACQUIRED_TIME         = -1;
     TRL_DECIDE_TIME                  = -1;
+    TRL_DECIDE_SEC_TIME              = -1;
     TRL_REFIX_TIME                   = -1;
     TRL_SACCADE_TIME                 = -1;
     TRL_ERLY_SACCADE_TIME            = -1;
@@ -1067,6 +1074,7 @@ process INIT_TRL_VARS()
     TRL_CUM_DURATION                 = -1;
     TRL_GET_READY_DURATION           = -1;
     TRL_FIX_HOLD_DURATION            = -1;
+    TRL_REFIX_HOLD_DURATION          = -1;
     TRL_CANCEL_DURATION              = -1;
     TRL_MIN_THT_DURATION             = -1;
     TRL_TARG_ON_DURATION             = -1;

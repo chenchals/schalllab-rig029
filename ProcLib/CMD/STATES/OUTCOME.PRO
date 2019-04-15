@@ -6,8 +6,6 @@
 //        All Global variables and the following state variables are available to monitor state progress
 //        1. PROCESS_STATE : Setup state processing, will be done once per call
 //        1. CURR_STAT :
-//        2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//        3. STAT_STP_T : End time of state (in ticks/ms) from trial start
 //        4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //        5. STAT_ALLOWED_T : Max time for staying in this state
 //        5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -96,6 +94,14 @@ process PROC_TRL_OUTCOME()
         TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR;
         printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] (TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) = [%d] \n",
                STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
+
+        // Add REFIX timeout if trial is a REFIX
+        if (TRL_IS_REFIX)
+        {
+          TIMEOUT_DURATION = TIMEOUT_DURATION + (TIMEOUT_REFIX_EXTRA * TIME_DILATE_FACTOR);
+        }
+
+
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_ITI_CHK;
     }

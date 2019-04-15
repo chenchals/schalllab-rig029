@@ -6,8 +6,8 @@
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -30,7 +30,7 @@ process PROC_TARG_HOLD()
         // actually TRL_ACQUIRE_FIX_TIME, however the below is practically
         //same and it keeps this state independent of previous state
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
+
         STAT_DLTA_T   = 0;
 
         STAT_ALLOWED_T = TRL_USE_MIN_THT_DURATION * TIME_DILATE_FACTOR;

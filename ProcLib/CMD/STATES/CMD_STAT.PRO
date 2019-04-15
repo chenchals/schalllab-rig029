@@ -4,11 +4,9 @@
 //                on EYE POSITION and current TASK PHASE (avoiding saying STATE here)
 //                A STATE should ideally know about
 //                1. CURR_STAT : State in currently
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
-//                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
-//                5. STAT_ALLOWED_T : Max time for staying in this state
-//                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
+//                2. STAT_DLTA_T : Length of time in this state (in ticks/ms)
+//                3. STAT_ALLOWED_T : Max time for staying in this state
+//                4. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
 //   NOTE:
 //
@@ -25,13 +23,11 @@
 //Current State variables in the absence of structs
 declare int CURR_STAT;
 declare int STAT_STRT_T;
-declare int STAT_STP_T;
 declare int STAT_DLTA_T;
 declare int STAT_ALLOWED_T;
 // for gating the eye pos by time
 declare int STAT_I_DURATION;
 declare int STAT_I_DURATION2;
-
 
 //
 declare constant int STAT_TEST = 99;

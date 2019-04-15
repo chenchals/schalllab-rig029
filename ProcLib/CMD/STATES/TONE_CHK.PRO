@@ -18,8 +18,8 @@
 //   All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -44,7 +44,7 @@ process PROC_TONE_CHK()
         printf("****STAT_TONE_CHK[%d]: Processing Tone times\n", STAT_TONE_CHK);
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
+        
         STAT_DLTA_T   = 0;
         // Give tone after this time, unless Abort
         STAT_ALLOWED_T = TRL_USE_TONE_DELAY * TIME_DILATE_FACTOR;
