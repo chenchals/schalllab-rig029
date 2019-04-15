@@ -21,6 +21,7 @@
 
 declare PROC_TIMEOUT_CHK();
 
+declare int RND_PG;
 
 process PROC_TIMEOUT_CHK()
 {
@@ -45,6 +46,12 @@ process PROC_TIMEOUT_CHK()
 
             INCEMENT_TARG_DURATION_FLAG = 0;
         }
+        
+    }
+    
+    if ((STAT_DLTA_T % 64) == 0)
+    {
+        dsendf("vp %d\n", PG_RAND_ARRAY[random(2)]);
     }
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -63,6 +70,9 @@ process PROC_TIMEOUT_CHK()
     }
     else
     {
+        dsendf("vp %d\n", PG_BLANK);
+        spawn GRAF_HIDE_FIX_TARG();
+
         TRL_TIMEOUT_END_TIME = time();
         spawn SEND_EVT(EVT_TIMEOUT_END_);
 

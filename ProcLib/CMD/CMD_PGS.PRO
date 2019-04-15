@@ -10,9 +10,8 @@
 //
 
 // Room variables
-#include C: / TEMPO / ProcLib / UTIL / DRW_RECT.PRO
+#include C:/TEMPO/ProcLib/UTIL/DRW_RECT.PRO
 
-declare DRW_ALL_RANDOM_DOT_PAGES(int nPages);
 declare DRW_RANDOM_DOT_PAGE(int pgIndex, int dotSize);
 
 
@@ -24,11 +23,11 @@ declare int PG_TARGET_PD       = 3;
 declare int PG_TARGET          = 4;
 declare int PG_SIGNAL_PD       = 5;
 declare int PG_SIGNAL          = 6;
-declare int N_RANDOM_DOT_PAGES = 6;
-declare int PG_RAND_ARRAY[6]   = { 7, 8, 9, 10, 11, 12 };
-declare int PG_MAX_PAGE_IDX    = 12;
+declare int N_RANDOM_DOT_PAGES = 2;
+declare int PG_RAND_ARRAY[2]   = { 7, 8};
+declare int PG_MAX_PAGE_IDX    = 8;
 
-declare int RANDOM_DOT_SIZE   = 2;
+declare int RANDOM_DOT_SIZE   = 10;
 declare int RANDOM_PAGES_DONE = 0;
 
 declare CMD_PGS(float targSize, float targAngle, float targEccentricity, int targColorIdx);
@@ -120,7 +119,7 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
     //printf("CMD_PGS: page %d targetSize %2.2d\n",PG_SIGNAL,targSize);
     dsendf("rw %d,%d;\n", PG_SIGNAL, PG_SIGNAL);
     dsendf("cl:\n");
-    spawnwait DRW_RECT(targSize, targSize, targAngle, targEccentricity, targColorIdx, FILL);
+    //spawnwait DRW_RECT(targSize, targSize, targAngle, targEccentricity, targColorIdx, FILL);
 
     // draw PG_TARGET
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_STOP_SIGNAL, FILL);
@@ -134,63 +133,61 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
 
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
+    // Draw RANDOM DOT PAGES
+    if (!RANDOM_PAGES_DONE)
+    {
+        spawnwait DRW_RANDOM_DOT_PAGE(PG_RAND_ARRAY[0], RANDOM_DOT_SIZE);
+        spawnwait DRW_RANDOM_DOT_PAGE(PG_RAND_ARRAY[1], RANDOM_DOT_SIZE);
+        RANDOM_PAGES_DONE = 1;
+    }
+    //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 0 BLANK (draw last so it is displayed as default))
     //printf("CMD_PGS: page %d PG_BLANK\n", PG_BLANK);
     // draw the PG_BLANK screen last so that it shows up first
     dsendf("rw %d,%d;\n", PG_BLANK, PG_BLANK);
-    dsendf("cl:\n");
+    dsendf("cl\n");
     nexttick;
-    //--------------------------------------------------------------------------------------------------------------------
-    // Draw RANDOM DOT PAGES
-    if (!RANDOM_PAGES_DONE)
-    {
-        spawnwait DRW_ALL_RANDOM_DOT_PAGES(N_RANDOM_DOT_PAGES);
 
-        RANDOM_PAGES_DONE = 1;
-    }
 } /* CMD_PGS */
-
-
-process DRW_ALL_RANDOM_DOT_PAGES(nPages)
-{
-    declare int temp;
-    declare int stTime = time();
-
-    temp = 0;
-    while (temp < nPages)
-    {
-        spawn DRW_RANDOM_DOT_PAGE(PG_RAND_ARRAY[temp], RANDOM_DOT_SIZE);
-
-        temp = temp + 1;
-        nexttick;
-    }
-    printf("  CMD_PGS/DRW_ALL_RANDOM_DOT_PAGES(%d) took [%d ms]\n",time()-stTime);
-}
-
 
 process DRW_RANDOM_DOT_PAGE(pgIndex, dotSize)
 {
     declare int xSteps, ySteps;
-    declare int ulx, uly;
+    declare int ulx, uly, lrx,lry;
     declare int xs, ys;
-
+    declare int cIdx;
+    dsendf("rw %d,%d;\n", pgIndex, pgIndex);
+    dsendf("cl\n");
     xSteps = floor(SCRN_PIX_X / dotSize);
     ySteps = floor(SCRN_PIX_Y / dotSize);
 
     ulx = SCRN_PIX_X / (-2);
-    while (xs < xSteps)
+    xs = 0;
+    while (xs < xSteps-1)
     {
         uly = SCRN_PIX_Y / 2;
         ys  = 0;
-        while (ys < ySteps)
+        while (ys < ySteps-1)
         {
-            dsendf("co %d\n", random(2) * 255);
-            dsendf("rf %d,%d,%d,%d", ulx, uly, (ulx + dotSize - 1), (uly + dotSize - 1));
-            uly = uly + n;
+            lrx = ulx + dotSize;
+            if(lrx > SCRN_PIX_X/2)
+            {
+                lrx = (SCRN_PIX_X/2);
+            }
+            lry = uly - dotSize;
+             if(lry > SCRN_PIX_Y/2)
+            {
+                lry = (SCRN_PIX_Y/2);
+            }           
+            cIdx = random(2) * 247;
+            dsendf("co %d\n", cIdx );
+            dsendf("rf %d,%d,%d,%d\n", ulx,uly,lrx,lry);
+            uly = uly - dotSize;
             ys  = ys + 1;
+            nexttick;
         }
-        ulx = ulx + dotSize;
         xs  = xs + 1;
+        ulx = ulx + dotSize ;
         nexttick;
     }
 }

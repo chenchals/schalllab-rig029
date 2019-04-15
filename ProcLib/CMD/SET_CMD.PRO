@@ -438,7 +438,7 @@ process SET_CMD_TRL()
             printf("****SET_CMD/SET_CMD_TRL: Setting CMD_PGS****\n");
         }
         spawnwait CMD_PGS(TRL_CURR_TARG_SIZE, TRL_CURR_TARG_ANGLE, TRL_CURR_TARG_ECCENTRICITY, TRL_CURR_TARG_COLOR_IDX);
-
+        nexttick 1000;
         // compute trial duration (mainly for fixed trial length)
         spawnwait COMPUTE_TRIAL_DURATION();
     } // if previous trial is not an error

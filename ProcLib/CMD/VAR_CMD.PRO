@@ -162,7 +162,7 @@ declare constant int RWRD_HI_IDX = 1;
 
 //
 declare int CORRECT_TRIALS_PER_BLOCK = 20;
-declare int RWRD_LO_HI_MEAN[2]       = { 30, 300 };
+declare int RWRD_LO_HI_MEAN[2]       = { 80, 320 };
 declare int RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
 declare int RWRD_DURATION_JITTER     = JITTER_NONE;
 

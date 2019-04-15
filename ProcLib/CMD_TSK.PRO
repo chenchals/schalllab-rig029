@@ -111,12 +111,21 @@ process IDLE() enabled
             spawnwait CMD_PGS(1.0, random(2) *180.0, 12.0, 1);
 
             printf("Showing Virtual Pages for COUNTERMANDING TASK\n");
-            tempCount = 0;
-            while (tempCount <= PG_MAX_PAGE_IDX)
+            tempCount = 7;
+            while(1)
             {
+            while (tempCount < PG_MAX_PAGE_IDX + 1)
+            {
+                //printf("Showing page %d\n",tempCount);
                 dsendf("vp %d\n", tempCount);
+                nexttick 100;
                 tempCount = tempCount + 1;
-                nexttick 1000;
+                //nexttick 1000;
+                //dsendf("vp %d\n", PG_BLANK);
+               // nexttick 500;
+            }
+            tempCount = 7;
+            nexttick;
             }
             dsendf("vp %d\n", 0);
             printf("****Done showing Virtual Pages for COUNTERMANDING TASK\n\n");
