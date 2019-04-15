@@ -10,17 +10,26 @@
 //
 
 // Room variables
-#include C:/TEMPO/ProcLib/UTIL/DRW_RECT.PRO
+#include C: / TEMPO / ProcLib / UTIL / DRW_RECT.PRO
+
+declare DRW_ALL_RANDOM_DOT_PAGES(int nPages);
+declare DRW_RANDOM_DOT_PAGE(int pgIndex, int dotSize);
+
 
 // Virtual Page indices
-declare int PG_BLANK        = 0;
-declare int PG_FIXATION_PD  = 1;
-declare int PG_FIXATION     = 2;
-declare int PG_TARGET_PD    = 3;
-declare int PG_TARGET       = 4;
-declare int PG_SIGNAL_PD    = 5;
-declare int PG_SIGNAL       = 6;
-declare int PG_MAX_PAGE_IDX = 6;
+declare int PG_BLANK           = 0;
+declare int PG_FIXATION_PD     = 1;
+declare int PG_FIXATION        = 2;
+declare int PG_TARGET_PD       = 3;
+declare int PG_TARGET          = 4;
+declare int PG_SIGNAL_PD       = 5;
+declare int PG_SIGNAL          = 6;
+declare int N_RANDOM_DOT_PAGES = 6;
+declare int PG_RAND_ARRAY[6]   = { 7, 8, 9, 10, 11, 12 };
+declare int PG_MAX_PAGE_IDX    = 12;
+
+declare int RANDOM_DOT_SIZE   = 2;
+declare int RANDOM_PAGES_DONE = 0;
 
 declare CMD_PGS(float targSize, float targAngle, float targEccentricity, int targColorIdx);
 
@@ -35,12 +44,12 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     // For Photodiode marker
-    adjacent = rad2deg(atan((SCRN_MM_X/2)/SUBJ_DIST_MM));
-    opposite = rad2deg(atan((SCRN_MM_Y/2)/SUBJ_DIST_MM));
+    adjacent = rad2deg(atan((SCRN_MM_X / 2) / SUBJ_DIST_MM));
+    opposite = rad2deg(atan((SCRN_MM_Y / 2) / SUBJ_DIST_MM));
 
     pdEccentricity = sqrt((opposite * opposite) + (adjacent * adjacent)) - 0.5;
-    pdAngleR       = rad2deg(atan(opposite/adjacent));
-    pdAngleL       = 180 - rad2deg(atan(opposite/adjacent));
+    pdAngleR       = rad2deg(atan(opposite / adjacent));
+    pdAngleL       = 180 - rad2deg(atan(opposite / adjacent));
 
     //--------------------------------------------------------------------------------------------------------------------
     // Draw pg 1 FIXATION_PD - PD is drawn on LEFT-TOP of screen only
@@ -48,7 +57,7 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
     dsendf("rw %d,%d;\n", PG_FIXATION_PD, PG_FIXATION_PD);
     dsendf("cl:\n");
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, FILL);
-    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
+    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG / 4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
@@ -74,7 +83,7 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
 
     //printf("drawing left PD\n");
     // Draw left PD marker
-    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
+    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG / 4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
@@ -103,7 +112,7 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
     spawnwait DRW_RECT(FIX_SIZE_DEG, FIX_SIZE_DEG, 0.0, 0.0, CLR_IDX_FIX, OPEN);
 
     // Draw right PD marker
-    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleR, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
+    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG / 4, pdAngleR, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
@@ -121,7 +130,7 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
 
     //printf("drawing left PD\n");
     // Draw **left** PD marker
-    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG/4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
+    spawnwait DRW_RECT(PD_WIDTH_DEG, PD_WIDTH_DEG / 4, pdAngleL, pdEccentricity, CLR_IDX_PTOTODIODE, FILL);
 
     nexttick;
     //--------------------------------------------------------------------------------------------------------------------
@@ -131,4 +140,57 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
     dsendf("rw %d,%d;\n", PG_BLANK, PG_BLANK);
     dsendf("cl:\n");
     nexttick;
+    //--------------------------------------------------------------------------------------------------------------------
+    // Draw RANDOM DOT PAGES
+    if (!RANDOM_PAGES_DONE)
+    {
+        spawnwait DRW_ALL_RANDOM_DOT_PAGES(N_RANDOM_DOT_PAGES);
+
+        RANDOM_PAGES_DONE = 1;
+    }
 } /* CMD_PGS */
+
+
+process DRW_ALL_RANDOM_DOT_PAGES(nPages)
+{
+    declare int temp;
+    declare int stTime = time();
+
+    temp = 0;
+    while (temp < nPages)
+    {
+        spawn DRW_RANDOM_DOT_PAGE(PG_RAND_ARRAY[temp], RANDOM_DOT_SIZE);
+
+        temp = temp + 1;
+        nexttick;
+    }
+    printf("  CMD_PGS/DRW_ALL_RANDOM_DOT_PAGES(%d) took [%d ms]\n",time()-stTime);
+}
+
+
+process DRW_RANDOM_DOT_PAGE(pgIndex, dotSize)
+{
+    declare int xSteps, ySteps;
+    declare int ulx, uly;
+    declare int xs, ys;
+
+    xSteps = floor(SCRN_PIX_X / dotSize);
+    ySteps = floor(SCRN_PIX_Y / dotSize);
+
+    ulx = SCRN_PIX_X / (-2);
+    while (xs < xSteps)
+    {
+        uly = SCRN_PIX_Y / 2;
+        ys  = 0;
+        while (ys < ySteps)
+        {
+            dsendf("co %d\n", random(2) * 255);
+            dsendf("rf %d,%d,%d,%d", ulx, uly, (ulx + dotSize - 1), (uly + dotSize - 1));
+            uly = uly + n;
+            ys  = ys + 1;
+        }
+        ulx = ulx + dotSize;
+        xs  = xs + 1;
+        nexttick;
+    }
+}
