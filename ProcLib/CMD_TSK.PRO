@@ -37,7 +37,7 @@
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 
 #include C:/TEMPO/ProcLib/WATCH/RITE_EYE.PRO
-declare int WRITE_RAW_EYE_DATA = 1;
+declare int WRITE_RAW_EYE_DATA = 0;
 
 //==========================================================================
 declare IDLE();
@@ -73,8 +73,8 @@ process IDLE() enabled
     printf("Setting SET_RIG\n");
     spawnwait SET_RIG(RIG_ID);
 
-    printf("Setting SET_CLRS\n");
-    spawnwait SET_CLRS();
+    printf("Setting SET_DEFAULT_COLORS\n");
+    spawnwait SET_DEFAULT_COLORS();
 
     printf("Setting SET_DEFAULT_STIM_VARS\n");
     spawnwait SET_DEFAULT_STIM_VARS();

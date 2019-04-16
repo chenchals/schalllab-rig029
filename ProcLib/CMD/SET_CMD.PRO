@@ -27,7 +27,7 @@
 // Stimulus Variables: fixation, target, photodiode
 #include C:/TEMPO/ProcLib/CMD/VAR_STIM.PRO
 // Set palatte colors and color indices
-#include C:/TEMPO/ProcLib/CMD/SET_CLRS.PRO
+#include C:/TEMPO/ProcLib/CMD/SET_DEFAULT_COLORS.PRO
 // Setup GRAPHS - referenced by _PGS
 #include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
 // set pages to load CMD_PGS.PRO?
@@ -438,7 +438,6 @@ process SET_CMD_TRL()
             printf("****SET_CMD/SET_CMD_TRL: Setting CMD_PGS****\n");
         }
         spawnwait CMD_PGS(TRL_CURR_TARG_SIZE, TRL_CURR_TARG_ANGLE, TRL_CURR_TARG_ECCENTRICITY, TRL_CURR_TARG_COLOR_IDX);
-        nexttick 1000;
         // compute trial duration (mainly for fixed trial length)
         spawnwait COMPUTE_TRIAL_DURATION();
     } // if previous trial is not an error
@@ -837,9 +836,8 @@ process SET_TARGET()
     TRL_CURR_TARG_SIZE         = TARG_SIZE_ARRY[TRL_CURR_TARG_IDX];
     TRL_CURR_TARG_ANGLE        = TARG_ANGLE_ARRY[TRL_CURR_TARG_IDX];
     TRL_CURR_TARG_ECCENTRICITY = TARG_ECCENTRICITY_ARRY[TRL_CURR_TARG_IDX];
-    // Zero is black.  see SET_CLRS.pro
-    // This will not work for search with different targets having different colors
-    TRL_CURR_TARG_COLOR_IDX = CLR_IDX_TARG_1;
+    // target colors are defined in monk.pro (JOULE.PRO/AUTO.PRO)
+    TRL_CURR_TARG_COLOR_IDX = CLR_IDX_TARG_ARRAY[TRL_CURR_TARG_IDX];
     if (DEBUG_CONSOLE)
     {
         printf("****SET_CMD/SET_TARGET: CURR_TARG IDX, SIZE, ANGLE, ECC = [%d, %5.2d, %6.2d, %4.2d]****\n",

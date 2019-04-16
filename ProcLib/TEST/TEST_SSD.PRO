@@ -159,7 +159,7 @@ process SETUP_SCRN_CLRS_PGS()
     dsend("ca");
     // Set up pages
     spawnwait SET_SCRN();
-    spawnwait TEST_SET_CLRS();
+    spawnwait TEST_SET_DEFAULT_COLORS();
     spawnwait TEST_PGS();
 
     nexttick 5000;
