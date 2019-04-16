@@ -44,9 +44,9 @@ process SET_CLRS()
     FIX_COLOR[B_IDX] = BLUE_VAL - WB_OFF;
     spawnwait SET_CLR(CLR_IDX_FIX, FIX_COLOR[R_IDX], FIX_COLOR[G_IDX], FIX_COLOR[B_IDX]);
 
-    STOP_SIGNAL_COLOR[R_IDX] = 17;
-    STOP_SIGNAL_COLOR[G_IDX] = 13;
-    STOP_SIGNAL_COLOR[B_IDX] = 14;
+    STOP_SIGNAL_COLOR[R_IDX] = 35;
+    STOP_SIGNAL_COLOR[G_IDX] = 33;
+    STOP_SIGNAL_COLOR[B_IDX] = 27;
     spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, STOP_SIGNAL_COLOR[R_IDX], STOP_SIGNAL_COLOR[G_IDX], STOP_SIGNAL_COLOR[B_IDX]);
 
     IGNORE_SIGNAL_COLOR[R_IDX] = 41;
@@ -57,9 +57,9 @@ process SET_CLRS()
     spawnwait SET_CLR(CLR_IDX_PTOTODIODE, 255, 255, 255);
 
     // define Target colors
-    COLOR_ARRY[0, R_IDX] = 35;
-    COLOR_ARRY[0, G_IDX] = 33;
-    COLOR_ARRY[0, B_IDX] = 27;
+    COLOR_ARRY[0, R_IDX] = 17;
+    COLOR_ARRY[0, G_IDX] = 16;
+    COLOR_ARRY[0, B_IDX] = 13;
     N_COLORS             = N_COLORS + 1;
     // All target position colors are same see original DEFAULT.PRO
     //CLR_IDX_TARG_1: 35, 33, 27

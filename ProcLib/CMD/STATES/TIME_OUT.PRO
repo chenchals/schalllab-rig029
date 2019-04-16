@@ -48,10 +48,13 @@ process PROC_TIMEOUT_CHK()
         }
         
     }
-    
-    if ((STAT_DLTA_T % 64) == 0)
+    // show random dot page(s)
+    if(TIMEOUT_SHOW_RANDM_PG_FLAG ==1)
     {
-        dsendf("vp %d\n", PG_RAND_ARRAY[random(2)]);
+        if ((STAT_DLTA_T % 64) == 0)
+        {
+            dsendf("vp %d\n", PG_RAND_ARRAY[random(2)]);
+        }
     }
 
     if (STAT_DLTA_T <= STAT_ALLOWED_T)
@@ -63,9 +66,11 @@ process PROC_TIMEOUT_CHK()
             spawn SEND_EVT(EVT_TIMEOUT_START_);
 
             printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_TIMEOUT_START_[%d]\n", STAT_ITI_CHK, EVT_TIMEOUT_START_);
-
-            //spawn PLAY_WHITE_NOISE(TRL_USE_TONE_DURATION);
-            spawn TONE(TRL_USE_TONE_FREQ, TRL_USE_TONE_DURATION);
+            
+            if (TIMEOUT_PLAY_TONE_FLAG == 1)
+            {
+                spawn TONE(TRL_USE_TONE_FREQ, TRL_USE_TONE_DURATION);
+            }
         }
     }
     else

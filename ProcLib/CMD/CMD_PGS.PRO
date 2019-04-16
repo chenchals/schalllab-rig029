@@ -155,7 +155,8 @@ process DRW_RANDOM_DOT_PAGE(pgIndex, dotSize)
     declare int xSteps, ySteps;
     declare int ulx, uly, lrx,lry;
     declare int xs, ys;
-    declare int cIdx;
+    declare int cIdx, cIdxToUse;
+    cIdxToUse = CLR_IDX_STOP_SIGNAL;
     dsendf("rw %d,%d;\n", pgIndex, pgIndex);
     dsendf("cl\n");
     xSteps = floor(SCRN_PIX_X / dotSize);
@@ -179,7 +180,7 @@ process DRW_RANDOM_DOT_PAGE(pgIndex, dotSize)
             {
                 lry = (SCRN_PIX_Y/2);
             }           
-            cIdx = random(2) * 247;
+            cIdx = random(2) * cIdxToUse;
             dsendf("co %d\n", cIdx );
             dsendf("rf %d,%d,%d,%d\n", ulx,uly,lrx,lry);
             uly = uly - dotSize;
