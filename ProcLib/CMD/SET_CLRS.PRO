@@ -28,10 +28,10 @@ declare int N_COLORS = 0;
 // There are 255 color indices in a palatte
 // 0 is reserved for BLACK
 // Use indices 1 to N for Target colorIndex etc
-// Fill Indices from 255 backwards for other colors
-declare constant int CLR_IDX_FIX                      = 255;
-declare constant int CLR_IDX_STOP_SIGNAL              = 254;
-declare constant int CLR_IDX_IGNORE                   = 253;
+// Fill Indices from 250 backwards for other colors
+declare constant int CLR_IDX_FIX                      = 250;
+declare constant int CLR_IDX_STOP_SIGNAL              = 249;
+declare constant int CLR_IDX_IGNORE                   = 248;
 declare constant int CLR_IDX_PTOTODIODE               = 247;
 declare constant int CLR_IDX_TARG_ARRAY[MAX_TARG_POS] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 declare constant int CLR_IDX_TARG_1                   = 1;
@@ -52,7 +52,6 @@ process SET_DEFAULT_COLORS()
     IGNORE_SIGNAL_COLOR[G_IDX] = 42;
     IGNORE_SIGNAL_COLOR[B_IDX] = 43;
 
-
     // define Target colors
     // All target position colors are same see original DEFAULT.PRO
     //CLR_IDX_TARG_1: 35, 33, 27
@@ -65,6 +64,8 @@ process SET_DEFAULT_COLORS()
         N_COLORS                   = N_COLORS + 1;
         varTemp                    = varTemp + 1;
     }
+    
+    spawnwait SET_CLR_PALETTE();
 }
 
 
@@ -74,7 +75,7 @@ process SET_CLR_PALETTE()
 
     spawnwait SET_CLR(CLR_IDX_FIX, FIX_COLOR[R_IDX], FIX_COLOR[G_IDX], FIX_COLOR[B_IDX]);
     spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, STOP_SIGNAL_COLOR[R_IDX], STOP_SIGNAL_COLOR[G_IDX], STOP_SIGNAL_COLOR[B_IDX]);
-    spawnwait SET_CLR(CLR_IDX_STOP_SIGNAL, IGNORE_SIGNAL_COLOR[R_IDX], IGNORE_SIGNAL_COLOR[G_IDX], IGNORE_SIGNAL_COLOR[B_IDX]);
+    spawnwait SET_CLR(CLR_IDX_IGNORE, IGNORE_SIGNAL_COLOR[R_IDX], IGNORE_SIGNAL_COLOR[G_IDX], IGNORE_SIGNAL_COLOR[B_IDX]);
     spawnwait SET_CLR(CLR_IDX_PTOTODIODE, 255, 255, 255);
 
     varTemp = 0;

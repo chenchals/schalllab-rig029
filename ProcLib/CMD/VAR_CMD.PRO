@@ -129,7 +129,7 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 300;
+declare int TONE_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -144,7 +144,7 @@ declare int TONE_DURATION = 30;
 
 //================= Reward variables =================================
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 300;
+declare int RWRD_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -161,7 +161,7 @@ declare constant int RWRD_LO_IDX = 0;
 declare constant int RWRD_HI_IDX = 1;
 
 //
-declare int CORRECT_TRIALS_PER_BLOCK = 15;
+declare int CORRECT_TRIALS_PER_BLOCK = 20;
 declare int RWRD_LO_HI_MEAN[2]       = { 80, 320 };
 declare int RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
 declare int RWRD_DURATION_JITTER     = JITTER_NONE;
@@ -186,19 +186,19 @@ declare constant int NOGO_POST_SSD_IDX = 2;
 
 //
 // in number of trial durations
-declare int TIMEOUT_REFIX_EXTRA       = 1;
+declare int TIMEOUT_REFIX_EXTRA       = 2;
 declare int TIMEOUT_FIX_ACQ_ERROR[3]  = { 0, 0, 0 };
 declare int TIMEOUT_FIX_BRK[3]        = { 0, 0, 0 };
 declare int TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
 declare int TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
 declare int TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
-declare int TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
-declare int TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
-declare int TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
-declare int TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
-declare int TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
-declare int TIMEOUT_BRK_RWRD[3]       = { 0, 0, 0 };
-declare int TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
+declare int TIMEOUT_BRK_MIN_THT[3]    = { 1, 1, 1 };
+declare int TIMEOUT_BRK_XTRA_HOLD[3]  = { 1, 1, 1 };
+declare int TIMEOUT_BRK_PRE_TONE[3]   = { 1, 1, 1 };
+declare int TIMEOUT_BRK_TONE[3]       = { 1, 1, 1 };
+declare int TIMEOUT_BRK_PRE_RWRD[3]   = { 1, 1, 1 };
+declare int TIMEOUT_BRK_RWRD[3]       = { 1, 1, 1 };
+declare int TIMEOUT_BRK_POST_RWRD[3]  = { 1, 1, 1 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
 declare int TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes

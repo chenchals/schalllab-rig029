@@ -10,6 +10,7 @@
 // Use variables on the fly - no declaration
 #pragma declare = 1
 
+#include C:/TEMPO/ProcLib/UTIL/WAIT_VDO.PRO
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 #include C:/TEMPO/ProcLib/UTIL/TONE.PRO

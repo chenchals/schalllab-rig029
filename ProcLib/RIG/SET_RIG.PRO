@@ -52,5 +52,9 @@ process INIT_PORTS_AND_VDOSYNC()
     printf("Resetting audio...\n");
     mio_fout(0);
     // for clearing videomode
-    nexttick 8000;
+    //nexttick 8000;
+    spawnwait WaitForVideoSYNC();
+    
+    
+    
 }

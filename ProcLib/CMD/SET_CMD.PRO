@@ -27,7 +27,7 @@
 // Stimulus Variables: fixation, target, photodiode
 #include C:/TEMPO/ProcLib/CMD/VAR_STIM.PRO
 // Set palatte colors and color indices
-#include C:/TEMPO/ProcLib/CMD/SET_DEFAULT_COLORS.PRO
+#include C:/TEMPO/ProcLib/CMD/SET_CLRS.PRO
 // Setup GRAPHS - referenced by _PGS
 #include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
 // set pages to load CMD_PGS.PRO?

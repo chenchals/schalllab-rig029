@@ -12,7 +12,7 @@
 //  Revision History:
 //
 
-#include C: / TEMPO / ProcLib / WATCH / AUTO_EYE.PRO
+#include C:/TEMPO/ProcLib/WATCH/AUTO_EYE.PRO
 declare AUTO();
 
 

@@ -14,7 +14,6 @@
 
 declare DRW_RANDOM_DOT_PAGE(int pgIndex, int dotSize);
 
-
 // Virtual Page indices
 declare int PG_BLANK           = 0;
 declare int PG_FIXATION_PD     = 1;
@@ -147,6 +146,8 @@ process CMD_PGS(float targSize, float targAngle, float targEccentricity, int tar
     dsendf("rw %d,%d;\n", PG_BLANK, PG_BLANK);
     dsendf("cl\n");
     nexttick;
+    
+    spawnwait WaitForVideoSYNC();
 
 } /* CMD_PGS */
 
