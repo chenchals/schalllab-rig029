@@ -27,7 +27,6 @@ process PROC_TARG_ACQ()
     // Target acquired, but not fixated yet or eye still in FixWin
     if (PROCESS_STATE)
     {
-
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
@@ -52,8 +51,11 @@ process PROC_TARG_ACQ()
             spawn SEND_EVT(EVT_TARGET_ACQUIRED_);
             spawn SEND_EVT(EVT_DECIDE_);
 
-            printf("****STAT_TARG_ACQ[%d]: OK sent Event: EVT_TARGET_ACQUIRED_[%d], EVT_DECIDE_[%d]\n", STAT_TARG_ACQ, EVT_TARGET_ACQUIRED_, EVT_DECIDE_);
-            printf("****STAT_TARG_ACQ[%d]: OK (EVT_TARGET_ACQUIRED_ in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_ACQ[%d]: OK sent Event: EVT_TARGET_ACQUIRED_[%d], EVT_DECIDE_[%d]\n", STAT_TARG_ACQ, EVT_TARGET_ACQUIRED_, EVT_DECIDE_);
+            }
+            printf("****STAT_TARG_ACQ[%d]: OK TARGET_ACQUIRED in [%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
             // process speparately for STOP/GO trials
@@ -67,7 +69,7 @@ process PROC_TARG_ACQ()
                 {
                     // change the display to PG_SIGNAL_PD to turn the signal back on
                     dsendf("vp %d\n", PG_SIGNAL_PD);
-                    printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial Saccade happened; Turn-on-Signal*)\n", STAT_TARG_ACQ);
+                    printf("****STAT_TARG_ACQ[%d]: OK (*Stop-Trial Saccade happened; Turn-on-Signal*) REIGNITE_FLAG ON\n", STAT_TARG_ACQ);
                 }
                 CURR_STAT = STAT_TARG_HOLD;
             }
@@ -82,15 +84,15 @@ process PROC_TARG_ACQ()
             TRL_ACQUIRE_TARGET_ERROR_TIME = time();
             spawn SEND_EVT(EVT_ACQUIRE_TARGET_ERROR_);
 
-            //spawn SEND_EVT(GoError_);
-
             // Error saccade?
-            printf("****STAT_TARG_ACQ[%d]: ERR sent Event: EVT_ACQUIRE_TARGET_ERROR_[%d]\n", STAT_TARG_ACQ, EVT_ACQUIRE_TARGET_ERROR_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_ACQ[%d]: ERR sent Event: EVT_ACQUIRE_TARGET_ERROR_[%d]\n", STAT_TARG_ACQ, EVT_ACQUIRE_TARGET_ERROR_);
+            }
             printf("****STAT_TARG_ACQ[%d]: ERR (*Eye elsewhere* in)[%d]/[%d](MAX_SACC_DURATION)\n", STAT_TARG_ACQ, TRL_SACC_DURATION, STAT_ALLOWED_T);
 
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
-            printf("**********Compute timeout for aborting****************\n");
         }
     }
 } /* PROC_TARG_ACQ */

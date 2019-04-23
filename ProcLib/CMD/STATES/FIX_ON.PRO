@@ -26,8 +26,6 @@ process PROC_FIX_ON()
 {
     if (PROCESS_STATE)
     {
-
-
         dsendf("vp %d\n", PG_FIXATION_PD);
         // show for only 1 screen refresh
         dsendf("vw 1\n");
@@ -47,7 +45,10 @@ process PROC_FIX_ON()
             spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
             dsendf("vp %d\n", PG_FIXATION);
-            printf("****STAT_FIX_ON[%d]: OK sent Event: EVT_FIX_SPOT_ON_[%d]\n", STAT_FIX_ON, EVT_FIX_SPOT_ON_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_FIX_ON[%d]: OK sent Event: EVT_FIX_SPOT_ON_[%d]\n", STAT_FIX_ON, EVT_FIX_SPOT_ON_);
+            }
         }
     }
 
@@ -63,8 +64,12 @@ process PROC_FIX_ON()
             TRL_TRIAL_START_TIME = time();
             spawn SEND_EVT(EVT_TRIAL_START_);
 
-            printf("****STAT_FIX_ON[%d]: OK sent Event: EVT_ACQUIRE_FIX_[%d], EVT_TRIAL_START_[%d]\n", STAT_FIX_ON, EVT_ACQUIRE_FIX_, EVT_TRIAL_START_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_FIX_ON[%d]: OK sent Event: EVT_ACQUIRE_FIX_[%d], EVT_TRIAL_START_[%d]\n", STAT_FIX_ON, EVT_ACQUIRE_FIX_, EVT_TRIAL_START_);
+            }
             printf("****STAT_FIX_ON[%d]: OK (Fixation acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
+
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_FIX_HOLD;
         }
@@ -77,7 +82,10 @@ process PROC_FIX_ON()
             TRL_ACQUIRE_FIX_ERROR_TIME = time();
             spawn SEND_EVT(EVT_ACQUIRE_FIX_ERROR_);
 
-            printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_ACQUIRE_FIX_ERROR_[%d]\n", STAT_FIX_ON, EVT_ACQUIRE_FIX_ERROR_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_ACQUIRE_FIX_ERROR_[%d]\n", STAT_FIX_ON, EVT_ACQUIRE_FIX_ERROR_);
+            }
             printf("****STAT_FIX_ON[%d]: ERR (Fixation not acquired)[%d]/[%d] (ALLOWED_FIX_TIME)\n", STAT_FIX_ON, STAT_DLTA_T, STAT_ALLOWED_T);
 
             // Show blank page for about No timeout or any tone
@@ -86,8 +94,11 @@ process PROC_FIX_ON()
 
             spawn SEND_EVT(EVT_OUTCOME_FIX_ERR_);
 
-            printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_OUTCOME_FIX_ERR_[%d]\n", STAT_FIX_ON, EVT_OUTCOME_FIX_ERR_);
-            printf("****STAT_FIX_ON[%d]: Waiting for FIX_NOT_ACQ_WAIT_TIME [%d] before going to STAT_IDLE\n", STAT_FIX_ON, FIX_NOT_ACQ_WAIT_TIME);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_FIX_ON[%d]: ERR sent Event: EVT_OUTCOME_FIX_ERR_[%d]\n", STAT_FIX_ON, EVT_OUTCOME_FIX_ERR_);
+                printf("****STAT_FIX_ON[%d]: Waiting for FIX_NOT_ACQ_WAIT_TIME [%d] before going to STAT_IDLE\n", STAT_FIX_ON, FIX_NOT_ACQ_WAIT_TIME);
+            }
             wait(FIX_NOT_ACQ_WAIT_TIME);
             PROCESS_STATE  = 1;
             CURR_STAT      = STAT_IDLE;

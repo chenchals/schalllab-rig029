@@ -27,7 +27,6 @@ process PROC_REFIX_CHK()
     // Target- Eye left target window during targ-hold onwards for Stop trial
     if (PROCESS_STATE)
     {
-
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
@@ -51,15 +50,20 @@ process PROC_REFIX_CHK()
                     TRL_DECIDE_SEC_TIME = time();
                     spawn SEND_EVT(EVT_DECIDE_SEC_);
 
-                    printf("****STAT_REFIX_CHK[%d]: Sent Event: EVT_DECIDE_SEC_[%d][%d]\n", STAT_REFIX_CHK, EVT_DECIDE_SEC_);
-                    printf("****STAT_REFIX_CHK[%d]: Secondary saccade in [%d]/[%d](MAX_SACC_DURATION)\n",
-                           STAT_REFIX_CHK, STAT_DLTA_T, STAT_ALLOWED_T);
+                    if (DEBUG_CONSOLE)
+                    {
+                        printf("****STAT_REFIX_CHK[%d]: Sent Event: EVT_DECIDE_SEC_[%d][%d]\n", STAT_REFIX_CHK, EVT_DECIDE_SEC_);
+
+                        printf("****STAT_REFIX_CHK[%d]: Secondary saccade in [%d]/[%d](MAX_SACC_DURATION)\n",
+                               STAT_REFIX_CHK, STAT_DLTA_T, STAT_ALLOWED_T);
+                    }
+
                     TRL_REFIX_HOLD_DURATION = 0;
                 }
             }
             else
             {
-                printf("****STAT_REFIX_CHK[%d]: ERR (*Eye elsewhere* in) [%d](MAX_SACC_DURATION)\n", STAT_REFIX_CHK, STAT_ALLOWED_T);
+                printf("****STAT_REFIX_CHK[%d]: ERR (*Secondary Saccade-Eye elsewhere* in) [%d](MAX_SACC_DURATION)\n", STAT_REFIX_CHK, STAT_ALLOWED_T);
 
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_OUTCOME;
@@ -99,8 +103,10 @@ process PROC_REFIX_CHK()
     }
     else
     {
-        printf("****STAT_REFIX_CHK[%d]: GO Trial; Not checking REFIX\n", STAT_REFIX_CHK);
-
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_REFIX_CHK[%d]: GO Trial; Not checking REFIX\n", STAT_REFIX_CHK);
+        }
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
     }

@@ -27,8 +27,10 @@ process PROC_GET_REDY()
 {
     if (PROCESS_STATE)
     {
-
-        printf("****STAT_GET_READY[%d]: Waiting for Eye to be outside FIX_WIN_WIDE\n", STAT_GET_READY);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_GET_READY[%d]: Waiting for Eye to be outside FIX_WIN_WIDE\n", STAT_GET_READY);
+        }
         TRL_GET_READY_TIME     = time();
         TRL_GET_READY_DURATION = 0;
         spawn SEND_EVT(EVT_TRIAL_GET_READY_);
@@ -59,7 +61,10 @@ process PROC_GET_REDY()
         TRL_READY_TIME = time();
         spawn SEND_EVT(EVT_TRIAL_READY_);
 
-        printf("****STAT_GET_READY[%d]: OK sent Event: EVT_TRIAL_READY_[%d]\n", STAT_GET_READY, EVT_TRIAL_READY_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_GET_READY[%d]: OK sent Event: EVT_TRIAL_READY_[%d]\n", STAT_GET_READY, EVT_TRIAL_READY_);
+        }
         printf("****STAT_GET_READY[%d]: OK (Ready)[%d]/[%d] (READY_TIME)\n", STAT_GET_READY, TRL_GET_READY_DURATION, STAT_ALLOWED_T);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_FIX_ON;

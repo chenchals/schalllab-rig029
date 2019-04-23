@@ -16,6 +16,7 @@ declare SETUP_SCRN_CLRS_PGS();
 declare SETUP_DATA_ACQ_PARMS();
 declare ESTMT_MS_PER_TICK();
 declare WTCH_PD_SCHMITT();
+declare WTCH_SCHMITT();
 declare WTCH_EYE();
 
 declare TEST_SSD();
@@ -23,12 +24,18 @@ declare TEST_SSD();
 declare float MS_PER_TICK;
 declare int   ASETS            = 1;
 declare float FIX_SIZE         = 0.5;
-declare int   PD_TRIG_L        = 0;
-declare int   PD_TRIG_R        = 0;
 declare int   VERT_RFRSH_COUNT = 0;
 declare int   VERT_RFRSH_SSD   = 0;
 declare int   TRL_NUM          = 0;
 declare int   BREAK_FIX_FLAG   = 0;
+
+declare constant int DEBUG_PD      = 1;
+declare constant int WRITE_PD_FILE = 1;
+declare int          PD_TRIG_L     = 0;
+declare int          PD_TRIG_R     = 0;
+declare int          PD_THRESHOLD  = 2000;
+
+
 
 // RIG variables
 #include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
@@ -64,7 +71,8 @@ process TEST_SSD() enabled
     spawnwait ESTMT_MS_PER_TICK();
     spawnwait SETUP_SCRN_CLRS_PGS();
     spawnwait SETUP_DATA_ACQ_PARMS();
-    spawn WTCH_PD_SCHMITT();
+    //spawn WTCH_PD_SCHMITT();
+    spawn WTCH_SCHMITT();
     spawn WTCH_EYE();
 
     TRL_NUM = 0;
@@ -201,6 +209,44 @@ process WTCH_PD_SCHMITT()
         printf("%d,%d,%d,%d,%d\n", TRL_NUM, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
 
         writef("pdValsSc.csv %d,%d,%d,%d,%d\n", TRL_NUM, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+        nexttick;
+    }
+}
+
+process WTCH_SCHMITT()
+{
+    declare float pdValL = 5000;
+    declare float pdValR = 5000;
+
+    while (1)
+    {
+        pdValL = atable(PHOTOCELL_L_CHANNEL);
+        pdValR = atable(PHOTOCELL_R_CHANNEL);
+        if (pdValL < PD_THRESHOLD && PD_TRIG_L == 0)
+        {
+            PD_TRIG_L = 1;
+        }
+        else if (pdValL > PD_THRESHOLD && PD_TRIG_L == 1)
+        {
+            PD_TRIG_L = 0;
+        }
+        // PD Right
+        if (pdValR < PD_THRESHOLD && PD_TRIG_R == 0)
+        {
+            PD_TRIG_R = 1;
+        }
+        else if (pdValR > PD_THRESHOLD && PD_TRIG_R == 1)
+        {
+            PD_TRIG_R = 0;
+        }
+        if (WRITE_PD_FILE)
+        {
+            writef("pdValsSc.csv %d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+        }
+        if (DEBUG_PD)
+        {
+            printf("%d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+        }
         nexttick;
     }
 }
