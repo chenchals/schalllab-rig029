@@ -31,7 +31,7 @@ process PROC_ITI_CHK()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_ITI_CHK[%d]: Processing Inter trial interval\n", STAT_ITI_CHK);
+
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
 

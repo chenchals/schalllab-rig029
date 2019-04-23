@@ -49,7 +49,7 @@ process PROC_TARG_SSD()
 
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
+
         TRL_TARGET_PRE_TIME = time();
         spawn SEND_EVT(EVT_TARGET_PRE_);
 

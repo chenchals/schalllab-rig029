@@ -27,7 +27,7 @@ process PROC_TIMEOUT_CHK()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_TIM_OUT[%d]: Processing Timeout interval\n", STAT_TIM_OUT);
+
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
         

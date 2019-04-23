@@ -26,7 +26,7 @@ process PROC_FIX_ON()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_FIX_ON[%d]: Processing Fixspot On\n", STAT_FIX_ON);
+
 
         dsendf("vp %d\n", PG_FIXATION_PD);
         // show for only 1 screen refresh

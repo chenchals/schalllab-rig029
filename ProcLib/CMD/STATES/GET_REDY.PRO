@@ -27,7 +27,7 @@ process PROC_GET_REDY()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_GET_READY[%d]: Processing Get ready\n", STAT_GET_READY);
+
         printf("****STAT_GET_READY[%d]: Waiting for Eye to be outside FIX_WIN_WIDE\n", STAT_GET_READY);
         TRL_GET_READY_TIME     = time();
         TRL_GET_READY_DURATION = 0;

@@ -27,7 +27,7 @@ process PROC_REFIX_CHK()
     // Target- Eye left target window during targ-hold onwards for Stop trial
     if (PROCESS_STATE)
     {
-        printf("****STAT_REFIX_CHK[%d]: Processing Target acquisition\n", STAT_REFIX_CHK);
+
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();

@@ -41,7 +41,7 @@ process PROC_TONE_CHK()
     // Target acquired, but not fixated yet or gaze still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_TONE_CHK[%d]: Processing Tone times\n", STAT_TONE_CHK);
+
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
         

@@ -42,7 +42,7 @@ process PROC_RWRD_CHK()
     // Target acquired, but not fixated yet or gaze still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_RWRD_CHK[%d]: Processing Reward times\n", STAT_RWRD_CHK);
+
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
         

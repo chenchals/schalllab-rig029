@@ -27,7 +27,7 @@ process PROC_TARG_ACQ()
     // Target acquired, but not fixated yet or eye still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_ACQ[%d]: Processing Target acquisition\n", STAT_TARG_ACQ);
+
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();

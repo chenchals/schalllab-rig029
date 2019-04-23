@@ -26,7 +26,7 @@ process PROC_TARG_HOLD()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_HOLD[%d]: Processing hold fixation\n", STAT_TARG_HOLD);
+
         // actually TRL_ACQUIRE_FIX_TIME, however the below is practically
         //same and it keeps this state independent of previous state
         PROCESS_STATE = 0;

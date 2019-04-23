@@ -31,7 +31,7 @@ process PROC_TARG_ON()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_ON[%d]: Processing Target On\n", STAT_TARG_ON);
+
         TRL_TARGET_PRE_TIME = time();
         spawn SEND_EVT(EVT_TARGET_PRE_);
 
