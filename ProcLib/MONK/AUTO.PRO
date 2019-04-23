@@ -65,7 +65,7 @@ process AUTO()
         else
         {
             TARG_SIZE_ARRY[tempVar]         = 2.0;
-            TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0 / N_TARG_POS);
+            TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0/N_TARG_POS);
             TARG_ECCENTRICITY_ARRY[tempVar] = 10.0;
         }
 

@@ -71,7 +71,7 @@ process PROC_REFIX_CHK()
         }
         else if (TRL_DECIDE_SEC_TIME > 0)
         {
-            // reset STAT_DLTA_T to 0 when TRL_DECIDE_SEC_TIME (> 0) / EVT_DECIDE_SEC_ (is sent)
+            // reset STAT_DLTA_T to 0 when TRL_DECIDE_SEC_TIME (> 0)/EVT_DECIDE_SEC_ (is sent)
             if (STAT_DLTA_T <= STAT_I_DURATION)
             {
                 if (I_FIX)

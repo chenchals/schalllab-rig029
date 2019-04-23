@@ -70,7 +70,7 @@ process JOULE()
         else
         {
             TARG_SIZE_ARRY[tempVar]         = 1.0;
-            TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0 / N_TARG_POS);
+            TARG_ANGLE_ARRY[tempVar]        = tempVar * (360.0/N_TARG_POS);
             TARG_ECCENTRICITY_ARRY[tempVar] = 12.0;
         }
         tempVar = tempVar + 1;

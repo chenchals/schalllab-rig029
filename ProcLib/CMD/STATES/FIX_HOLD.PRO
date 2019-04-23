@@ -48,7 +48,7 @@ process PROC_FIX_HOLD()
     // so that we sync all target presentation to vertical retrace (less offsetForVdoSync)
     // variable time when fix is acquired and the length of fix hold time
 
-    tempVRCount             = (TRL_ACQUIRE_FIX_TIME - TRL_FIX_ON_TIME + TRL_USE_FIX_HOLD_DURATION) * 1.0 / REFRESH_RATE;
+    tempVRCount             = (TRL_ACQUIRE_FIX_TIME - TRL_FIX_ON_TIME + TRL_USE_FIX_HOLD_DURATION) * 1.0/REFRESH_RATE;
     TRL_USE_FIX_HOLD_ADJUST = round(round(tempVRCount) * REFRESH_RATE) + TRL_FIX_ON_TIME - TRL_ACQUIRE_FIX_TIME - TRL_USE_FIX_HOLD_DURATION;
     TRL_USE_FIX_HOLD_ADJUST = TRL_USE_FIX_HOLD_ADJUST - offsetForVdoSync;
     if (adjust)

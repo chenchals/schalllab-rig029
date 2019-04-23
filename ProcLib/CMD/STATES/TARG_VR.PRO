@@ -26,7 +26,10 @@ process CHECK_TARG_VERT_RFRSH()
         if (TRL_IS_STOP_SIGNAL_ON <= 0)
         {
             TRL_IS_STOP_SIGNAL_ON = 1;
-            printf("****TARG_VR.PRO: TRL_IS_STOP_SIGNAL_ON = [%d]\n", TRL_IS_STOP_SIGNAL_ON);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****TARG_VR.PRO: TRL_IS_STOP_SIGNAL_ON = [%d]\n", TRL_IS_STOP_SIGNAL_ON);
+            }
             TRL_TARG_VR_COUNT = TRL_TARG_VR_COUNT + 1;
         }
         if ((STAT_DLTA_T - PD_WIDTH_DURATION) > trigWidth)
