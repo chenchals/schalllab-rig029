@@ -60,7 +60,9 @@ declare SET_TARGET();
 declare SET_WINS();
 declare PICK_TRL_SSD();
 declare SET_TONE();
+declare SET_RWRD_FOR_TRIAL();
 declare SET_ASYMMETRIC_RWRD();
+declare SET_RWRD_RATIOS_FOR_BLOCK();
 declare SET_RWRD();
 
 // min stop signal hold time
@@ -122,8 +124,12 @@ declare int TRL_IS_NON_CANCELLED_NO_BRK;
 declare int TRL_IS_NON_CANCELLED_BRK;
 // is the current STOP trail is an error - gaze out fo fix, but not on target or bad saccade (GO trial value = -1)
 declare int TRL_IS_NOGO_ERR;
-// is the trial a low reward trial (for the current block)
+// is the trial a LO reward trial (for the current block)
 declare int TRL_IS_LO_RWRD;
+// is the trial a HI reward trial (for the current block)
+declare int TRL_IS_HI_RWRD;
+// is the trial a med reward trial (for the current block)
+declare int TRL_IS_MED_RWRD;
 // should the fix spot turn on for STOP trial as saccade occured within specified limits
 declare int TRL_IS_FIX_REIGNITE;
 // use to compute next STOP trial SSD (Cancel or non-cancelled and good saccade landed on target)
@@ -349,6 +355,9 @@ declare int TRL_LO_RWRD_TARG_IDX;
 declare int TRL_REPEAT_COUNT;
 // number of GO correct and STOP cancelled trial in current block
 declare int BLOCK_N_CORRECT_TRLS;
+// reward-ratio-index (for target location) to use for current block
+declare int BLOCK_RWRD_BY_TARG_IDX[2];
+declare int BLOCK_NEXT_RWRD_RATIO_IDXS[2];
 // temporary variable for toggling target index for low reward for next block
 declare int TOGGLE_RWRD_ASSOCIATION;
 // Other variables for trial to use for staircasing in next session
@@ -389,7 +398,7 @@ process SET_CMD_TRL()
     TRL_USE_STAIRCASE                = STAIRCASE_SSD;
     TRL_USE_SSD_STEP_UP              = SSD_STEP_UP;
     TRL_USE_SSD_STEP_DOWN            = SSD_STEP_DOWN;
-    TRL_USE_USE_PROVIDED_TRL_LENGTH      = USE_PROVIDED_TRL_LENGTH;
+    TRL_USE_USE_PROVIDED_TRL_LENGTH  = USE_PROVIDED_TRL_LENGTH;
     TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG = XTRA_HOLD_TONE_RWRD_FLAG;
     //============================================================================
     if (DEBUG_CONSOLE)
@@ -438,6 +447,7 @@ process SET_CMD_TRL()
             printf("****SET_CMD/SET_CMD_TRL: Setting CMD_PGS****\n");
         }
         spawnwait CMD_PGS(TRL_CURR_TARG_SIZE, TRL_CURR_TARG_ANGLE, TRL_CURR_TARG_ECCENTRICITY, TRL_CURR_TARG_COLOR_IDX);
+
         // compute trial duration (mainly for fixed trial length)
         spawnwait COMPUTE_TRIAL_DURATION();
     } // if previous trial is not an error
@@ -450,8 +460,8 @@ process SET_CMD_TRL()
     // increment trial number
     TRL_TRIAL_NUMBER = TRL_TRIAL_NUMBER + 1;
 
-    printf("Block [%d], Trl [%d], lowRwrdTargIdx [%d], targIdx [%d], trlIsLowRwrd [%d]\n",
-           TRL_BLOCK_NUM, TRL_TRIAL_NUMBER, TRL_LO_RWRD_TARG_IDX, TRL_CURR_TARG_IDX, TRL_IS_LO_RWRD);
+    printf("Block [%d], Trl [%d], targIdx [%d], rewardDuration [%d]\n",
+           TRL_BLOCK_NUM, TRL_TRIAL_NUMBER, TRL_CURR_TARG_IDX, TRL_USE_RWRD_DURATION);
 } /* SET_CMD_TRL */
 
 
@@ -501,7 +511,7 @@ process COMPUTE_TRIAL_DURATION()
         maxTrialDuration = maxTrialDuration + TRL_USE_XTRA_HOLD_DURATION;
     }
     // maxTrialDuration to the nearest higher 100ms
-    maxTrialDuration = ceil(maxTrialDuration/100.0)*100;
+    maxTrialDuration = ceil(maxTrialDuration/100.0) * 100;
 
     // now check for the longest time of the following
     if (USE_PROVIDED_TRL_LENGTH && maxTrialDuration > PROVIDED_TRL_LENGTH)
@@ -673,7 +683,8 @@ process SET_RWRD()
     spawnwait JITTER(RWRD_DELAY_MEAN, RWRD_DELAY_SPREAD, RWRD_JITTER_FLAG);
 
     TRL_USE_RWRD_DELAY = JITTER_INT;
-    spawnwait SET_ASYMMETRIC_RWRD();
+    //spawnwait SET_ASYMMETRIC_RWRD();
+    spawnwait SET_RWRD_FOR_TRIAL();
 
     if (DEBUG_CONSOLE)
     {
@@ -767,6 +778,34 @@ process SET_WINS()
 } /* SET_WINS */
 
 
+process SET_RWRD_FOR_TRIAL()
+{
+    if (DEBUG_CONSOLE)
+    {
+        printf("****SET_CMD/SET_RWRD_FOR_TRIAL: Setting asymmetric reward****\n");
+    }
+    TRL_USE_RWRD_DURATION = BLOCK_RWRD_BY_TARG_IDX[TRL_CURR_TARG_IDX];
+    if (TRL_USE_RWRD_DURATION == LO_RWRD_DUR)
+    {
+        TRL_IS_LO_RWRD  = 1;
+        TRL_IS_HI_RWRD  = 0;
+        TRL_IS_MED_RWRD = 0;
+    }
+    else if (TRL_USE_RWRD_DURATION == MED_RWRD_DUR)
+    {
+        TRL_IS_LO_RWRD  = 0;
+        TRL_IS_HI_RWRD  = 1;
+        TRL_IS_MED_RWRD = 0;
+    }
+    else if (TRL_USE_RWRD_DURATION == MED_RWRD_DUR)
+    {
+        TRL_IS_LO_RWRD  = 0;
+        TRL_IS_HI_RWRD  = 0;
+        TRL_IS_MED_RWRD = 1;
+    }
+}
+
+
 // Assumes only 2 indices 0,1
 process SET_ASYMMETRIC_RWRD()
 {
@@ -774,7 +813,7 @@ process SET_ASYMMETRIC_RWRD()
 
     if (DEBUG_CONSOLE)
     {
-        printf("****SET_CMD/SET_ASYMMETRIC_RWRD: Setting asymmetric reward****\n");
+        printf("****SET_CMD/SET_RWRD_FOR_TRIAL: Setting asymmetric reward****\n");
     }
 
     if (TOGGLE_RWRD_ASSOCIATION)
@@ -824,7 +863,7 @@ process SET_ASYMMETRIC_RWRD()
     }
     if (DEBUG_CONSOLE)
     {
-        printf("****SET_CMD/SET_ASYMMETRIC_RWRD: TRL_IS_LO_RWRD [%d], RWRD_DURATION [%d]****\n", TRL_IS_LO_RWRD, TRL_USE_RWRD_DURATION);
+        printf("****SET_CMD/SET_RWRD_FOR_TRIAL: TRL_IS_LO_RWRD [%d], RWRD_DURATION [%d]****\n", TRL_IS_LO_RWRD, TRL_USE_RWRD_DURATION);
     }
 }/* SET_ASYMMETRIC_RWRD */
 
@@ -874,18 +913,71 @@ process SET_BLOCK_NUM()
     {
         TRL_BLOCK_NUM        = 1;
         BLOCK_N_CORRECT_TRLS = 0;
+        spawnwait SET_RWRD_RATIOS_FOR_BLOCK();
     }
     else if (BLOCK_N_CORRECT_TRLS == CORRECT_TRIALS_PER_BLOCK)
     {
         TOGGLE_RWRD_ASSOCIATION = 1;
         TRL_BLOCK_NUM           = TRL_BLOCK_NUM + 1;
         BLOCK_N_CORRECT_TRLS    = 0;
+        spawnwait SET_RWRD_RATIOS_FOR_BLOCK();
     }
     if (DEBUG_CONSOLE)
     {
         printf("****SET_CMD/SET_BLOCK_NUM: BLOCK_NUM [%d],****\n", TRL_BLOCK_NUM);
     }
 }/* SET_BLOCK_NUM */
+
+
+process SET_RWRD_RATIOS_FOR_BLOCK()
+{
+    declare int nRewardRatios = 3;
+    declare int nRewardLocs = 2;
+    declate int tempRand, tempCount, idx;
+
+    if (DEBUG_CONSOLE)
+    {
+        printf("****SET_CMD/SET_RWRD_RATIOS_FOR_BLOCK: Setting asymmetric reward****\n");
+    }
+    // Pick BLOCK_RWRD_BY_TARG_IDX for block 1 or if TOGGLE_RWRD_ASSOCIATION (change for each block)
+    //declare int BLOCK_RWRD_BY_TARG_IDX[2];
+    //declare int BLOCK_NEXT_RWRD_RATIO_IDXS[2];
+    if (TRL_BLOCK_NUM == 1)
+    {
+        tempRand = random(nRewardRatios);
+        // setup current bloch reward ratios by target location
+        idx = 0;
+        while (idx < nRewardLocs)
+        {
+            BLOCK_RWRD_BY_TARG_IDX[idx] = RWRD_RATIOS[tempRand, idx];
+            idx                         = idx + 1;
+        }
+    }
+    else if (TOGGLE_RWRD_ASSOCIATION == 1)
+    {
+        TOGGLE_RWRD_ASSOCIATION = 0;
+        tempRand                = BLOCK_NEXT_RWRD_RATIO_IDXS[random(nRewardRatios - 1)];
+        // setup current bloch reward ratios by target location
+        idx = 0;
+        while (idx < nRewardLocs)
+        {
+            BLOCK_RWRD_BY_TARG_IDX[idx] = RWRD_RATIOS[tempRand, idx];
+            idx                         = idx + 1;
+        }
+        // setup Reward ratio pair indices for next block
+        tempCount = 0;
+        idx       = 0;
+        while (tempCount < nRewardRatios)
+        {
+            if (tempCount != tempRand)
+            {
+                BLOCK_NEXT_RWRD_RATIO_IDXS[idx] = tempCount;
+                idx                             = idx + 1;
+            }
+            tempCount = tempCount + 1;
+        }
+    }
+}/* SET_RWRD_RATIOS_FOR_BLOCK */
 
 
 process INIT_VARS_REPEAT_TRL()
