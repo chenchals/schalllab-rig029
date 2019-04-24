@@ -273,8 +273,12 @@ process IDLE() enabled
 
                 TRL_TASK_END_TIME = time();
                 spawn SEND_EVT(EVT_TASK_END_);
-
-                printf("****CMD_TSK: OK (Ending Task) sent Event: EVT_TASK_END_[%d]\n", EVT_TASK_END_);
+                
+                
+                if(DEBUG_CONSOLE)
+                {
+                    printf("****CMD_TSK: OK (Ending Task) sent Event: EVT_TASK_END_[%d]\n", EVT_TASK_END_);
+                }
                 printf("****CMD_TSK: OK (Ending Task) TRL_TRIAL_NUMBER [%d], TRL_CUM_DURATION[%d]\n", TRL_TRIAL_NUMBER, TRL_CUM_DURATION);
                 TRL_IS_RUNNING = 0;
                 PROCESS_STATE  = 0;

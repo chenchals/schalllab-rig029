@@ -113,7 +113,7 @@ process PROC_GO_OUTCOMES()
         spawn SEND_EVT(EVT_OUTCOME_GO_CORRECT_);
 
         TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_CORRECT_;
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: GO-CORRECT\n", TAT_OUTCOME, TRL_TRIAL_NUMBER);
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: GO-CORRECT\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
         if (DEBUG_CONSOLE)
         {
             printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_CORRECT_ [%d]; Go Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
