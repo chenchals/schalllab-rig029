@@ -61,7 +61,6 @@ declare SET_WINS();
 declare PICK_TRL_SSD();
 declare SET_TONE();
 declare SET_RWRD_FOR_TRIAL();
-declare SET_ASYMMETRIC_RWRD();
 declare SET_RWRD_RATIOS_FOR_BLOCK();
 declare SET_RWRD();
 

@@ -158,8 +158,8 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
 declare int CORRECT_TRIALS_PER_BLOCK = 5;
-// Asymmetric REWARD COMBINATIONS to Use
-//Lo / Med / Hi reward combinations to use
+// Reward amounts for Asymmetric REWARD COMBINATIONS
+//  Lo / Med / Hi
 declare int LO_RWRD_DUR  = 80;
 declare int MED_RWRD_DUR = 200;
 declare int HI_RWRD_DUR  = 320;
@@ -168,9 +168,10 @@ declare int HI_RWRD_DUR  = 320;
 // associate Asymmetic rewards by location. For details:
 // see SET_CMD.PRO/SET_RWRD_RATIOS_FOR_BLOCK and SET_CMD.PRO/SET_RWRD_FOR_TRIAL
 // For the 3 variables below:
-//    Ensure num_rows =  *NUM_RWRD_RATIOS*  in the array below
-//    Ensure num_cols =  *NUM_RWRD_TARG_LOCS*  in the array below
-//      additionally, NUM_RWRD_TARG_LOCS *shall* = N_TARG_POS
+//    1. NUM_RWRD_RATIOS    = num_rows in the RWRD_RATIOS array below
+//    2. NUM_RWRD_TARG_LOCS = num_cols in the RWRD_RATIOS array below
+//             additionally, NUM_RWRD_TARG_LOCS *shall* = N_TARG_POS
+//    3. RWRD_RATIOS  = Possible Asymmetic reward ratios for a block  
 // ** For 2 ratios : {LO, HI} and (HI, LO} use this and comment out the other RWRD_RATIOS *below*
 declare int NUM_RWRD_RATIOS    = 2;
 declare int NUM_RWRD_TARG_LOCS = 2;
