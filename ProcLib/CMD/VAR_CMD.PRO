@@ -157,37 +157,37 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare constant int RWRD_LO_IDX = 0;
-declare constant int RWRD_HI_IDX = 1;
-
-//
 declare int CORRECT_TRIALS_PER_BLOCK = 5;
-declare int RWRD_LO_HI_MEAN[2]       = { 80, 320 };
-declare int RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
-declare int RWRD_DURATION_JITTER     = JITTER_NONE;
-
-// Lo / Med / Hi reward combinations to use
-//
+// Asymmetric REWARD COMBINATIONS to Use
+//Lo / Med / Hi reward combinations to use
 declare int LO_RWRD_DUR  = 80;
 declare int MED_RWRD_DUR = 200;
 declare int HI_RWRD_DUR  = 320;
-// Reward Ratios by Position - No Jitter
-// 3 different reward ratios for 2 target locations
-declare int NUM_RWRD_RATIOS    = 3;
+// Reward Ratios by Target Location - No Jitter
+// For each block one of the rows from RWRD_RATIOS is chosen to
+// associate Asymmetic rewards by location. For details:
+// see SET_CMD.PRO/SET_RWRD_RATIOS_FOR_BLOCK and SET_CMD.PRO/SET_RWRD_FOR_TRIAL
+// For the 3 variables below:
+//    Ensure num_rows =  *NUM_RWRD_RATIOS*  in the array below
+//    Ensure num_cols =  *NUM_RWRD_TARG_LOCS*  in the array below
+//      additionally, NUM_RWRD_TARG_LOCS *shall* = N_TARG_POS
+// ** For 2 ratios : {LO, HI} and (HI, LO} use this and comment out the other RWRD_RATIOS *below*
+declare int NUM_RWRD_RATIOS    = 2;
 declare int NUM_RWRD_TARG_LOCS = 2;
-// These *shall* correspond to the the numbers set above
-// Ensure num_rows =  *NUM_RWRD_RATIOS*  in the array below
-// Ensure num_cols =  *NUM_RWRD_TARG_LOCS*  in the array below
-// additionally, the N_TARG_POS *shall* = NUM_RWRD_TARG_LOCS
-// For each block one of the rows below is chosen to associate Asymmetic rewards by location
-// For details see: SET_CMD.PRO/SET_RWRD_RATIOS_FOR_BLOCK and SET_CMD.PRO/SET_RWRD_FOR_TRIAL
 declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
 {
     LO_RWRD_DUR,  HI_RWRD_DUR,
-    HI_RWRD_DUR,  LO_RWRD_DUR,
-    MED_RWRD_DUR, MED_RWRD_DUR
+    HI_RWRD_DUR,  LO_RWRD_DUR
 };
-
+// ** For 3 ratios : {LO, HI}, (HI, LO}, {MED, MED} use this and comment out the other RWRD_RATIOS *above*
+// declare int NUM_RWRD_RATIOS    = 3;
+// declare int NUM_RWRD_TARG_LOCS = 2;
+// declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
+// {
+//     LO_RWRD_DUR,  HI_RWRD_DUR,
+//     HI_RWRD_DUR,  LO_RWRD_DUR,
+//     MED_RWRD_DUR, MED_RWRD_DUR
+// };
 
 //=========================== Timeout variables ======================
 // timeout time for punishment computed

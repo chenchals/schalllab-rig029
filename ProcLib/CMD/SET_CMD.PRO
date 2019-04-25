@@ -805,69 +805,6 @@ process SET_RWRD_FOR_TRIAL()
     }
 }
 
-
-// Assumes only 2 indices 0,1
-process SET_ASYMMETRIC_RWRD()
-{
-    declare int tempRand;
-
-    if (DEBUG_CONSOLE)
-    {
-        printf("****SET_CMD/SET_RWRD_FOR_TRIAL: Setting asymmetric reward****\n");
-    }
-
-    if (TOGGLE_RWRD_ASSOCIATION)
-    {
-        TOGGLE_RWRD_ASSOCIATION = 0;
-
-        if (TRL_BLOCK_NUM == 1)
-        {
-            // Choose Left or right as low reward initially
-            // this could be change to low reward for pos 0,1,2,3
-            // Making actual reward duration seection independent targ. position
-            // for countermanding since there are only 2 positions
-            if (random(2))
-            {
-                TRL_LO_RWRD_TARG_IDX = 1;
-            }
-            else
-            {
-                TRL_LO_RWRD_TARG_IDX = 0;
-            }
-        }
-        else // Switch reward association
-        {
-            if (TRL_LO_RWRD_TARG_IDX)
-            {
-                TRL_LO_RWRD_TARG_IDX = 0;
-            }
-            else
-            {
-                TRL_LO_RWRD_TARG_IDX = 1;
-            }
-        }
-    }
-    if (TRL_CURR_TARG_IDX == TRL_LO_RWRD_TARG_IDX)
-    {
-        spawnwait JITTER(RWRD_LO_HI_MEAN[RWRD_LO_IDX], RWRD_LO_HI_SPREAD[RWRD_LO_IDX], RWRD_DURATION_JITTER);
-
-        TRL_USE_RWRD_DURATION = JITTER_INT;
-        TRL_IS_LO_RWRD        = 1;
-    }
-    else
-    {
-        spawnwait JITTER(RWRD_LO_HI_MEAN[RWRD_HI_IDX], RWRD_LO_HI_SPREAD[RWRD_HI_IDX], RWRD_DURATION_JITTER);
-
-        TRL_USE_RWRD_DURATION = JITTER_INT;
-        TRL_IS_LO_RWRD        = 0;
-    }
-    if (DEBUG_CONSOLE)
-    {
-        printf("****SET_CMD/SET_RWRD_FOR_TRIAL: TRL_IS_LO_RWRD [%d], RWRD_DURATION [%d]****\n", TRL_IS_LO_RWRD, TRL_USE_RWRD_DURATION);
-    }
-}/* SET_ASYMMETRIC_RWRD */
-
-
 process SET_TARGET()
 {
     // pick random current target location
@@ -885,7 +822,6 @@ process SET_TARGET()
 
     spawnwait SET_WINS();
 } /* SET_TARGET */
-
 
 process PICK_TRIAL_TYPE()
 {
