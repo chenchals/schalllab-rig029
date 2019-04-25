@@ -931,8 +931,6 @@ process SET_BLOCK_NUM()
 
 process SET_RWRD_RATIOS_FOR_BLOCK()
 {
-    declare int nRewardRatios = 3;
-    declare int nRewardLocs = 2;
     declare int tempRand, tempCount, idx;
 
     if (DEBUG_CONSOLE)
@@ -944,10 +942,10 @@ process SET_RWRD_RATIOS_FOR_BLOCK()
     //declare int BLOCK_NEXT_RWRD_RATIO_IDXS[2];
     if (TRL_BLOCK_NUM == 1)
     {
-        tempRand = random(nRewardRatios);
+        tempRand = random(NUM_RWRD_RATIOS);
         // setup current bloch reward ratios by target location
         idx = 0;
-        while (idx < nRewardLocs)
+        while (idx < NUM_RWRD_TARG_LOCS)
         {
             BLOCK_RWRD_BY_TARG_IDX[idx] = RWRD_RATIOS[tempRand, idx];
             idx                         = idx + 1;
@@ -956,10 +954,10 @@ process SET_RWRD_RATIOS_FOR_BLOCK()
     else if (TOGGLE_RWRD_ASSOCIATION == 1)
     {
         TOGGLE_RWRD_ASSOCIATION = 0;
-        tempRand                = BLOCK_NEXT_RWRD_RATIO_IDXS[random(nRewardRatios - 1)];
+        tempRand                = BLOCK_NEXT_RWRD_RATIO_IDXS[random(NUM_RWRD_RATIOS - 1)];
         // setup current bloch reward ratios by target location
         idx = 0;
-        while (idx < nRewardLocs)
+        while (idx < NUM_RWRD_TARG_LOCS)
         {
             BLOCK_RWRD_BY_TARG_IDX[idx] = RWRD_RATIOS[tempRand, idx];
             idx                         = idx + 1;
@@ -967,7 +965,7 @@ process SET_RWRD_RATIOS_FOR_BLOCK()
         // setup Reward ratio pair indices for next block
         tempCount = 0;
         idx       = 0;
-        while (tempCount < nRewardRatios)
+        while (tempCount < NUM_RWRD_RATIOS)
         {
             if (tempCount != tempRand)
             {

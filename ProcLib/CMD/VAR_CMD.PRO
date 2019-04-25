@@ -172,8 +172,16 @@ declare int LO_RWRD_DUR  = 80;
 declare int MED_RWRD_DUR = 200;
 declare int HI_RWRD_DUR  = 320;
 // Reward Ratios by Position - No Jitter
-// 3 different reward ratios for target positions
-declare int RWRD_RATIOS[3, 2] =
+// 3 different reward ratios for 2 target locations
+declare int NUM_RWRD_RATIOS    = 3;
+declare int NUM_RWRD_TARG_LOCS = 2;
+// These *shall* correspond to the the numbers set above
+// Ensure num_rows =  *NUM_RWRD_RATIOS*  in the array below
+// Ensure num_cols =  *NUM_RWRD_TARG_LOCS*  in the array below
+// additionally, the N_TARG_POS *shall* = NUM_RWRD_TARG_LOCS
+// For each block one of the rows below is chosen to associate Asymmetic rewards by location
+// For details see: SET_CMD.PRO/SET_RWRD_RATIOS_FOR_BLOCK and SET_CMD.PRO/SET_RWRD_FOR_TRIAL
+declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
 {
     LO_RWRD_DUR,  HI_RWRD_DUR,
     HI_RWRD_DUR,  LO_RWRD_DUR,
