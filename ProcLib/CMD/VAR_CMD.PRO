@@ -161,7 +161,7 @@ declare constant int RWRD_LO_IDX = 0;
 declare constant int RWRD_HI_IDX = 1;
 
 //
-declare int CORRECT_TRIALS_PER_BLOCK = 20;
+declare int CORRECT_TRIALS_PER_BLOCK = 5;
 declare int RWRD_LO_HI_MEAN[2]       = { 80, 320 };
 declare int RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
 declare int RWRD_DURATION_JITTER     = JITTER_NONE;
@@ -170,7 +170,7 @@ declare int RWRD_DURATION_JITTER     = JITTER_NONE;
 //
 declare int LO_RWRD_DUR  = 80;
 declare int MED_RWRD_DUR = 200;
-declare int HI_RWRD_DUR  = 200;
+declare int HI_RWRD_DUR  = 320;
 // Reward Ratios by Position - No Jitter
 // 3 different reward ratios for target positions
 declare int RWRD_RATIOS[3, 2] =
@@ -185,8 +185,8 @@ declare int RWRD_RATIOS[3, 2] =
 // timeout time for punishment computed
 declare int TIMEOUT_DURATION;
 declare int TIMEOUT_TONE;
-declare int TIMEOUT_SHOW_RANDM_PG_FLAG = 1;
-declare int TIMEOUT_PLAY_TONE_FLAG     = 0;
+declare int TIMEOUT_SHOW_RANDM_PG_FLAG = 0;
+declare int TIMEOUT_PLAY_TONE_FLAG     = 1;
 
 // See ProcLib/DOC/CmdOutcomes.xlsx
 // Extra punish time for diferent outcomes in number of Trial lengths

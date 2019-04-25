@@ -933,7 +933,7 @@ process SET_RWRD_RATIOS_FOR_BLOCK()
 {
     declare int nRewardRatios = 3;
     declare int nRewardLocs = 2;
-    declate int tempRand, tempCount, idx;
+    declare int tempRand, tempCount, idx;
 
     if (DEBUG_CONSOLE)
     {

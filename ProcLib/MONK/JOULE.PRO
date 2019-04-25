@@ -21,17 +21,17 @@ process JOULE()
     //SSD list is not set
     // See VAR_CMD.PRO
     SSD_ARRY[0] = 4;
-    SSD_ARRY[1] = 8;
-    SSD_ARRY[2] = 12;
-    SSD_ARRY[3] = 16;
-    SSD_ARRY[4] = 20;
-    SSD_ARRY[5] = 24;
-    SSD_ARRY[6] = 28;
-    SSD_ARRY[7] = 32;
-    SSD_ARRY[8] = 36;
-    SSD_ARRY[9] = 40;
+    SSD_ARRY[1] = 11;
+    SSD_ARRY[2] = 18;
+    SSD_ARRY[3] = 25;
+    SSD_ARRY[4] = 32;
+    SSD_ARRY[5] = 39;
+ //   SSD_ARRY[6] = 28;
+ //   SSD_ARRY[7] = 32;
+ //   SSD_ARRY[8] = 36;
+  //  SSD_ARRY[9] = 40;
 
-    tempVar = 10;
+    tempVar = 6;
     while (tempVar < N_SSD_MAX)
     {
         SSD_ARRY[tempVar] = 0;
