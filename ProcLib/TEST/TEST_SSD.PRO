@@ -33,7 +33,7 @@ declare constant int DEBUG_PD      = 0;
 declare constant int WRITE_PD_FILE = 1;
 declare int          PD_TRIG_L     = 0;
 declare int          PD_TRIG_R     = 0;
-declare int          PD_THRESHOLD  = 2000;
+declare int          PD_THRESHOLD  = 500;
 
 
 
