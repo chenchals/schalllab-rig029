@@ -15,12 +15,12 @@
 declare SETUP_SCRN_CLRS_PGS();
 declare SETUP_DATA_ACQ_PARMS();
 declare ESTMT_MS_PER_TICK();
-declare WTCH_PD_SCHMITT();
 declare WTCH_SCHMITT();
 declare WTCH_EYE();
 
 declare TEST_SSD();
 
+declare int DEBUG_CONSOLE=1;
 declare float MS_PER_TICK;
 declare int   ASETS            = 1;
 declare float FIX_SIZE         = 0.5;
@@ -29,7 +29,7 @@ declare int   VERT_RFRSH_SSD   = 0;
 declare int   TRL_NUM          = 0;
 declare int   BREAK_FIX_FLAG   = 0;
 
-declare constant int DEBUG_PD      = 1;
+declare constant int DEBUG_PD      = 0;
 declare constant int WRITE_PD_FILE = 1;
 declare int          PD_TRIG_L     = 0;
 declare int          PD_TRIG_R     = 0;
@@ -151,8 +151,8 @@ process TEST_SSD() enabled
         {
             printf("===OK OK OK====\n");
         }
-        //printf("TRL %d, V_RFRSH_SSD [%d], V_RFRSH_COUNT [%d], ssdTime [%d], ssdExpec [%d], isiTicks [%d], eyeTicks [%d], breakFix [%d]\n", TRL_NUM,VERT_RFRSH_SSD,VERT_RFRSH_COUNT,ssdTime,ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
-        //writef("C:\\tempo\\ProcLib\\TEST\\testSSDR.csv %d,%d,%d,%d,%d,%d,%d,%d\n", TRL_NUM, VERT_RFRSH_SSD, VERT_RFRSH_COUNT, ssdTime, ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
+        printf("TRL %d, V_RFRSH_SSD [%d], V_RFRSH_COUNT [%d], ssdTime [%d], ssdExpec [%d], isiTicks [%d], eyeTicks [%d], breakFix [%d]\n", TRL_NUM,VERT_RFRSH_SSD,VERT_RFRSH_COUNT,ssdTime,ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
+        writef("testSSDR.csv %d,%d,%d,%d,%d,%d,%d,%d\n", TRL_NUM, VERT_RFRSH_SSD, VERT_RFRSH_COUNT, ssdTime, ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
     }
 } /* TEST_SSD */
 
@@ -177,40 +177,6 @@ process SETUP_SCRN_CLRS_PGS()
 process SETUP_DATA_ACQ_PARMS()
 {
     printf("SETUP_DATA_ACQ_PARMS...");
-}
-
-
-process WTCH_PD_SCHMITT()
-{
-    declare float pdValL   = 0;
-    declare float pdValR   = 0;
-    declare int   threshLo = 100;//both hi and lo
-
-    while (1)
-    {
-        pdValL = atable(PHOTOCELL_L_CHANNEL);
-        pdValR = atable(PHOTOCELL_R_CHANNEL);
-        if (pdValL < threshLo && PD_TRIG_L == 0)
-        {
-            PD_TRIG_L = 1;
-        }
-        else if (pdValL > threshLo && PD_TRIG_L == 1)
-        {
-            PD_TRIG_L = 0;
-        }
-        if (pdValR < threshLo && PD_TRIG_R == 0)
-        {
-            PD_TRIG_R = 1;
-        }
-        else if (pdValR > threshLo && PD_TRIG_R == 1)
-        {
-            PD_TRIG_R = 0;
-        }
-        printf("%d,%d,%d,%d,%d\n", TRL_NUM, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
-
-        writef("pdValsSc.csv %d,%d,%d,%d,%d\n", TRL_NUM, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
-        nexttick;
-    }
 }
 
 process WTCH_SCHMITT()

@@ -157,7 +157,7 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int CORRECT_TRIALS_PER_BLOCK = 5;
+declare int CORRECT_TRIALS_PER_BLOCK = 20;
 // Reward amounts for Asymmetric REWARD COMBINATIONS
 //  Lo / Med / Hi
 declare int LO_RWRD_DUR  = 80;
