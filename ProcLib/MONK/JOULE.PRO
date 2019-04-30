@@ -22,16 +22,16 @@ process JOULE()
     // See VAR_CMD.PRO
     SSD_ARRY[0] = 4;
     SSD_ARRY[1] = 11;
-    SSD_ARRY[2] = 18;
-    SSD_ARRY[3] = 25;
-    SSD_ARRY[4] = 32;
-    SSD_ARRY[5] = 39;
- //   SSD_ARRY[6] = 28;
- //   SSD_ARRY[7] = 32;
- //   SSD_ARRY[8] = 36;
-  //  SSD_ARRY[9] = 40;
+    SSD_ARRY[2] = 16;
+    SSD_ARRY[3] = 19;
+    SSD_ARRY[4] = 22;
+    SSD_ARRY[5] = 25;
+    SSD_ARRY[6] = 30;
+    SSD_ARRY[7] = 37;
+    //SSD_ARRY[8] = 36;
+    //SSD_ARRY[9] = 40;
 
-    tempVar = 6;
+    tempVar = 8;
     while (tempVar < N_SSD_MAX)
     {
         SSD_ARRY[tempVar] = 0;

@@ -76,8 +76,12 @@ process TEST_SSD() enabled
     spawn WTCH_EYE();
 
     TRL_NUM = 0;
-
-    //dsendf("vp %d\n", PAGE_TEST_PD);
+    while(1)
+    {
+        // show both right and left PD
+        dsendf("vp %d\n", PAGE_TEST_PD);
+        nexttick 10000;
+    }
     //while(1)
     //{
     // dsendf("vp %d\n", PAGE_FIX_PD);
