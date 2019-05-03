@@ -34,39 +34,56 @@ process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int step
     if (staircaseFlag == 0)
     {
         STAIRCASE_NEXT_SSD_IDX = random(nSSD);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****staircaseFlag [%d]****\n", staircaseFlag);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastSssdIdx [%d], --> next: RANDOM ", lastSsdIdx);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****staircaseFlag [%d]****\n", staircaseFlag);
+            printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: lastSssdIdx [%d], --> next: RANDOM ", lastSsdIdx);
+        }
     }
     else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_CANCEL_BRK_)
     {
         STAIRCASE_NEXT_SSD_IDX = lastSsdIdx + random(stepUpMax) + 1;
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****STEP-UP****\n");
-        printf("*********LastStopOutcome [%d] is (EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ [%d] or EVT_OUTCOME_NOGO_CANCEL_BRK_ [%d]), lastSssdIdx [%d], --> ",
-               lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, EVT_OUTCOME_NOGO_CANCEL_BRK_, lastSsdIdx);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****STEP-UP****\n");
+            printf("*********LastStopOutcome [%d] is (EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ [%d] or EVT_OUTCOME_NOGO_CANCEL_BRK_ [%d]), lastSssdIdx [%d], --> ",
+                   lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, EVT_OUTCOME_NOGO_CANCEL_BRK_, lastSsdIdx);
+        }
     }
     else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_ || lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_NON_CANCEL_BRK_)
     {
         STAIRCASE_NEXT_SSD_IDX = lastSsdIdx - (random(stepDownMax) + 1);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****STEP-DOWN****\n");
-        printf("*********LastStopOutcome [%d] is (EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_[%d] or EVT_OUTCOME_NOGO_NON_CANCEL_BRK_ [%d]), lastSssdIdx [%d], --> ",
-               lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_, EVT_OUTCOME_NOGO_NON_CANCEL_BRK_, lastSsdIdx);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****STEP-DOWN****\n");
+            printf("*********LastStopOutcome [%d] is (EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_[%d] or EVT_OUTCOME_NOGO_NON_CANCEL_BRK_ [%d]), lastSssdIdx [%d], --> ",
+                   lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_, EVT_OUTCOME_NOGO_NON_CANCEL_BRK_, lastSsdIdx);
+        }
     }
     else if (lastStopOutcomeEvntCode == EVT_OUTCOME_NOGO_ERR_)
     {
         STAIRCASE_NEXT_SSD_IDX = lastSsdIdx;
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****NO-CHANGE****\n");
-        printf("*********LastStopOutcome [%d] is EVT_OUTCOME_NOGO_ERR_ []%d], lastSssdIdx [%d], -->  ",
-               lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_ERR_, lastSsdIdx);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****NO-CHANGE****\n");
+            printf("*********LastStopOutcome [%d] is EVT_OUTCOME_NOGO_ERR_ []%d], lastSssdIdx [%d], -->  ",
+                   lastStopOutcomeEvntCode, EVT_OUTCOME_NOGO_ERR_, lastSsdIdx);
+        }
     }
     else
     {
         STAIRCASE_NEXT_SSD_IDX = random(nSSD);
-        printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****RANDOM****\n");
-
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAIR.PRO/STAIRCASE_NEXT_SSD: ****RANDOM****\n");
+        }
         if (IS_FIRST_STOP_TRIAL <= 0)
         {
             IS_FIRST_STOP_TRIAL = 1;
-            printf("*********LastStopOutcome *UNKNOWN* TRL_NUMBER = [%d], lastssdIdx [first-stop-trial], --> ");
+            if (DEBUG_CONSOLE)
+            {
+                printf("*********LastStopOutcome *UNKNOWN* TRL_NUMBER = [%d], lastssdIdx [first-stop-trial], --> ");
+            }
         }
         else
         {
@@ -85,5 +102,5 @@ process STAIRCASE_NEXT_SSD(int lastStopOutcomeEvntCode, int lastSsdIdx, int step
         STAIRCASE_NEXT_SSD_IDX = nSSD - 1;
     }
 
-    printf("STAIRCASE_NEXT_SSD [%d]\n", STAIRCASE_NEXT_SSD_IDX);
+    printf("****STAIR/STAIRCASE_NEXT_SSD STAIRCASE_NEXT_SSD_IDX = [%d]\n", STAIRCASE_NEXT_SSD_IDX);
 }/* STAIRCASE_NEXT_SSD */

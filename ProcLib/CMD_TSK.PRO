@@ -10,6 +10,7 @@
 // Use variables on the fly - no declaration
 #pragma declare = 1
 
+#include C:/TEMPO/ProcLib/UTIL/WAIT_VDO.PRO
 #include C:/TEMPO/ProcLib/CMD/SET_CMD.PRO
 #include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 #include C:/TEMPO/ProcLib/UTIL/TONE.PRO
@@ -37,7 +38,7 @@
 #include C:/TEMPO/ProcLib/CMD/INFOS.PRO
 
 #include C:/TEMPO/ProcLib/WATCH/RITE_EYE.PRO
-declare int WRITE_RAW_EYE_DATA = 1;
+declare int WRITE_RAW_EYE_DATA = 0;
 
 //==========================================================================
 declare IDLE();
@@ -73,8 +74,8 @@ process IDLE() enabled
     printf("Setting SET_RIG\n");
     spawnwait SET_RIG(RIG_ID);
 
-    printf("Setting SET_CLRS\n");
-    spawnwait SET_CLRS();
+    printf("Setting SET_DEFAULT_COLORS\n");
+    spawnwait SET_DEFAULT_COLORS();
 
     printf("Setting SET_DEFAULT_STIM_VARS\n");
     spawnwait SET_DEFAULT_STIM_VARS();
@@ -111,12 +112,21 @@ process IDLE() enabled
             spawnwait CMD_PGS(1.0, random(2) *180.0, 12.0, 1);
 
             printf("Showing Virtual Pages for COUNTERMANDING TASK\n");
-            tempCount = 0;
-            while (tempCount <= PG_MAX_PAGE_IDX)
+            tempCount = 7;
+            while(1)
             {
+            while (tempCount < PG_MAX_PAGE_IDX + 1)
+            {
+                //printf("Showing page %d\n",tempCount);
                 dsendf("vp %d\n", tempCount);
+                nexttick 100;
                 tempCount = tempCount + 1;
-                nexttick 1000;
+                //nexttick 1000;
+                //dsendf("vp %d\n", PG_BLANK);
+               // nexttick 500;
+            }
+            tempCount = 7;
+            nexttick;
             }
             dsendf("vp %d\n", 0);
             printf("****Done showing Virtual Pages for COUNTERMANDING TASK\n\n");
@@ -263,8 +273,12 @@ process IDLE() enabled
 
                 TRL_TASK_END_TIME = time();
                 spawn SEND_EVT(EVT_TASK_END_);
-
-                printf("****CMD_TSK: OK (Ending Task) sent Event: EVT_TASK_END_[%d]\n", EVT_TASK_END_);
+                
+                
+                if(DEBUG_CONSOLE)
+                {
+                    printf("****CMD_TSK: OK (Ending Task) sent Event: EVT_TASK_END_[%d]\n", EVT_TASK_END_);
+                }
                 printf("****CMD_TSK: OK (Ending Task) TRL_TRIAL_NUMBER [%d], TRL_CUM_DURATION[%d]\n", TRL_TRIAL_NUMBER, TRL_CUM_DURATION);
                 TRL_IS_RUNNING = 0;
                 PROCESS_STATE  = 0;

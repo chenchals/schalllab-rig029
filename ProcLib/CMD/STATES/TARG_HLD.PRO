@@ -6,8 +6,8 @@
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -26,12 +26,11 @@ process PROC_TARG_HOLD()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_HOLD[%d]: Processing hold fixation\n", STAT_TARG_HOLD);
         // actually TRL_ACQUIRE_FIX_TIME, however the below is practically
         //same and it keeps this state independent of previous state
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
-        STAT_DLTA_T   = 0;
+
+        STAT_DLTA_T = 0;
 
         STAT_ALLOWED_T = TRL_USE_MIN_THT_DURATION * TIME_DILATE_FACTOR;
 
@@ -39,7 +38,10 @@ process PROC_TARG_HOLD()
         TRL_MIN_THT_START_TIME = time();
         spawn SEND_EVT(EVT_MIN_THT_START_);
 
-        printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_START_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_START_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_START_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_START_);
+        }
 
         // initialize durations
         TRL_TARG_HOLD_DURATION = 0;
@@ -60,7 +62,10 @@ process PROC_TARG_HOLD()
             TRL_MIN_THT_END_TIME = time();
             spawn SEND_EVT(EVT_MIN_THT_END_);
 
-            printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_END_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_END_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_MIN_THT_END_[%d]\n", STAT_TARG_HOLD, EVT_MIN_THT_END_);
+            }
         }
     }
 
@@ -72,7 +77,10 @@ process PROC_TARG_HOLD()
             spawn SEND_EVT(EVT_TARGET_BREAK_);
             spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-            printf("****STAT_TARG_HOLD[%d]: ERR sent Event: EVT_TARGET_BREAK_[%d], EVT_SACCADE_SEC_[%d] \n", STAT_TARG_HOLD, EVT_TARGET_BREAK_,EVT_SACCADE_SEC_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_HOLD[%d]: ERR sent Event: EVT_TARGET_BREAK_[%d], EVT_SACCADE_SEC_[%d] \n", STAT_TARG_HOLD, EVT_TARGET_BREAK_, EVT_SACCADE_SEC_);
+            }
             printf("****STAT_TARG_HOLD[%d]:ERR (Broke target fixation)[%d]/[%d] (TRL_USE_MIN_THT_DURATION)\n", STAT_TARG_HOLD, TRL_MIN_THT_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_REFIX_CHK;
@@ -85,7 +93,10 @@ process PROC_TARG_HOLD()
             TRL_TARGET_HOLD_TIME = time();
             spawn SEND_EVT(EVT_TARGET_HOLD_);
 
-            printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_TARGET_HOLD_[%d], Abort_[%d]\n", STAT_TARG_HOLD, EVT_TARGET_HOLD_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_HOLD[%d]: OK sent Event: EVT_TARGET_HOLD_[%d], Abort_[%d]\n", STAT_TARG_HOLD, EVT_TARGET_HOLD_);
+            }
             printf("****STAT_TARG_HOLD[%d]: OK (Target held for min THT)[%d]/[%d] (TRL_MIN_THT_DURATION)\n", STAT_TARG_HOLD, TRL_MIN_THT_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TONE_CHK;

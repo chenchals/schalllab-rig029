@@ -11,8 +11,8 @@
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -31,7 +31,6 @@ process PROC_TARG_ON()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_ON[%d]: Processing Target On\n", STAT_TARG_ON);
         TRL_TARGET_PRE_TIME = time();
         spawn SEND_EVT(EVT_TARGET_PRE_);
 
@@ -57,12 +56,14 @@ process PROC_TARG_ON()
         TRL_TARGET_TIME  = time();
         spawn SEND_EVT(EVT_TARGET_);
 
-        printf("****STAT_TARG_ON[%d]: Sending Event EVT_TARGET_[%d]\n", STAT_TARG_ON, EVT_TARGET_);
-
         TRL_FIX_SPOT_OFF_TIME = time();
         spawn SEND_EVT(EVT_FIX_SPOT_OFF_);
 
-        printf("****STAT_TARG_ON[%d]: Sending Event EVT_FIX_SPOT_OFF_[%d]\n", STAT_TARG_ON, EVT_FIX_SPOT_OFF_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TARG_ON[%d]: Sent Event EVT_TARGET_[%d]\n", STAT_TARG_ON, EVT_TARGET_);
+            printf("****STAT_TARG_ON[%d]: Sent Event EVT_FIX_SPOT_OFF_[%d]\n", STAT_TARG_ON, EVT_FIX_SPOT_OFF_);
+        }
     }
     // Before MIN_SACCADE_TIME
     if (STAT_DLTA_T <= STAT_I_DURATION)
@@ -73,7 +74,10 @@ process PROC_TARG_ON()
             TRL_ERLY_SACCADE_TIME = time();
             spawn SEND_EVT(EVT_EARLY_SACCADE_);
 
-            printf("****STAT_TARG_ON[%d]: ERR sent Event: EVT_EARLY_SACCADE_[%d]\n", STAT_TARG_ON, EVT_EARLY_SACCADE_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_ON[%d]: ERR sent Event: EVT_EARLY_SACCADE_[%d]\n", STAT_TARG_ON, EVT_EARLY_SACCADE_);
+            }
             printf("****STAT_TARG_ON[%d]: ERR (*Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;
@@ -87,8 +91,11 @@ process PROC_TARG_ON()
             TRL_SACCADE_TIME   = time();
             spawn SEND_EVT(EVT_SACCADE_);
 
-            printf("****STAT_TARG_ON[%d]: OK sent Event: EVT_SACCADE_[%d]\n", STAT_TARG_ON, EVT_SACCADE_);
-            printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]/([%d],[%d]) (MAX_SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION, STAT_ALLOWED_T);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_ON[%d]: OK sent Event: EVT_SACCADE_[%d]\n", STAT_TARG_ON, EVT_SACCADE_);
+            }
+            printf("****STAT_TARG_ON[%d]: OK (Correct Saccade)[%d]/([%d,%d]) (MIN, MAX SACC_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_I_DURATION, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_TARG_ACQ;
         }
@@ -101,9 +108,10 @@ process PROC_TARG_ON()
             TRL_NO_SACCADE_TIME = time();
             spawn SEND_EVT(EVT_NO_SACCADE_);
 
-            //spawn SEND_EVT(GoError_);
-
-            printf("****STAT_TARG_ON[%d]: ERR sent Event: EVT_NO_SACCADE_[%d]\n", STAT_TARG_ON, EVT_NO_SACCADE_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_ON[%d]: ERR sent Event: EVT_NO_SACCADE_[%d]\n", STAT_TARG_ON, EVT_NO_SACCADE_);
+            }
             printf("****STAT_TARG_ON[%d]: ERR (No Saccade)[%d]/[%d] (MAX_SACCADE_TIME)\n", STAT_TARG_ON, STAT_DLTA_T, STAT_ALLOWED_T);
             PROCESS_STATE = 1;
             CURR_STAT     = STAT_OUTCOME;

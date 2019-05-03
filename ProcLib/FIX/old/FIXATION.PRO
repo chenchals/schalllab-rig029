@@ -50,7 +50,7 @@ process FIXATION()
         system("key curdn = OK = 1");                           // define down to start task
         spawnwait GOODVARS(State);
 
-        spawnwait SET_CLRS(n_targ_pos);
+        spawnwait SET_DEFAULT_COLORS(n_targ_pos);
 
 
         nexttick 10;                                                            // to prevent buffer overflows after task reentry.
@@ -110,7 +110,7 @@ process FIXATION()
 
         spawnwait GOODVARS(State);
 
-        spawnwait SET_CLRS(n_targ_pos);
+        spawnwait SET_DEFAULT_COLORS(n_targ_pos);
 
 
         nexttick 10;                                                            // to prevent buffer overflows after task reentry.

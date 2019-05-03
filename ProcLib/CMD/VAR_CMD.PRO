@@ -24,12 +24,13 @@
 //===========Trial types and distributions======================
 declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
+
 // Percentage of trial types (must sum to 100)
-declare float        GO_WEIGHT     = 60.0;
-declare float        STOP_WEIGHT   = 40.0;
-declare float        IGNORE_WEIGHT = 0.0;
+declare float GO_WEIGHT     = 70.0;
+declare float STOP_WEIGHT   = 30.0;
+declare float IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
-declare int          REPEAT_LO_RWRD_ERROR_TRL = 0;
+declare int   REPEAT_LO_RWRD_ERROR_TRL = 0;
 // Values: -1 : repeat till monk got it right
 //          0 : No repeat
 //          N : Any positive number
@@ -128,7 +129,7 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 300;
+declare int TONE_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -143,7 +144,7 @@ declare int TONE_DURATION = 30;
 
 //================= Reward variables =================================
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 300;
+declare int RWRD_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -156,17 +157,46 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int          CORRECT_TRIALS_PER_BLOCK = 20;
-declare constant int RWRD_LO_IDX              = 0;
-declare constant int RWRD_HI_IDX              = 1;
-declare int          RWRD_LO_HI_MEAN[2]       = { 30, 300 };
-declare int          RWRD_LO_HI_SPREAD[2]     = { 0, 0 };
-declare int          RWRD_DURATION_JITTER     = JITTER_NONE;
+declare int CORRECT_TRIALS_PER_BLOCK = 20;
+// Reward amounts for Asymmetric REWARD COMBINATIONS
+//  Lo / Med / Hi
+declare int LO_RWRD_DUR  = 80;
+declare int MED_RWRD_DUR = 200;
+declare int HI_RWRD_DUR  = 320;
+// Reward Ratios by Target Location - No Jitter
+// For each block one of the rows from RWRD_RATIOS is chosen to
+// associate Asymmetic rewards by location. For details:
+// see SET_CMD.PRO/SET_RWRD_RATIOS_FOR_BLOCK and SET_CMD.PRO/SET_RWRD_FOR_TRIAL
+// For the 3 variables below:
+//    1. NUM_RWRD_RATIOS    = num_rows in the RWRD_RATIOS array below
+//    2. NUM_RWRD_TARG_LOCS = num_cols in the RWRD_RATIOS array below
+//             additionally, NUM_RWRD_TARG_LOCS *shall* = N_TARG_POS
+//    3. RWRD_RATIOS  = Possible Asymmetic reward ratios for a block  
+// ** For 2 ratios : {LO, HI} and (HI, LO} use this and comment out the other RWRD_RATIOS *below*
+declare int NUM_RWRD_RATIOS    = 2;
+declare int NUM_RWRD_TARG_LOCS = 2;
+declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
+{
+    LO_RWRD_DUR,  HI_RWRD_DUR,
+    HI_RWRD_DUR,  LO_RWRD_DUR
+};
+// ** For 3 ratios : {LO, HI}, (HI, LO}, {MED, MED} use this and comment out the other RWRD_RATIOS *above*
+// declare int NUM_RWRD_RATIOS    = 3;
+// declare int NUM_RWRD_TARG_LOCS = 2;
+// declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
+// {
+//     LO_RWRD_DUR,  HI_RWRD_DUR,
+//     HI_RWRD_DUR,  LO_RWRD_DUR,
+//     MED_RWRD_DUR, MED_RWRD_DUR
+// };
 
 //=========================== Timeout variables ======================
 // timeout time for punishment computed
 declare int TIMEOUT_DURATION;
 declare int TIMEOUT_TONE;
+declare int TIMEOUT_SHOW_RANDM_PG_FLAG = 0;
+declare int TIMEOUT_PLAY_TONE_FLAG     = 1;
+
 // See ProcLib/DOC/CmdOutcomes.xlsx
 // Extra punish time for diferent outcomes in number of Trial lengths
 // The value must be an integer
@@ -177,27 +207,30 @@ declare int TIMEOUT_TONE;
 declare constant int GO_IDX            = 0;
 declare constant int NOGO_PRE_SSD_IDX  = 1;
 declare constant int NOGO_POST_SSD_IDX = 2;
+
 //
-declare int          TIMEOUT_FIX_ACQ_ERROR[3]  = { 0, 0, 0 };
-declare int          TIMEOUT_FIX_BRK[3]        = { 0, 0, 0 };
-declare int          TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
-declare int          TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
-declare int          TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_MIN_THT[3]    = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_XTRA_HOLD[3]  = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_PRE_TONE[3]   = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_TONE[3]       = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_PRE_RWRD[3]   = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_RWRD[3]       = { 0, 0, 0 };
-declare int          TIMEOUT_BRK_POST_RWRD[3]  = { 0, 0, 0 };
+// in number of trial durations
+declare int TIMEOUT_REFIX_EXTRA       = 2;
+declare int TIMEOUT_FIX_ACQ_ERROR[3]  = { 0, 0, 0 };
+declare int TIMEOUT_FIX_BRK[3]        = { 0, 0, 0 };
+declare int TIMEOUT_ERLY_SACC[3]      = { 0, 0, 0 };
+declare int TIMEOUT_LATE_NO_SACC[3]   = { 0, 0, 0 };
+declare int TIMEOUT_TARG_ACQ_ERROR[3] = { 0, 0, 0 };
+declare int TIMEOUT_BRK_MIN_THT[3]    = { 1, 1, 1 };
+declare int TIMEOUT_BRK_XTRA_HOLD[3]  = { 1, 1, 1 };
+declare int TIMEOUT_BRK_PRE_TONE[3]   = { 1, 1, 1 };
+declare int TIMEOUT_BRK_TONE[3]       = { 1, 1, 1 };
+declare int TIMEOUT_BRK_PRE_RWRD[3]   = { 1, 1, 1 };
+declare int TIMEOUT_BRK_RWRD[3]       = { 1, 1, 1 };
+declare int TIMEOUT_BRK_POST_RWRD[3]  = { 1, 1, 1 };
 // Only valid for NoGo Trial, the 0 index is not used for GoTrial
-declare int          TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
+declare int TIMEOUT_BRK_IS_CANCEL[3] = { 0, 0, 0 };
 // Tone frequencies for different outcomes
-declare int          NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 1000;
-declare int          CANCELLED_TONE_HZ                   = 400;
-declare int          GO_CORRECT_TONE_HZ                  = 400;
-declare int          GO_ERROR_TONE_HZ                    = 100;
-declare int          NOGO_ERROR_TONE_HZ                  = 100;
+declare int NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ = 1000;
+declare int CANCELLED_TONE_HZ                   = 400;
+declare int GO_CORRECT_TONE_HZ                  = 400;
+declare int GO_ERROR_TONE_HZ                    = 100;
+declare int NOGO_ERROR_TONE_HZ                  = 100;
 
 //==========================Additional Timeouts======================
 // additive timeout imposed for each body movement

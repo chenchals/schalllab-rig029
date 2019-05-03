@@ -11,8 +11,8 @@
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -31,22 +31,25 @@ process PROC_ITI_CHK()
 {
     if (PROCESS_STATE)
     {
-        printf("****STAT_ITI_CHK[%d]: Processing Inter trial interval\n", STAT_ITI_CHK);
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
-        STAT_DLTA_T   = 0;
+
+        STAT_DLTA_T = 0;
         dsendf("vp %d\n", PG_BLANK);
         spawn GRAF_HIDE_FIX_TARG();
 
         INCEMENT_TARG_DURATION_FLAG = 0;
-
-        printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
-        printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_DURATION\n");
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_ITI_CHK[%d]: OK TRL_CUM_DURATION[%d]\n", STAT_ITI_CHK, TRL_CUM_DURATION);
+            printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR)  - TRL_CUM_DURATION\n");
+        }
         TRL_USE_ITI_DURATION = (TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) - TRL_CUM_DURATION;
-        printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION [%d] = (%d * %d) - %d\n", STAT_ITI_CHK, TRL_USE_ITI_DURATION, TRL_USE_TRIAL_DURATION, TIME_DILATE_FACTOR, TRL_CUM_DURATION);
-
-        STAT_ALLOWED_T = TRL_USE_ITI_DURATION;
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_ITI_CHK[%d]: OK; TRL_USE_ITI_DURATION [%d] = (%d * %d) - %d\n", STAT_ITI_CHK, TRL_USE_ITI_DURATION, TRL_USE_TRIAL_DURATION, TIME_DILATE_FACTOR, TRL_CUM_DURATION);
+        }
+        STAT_ALLOWED_T   = TRL_USE_ITI_DURATION;
         TRL_ITI_DURATION = 0;
     }
 
@@ -78,7 +81,10 @@ process PROC_ITI_CHK()
 
             // initialize durations
             TRL_ITI_DURATION = 0;
-            printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_START_[%d]\n", STAT_ITI_CHK, EVT_ITI_START_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_START_[%d]\n", STAT_ITI_CHK, EVT_ITI_START_);
+            }
         }
     }
     else
@@ -86,8 +92,10 @@ process PROC_ITI_CHK()
         TRL_ITI_END_TIME = time();
         spawn SEND_EVT(EVT_ITI_END_);
 
-        printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_END_[%d]\n", STAT_ITI_CHK, EVT_ITI_END_);
-
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_ITI_CHK[%d]: OK sent Event: EVT_ITI_END_[%d]\n", STAT_ITI_CHK, EVT_ITI_END_);
+        }
         PROCESS_STATE  = 1;
         TRL_IS_RUNNING = 1;
         CURR_STAT      = STAT_IDLE;

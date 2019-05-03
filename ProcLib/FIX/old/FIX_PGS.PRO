@@ -37,7 +37,7 @@ process FIX_PGS(int   curr_target,                                              
     size         = Size_list[curr_target];                                                                                      // Figure out the attributes of the current target
     angle        = Angle_list[curr_target];                                                                                     // THESE USER DEFINED GLOBALS ARE ARRAYS SO
     eccentricity = Eccentricity_list[curr_target];                                                                              // THEY CANNOT BE PASSED INTO PROCESSES
-    color        = curr_target + 1;                                                                                             // zero is reserved for black.  see SET_CLRS.pro
+    color        = curr_target + 1;                                                                                             // zero is reserved for black.  see SET_DEFAULT_COLORS.pro
 
     stim_ecc_x = cos(angle) * eccentricity;                                                                                     // find the center of the box in x and y space based on the angle and eccentricity...
     stim_ecc_y = sin(angle) * eccentricity * -1;

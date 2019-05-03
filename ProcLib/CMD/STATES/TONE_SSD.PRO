@@ -19,8 +19,8 @@
 //   All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -42,11 +42,10 @@ process PROC_TONE_SSD()
     // Target acquired, but not fixated yet or gaze still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_TONE_SSD[%d]: Processing Tone times\n", STAT_TONE_SSD);
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
-        STAT_DLTA_T   = 0;
+
+        STAT_DLTA_T = 0;
         // Give tone after this time, unless Abort
         STAT_ALLOWED_T = TRL_USE_TONE_DELAY * TIME_DILATE_FACTOR;
         // Tone already given, during tone check gaze
@@ -56,18 +55,19 @@ process PROC_TONE_SSD()
         TEMP_DELY_PLUS_DURATION = STAT_ALLOWED_T + TEMP_TONE_DURATION;
 
         TRL_USE_TONE_FREQ = CANCELLED_TONE_HZ;
-        printf("****STAT_TONE_SSD[%d]: Processing Tone times; STOP Trial: %d Hz\n", STAT_TONE_SSD, TRL_USE_TONE_FREQ);
 
         spawn SEND_EVT(EVT_TONE_DELAY_START_);
-
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_DELAY_START_[%d]\n", STAT_TONE_SSD, EVT_TONE_DELAY_START_);
 
         // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_XTRA_HOLD_START_TIME = time();
         spawn SEND_EVT(EVT_XTRA_HOLD_START_);
 
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_START_);
-
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TONE_SSD[%d]: Processing Tone times; STOP Trial: %d Hz\n", STAT_TONE_SSD, TRL_USE_TONE_FREQ);
+            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_DELAY_START_[%d]\n", STAT_TONE_SSD, EVT_TONE_DELAY_START_);
+            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_START_);
+        }
         TRL_XTRA_HOLD_DURATION = 0;
         TRL_IS_XTRA_HOLD_DONE  = 0;
     }
@@ -86,7 +86,10 @@ process PROC_TONE_SSD()
             TRL_XTRA_HOLD_END_TIME = time();
             spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_END_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_END_);
+            }
         }
     }
 
@@ -100,7 +103,10 @@ process PROC_TONE_SSD()
                 TRL_BRK_XTRA_HOLD_TIME = time();
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
 
-                printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_BREAK_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_BREAK_);
+                }
                 printf("****STAT_TONE_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -111,7 +117,10 @@ process PROC_TONE_SSD()
                 TRL_BRK_PRE_TONE_TIME = time();
                 spawn SEND_EVT(EVT_PRE_TONE_BREAK_);
 
-                printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_PRE_TONE_BREAK_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_PRE_TONE_BREAK_);
+                }
                 printf("****STAT_TONE_SSD[%d]: ERR (*Pre-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -135,7 +144,10 @@ process PROC_TONE_SSD()
                 TRL_BRK_XTRA_HOLD_TIME = time();
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
 
-                printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_BREAK_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d]\n", STAT_TONE_SSD, EVT_XTRA_HOLD_BREAK_);
+                }
                 printf("****STAT_TONE_SSD[%d]: ERR (*XTRA_HOLD*Broke Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -146,7 +158,10 @@ process PROC_TONE_SSD()
                 TRL_BRK_TONE_TIME = time();
                 spawn SEND_EVT(EVT_TONE_BREAK_);
 
-                printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_TONE_BREAK_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_SSD[%d]: ERR sent Event: EVT_TONE_BREAK_[%d]\n", STAT_TONE_SSD, EVT_TONE_BREAK_);
+                }
                 printf("****STAT_TONE_SSD[%d]: ERR (*During-Tone*Broke Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_SSD, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -159,7 +174,10 @@ process PROC_TONE_SSD()
         TRL_TONE_DELAY_END_TIME = time();
         spawn SEND_EVT(EVT_TONE_DELAY_END_);
 
-        printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_DELAY_END_[%d]\n", STAT_TONE_SSD, EVT_TONE_DELAY_END_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TONE_SSD[%d]: OK sent Event: EVT_TONE_DELAY_END_[%d]\n", STAT_TONE_SSD, EVT_TONE_DELAY_END_);
+        }
         printf("****STAT_TONE_SSD[%d]: OK (*Tone* Fixation maintained*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n", STAT_TONE_SSD,
                TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;

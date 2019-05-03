@@ -15,20 +15,27 @@
 declare SETUP_SCRN_CLRS_PGS();
 declare SETUP_DATA_ACQ_PARMS();
 declare ESTMT_MS_PER_TICK();
-declare WTCH_PD_SCHMITT();
+declare WTCH_SCHMITT();
 declare WTCH_EYE();
 
 declare TEST_SSD();
 
+declare int DEBUG_CONSOLE=1;
 declare float MS_PER_TICK;
 declare int   ASETS            = 1;
 declare float FIX_SIZE         = 0.5;
-declare int   PD_TRIG_L        = 0;
-declare int   PD_TRIG_R        = 0;
 declare int   VERT_RFRSH_COUNT = 0;
 declare int   VERT_RFRSH_SSD   = 0;
 declare int   TRL_NUM          = 0;
 declare int   BREAK_FIX_FLAG   = 0;
+
+declare constant int DEBUG_PD      = 0;
+declare constant int WRITE_PD_FILE = 1;
+declare int          PD_TRIG_L     = 0;
+declare int          PD_TRIG_R     = 0;
+declare int          PD_THRESHOLD  = 500;
+
+
 
 // RIG variables
 #include C:/TEMPO/ProcLib/RIG/VAR_RIG.PRO
@@ -64,12 +71,17 @@ process TEST_SSD() enabled
     spawnwait ESTMT_MS_PER_TICK();
     spawnwait SETUP_SCRN_CLRS_PGS();
     spawnwait SETUP_DATA_ACQ_PARMS();
-    spawn WTCH_PD_SCHMITT();
+    //spawn WTCH_PD_SCHMITT();
+    spawn WTCH_SCHMITT();
     spawn WTCH_EYE();
 
     TRL_NUM = 0;
-
-    //dsendf("vp %d\n", PAGE_TEST_PD);
+    while(1)
+    {
+        // show both right and left PD
+        dsendf("vp %d\n", PAGE_TEST_PD);
+        nexttick 10000;
+    }
     //while(1)
     //{
     // dsendf("vp %d\n", PAGE_FIX_PD);
@@ -143,8 +155,8 @@ process TEST_SSD() enabled
         {
             printf("===OK OK OK====\n");
         }
-        //printf("TRL %d, V_RFRSH_SSD [%d], V_RFRSH_COUNT [%d], ssdTime [%d], ssdExpec [%d], isiTicks [%d], eyeTicks [%d], breakFix [%d]\n", TRL_NUM,VERT_RFRSH_SSD,VERT_RFRSH_COUNT,ssdTime,ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
-        //writef("C:\\tempo\\ProcLib\\TEST\\testSSDR.csv %d,%d,%d,%d,%d,%d,%d,%d\n", TRL_NUM, VERT_RFRSH_SSD, VERT_RFRSH_COUNT, ssdTime, ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
+        printf("TRL %d, V_RFRSH_SSD [%d], V_RFRSH_COUNT [%d], ssdTime [%d], ssdExpec [%d], isiTicks [%d], eyeTicks [%d], breakFix [%d]\n", TRL_NUM,VERT_RFRSH_SSD,VERT_RFRSH_COUNT,ssdTime,ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
+        writef("testSSDR.csv %d,%d,%d,%d,%d,%d,%d,%d\n", TRL_NUM, VERT_RFRSH_SSD, VERT_RFRSH_COUNT, ssdTime, ssdTimeExpected,currWaitTicks,currWatchEyeTicks,currBreakFix);
     }
 } /* TEST_SSD */
 
@@ -159,7 +171,7 @@ process SETUP_SCRN_CLRS_PGS()
     dsend("ca");
     // Set up pages
     spawnwait SET_SCRN();
-    spawnwait TEST_SET_CLRS();
+    spawnwait TEST_SET_DEFAULT_COLORS();
     spawnwait TEST_PGS();
 
     nexttick 5000;
@@ -171,36 +183,40 @@ process SETUP_DATA_ACQ_PARMS()
     printf("SETUP_DATA_ACQ_PARMS...");
 }
 
-
-process WTCH_PD_SCHMITT()
+process WTCH_SCHMITT()
 {
-    declare float pdValL   = 0;
-    declare float pdValR   = 0;
-    declare int   threshLo = 100;//both hi and lo
+    declare float pdValL = 5000;
+    declare float pdValR = 5000;
 
     while (1)
     {
         pdValL = atable(PHOTOCELL_L_CHANNEL);
         pdValR = atable(PHOTOCELL_R_CHANNEL);
-        if (pdValL < threshLo && PD_TRIG_L == 0)
+        if (pdValL < PD_THRESHOLD && PD_TRIG_L == 0)
         {
             PD_TRIG_L = 1;
         }
-        else if (pdValL > threshLo && PD_TRIG_L == 1)
+        else if (pdValL > PD_THRESHOLD && PD_TRIG_L == 1)
         {
             PD_TRIG_L = 0;
         }
-        if (pdValR < threshLo && PD_TRIG_R == 0)
+        // PD Right
+        if (pdValR < PD_THRESHOLD && PD_TRIG_R == 0)
         {
             PD_TRIG_R = 1;
         }
-        else if (pdValR > threshLo && PD_TRIG_R == 1)
+        else if (pdValR > PD_THRESHOLD && PD_TRIG_R == 1)
         {
             PD_TRIG_R = 0;
         }
-        printf("%d,%d,%d,%d,%d\n", TRL_NUM, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
-
-        writef("pdValsSc.csv %d,%d,%d,%d,%d\n", TRL_NUM, pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+        if (WRITE_PD_FILE)
+        {
+            writef("pdValsSc.csv %d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+        }
+        if (DEBUG_PD)
+        {
+            printf("%d,%d,%d,%d\n", pdValL, pdValR, PD_TRIG_L, PD_TRIG_R);
+        }
         nexttick;
     }
 }

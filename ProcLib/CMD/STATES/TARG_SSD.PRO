@@ -25,8 +25,8 @@
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -49,7 +49,6 @@ process PROC_TARG_SSD()
 
     if (PROCESS_STATE)
     {
-        printf("****STAT_TARG_SSD[%d]: STOP TRIAL Processing Target On SSD\n", STAT_TARG_SSD);
         TRL_TARGET_PRE_TIME = time();
         spawn SEND_EVT(EVT_TARGET_PRE_);
 
@@ -94,12 +93,17 @@ process PROC_TARG_SSD()
     {
         TRL_IS_TARGET_ON = 1;
         TRL_TARGET_TIME  = time();
-        printf("****STAT_TARG_SSD[%d]: Sending Event EVT_TARGET_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_TARGET_, TRL_TARGET_TIME);
         spawn SEND_EVT(EVT_TARGET_);
 
-        printf("****STAT_TARG_SSD[%d]: Sending Event EVT_FIX_SPOT_OFF_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_FIX_SPOT_OFF_, TRL_TARGET_TIME);
         TRL_FIX_SPOT_OFF_TIME = time();
         spawn SEND_EVT(EVT_FIX_SPOT_OFF_);
+
+        if
+        (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TARG_SSD[%d]: Sent Event EVT_TARGET_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_TARGET_, TRL_TARGET_TIME);
+            printf("****STAT_TARG_SSD[%d]: Sent Event EVT_FIX_SPOT_OFF_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_FIX_SPOT_OFF_, TRL_TARGET_TIME);
+        }
     }
     if (TRL_IS_STOP_SIGNAL_ON)
     {
@@ -109,7 +113,10 @@ process PROC_TARG_SSD()
             spawn SEND_EVT(EVT_STOP_SIGNAL_);
             spawn GRAF_SHOW_FIX(GRAF_SHOW);
 
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_STOP_SIGNAL_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_STOP_SIGNAL_, TRL_STOP_SIGNAL_TIME);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_STOP_SIGNAL_[%d], Time [%d]\n", STAT_TARG_SSD, EVT_STOP_SIGNAL_, TRL_STOP_SIGNAL_TIME);
+            }
         }
         TRL_CANCEL_DURATION = TRL_CANCEL_DURATION + 1;
         if (TRL_CANCEL_START_TIME <= 0)
@@ -117,7 +124,10 @@ process PROC_TARG_SSD()
             TRL_CANCEL_START_TIME = time();
             spawn SEND_EVT(EVT_CANCEL_START_);
 
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_START_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_START_, TRL_CANCEL_START_TIME);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_START_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_START_, TRL_CANCEL_START_TIME);
+            }
         }
     }
 
@@ -136,7 +146,10 @@ process PROC_TARG_SSD()
         {
             queuedStopSignalPage = 1;
             dsendf("vp %d\n", PG_SIGNAL_PD);
-            printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_SSD[%d]: OK (*Stop signal page sent*)[%d]/[%d] (TRL_STOP_SIGNAL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TRL_STOP_SIGNAL_DURATION);
+            }
         }
 
         // till Cancel time is expired and the stop signal is shown
@@ -158,8 +171,11 @@ process PROC_TARG_SSD()
             TRL_CANCEL_END_TIME = time();
             spawn SEND_EVT(EVT_CANCEL_END_);
 
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_CANCEL_TIME);
-            printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_END_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_CANCEL_END_TIME);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_CANCEL_TIME);
+                printf("****STAT_TARG_SSD[%d]: OK sent Event: EVT_CANCEL_END_[%d],Time [%d]\n", STAT_TARG_SSD, EVT_CANCEL_, TRL_CANCEL_END_TIME);
+            }
             printf("****STAT_TARG_SSD[%d]: OK (EVT_CANCEL_ in)[%d]/[%d](TRL_USE_SSD_VR_COUNT + TRL_USE_SSD_CANCEL_DURATION)\n", STAT_TARG_SSD, STAT_DLTA_T, TEMP_DELY_PLUS_DURATION);
 
             spawn PRINT_MSG();
@@ -169,7 +185,6 @@ process PROC_TARG_SSD()
         }
         else
         {
-            printf("STAT_DLTA_T > TEMP_DELY_PLUS_DURATION\n");
             spawnwait SSD_CHECK_SACC();
         }
     }
@@ -179,7 +194,10 @@ process PROC_TARG_SSD()
 process SSD_CHECK_SACC()
 {
     // Flip page to PG_TARG_PD and continue as a GO trial
-    printf("****STAT_TARG_SSD[%d]: NoGo correct saccade, continue as Go trial. Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_TARG_SSD[%d]: NoGo correct saccade, continue as Go trial. Flipping page to PG_TARGET_PD\n", STAT_TARG_SSD);
+    }
     dsendf("vp %d\n", PG_TARGET_PD);
     //dsendf("vw 1\n");
     spawn GRAF_SHOW_FIX(GRAF_HIDE);
@@ -193,7 +211,10 @@ process SSD_CHECK_SACC()
         TRL_NOGO_EARLY_SACCADE_TIME = time();
         spawn SEND_EVT(EVT_NOGO_EARLY_SACCADE_);
 
-        printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_EARLY_SACCADE_[%d]\n", STAT_TARG_SSD, EVT_NOGO_EARLY_SACCADE_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_EARLY_SACCADE_[%d]\n", STAT_TARG_SSD, EVT_NOGO_EARLY_SACCADE_);
+        }
         printf("****STAT_TARG_SSD[%d]: ERR (*NoGo Early Saccade*)[%d]/[%d] (MIN_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
@@ -208,7 +229,10 @@ process SSD_CHECK_SACC()
             TRL_NOGO_SACCADE_POST_SSD_TIME = time();
             spawn SEND_EVT(EVT_NOGO_SACCADE_POST_SSD_);
 
-            printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_SACCADE_POST_SSD_[%d]\n", STAT_TARG_SSD, EVT_NOGO_SACCADE_POST_SSD_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_SACCADE_POST_SSD_[%d]\n", STAT_TARG_SSD, EVT_NOGO_SACCADE_POST_SSD_);
+            }
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**After SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
 
             TRL_USE_POST_SSD_FIX_ON_DELAY = STAT_DLTA_T - ceil((STAT_ALLOWED_T * REFRESH_RATE));
@@ -228,7 +252,10 @@ process SSD_CHECK_SACC()
             TRL_NOGO_SACCADE_PRE_SSD_TIME = time();
             spawn SEND_EVT(EVT_NOGO_SACCADE_PRE_SSD_);
 
-            printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_SACCADE_PRE_SSD_[%d]\n", STAT_TARG_SSD, EVT_NOGO_SACCADE_PRE_SSD_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_SACCADE_PRE_SSD_[%d]\n", STAT_TARG_SSD, EVT_NOGO_SACCADE_PRE_SSD_);
+            }
             printf("****STAT_TARG_SSD[%d]: ERR: (*NoGo Saccade**Before SSD*)[%d]/[%d, %d] (MIN_SACC_TIME, MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION, STAT_I_DURATION2);
 
             // How long *before* SSD did saccade happen (before MAX_SACC_TIME), since we do not have stop signal use possible stop signal time
@@ -250,7 +277,10 @@ process SSD_CHECK_SACC()
         TRL_NOGO_LATE_SACCADE_TIME = time();
         spawn SEND_EVT(EVT_NOGO_LATE_SACCADE_);
 
-        printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_LATE_SACCADE_[%d]\n", STAT_TARG_SSD, EVT_NOGO_LATE_SACCADE_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TARG_SSD[%d]: ERR sent Event: EVT_NOGO_LATE_SACCADE_[%d]\n", STAT_TARG_SSD, EVT_NOGO_LATE_SACCADE_);
+        }
         printf("****STAT_TARG_SSD[%d]: ERR (*NoGo Late Saccade*)[%d]/[%d] (MAX_SACC_TIME)\n", STAT_TARG_SSD, STAT_DLTA_T, STAT_I_DURATION2);
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_TARG_ACQ;

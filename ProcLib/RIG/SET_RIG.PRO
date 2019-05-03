@@ -42,15 +42,31 @@ process SET_RIG(int id)
 
 process INIT_PORTS_AND_VDOSYNC()
 {
-    printf("Initializing VDOSYNC to mode to [%d] \n", VDO_SYNC_MODE);
+    if (DEBUG_CONSOLE)
+    {
+        printf("Initializing VDOSYNC to mode to [%d] \n", VDO_SYNC_MODE);
+    }
     dsendf("vi %d;", VDO_SYNC_MODE);
     dsend("ca");
-    printf("Setting PORTS...\n");
+
+    if (DEBUG_CONSOLE)
+    {
+        printf("Setting PORTS...\n");
+    }
     dioSetMode(0, PORTA | PORTB | PORTC);
-    printf("Resetting juice channel...\n");
+
+    if (DEBUG_CONSOLE)
+    {
+        printf("Resetting juice channel...\n");
+    }
     mio_dig_set(JUICE_CHANNEL, 0);
-    printf("Resetting audio...\n");
+
+    if (DEBUG_CONSOLE)
+    {
+        printf("Resetting audio...\n");
+    }
     mio_fout(0);
     // for clearing videomode
-    nexttick 8000;
+    //nexttick 8000;
+    spawnwait WaitForVideoSYNC();
 }

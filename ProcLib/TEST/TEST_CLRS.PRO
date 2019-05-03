@@ -9,7 +9,7 @@
 //       Global color indices and palettes for colors
 //
 //
-declare TEST_SET_CLRS();
+declare TEST_SET_DEFAULT_COLORS();
 declare TEST_SET_CLR(int colorIndex, int color_r, int color_g, int color_b);
 
 // Global color Variables
@@ -25,7 +25,7 @@ int CLR_IDX_IGNORE      = 253;
 int CLR_IDX_PTOTODIODE  = 247;
 
 
-process TEST_SET_CLRS()
+process TEST_SET_DEFAULT_COLORS()
 {
     declare int r_, g_, b_;
     declare     targetIndex;
@@ -72,7 +72,7 @@ process TEST_SET_CLRS()
 
     spawn TEST_SET_CLR(1, 255, 0, 0);
     spawn TEST_SET_CLR(2, 0, 0, 255);
-} /* TEST_SET_CLRS */
+} /* TEST_SET_DEFAULT_COLORS */
 
 
 process TEST_SET_CLR(int colorIndex, int color_r, int color_g, int color_b)

@@ -45,16 +45,17 @@ process AUTO()
     IGNORE_SIGNAL_COLOR[R_IDX] = 41;
     IGNORE_SIGNAL_COLOR[G_IDX] = 42;
     IGNORE_SIGNAL_COLOR[B_IDX] = 43;
-    // This will be CLR_IDX_TARG_1
-    COLOR_ARRY[0, R_IDX] = 35;
-    COLOR_ARRY[0, G_IDX] = 33;
-    COLOR_ARRY[0, B_IDX] = 27;
 
     // Check VAR_STIM.PRO --> SET_DEFAULT_STIM_VARS()
     N_TARG_POS = 2;
     tempVar    = 0;
     while (tempVar < MAX_TARG_POS)
     {
+        // All target colors are same
+        TARG_COLOR_ARRAY[tempVar, R_IDX] = 35;
+        TARG_COLOR_ARRAY[tempVar, G_IDX] = 33;
+        TARG_COLOR_ARRAY[tempVar, B_IDX] = 27;
+
         if (tempVar >= N_TARG_POS)
         {
             TARG_SIZE_ARRY[tempVar]         = 0.0;

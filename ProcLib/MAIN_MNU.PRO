@@ -25,10 +25,10 @@ process MAIN_MNU() enabled
 {
     if (TASK == TASK_TEST_SSD)
     {
-        pload C:/ TEMPO/ProcLib/TEST/TEST_SSD.PRO;
+        pload C:/TEMPO/ProcLib/TEST/TEST_SSD.PRO;
     }
     else
     {
-        pload C:/ TEMPO/ProcLib/CMD_TSK.PRO;
+        pload C:/TEMPO/ProcLib/CMD_TSK.PRO;
     }
 }

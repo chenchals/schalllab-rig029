@@ -36,4 +36,5 @@ process SET_MONK(int monkId)
     {
         spawnwait JOULE();
     }
+    spawnwait SET_CLR_PALETTE();
 }

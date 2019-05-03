@@ -52,11 +52,12 @@ process SET_SCRN()
 
     DEG_2_PIX_X = (SCRN_PIX_X/2)/SCRN_DEG_X;
     DEG_2_PIX_Y = (SCRN_PIX_Y/2)/SCRN_DEG_Y;
-
-    printf("SET_SCRN: Deg2Pix_X(DEG_2_PIX_X) %0.4d, Deg2Pix_Y(DEG_2_PIX_Y) %0.4d\n", DEG_2_PIX_X, DEG_2_PIX_Y);
-    printf("SET_SCRN: Unit2Pix_X(MM_2_PIX_X) %0.4d, Unit2Pix_Y(MM_2_PIX_Y) %0.4d\n", MM_2_PIX_X, MM_2_PIX_Y);
-    printf("SET_SCRN: Setting virtual cordinate system for drawing pages to screen buffer\n");
-
+    if (DEBUG_CONSOLE)
+    {
+        printf("SET_SCRN: Deg2Pix_X(DEG_2_PIX_X) %0.4d, Deg2Pix_Y(DEG_2_PIX_Y) %0.4d\n", DEG_2_PIX_X, DEG_2_PIX_Y);
+        printf("SET_SCRN: Unit2Pix_X(MM_2_PIX_X) %0.4d, Unit2Pix_Y(MM_2_PIX_Y) %0.4d\n", MM_2_PIX_X, MM_2_PIX_Y);
+        printf("SET_SCRN: Setting virtual cordinate system for drawing pages to screen buffer\n");
+    }
     // Set screen virtual coordinate systm for screen
     dsendf("vc %d, %d, %d, %d\n", SCRN_PIX_X/(-2), SCRN_PIX_X/2, SCRN_PIX_Y/2, SCRN_PIX_Y/(-2));
 }

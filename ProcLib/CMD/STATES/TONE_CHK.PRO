@@ -18,8 +18,8 @@
 //   All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -41,11 +41,10 @@ process PROC_TONE_CHK()
     // Target acquired, but not fixated yet or gaze still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_TONE_CHK[%d]: Processing Tone times\n", STAT_TONE_CHK);
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
-        STAT_DLTA_T   = 0;
+
+        STAT_DLTA_T = 0;
         // Give tone after this time, unless Abort
         STAT_ALLOWED_T = TRL_USE_TONE_DELAY * TIME_DILATE_FACTOR;
         // Tone already given, during tone check gaze
@@ -58,25 +57,36 @@ process PROC_TONE_CHK()
         {
             // is a non-cancelled trial so far...
             TRL_USE_TONE_FREQ = NON_CANCELLED_NO_BRK_NO_BRK_TONE_HZ;
-            printf("****STAT_TONE_CHK[%d]: Processing Tone times; STOP Trial: %d Hz\n", STAT_TONE_CHK, TRL_USE_TONE_FREQ);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TONE_CHK[%d]: Processing Tone times; STOP Trial: %d Hz\n", STAT_TONE_CHK, TRL_USE_TONE_FREQ);
+            }
         }
         else if (TRL_TRIAL_TYPE == TRIAL_TYPE_GO)
         {
             TRL_USE_TONE_FREQ = GO_CORRECT_TONE_HZ;
-            printf("****STAT_TONE_CHK[%d]: Processing Tone times; GO Trial: %d Hz\n", STAT_TONE_CHK, TRL_USE_TONE_FREQ);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TONE_CHK[%d]: Processing Tone times; GO Trial: %d Hz\n", STAT_TONE_CHK, TRL_USE_TONE_FREQ);
+            }
         }
         spawn SEND_EVT(EVT_TONE_DELAY_START_);
 
-        printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_DELAY_START_[%d]\n", STAT_TONE_CHK, EVT_TONE_DELAY_START_);
-
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_DELAY_START_[%d]\n", STAT_TONE_CHK, EVT_TONE_DELAY_START_);
+        }
         // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_XTRA_HOLD_START_TIME = time();
         spawn SEND_EVT(EVT_XTRA_HOLD_START_);
 
-        printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_START_);
         TRL_XTRA_HOLD_DURATION = 0;
         TRL_IS_XTRA_HOLD_DONE  = 0;
-        printf("******* TEMP_XTRA_HOLD_TIME [%d], STAT_ALLOWED_T [%d] ***********\n", TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_START_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_START_);
+            printf("******* TEMP_XTRA_HOLD_TIME [%d], STAT_ALLOWED_T [%d] ***********\n", TEMP_XTRA_HOLD_TIME, STAT_ALLOWED_T);
+        }
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -93,7 +103,10 @@ process PROC_TONE_CHK()
             TRL_XTRA_HOLD_END_TIME = time();
             spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-            printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_END_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_END_);
+            }
         }
     }
 
@@ -108,8 +121,10 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_,EVT_SACCADE_SEC_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_, EVT_SACCADE_SEC_);
+                }
                 printf("****STAT_TONE_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -121,7 +136,10 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(EVT_PRE_TONE_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d], EVT_SACCADE_SEC_[d]\n", STAT_TONE_CHK, EVT_PRE_TONE_BREAK_,EVT_SACCADE_SEC_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_PRE_TONE_BREAK_[%d], EVT_SACCADE_SEC_[d]\n", STAT_TONE_CHK, EVT_PRE_TONE_BREAK_, EVT_SACCADE_SEC_);
+                }
                 printf("****STAT_TONE_CHK[%d]: ERR (*Pre-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -146,7 +164,10 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_,EVT_SACCADE_SEC_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_XTRA_HOLD_BREAK_, EVT_SACCADE_SEC_);
+                }
                 printf("****STAT_TONE_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -158,7 +179,10 @@ process PROC_TONE_CHK()
                 spawn SEND_EVT(EVT_TONE_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_TONE_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_TONE_BREAK_,EVT_SACCADE_SEC_);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_TONE_CHK[%d]: ERR sent Event: EVT_TONE_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_TONE_CHK, EVT_TONE_BREAK_, EVT_SACCADE_SEC_);
+                }
                 printf("****STAT_TONE_CHK[%d]: ERR (*During-Tone*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                        STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
                 PROCESS_STATE = 1;
@@ -171,7 +195,10 @@ process PROC_TONE_CHK()
         TRL_TONE_DELAY_END_TIME = time();
         spawn SEND_EVT(EVT_TONE_DELAY_END_);
 
-        printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_DELAY_END_[%d]\n", STAT_TONE_CHK, EVT_TONE_DELAY_END_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_TONE_CHK[%d]: OK sent Event: EVT_TONE_DELAY_END_[%d]\n", STAT_TONE_CHK, EVT_TONE_DELAY_END_);
+        }
         printf("****STAT_TONE_CHK[%d]: OK (*Tone*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
                STAT_TONE_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
         PROCESS_STATE = 1;

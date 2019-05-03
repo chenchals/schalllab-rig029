@@ -6,8 +6,6 @@
 //        All Global variables and the following state variables are available to monitor state progress
 //        1. PROCESS_STATE : Setup state processing, will be done once per call
 //        1. CURR_STAT :
-//        2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//        3. STAT_STP_T : End time of state (in ticks/ms) from trial start
 //        4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //        5. STAT_ALLOWED_T : Max time for staying in this state
 //        5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -39,7 +37,6 @@ process PROC_TRL_OUTCOME()
     // Target acquired, but not fixated yet or eye still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_OUTCOME[%d]: Processing Trial outcome\n", STAT_OUTCOME);
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();
@@ -91,11 +88,15 @@ process PROC_TRL_OUTCOME()
                 TIMEOUT_TONE = NOGO_ERROR_TONE_HZ;
             }
         }
-
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
         TIMEOUT_DURATION = TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR;
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] (TIMEOUT_DURATION * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR) = [%d] \n",
-               STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] TIMEOUT_DURATION [%d] \n", STAT_OUTCOME, TRL_TRIAL_NUMBER, TIMEOUT_DURATION);
+
+        // Add REFIX timeout if trial is a REFIX
+        if (TRL_IS_REFIX == 1)
+        {
+            TIMEOUT_DURATION = TIMEOUT_DURATION + (TIMEOUT_REFIX_EXTRA * TRL_USE_TRIAL_DURATION * TIME_DILATE_FACTOR);
+        }
+
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_ITI_CHK;
     }
@@ -112,10 +113,12 @@ process PROC_GO_OUTCOMES()
         spawn SEND_EVT(EVT_OUTCOME_GO_CORRECT_);
 
         TRL_LAST_GO_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_CORRECT_;
-        printf("---GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT------GO-CORRECT---\n");
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_CORRECT_ [%d]; Go Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
-               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
-
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: GO-CORRECT\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_CORRECT_ [%d]; Go Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
+                   STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_CORRECT_);
+        }
         SESS_N_GO_CORRECT_TRLS = SESS_N_GO_CORRECT_TRLS + 1;
         BLOCK_N_CORRECT_TRLS   = BLOCK_N_CORRECT_TRLS + 1;
     }
@@ -180,12 +183,18 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
     if (TRL_IS_STOP_SIGNAL_ON)
     {
         nogoIdx = NOGO_POST_SSD_IDX;
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+        }
     }
     else
     {
         nogoIdx = NOGO_PRE_SSD_IDX;
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; PRE-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; PRE-SSD, PRE_CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+        }
     }
 
     if (TRL_IS_MIN_THT > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
@@ -196,10 +205,12 @@ process PROC_NOGO_PRE_CANCEL_OUTCOMES()
         spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_);
 
         TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_;
-        printf("---NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED------NON-CANCELLED---\n");
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_** [%d]; TRL_IS_STAIRCASE_SSD [%d]; STOP Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
-               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
-
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: NON-CANCELLED\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_** [%d]; TRL_IS_STAIRCASE_SSD [%d]; STOP Trial; (TRL_XTRA_HOLD_END_TIME - OK) \n",
+                   STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
+        }
         SESS_N_NON_CANCEL_NO_BRK_TRLS = SESS_N_NON_CANCEL_NO_BRK_TRLS + 1;
     }
     else if (TRL_FIX_BREAK_TIME > 0)
@@ -261,7 +272,10 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
     declare int nogoIdx;
 
     nogoIdx = NOGO_POST_SSD_IDX;
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: STOP Trial; POST-SSD, POST-CANCEL\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    }
     if (TRL_IS_CANCEL > 0 && TRL_IS_XTRA_HOLD_DONE > 0)
     {
         TRL_IS_CANCELLED_NO_BRK = 1;
@@ -270,9 +284,12 @@ process PROC_NOGO_POST_CANCEL_OUTCOMES()
         spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_NO_BRK_);
 
         TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_NO_BRK_;
-        printf("---CANCELLED------CANCELLED------SSD [%d, %dms]------CANCELLED------CANCELLED---\n", TRL_USE_SSD_VR_COUNT, TRL_STOP_SIGNAL_DURATION);
-        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ [%d]; TRL_IS_STAIRCASE_SSD  [%d]; STOP Trial; (TRL_IS_TARG_IS_CANCEL - OK) \n",
-               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: CANCELLED; SSD [%d, %dms]\n", STAT_OUTCOME, TRL_TRIAL_NUMBER, TRL_USE_SSD_VR_COUNT, TRL_STOP_SIGNAL_DURATION);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ [%d]; TRL_IS_STAIRCASE_SSD  [%d]; STOP Trial; (TRL_IS_TARG_IS_CANCEL - OK) \n",
+                   STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_NO_BRK_, TRL_IS_STAIRCASE_SSD);
+        }
 
         SESS_N_CANCEL_NO_BRK_TRLS = SESS_N_CANCEL_NO_BRK_TRLS + 1;
         BLOCK_N_CORRECT_TRLS      = BLOCK_N_CORRECT_TRLS + 1;
@@ -314,8 +331,13 @@ process PROC_FIX_BREAK()
 {
     spawn SEND_EVT(EVT_OUTCOME_FIX_BREAK_);
 
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_FIX_BREAK_ [%d] \n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_FIX_BREAK_);
+    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: FIX_BREAK\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_FIX_BREAK_ [%d] \n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_FIX_BREAK_);
+    }
 }
 
 
@@ -325,9 +347,12 @@ process PROC_GO_ERR()
     spawn SEND_EVT(EVT_OUTCOME_GO_ERR_);
 
     TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_GO_ERR_;
-    printf("---GO-ERR------GO-ERR------GO-ERR------GO-ERR------GO-ERR---\n");
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERR_ [%d]; Go Trial\n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERR_);
+    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: GO-ERR\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_GO_ERR_ [%d]; Go Trial\n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_GO_ERR_);
+    }
     SESS_N_GO_ERROR_TRLS = SESS_N_GO_ERROR_TRLS + 1;
 }
 
@@ -338,9 +363,12 @@ process PROC_CANCELLED_BRK()
     spawn SEND_EVT(EVT_OUTCOME_NOGO_CANCEL_BRK_);
 
     TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_CANCEL_BRK_;
-    printf("---CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR------CANCELLED-ERR---\n");
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_CANCEL_BRK_** [%d];STOP Trial\n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_BRK_);
+    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: CANCELLED-ERR\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_CANCEL_BRK_** [%d];STOP Trial\n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_CANCEL_BRK_);
+    }
     SESS_N_CANCEL_BRK_TRLS = SESS_N_CANCEL_BRK_TRLS + 1;
 }
 
@@ -351,9 +379,12 @@ process PROC_NON_CANCELLED_BRK()
     spawn SEND_EVT(EVT_OUTCOME_NOGO_NON_CANCEL_BRK_);
 
     TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_NON_CANCEL_BRK_;
-    printf("---NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR------NON-CANCELLED-ERR---\n");
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_BRK_** [%d];STOP Trial\n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_BRK_);
+    printf("-****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: NON-CANCELLED-ERR\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: **EVT_OUTCOME_NOGO_NON_CANCEL_BRK_** [%d];STOP Trial\n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_NON_CANCEL_BRK_);
+    }
     SESS_N_NON_CANCEL_BRK_TRLS = SESS_N_NON_CANCEL_BRK_TRLS + 1;
 }
 
@@ -364,7 +395,11 @@ process PROC_NOGO_ERR()
     spawn SEND_EVT(EVT_OUTCOME_NOGO_ERR_);
 
     TRL_LAST_STOP_OUTCOME_EVNTCODE = EVT_OUTCOME_NOGO_ERR_;
-    printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERR_ [%d]; STOP Trial\n",
-           STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERR_);
+    printf("-****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: NOGO-ERR\n", STAT_OUTCOME, TRL_TRIAL_NUMBER);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****STAT_OUTCOME[%d]: TRL_TRIAL_NUMBER[%d] outcome: EVT_OUTCOME_NOGO_ERR_ [%d]; STOP Trial\n",
+               STAT_OUTCOME, TRL_TRIAL_NUMBER, EVT_OUTCOME_NOGO_ERR_);
+    }
     SESS_N_NOGO_ERROR_TRLS = SESS_N_NOGO_ERROR_TRLS + 1;
 }

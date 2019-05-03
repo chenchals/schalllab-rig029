@@ -19,8 +19,8 @@
 //   All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
 //                1. CURR_STAT :
-//                2. STAT_STRT_T : Start time of state (in ticks/ms) from trial start
-//                3. STAT_STP_T : End time of state (in ticks/ms) from trial start
+
+
 //                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
 //                5. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
@@ -42,11 +42,10 @@ process PROC_RWRD_CHK()
     // Target acquired, but not fixated yet or gaze still in FixWin
     if (PROCESS_STATE)
     {
-        printf("****STAT_RWRD_CHK[%d]: Processing Reward times\n", STAT_RWRD_CHK);
         // Keep independent of previous state times if any.
         PROCESS_STATE = 0;
-        STAT_STRT_T   = time();
-        STAT_DLTA_T   = 0;
+
+        STAT_DLTA_T = 0;
         // Give reward after this time, unless Abort
         STAT_ALLOWED_T = TRL_USE_RWRD_DELAY * TIME_DILATE_FACTOR;
         // Reward already given, during reward duration check gaze
@@ -57,7 +56,10 @@ process PROC_RWRD_CHK()
 
         spawn SEND_EVT(EVT_REWARD_DELAY_START_);
 
-        printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_START_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_START_);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_START_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_START_);
+        }
     }
     spawnwait CHECK_TARG_VERT_RFRSH();
 
@@ -76,9 +78,12 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_BREAK_,EVT_SACCADE_SEC_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-                       STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_BREAK_, EVT_SACCADE_SEC_);
+                    printf("****STAT_RWRD_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation--PRE--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                           STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                }
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_REFIX_CHK;
             }
@@ -88,9 +93,12 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(EVT_PRE_RWRD_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_PRE_RWRD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_PRE_RWRD_BREAK_,EVT_SACCADE_SEC_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-                       STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_PRE_RWRD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_PRE_RWRD_BREAK_, EVT_SACCADE_SEC_);
+                    printf("****STAT_RWRD_CHK[%d]: ERR (*Pre-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                           STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                }
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_REFIX_CHK;
             }
@@ -104,6 +112,7 @@ process PROC_RWRD_CHK()
         {
             TRL_REWARD_DELAY_START_TIME = time();
             spawn JUICE(JUICE_CHANNEL, TEMP_RWRD_DURATION);
+            printf("****STAT_RWRD_CHK[%d]: OK JUICE given\n", STAT_RWRD_CHK);
         }
 
         if (!I_TARG && TRL_IS_XTRA_HOLD_DONE <= 0)
@@ -114,9 +123,12 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(EVT_XTRA_HOLD_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_BREAK_,EVT_SACCADE_SEC_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation*--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-                       STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_XTRA_HOLD_BREAK_[%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_BREAK_, EVT_SACCADE_SEC_);
+                    printf("****STAT_RWRD_CHK[%d]: ERR (*XTRA_HOLD*Broke Target Fixation*--DURING--*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                           STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                }
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_REFIX_CHK;
             }
@@ -126,9 +138,12 @@ process PROC_RWRD_CHK()
                 spawn SEND_EVT(EVT_RWRD_BREAK_);
                 spawn SEND_EVT(EVT_SACCADE_SEC_);
 
-                printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_RWRD_BREAK_[%d][%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_RWRD_BREAK_,EVT_SACCADE_SEC_);
-                printf("****STAT_RWRD_CHK[%d]: ERR (*During-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-                       STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                if (DEBUG_CONSOLE)
+                {
+                    printf("****STAT_RWRD_CHK[%d]: ERR sent Event: EVT_RWRD_BREAK_[%d][%d], EVT_SACCADE_SEC_[%d]\n", STAT_RWRD_CHK, EVT_RWRD_BREAK_, EVT_SACCADE_SEC_);
+                    printf("****STAT_RWRD_CHK[%d]: ERR (*During-Reward*Broke Target Fixation*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                           STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+                }
                 PROCESS_STATE = 1;
                 CURR_STAT     = STAT_REFIX_CHK;
             }
@@ -141,7 +156,10 @@ process PROC_RWRD_CHK()
             TRL_REWARD_DELAY_END_TIME = time();
             spawn SEND_EVT(EVT_REWARD_DELAY_END_);
 
-            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_END_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_END_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_REWARD_DELAY_END_[%d]\n", STAT_RWRD_CHK, EVT_REWARD_DELAY_END_);
+            }
         }
         // if you reached here xtra-hold is done
         TRL_IS_XTRA_HOLD_DONE = 1;
@@ -150,10 +168,16 @@ process PROC_RWRD_CHK()
             TRL_XTRA_HOLD_END_TIME = time();
             spawn SEND_EVT(EVT_XTRA_HOLD_END_);
 
-            printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);
+            if (DEBUG_CONSOLE)
+            {
+                printf("****STAT_RWRD_CHK[%d]: OK sent Event: EVT_XTRA_HOLD_END_[%d]\n", STAT_RWRD_CHK, EVT_XTRA_HOLD_END_);
+            }
         }
-        printf("****STAT_RWRD_CHK[%d]: OK (*XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
-               STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+        if (DEBUG_CONSOLE)
+        {
+            printf("****STAT_RWRD_CHK[%d]: OK (*XTRA_HOLD*Target Fixated*)[%d]/[%d](TEMP_XTRA_HOLD_TIME)\n",
+                   STAT_RWRD_CHK, TRL_XTRA_HOLD_DURATION, TEMP_XTRA_HOLD_TIME);
+        }
         PROCESS_STATE = 1;
         CURR_STAT     = STAT_OUTCOME;
     }

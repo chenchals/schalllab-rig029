@@ -24,7 +24,7 @@ int CLR_IDX_IGNORE      = 253;
 int CLR_IDX_PTOTODIODE  = 247;
 
 
-process SET_CLRS()
+process SET_DEFAULT_COLORS()
 {
     declare int r_, g_, b_;
     declare     targetIndex;
@@ -71,7 +71,7 @@ process SET_CLRS()
 
     spawn SET_CLR(1, 255, 0, 0);
     spawn SET_CLR(2, 0, 0, 255);
-} /* SET_CLRS */
+} /* SET_DEFAULT_COLORS */
 
 
 process SET_CLR(int colorIndex, int color_r, int color_g, int color_b)

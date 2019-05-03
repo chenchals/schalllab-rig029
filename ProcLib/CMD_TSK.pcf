@@ -40,7 +40,7 @@
 ;    STATE PROCESS  Longest  0.000ms   PC INST  MAX LONG     MS  MaxMS LongMS Bytes  Conventional        XMS      Loaded  uSec
 ;   1 SUSP CLEAR_VDO                    0    0    0    0  0.000  0.000  0.000    16    notLoaded         2-17          0     0
 ;   2 SUSP SET_DEFAULT_STIM_VARS        0    0    0    0  0.000  0.000  0.000   174    notLoaded        18-191         0     0
-;   3 SUSP SET_CLRS                     0    0    0    0  0.000  0.000  0.000   520    notLoaded       192-711         0     0
+;   3 SUSP SET_DEFAULT_COLORS                     0    0    0    0  0.000  0.000  0.000   520    notLoaded       192-711         0     0
 ;   4 SUSP SET_CLR                      0    0    0    0  0.000  0.000  0.000    56    notLoaded       712-767         0     0
 ;   5 SUSP GRAPHS                       0    0    0    0  0.000  0.000  0.000   440    notLoaded       768-1207        0     0
 ;   6 SUSP GRAF_UPD8_EYE                0    0    0    0  0.000  0.000  0.000    70    notLoaded      1208-1277        0     0
