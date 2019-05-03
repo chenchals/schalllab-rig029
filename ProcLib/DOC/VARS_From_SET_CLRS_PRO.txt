@@ -1,0 +1,32 @@
+
+From CMD/SET_CLRS.PRO
+====================================================
+****Do not change these:
+
+declare constant int PAL_DEFAULT = 0;
+declare constant int CLR_IDX_FIX                      = 250;
+declare constant int CLR_IDX_STOP_SIGNAL              = 249;
+declare constant int CLR_IDX_IGNORE                   = 248;
+declare constant int CLR_IDX_PTOTODIODE               = 247;
+declare constant int CLR_IDX_TARG_ARRAY[MAX_TARG_POS] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+declare constant int CLR_IDX_TARG_1                   = 1;
+declare int N_COLORS = 0;
+
+
+====================================================
+****These can be changed:
+STOP_SIGNAL_COLOR[3];
+IGNORE_SIGNAL_COLOR[3];
+FIX_COLOR[3];
+
+
+
+
+
+
+
+
+
+
+    
+    

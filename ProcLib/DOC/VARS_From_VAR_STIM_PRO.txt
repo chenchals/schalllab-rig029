@@ -1,0 +1,40 @@
+
+From CMD/VAR_STIM.PRO
+====================================================
+****Do not change these:
+declare constant int MAX_TARG_POS = 12;
+N_TARG_POS;
+
+
+FIX_WIN_ACQ[4];
+FIX_WIN[4];
+FIX_WIN_ACQ_SIZE = 1.0;
+FIX_WIN_LARGE[4];
+
+MAX_TARG_POS
+
+TARG_WIN[4];
+TARG_WIN_ANTI[4];
+TARG_WIN_LARGE[4];
+TARG_WIN_ANTI_LARGE[4];
+
+PD_WIDTH_DEG = 4.0;
+
+====================================================
+****How to do this in GUI?
+???
+
+====================================================
+****These can be changed:
+FIX_SIZE_DEG = 1.0;
+FIX_WIN_SIZE = 5;
+FIX_WIN_SIZE_LARGE = FIX_WIN_SIZE * 1.2;
+
+TARG_SIZE_ARRY[MAX_TARG_POS];
+TARG_ANGLE_ARRY[MAX_TARG_POS];
+TARG_ECCENTRICITY_ARRY[MAX_TARG_POS];
+
+TARG_WIN_SIZE = 7;
+TARG_WIN_SIZE_LARGE = TARG_WIN_SIZE * 1.5;
+
+
