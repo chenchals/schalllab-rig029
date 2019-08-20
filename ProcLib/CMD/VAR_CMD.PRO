@@ -129,7 +129,7 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 500;
+declare int TONE_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -144,7 +144,7 @@ declare int TONE_DURATION = 30;
 
 //================= Reward variables =================================
 // how long after tone before juice is given (needed to seperate primary and secondary reinforcement)
-declare int RWRD_DELAY_MEAN = 500;
+declare int RWRD_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO
 // if RWRD_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if RWRD_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
@@ -162,7 +162,7 @@ declare int CORRECT_TRIALS_PER_BLOCK = 20;
 //  Lo / Med / Hi
 declare int LO_RWRD_DUR  = 40;
 declare int MED_RWRD_DUR = 120;
-declare int HI_RWRD_DUR  = 360;
+declare int HI_RWRD_DUR  = 400;
 // Reward Ratios by Target Location - No Jitter
 // For each block one of the rows from RWRD_RATIOS is chosen to
 // associate Asymmetic rewards by location. For details:
@@ -173,22 +173,22 @@ declare int HI_RWRD_DUR  = 360;
 //             additionally, NUM_RWRD_TARG_LOCS *shall* = N_TARG_POS
 //    3. RWRD_RATIOS  = Possible Asymmetic reward ratios for a block  
 // ** For 2 ratios : {LO, HI} and (HI, LO} use this and comment out the other RWRD_RATIOS *below*
-// declare int NUM_RWRD_RATIOS    = 2;
-// declare int NUM_RWRD_TARG_LOCS = 2;
-// declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
-// {
-//    LO_RWRD_DUR,  HI_RWRD_DUR,
-//    HI_RWRD_DUR,  LO_RWRD_DUR
-// };
-// ** For 3 ratios : {LO, HI}, (HI, LO}, {MED, MED} use this and comment out the other RWRD_RATIOS *above*
-declare int NUM_RWRD_RATIOS    = 3;
+declare int NUM_RWRD_RATIOS    = 2;
 declare int NUM_RWRD_TARG_LOCS = 2;
 declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
- {
-   LO_RWRD_DUR,  HI_RWRD_DUR,
-   HI_RWRD_DUR,  LO_RWRD_DUR,
-   MED_RWRD_DUR, MED_RWRD_DUR
+{
+    LO_RWRD_DUR,  HI_RWRD_DUR,
+    HI_RWRD_DUR,  LO_RWRD_DUR
  };
+// ** For 3 ratios : {LO, HI}, (HI, LO}, {MED, MED} use this and comment out the other RWRD_RATIOS *above*
+// declare int NUM_RWRD_RATIOS    = 3;
+// declare int NUM_RWRD_TARG_LOCS = 2;
+// declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
+//  {
+//    LO_RWRD_DUR,  HI_RWRD_DUR,
+//    HI_RWRD_DUR,  LO_RWRD_DUR,
+//    MED_RWRD_DUR, MED_RWRD_DUR
+//  };
 
 //=========================== Timeout variables ======================
 // timeout time for punishment computed
