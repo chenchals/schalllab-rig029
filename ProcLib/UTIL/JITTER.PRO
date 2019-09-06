@@ -81,14 +81,7 @@ process GAUSS_JITTER(int meanT, int spreadT)
 // Random uniform distribution
 process UNIFORM_JITTER(int meanT, int spreadT)
 {
-    if (random(2) > 0)
-    {
-        JITTER_INT = meanT + random(spreadT);
-    }
-    else
-    {
-        JITTER_INT = meanT - random(spreadT);
-    }
+    JITTER_INT = (meanT - spreadT) + random(2*spreadT);
 }
 
 
