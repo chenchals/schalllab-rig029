@@ -16,8 +16,8 @@ process JITTER_TEST() enabled
 {
     declare int nPoints = 2000;
 
-    declare int meanT     = 600;
-    declare int varianceT = 175;
+    declare int meanT     = 15;
+    declare int varianceT = 3;
 
     declare int exponentJitter, uniformJitter, gaussJitter;
 

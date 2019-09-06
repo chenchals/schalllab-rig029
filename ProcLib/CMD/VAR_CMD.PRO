@@ -26,8 +26,8 @@ declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 
 // Percentage of trial types (must sum to 100)
-declare float GO_WEIGHT     = 70.0;
-declare float STOP_WEIGHT   = 30.0;
+declare float GO_WEIGHT     = 0.0;
+declare float STOP_WEIGHT   = 100.0;
 declare float IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int   REPEAT_LO_RWRD_ERROR_TRL = 0;
@@ -157,7 +157,11 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int CORRECT_TRIALS_PER_BLOCK = 20;
+// TRL_USE_CORRECT_TRIALS_PER_BLOCK is computed when block changes
+declare int CORRECT_TRLS_BLK_MEAN = 15;
+declare int CORRECT_TRLS_BLK_SPREAD = 5;
+declare int CORRECT_TRLS_BLK_JITTER_FLAG  = JITTER_UNIFORM_FLAG;
+
 // Reward amounts for Asymmetric REWARD COMBINATIONS
 //  Lo / Med / Hi
 declare int LO_RWRD_DUR  = 40;
