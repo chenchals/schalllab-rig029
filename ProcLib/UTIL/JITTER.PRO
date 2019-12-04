@@ -21,11 +21,13 @@
 declare GAUSS_JITTER(int meanT, int spreadT);
 declare UNIFORM_JITTER(int meanT, int spreadT);
 declare EXPONENT_JITTER(int meanT, int spreadT);
+declare CUSTOM_JITTER(int nIndices, int pickOne)
 
 declare constant int JITTER_NONE             = 0;
 declare constant int JITTER_GAUSS_FLAG       = 1;
 declare constant int JITTER_UNIFORM_FLAG     = 2;
 declare constant int JITTER_EXPONENTIAL_FLAG = 3;
+declare constant int JITTER_CUSTOM_FLAG      = 4;
 
 declare int          JITTER_INT;
 
@@ -56,6 +58,11 @@ process JITTER(int meanT, int spreadT, int jitterFlag)
     {
         spawnwait EXPONENT_JITTER(meanT, spreadT);
     }
+    else if (jitterFlag == JITTER_CUSTOM_FLAG)
+    {
+        spawnwait CUSTOM_JITTER(meanT);
+    }
+
 }
 
 
@@ -93,4 +100,11 @@ process EXPONENT_JITTER(int meanT, int spreadT)
     jitter     = (random(1001))/1000.0;
     jitter     = exp(-1.0 * jitter/0.25);
     JITTER_INT = round(jitter * spreadT + meanT);
+}
+
+// Custom distribution
+process CUSTOM_JITTER(int nIndices)
+{
+    // pick an index into the distribution_by_proportion array
+    JITTER_INT = random(nIndices) + 1;
 }
