@@ -806,7 +806,7 @@ process SET_RWRD_FOR_TRIAL()
         TRL_IS_HI_RWRD  = 0;
         TRL_IS_MED_RWRD = 0;
     }
-    else if (TRL_USE_RWRD_DURATION == MED_RWRD_DUR)
+    else if (TRL_USE_RWRD_DURATION == HI_RWRD_DUR)
     {
         TRL_IS_LO_RWRD  = 0;
         TRL_IS_HI_RWRD  = 1;
@@ -1056,6 +1056,9 @@ process INIT_TRL_VARS()
     TRL_IS_FIX_REIGNITE              = -1;
     TRL_IS_STAIRCASE_SSD             = -1;
     TRL_IS_REFIX                     = -1;
+    TRL_IS_LO_RWRD                   = -1;
+    TRL_IS_MED_RWRD                  = -1;
+    TRL_IS_HI_RWRD                   = -1;
     TRL_TASK_START_TIME              = -1;
     TRL_TRIAL_START_TIME             = -1;
     TRL_EOT_TIME                     = -1;
