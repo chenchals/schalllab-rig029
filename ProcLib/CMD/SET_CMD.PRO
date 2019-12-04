@@ -77,6 +77,9 @@ declare COMPUTE_MIN_THT();
 // Compute the max. trial duration
 declare COMPUTE_TRIAL_DURATION();
 
+// Compute TRL_USE_CORRECT_TRIALS_PER_BLOCK
+declare SET_CORRECT_TRLS_PER_BLOCK();
+
 // process new state
 declare int PROCESS_STATE;
 // current trial number
@@ -353,7 +356,7 @@ declare int TRL_LO_RWRD_TARG_IDX;
 // repeat count for lo-reward trials that resulted in GO error or STOP error
 declare int TRL_REPEAT_COUNT;
 // number of GO correct and STOP cancelled trial in current block
-declare int BLOCK_N_CORRECT_TRLS;
+declare int TRL_BLOCK_N_CORRECT_TRLS;
 // reward-ratio-index (for target location) to use for current block
 declare int BLOCK_RWRD_BY_TARG_IDX[2];
 declare int BLOCK_NEXT_RWRD_RATIO_IDXS[2];
@@ -726,6 +729,19 @@ process COMPUTE_FIX_HOLD()
     }
 } /* COMPUTE_FIX_HOLD */
 
+process SET_CORRECT_TRLS_PER_BLOCK()
+{
+    // set no of correct trials per block to use
+    spawnwait JITTER(CORRECT_TRLS_BLK_MEAN, CORRECT_TRLS_BLK_SPREAD, CORRECT_TRLS_BLK_JITTER_FLAG);  
+    TRL_USE_CORRECT_TRIALS_PER_BLOCK = JITTER_INT;
+// ****REMOVE LINE BELOW AFTER TESTING************//
+    printf("****SET_CMD/SET_TRL_CORRECT_TRIALS_PER_BLOCK: TRL_USE_CORRECT_TRIALS_PER_BLOCK = [%d]****\n", TRL_USE_CORRECT_TRIALS_PER_BLOCK);
+    if (DEBUG_CONSOLE)
+    {
+        printf("****SET_CMD/SET_CORRECT_TRIALS_PER_BLOCK: TRL_USE_CORRECT_TRIALS_PER_BLOCK = [%d]****\n", TRL_USE_CORRECT_TRIALS_PER_BLOCK);
+    }    
+    
+}
 
 process SET_WINS()
 {
@@ -790,7 +806,7 @@ process SET_RWRD_FOR_TRIAL()
         TRL_IS_HI_RWRD  = 0;
         TRL_IS_MED_RWRD = 0;
     }
-    else if (TRL_USE_RWRD_DURATION == MED_RWRD_DUR)
+    else if (TRL_USE_RWRD_DURATION == HI_RWRD_DUR)
     {
         TRL_IS_LO_RWRD  = 0;
         TRL_IS_HI_RWRD  = 1;
@@ -847,15 +863,17 @@ process SET_BLOCK_NUM()
     if (TRL_BLOCK_NUM == 0)
     {
         TRL_BLOCK_NUM        = 1;
-        BLOCK_N_CORRECT_TRLS = 0;
+        TRL_BLOCK_N_CORRECT_TRLS = 0;
         spawnwait SET_RWRD_RATIOS_FOR_BLOCK();
+        spawnwait SET_CORRECT_TRLS_PER_BLOCK();
     }
-    else if (BLOCK_N_CORRECT_TRLS == CORRECT_TRIALS_PER_BLOCK)
+    else if (TRL_BLOCK_N_CORRECT_TRLS == TRL_USE_CORRECT_TRIALS_PER_BLOCK)
     {
         TOGGLE_RWRD_ASSOCIATION = 1;
         TRL_BLOCK_NUM           = TRL_BLOCK_NUM + 1;
-        BLOCK_N_CORRECT_TRLS    = 0;
+        TRL_BLOCK_N_CORRECT_TRLS    = 0;
         spawnwait SET_RWRD_RATIOS_FOR_BLOCK();
+        spawnwait SET_CORRECT_TRLS_PER_BLOCK();
     }
     if (DEBUG_CONSOLE)
     {
@@ -1038,6 +1056,9 @@ process INIT_TRL_VARS()
     TRL_IS_FIX_REIGNITE              = -1;
     TRL_IS_STAIRCASE_SSD             = -1;
     TRL_IS_REFIX                     = -1;
+    TRL_IS_LO_RWRD                   = -1;
+    TRL_IS_MED_RWRD                  = -1;
+    TRL_IS_HI_RWRD                   = -1;
     TRL_TASK_START_TIME              = -1;
     TRL_TRIAL_START_TIME             = -1;
     TRL_EOT_TIME                     = -1;
@@ -1124,7 +1145,6 @@ process INIT_TRL_VARS()
     TRL_USE_RWRD_DURATION            = -1;
     TRL_USE_ITI_DURATION             = -1;
     TRL_USE_TIMEOUT_DURATION         = -1;
-    TRL_USE_CORRECT_TRIALS_PER_BLOCK = -1;
     TRL_CURR_TARG_IDX                = -1;
     TRL_CURR_TARG_SIZE               = -1;
     TRL_CURR_TARG_ANGLE              = -1;

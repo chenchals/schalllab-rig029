@@ -26,8 +26,8 @@ declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 
 // Percentage of trial types (must sum to 100)
-declare float GO_WEIGHT     = 70.0;
-declare float STOP_WEIGHT   = 30.0;
+declare float GO_WEIGHT     = 67.0;
+declare float STOP_WEIGHT   = 33.0;
 declare float IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int   REPEAT_LO_RWRD_ERROR_TRL = 0;
@@ -157,12 +157,16 @@ declare int RWRD_JITTER_FLAG  = JITTER_NONE;
 
 //====================Asymmetric reward ========================
 // Switch block after number of Correct trials = TRIALS_PER_BLOCK
-declare int CORRECT_TRIALS_PER_BLOCK = 20;
+// TRL_USE_CORRECT_TRIALS_PER_BLOCK is computed when block changes
+declare int CORRECT_TRLS_BLK_MEAN = 20;
+declare int CORRECT_TRLS_BLK_SPREAD = 8;
+declare int CORRECT_TRLS_BLK_JITTER_FLAG  = JITTER_UNIFORM_FLAG;
+
 // Reward amounts for Asymmetric REWARD COMBINATIONS
 //  Lo / Med / Hi
-declare int LO_RWRD_DUR  = 80;
-declare int MED_RWRD_DUR = 200;
-declare int HI_RWRD_DUR  = 320;
+declare int LO_RWRD_DUR  = 40;
+declare int MED_RWRD_DUR = 120;
+declare int HI_RWRD_DUR  = 400;
 // Reward Ratios by Target Location - No Jitter
 // For each block one of the rows from RWRD_RATIOS is chosen to
 // associate Asymmetic rewards by location. For details:
@@ -179,16 +183,16 @@ declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
 {
     LO_RWRD_DUR,  HI_RWRD_DUR,
     HI_RWRD_DUR,  LO_RWRD_DUR
-};
+ };
 // ** For 3 ratios : {LO, HI}, (HI, LO}, {MED, MED} use this and comment out the other RWRD_RATIOS *above*
 // declare int NUM_RWRD_RATIOS    = 3;
 // declare int NUM_RWRD_TARG_LOCS = 2;
 // declare int RWRD_RATIOS[NUM_RWRD_RATIOS, NUM_RWRD_TARG_LOCS] =
-// {
-//     LO_RWRD_DUR,  HI_RWRD_DUR,
-//     HI_RWRD_DUR,  LO_RWRD_DUR,
-//     MED_RWRD_DUR, MED_RWRD_DUR
-// };
+//  {
+//    LO_RWRD_DUR,  HI_RWRD_DUR,
+//    HI_RWRD_DUR,  LO_RWRD_DUR,
+//    MED_RWRD_DUR, MED_RWRD_DUR
+//  };
 
 //=========================== Timeout variables ======================
 // timeout time for punishment computed
