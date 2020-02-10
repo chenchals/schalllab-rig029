@@ -134,11 +134,8 @@ declare int TONE_DELAY_MEAN = 400;
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
-// if TONE_JITTER_FLAG == JITTER_CUSTOM_FLAG : then CUSTOM_JITTER(nDelayIndices)
 declare int TONE_DELAY_SPREAD = 0;
 declare int TONE_JITTER_FLAG  = JITTER_NONE;
-****************
-declare int TONE_DELAY_VALUES = [1000 1100 1200 1300 1400 1500]
 
 // how long should the error and success tones be presented?
 // this will be recomputed during trial
@@ -178,7 +175,7 @@ declare int HI_RWRD_DUR  = 400;
 //    1. NUM_RWRD_RATIOS    = num_rows in the RWRD_RATIOS array below
 //    2. NUM_RWRD_TARG_LOCS = num_cols in the RWRD_RATIOS array below
 //             additionally, NUM_RWRD_TARG_LOCS *shall* = N_TARG_POS
-//    3. RWRD_RATIOS  = Possible Asymmetic reward ratios for a block
+//    3. RWRD_RATIOS  = Possible Asymmetic reward ratios for a block  
 // ** For 2 ratios : {LO, HI} and (HI, LO} use this and comment out the other RWRD_RATIOS *below*
 declare int NUM_RWRD_RATIOS    = 2;
 declare int NUM_RWRD_TARG_LOCS = 2;
