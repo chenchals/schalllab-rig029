@@ -16,6 +16,8 @@
 
 // Load all constants and related gobal vars
 #include C:/TEMPO/ProcLib/CONSTNTS.PRO
+// Setup event defs so events can be sent
+#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 // Jitter utils
 #include C:/TEMPO/ProcLib/UTIL/JITTER.PRO
 // CMD Vars only...?
@@ -32,8 +34,6 @@
 #include C:/TEMPO/ProcLib/GRAFS/GRAPHS.PRO
 // set pages to load CMD_PGS.PRO?
 #include C:/TEMPO/ProcLib/CMD/CMD_PGS.PRO
-// Setup event defs so events can be sent
-#include C:/TEMPO/ProcLib/CMD/EVENTDEF.PRO
 // for using staircase method for SSD
 #include C:/TEMPO/ProcLib/CMD/STAIR.PRO
 //=====Now do monk specific========
@@ -41,6 +41,8 @@
 #include C:/TEMPO/ProcLib/RIG/SET_RIG.PRO
 // Set monk
 #include C:/TEMPO/ProcLib/MONK/SET_MONK.PRO
+// Set TONE_TMR for starting and stopping timer for Tone
+#include C:/TEMPO/ProcLib/UTIL/TONE_TMR.PRO
 
 //========other utils=============
 // Send event processes
@@ -669,6 +671,25 @@ process COMPUTE_MIN_THT()
 
 process SET_TONE()
 {
+    // on which event should tone timer start?
+    // default: -1 --> alwars start in
+    // GO trls: TONE_CHK.PRO
+    // STOP trls: TONE_SSD.PRO
+    if (TONE_TIMER_START_USE_EVENT == 1)
+    {
+       TRL_TONE_TIMER_START_EVENT = TONE_TIMER_START_EVT_GO_TRL;
+       if (TRL_TRIAL_TYPE == TRIAL_TYPE_STOP)
+        {
+            // Assume it is Cancelled or Successful STOP trial
+            // Change to TONE_TIMER_START_EVT_NC_TRL if Non-cancelled in TARG_SSD.PRO
+            TRL_TONE_TIMER_START_EVENT = TONE_TIMER_START_EVT_C_TRL;
+        }
+     }
+    else
+    {
+        TRL_TONE_TIMER_START_EVENT = -1;
+    }
+    
     spawnwait JITTER(TONE_DELAY_MEAN, TONE_DELAY_SPREAD, TONE_JITTER_FLAG);
 
     TRL_USE_TONE_DELAY    = JITTER_INT;
@@ -989,6 +1010,7 @@ process INIT_VARS_REPEAT_TRL()
     TRL_BRK_TONE_TIME              = -1;
     TRL_BRK_PRE_RWRD_TIME          = -1;
     TRL_BRK_RWRD_TIME              = -1;
+    TRL_TONE_TIMER_START_EVENT     = -1;
     TRL_TONE_DELAY_START_TIME      = -1;
     TRL_TONE_DELAY_END_TIME        = -1;
     TRL_REWARD_DELAY_START_TIME    = -1;
@@ -1095,6 +1117,7 @@ process INIT_TRL_VARS()
     TRL_BRK_TONE_TIME                = -1;
     TRL_BRK_PRE_RWRD_TIME            = -1;
     TRL_BRK_RWRD_TIME                = -1;
+    TRL_TONE_TIMER_START_EVENT       = -1;
     TRL_TONE_DELAY_START_TIME        = -1;
     TRL_TONE_DELAY_END_TIME          = -1;
     TRL_REWARD_DELAY_START_TIME      = -1;

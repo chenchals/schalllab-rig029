@@ -128,6 +128,21 @@ declare int XTRA_HOLD_SPREAD      = 0;
 declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
+// TOME_TIMER_START_USE_EVENT:
+// value = 0 --> use deafult i.e. dont use timer.  
+//   GO Trls: Tone delay counter starts in TONE_CHK.PRO
+//   STOP Trls: Tone delay counter starts in TONE_SSD.PRO
+// value = 1 --> use defined event to start a tone delay timer  
+//   GO Trls: Use TONE_TIMER_START_EVT_GO_TRL, and adjust time in TONE_CHK.PRO
+//   NON_CANCELLED Trls: Use TONE_TIMER_START_EVT_NC_TRL, and adjust time in TONE_SSD.PRO
+//   CANCELLED Trls: Use TONE_TIMER_START_EVT_C_TRL, and adjust time in TONE_SSD.PRO
+declare int TONE_TIMER_START_USE_EVENT = 1;
+declare int TONE_TIMER_START_EVT_GO_TRL = EVT_SACCADE_;
+declare int TONE_TIMER_START_EVT_NC_TRL = EVT_SACCADE_;
+declare int TONE_TIMER_START_EVT_C_TRL = EVT_TARGET_;
+// Trial Specific...when should tone timer start - Must be one of event numbers
+declare int TRL_TONE_TIMER_START_EVENT;
+
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
 declare int TONE_DELAY_MEAN = 400;
 // Variance to the delay: See UTIL/JITTER.PRO

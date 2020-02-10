@@ -37,6 +37,8 @@ process PROC_TRL_OUTCOME()
     // Target acquired, but not fixated yet or eye still in FixWin
     if (PROCESS_STATE)
     {
+        // 2020/02/10 --> always stop the tone timer 
+        spawn STOP_TONE_TIMER();
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;
         STAT_STRT_T    = time();

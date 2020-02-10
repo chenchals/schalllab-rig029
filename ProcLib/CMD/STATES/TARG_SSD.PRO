@@ -210,6 +210,10 @@ process SSD_CHECK_SACC()
         TRL_IS_I_IN_FLIGHT          = 1;
         TRL_NOGO_EARLY_SACCADE_TIME = time();
         spawn SEND_EVT(EVT_NOGO_EARLY_SACCADE_);
+        // 2020/02/10: trial is an error, stop tone timer
+        spawn STOP_TONE_TIMER();
+        TRL_TONE_TIMER_START_EVENT = EVT_SACCADE_;
+        spawn SEND_EVT(EVT_SACCADE_);
 
         if (DEBUG_CONSOLE)
         {
@@ -228,6 +232,9 @@ process SSD_CHECK_SACC()
         {
             TRL_NOGO_SACCADE_POST_SSD_TIME = time();
             spawn SEND_EVT(EVT_NOGO_SACCADE_POST_SSD_);
+            // 2020/02/10: trial is an error, stop tone timer
+            spawn STOP_TONE_TIMER();
+            TRL_TONE_TIMER_START_EVENT = EVT_SACCADE_;
 
             if (DEBUG_CONSOLE)
             {
@@ -251,6 +258,9 @@ process SSD_CHECK_SACC()
         {
             TRL_NOGO_SACCADE_PRE_SSD_TIME = time();
             spawn SEND_EVT(EVT_NOGO_SACCADE_PRE_SSD_);
+            // 2020/02/10: trial is an error, stop tone timer
+            spawn STOP_TONE_TIMER();
+            TRL_TONE_TIMER_START_EVENT = EVT_SACCADE_;
 
             if (DEBUG_CONSOLE)
             {

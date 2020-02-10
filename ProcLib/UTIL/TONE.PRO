@@ -23,10 +23,8 @@
 //  Revision History:
 //  001: 2019/02/08 chenchal subraveti
 
-
 declare TONE(int frequency, int duration);
 declare PLAY_WHITE_NOISE(int duration);
-
 
 process TONE(int frequency, int duration)
 {

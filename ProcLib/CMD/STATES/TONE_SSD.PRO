@@ -48,6 +48,10 @@ process PROC_TONE_SSD()
         STAT_DLTA_T = 0;
         // Give tone after this time, unless Abort
         STAT_ALLOWED_T = TRL_USE_TONE_DELAY * TIME_DILATE_FACTOR;
+        // 2020/02/10 added TONE_DURATION_EXPIRED see: TONE.PRO
+        STAT_ALLOWED_T = STAT_ALLOWED_T - TONE_DURATION_EXPIRED;
+        // stop tone timer to set TONE_DURATION_EXPIRED = 0
+        spawn STOP_TONE_TIMER();
         // Tone already given, during tone check gaze
         TEMP_TONE_DURATION = TRL_USE_TONE_DURATION * TIME_DILATE_FACTOR;
 

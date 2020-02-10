@@ -39,6 +39,11 @@ declare QUE_TTL();
 
 process SEND_EVT(int eventCode)
 {
+    if (TRL_TONE_TIMER_START_EVENT == eventCode)
+    {
+        spawn STOP_TONE_TIMER();
+    }   
+    
     EVENT_FIFO[CURR_EVENT_FIFO_IDX] = eventCode;
     CURR_EVENT_FIFO_IDX             = (CURR_EVENT_FIFO_IDX + 1) % N_EVENT_FIFO;
 }
