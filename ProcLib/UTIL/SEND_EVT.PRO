@@ -41,7 +41,7 @@ process SEND_EVT(int eventCode)
 {
     if (TRL_TONE_TIMER_START_EVENT == eventCode)
     {
-        spawn STOP_TONE_TIMER();
+        spawn START_TONE_TIMER();
     }   
     
     EVENT_FIFO[CURR_EVENT_FIFO_IDX] = eventCode;

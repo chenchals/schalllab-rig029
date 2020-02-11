@@ -315,8 +315,12 @@ declare int TRL_USE_SSD_CANCEL_DURATION;
 declare int TRL_USE_PRE_SSD_FIX_ON_DELAY;
 // user/system set - delay *after* SSD for saccade to happen (before MAX_SACC_TIME) to turn FIX Back ON
 declare int TRL_USE_POST_SSD_FIX_ON_DELAY;
-// user/system set - delay *after* target-hold/ssd-cancel for tone to start
+// this is set as per the trial type at the start but changes in TARG_SSD.PRO when it is a CANCEL Trial
 declare int TRL_USE_TONE_DELAY;
+// for go and non-cancel compute and make as default
+declare int TRL_USE_TONE_DELAY_GO_NON_CANCEL;
+// for cancel compute tone delay to use 
+declare int TRL_USE_TONE_DELAY_CANCEL;
 // user/system set - frequency of tone to be used
 declare int TRL_USE_TONE_FREQ;
 // user/system set - how long will the tone be ON
@@ -476,7 +480,9 @@ process COMPUTE_TRIAL_DURATION()
 
     declare int tonePlusReward;
 
-    tonePlusReward = TONE_DELAY_MEAN + TONE_DELAY_SPREAD + TONE_DURATION;
+    tonePlusReward = max(TONE_DELAY_MEAN_GO_NON_CANCEL,TONE_DELAY_MEAN_CANCEL) ;
+    tonePlusReward = tonePlusReward + max(TONE_DELAY_SPREAD_GO_NON_CANCEL,TONE_DELAY_SPREAD_CANCEL);
+    tonePlusReward = tonePlusReward + TONE_DURATION;
     tonePlusReward = tonePlusReward + RWRD_DELAY_MEAN + RWRD_DELAY_SPREAD + HI_RWRD_DUR;
 
     if (DEBUG_CONSOLE)
@@ -631,7 +637,10 @@ process COMPUTE_XTRA_HOLD_TIME()
     declare int tonePlusReward;
 
     // Assume TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG = 1
-    TRL_USE_XTRA_HOLD_DURATION = TONE_DELAY_MEAN + TONE_DELAY_SPREAD + TONE_DURATION;
+    TRL_USE_XTRA_HOLD_DURATION = max(TONE_DELAY_MEAN_GO_NON_CANCEL,TONE_DELAY_MEAN_CANCEL);
+    TRL_USE_XTRA_HOLD_DURATION = TRL_USE_XTRA_HOLD_DURATION + max(TONE_DELAY_SPREAD_GO_NON_CANCEL,TONE_DELAY_SPREAD_CANCEL);
+    TRL_USE_XTRA_HOLD_DURATION = TRL_USE_XTRA_HOLD_DURATION+ TONE_DURATION;
+    
     TRL_USE_XTRA_HOLD_DURATION = TRL_USE_XTRA_HOLD_DURATION + RWRD_DELAY_MEAN + RWRD_DELAY_SPREAD + HI_RWRD_DUR;
 
     if (TRL_USE_XTRA_HOLD_TONE_RWRD_FLAG == 0)
@@ -690,14 +699,19 @@ process SET_TONE()
         TRL_TONE_TIMER_START_EVENT = -1;
     }
     
-    spawnwait JITTER(TONE_DELAY_MEAN, TONE_DELAY_SPREAD, TONE_JITTER_FLAG);
+    spawnwait JITTER(TONE_DELAY_MEAN_GO_NON_CANCEL, TONE_DELAY_SPREAD_GO_NON_CANCEL, TONE_JITTER_FLAG);
 
-    TRL_USE_TONE_DELAY    = JITTER_INT;
+    TRL_USE_TONE_DELAY_GO_NON_CANCEL    = JITTER_INT;
     TRL_USE_TONE_DURATION = TONE_DURATION;
     if (DEBUG_CONSOLE)
     {
         printf("****SET_CMD/SET_TONE: TONE_DELAY, TONE_DURATION = [%d, %d]****\n", TRL_USE_TONE_DELAY, TRL_USE_TONE_DURATION);
-    }
+    }    
+    spawnwait JITTER(TONE_DELAY_MEAN_CANCEL, TONE_DELAY_SPREAD_CANCEL, TONE_JITTER_FLAG);
+    TRL_USE_TONE_DELAY_CANCEL = JITTER_INT;
+
+    // Set the default to be for GO_NON_CANCEL
+    TRL_USE_TONE_DELAY = TRL_USE_TONE_DELAY_GO_NON_CANCEL;    
 }  /* SET_TONE */
 
 
@@ -1162,6 +1176,8 @@ process INIT_TRL_VARS()
     TRL_USE_PRE_SSD_FIX_ON_DELAY     = -1;
     TRL_USE_POST_SSD_FIX_ON_DELAY    = -1;
     TRL_USE_TONE_DELAY               = -1;
+    TRL_USE_TONE_DELAY_GO_NON_CANCEL = -1;
+    TRL_USE_TONE_DELAY_CANCEL        = -1;
     TRL_USE_TONE_FREQ                = -1;
     TRL_USE_TONE_DURATION            = -1;
     TRL_USE_RWRD_DELAY               = -1;

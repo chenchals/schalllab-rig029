@@ -26,8 +26,8 @@ declare constant int TRIAL_TYPE_GO   = 0;
 declare constant int TRIAL_TYPE_STOP = 1;
 
 // Percentage of trial types (must sum to 100)
-declare float GO_WEIGHT     = 67.0;
-declare float STOP_WEIGHT   = 33.0;
+declare float GO_WEIGHT     = 0.0;
+declare float STOP_WEIGHT   = 100.0;
 declare float IGNORE_WEIGHT = 0.0;
 // Repeat low reward error Trials
 declare int   REPEAT_LO_RWRD_ERROR_TRL = 0;
@@ -96,7 +96,7 @@ declare int SSD_STEP_DOWN = 3;
 // Minimum time *after* stop signal that subject has to fixate
 // in order for trial to be considered as Cancel trial
 // Relative to TRL_USE_SSD_VR_COUNT (equivalent to TRL_USE_XTRA_HOLD_DURATION for GO trials)
-declare int SSD_CANCEL_DURATION = 1200;
+declare int SSD_CANCEL_DURATION = 3000;
 // after TRL_USE_SSD_VR_COUNT, subject must hold gaze on FIXSPOT for this long
 // if not, then TIMEOUT is imposed regardless of TONE or REWARD
 // evt: FixHoldMinSSHT_
@@ -128,7 +128,7 @@ declare int XTRA_HOLD_SPREAD      = 0;
 declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 
 //================= Tone variables =================================
-// TOME_TIMER_START_USE_EVENT:
+// TONE_TIMER_START_USE_EVENT:
 // value = 0 --> use deafult i.e. dont use timer.  
 //   GO Trls: Tone delay counter starts in TONE_CHK.PRO
 //   STOP Trls: Tone delay counter starts in TONE_SSD.PRO
@@ -137,19 +137,24 @@ declare int XTRA_HOLD_JITTER_FLAG = JITTER_NONE;
 //   NON_CANCELLED Trls: Use TONE_TIMER_START_EVT_NC_TRL, and adjust time in TONE_SSD.PRO
 //   CANCELLED Trls: Use TONE_TIMER_START_EVT_C_TRL, and adjust time in TONE_SSD.PRO
 declare int TONE_TIMER_START_USE_EVENT = 1;
-declare int TONE_TIMER_START_EVT_GO_TRL = EVT_SACCADE_;
-declare int TONE_TIMER_START_EVT_NC_TRL = EVT_SACCADE_;
+declare int TONE_TIMER_START_EVT_GO_TRL = EVT_SACCADE_;  // preferred to match it with the timing of NC trial -- line below
+declare int TONE_TIMER_START_EVT_NC_TRL = EVT_SACCADE_;  // this cannot be for any time prior to saccade
 declare int TONE_TIMER_START_EVT_C_TRL = EVT_TARGET_;
 // Trial Specific...when should tone timer start - Must be one of event numbers
 declare int TRL_TONE_TIMER_START_EVENT;
 
 // how long after IS_TARG_ACQUIRED before tone is played (primary reinforcement)
-declare int TONE_DELAY_MEAN = 400;
+// For GO and NON-CANCELLED trials
+declare int TONE_DELAY_MEAN_GO_NON_CANCEL = 3400;
+declare int TONE_DELAY_SPREAD_GO_NON_CANCEL = 0;
+// For CANCEL trials
+declare int TONE_DELAY_MEAN_CANCEL = 5400;
+declare int TONE_DELAY_SPREAD_CANCEL = 0;
+
 // Variance to the delay: See UTIL/JITTER.PRO
 // if TONE_JITTER_FLAG == JITTER_GAUSS_FLAG : then use GAUSS_JITTER(mean, sd)
 // if TONE_JITTER_FLAG == JITTER_UNIFORM_FLAG : then use UNIFORM_JITTER(mean, spread)
 // if TONE_JITTER_FLAG == JITTER_EXPONENTIAL_FLAG : then EXPONENT_JITTER(mean, spread)
-declare int TONE_DELAY_SPREAD = 0;
 declare int TONE_JITTER_FLAG  = JITTER_NONE;
 
 // how long should the error and success tones be presented?

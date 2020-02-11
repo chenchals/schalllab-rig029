@@ -181,7 +181,11 @@ process PROC_TARG_SSD()
             spawn PRINT_MSG();
 
             PROCESS_STATE = 1;
-            CURR_STAT     = STAT_TONE_SSD;
+            if ( TONE_TIMER_START_USE_EVENT == 1)
+            {
+                TRL_USE_TONE_DELAY =  TRL_USE_TONE_DELAY_CANCEL;
+            }
+            CURR_STAT = STAT_TONE_SSD;
         }
         else
         {

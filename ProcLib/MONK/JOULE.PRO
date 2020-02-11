@@ -17,17 +17,17 @@ declare JOULE();
 process JOULE()
 {
     declare int tempVar = 0;
-
+declare int addSSDvar = 50;
     //SSD list is not set
     // See VAR_CMD.PRO
-    SSD_ARRY[0] = 4;
-    SSD_ARRY[1] = 11;
-    SSD_ARRY[2] = 16;
-    SSD_ARRY[3] = 19;
-    SSD_ARRY[4] = 22;
-    SSD_ARRY[5] = 25;
-    SSD_ARRY[6] = 30;
-    SSD_ARRY[7] = 37;
+    SSD_ARRY[0] = 4+addSSDvar;
+    SSD_ARRY[1] = 11+addSSDvar;
+    SSD_ARRY[2] = 16+addSSDvar;
+    SSD_ARRY[3] = 19+addSSDvar;
+    SSD_ARRY[4] = 22+addSSDvar;
+    SSD_ARRY[5] = 25+addSSDvar;
+    SSD_ARRY[6] = 30+addSSDvar;
+    SSD_ARRY[7] = 37+addSSDvar;
     //SSD_ARRY[8] = 36;
     //SSD_ARRY[9] = 40;
 
