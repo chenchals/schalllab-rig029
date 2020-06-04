@@ -6,11 +6,9 @@
 //
 //                All Global variables and the following state variables are available to monitor state progress
 //                1. PROCESS_STATE : Setup state processing, will be done once per call
-//                1. CURR_STAT :
-
-
-//                4. STAT_DLTA_T : Length of time in this state (in ticks/ms)
-//                5. STAT_ALLOWED_T : Max time for staying in this state
+//                2. CURR_STAT : Transitions to : STAT_FIX_ON
+//                3. STAT_DLTA_T : Length of time in this state (in ticks/ms)
+//                4. STAT_ALLOWED_T : Max time for staying in this state
 //                5. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
 //   NOTE:

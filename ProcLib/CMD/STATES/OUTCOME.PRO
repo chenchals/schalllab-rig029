@@ -10,12 +10,35 @@
 //        5. STAT_ALLOWED_T : Max time for staying in this state
 //        5. STAT_I_DURATION : If saccade occurs, it must complete in this time
 //
-//  NOTE:
+// NOTE:
 //
 //  Author: chenchal.subraveti@vanderbilt.edu
 //  Date: 2019-02-13
 //==========================================================================
-// Revision History:
+// Revision History: 2020-06-04
+// Trials Outcomes
+// The following outcomes are determined for the trial whenever this state is processed
+// The outcomes are defined as events in the CMD/EVENTDEF.PRO
+// Outcome Codes: from 1550-1599
+// did not acquire fixation
+//     EVT_OUTCOME_FIX_ERR_ = 1550;
+// did not hold gaze for fix hold time
+//     EVT_OUTCOME_FIX_BREAK_ = 1552;
+// Go trial - held fixation on target through reward
+//     EVT_OUTCOME_GO_CORRECT_ = 1560;
+// Go trial - after acquiring target, broke gaze on target
+//     EVT_OUTCOME_GO_ERR_ = 1562;
+// Stop trial - held gaze on fix/signal till reward
+//     EVT_OUTCOME_NOGO_CANCEL_NO_BRK_ = 1570;
+// Stop trial - held gaze on fix/signal till cancel time + xtra-hold-time, then broke fix/signal
+//     EVT_OUTCOME_NOGO_CANCEL_BRK_ = 1572;
+// Stop trial - after target on, gaze on target through tone and reward
+//     EVT_OUTCOME_NOGO_NON_CANCEL_NO_BRK_ = 1574;
+// Stop trial - after target on, gaze on target till xtra-hold-time, then broke target
+//     EVT_OUTCOME_NOGO_NON_CANCEL_BRK_ = 1576;
+// Stop trial - after target on, gaze elsewhere or incorrect saccade or broke min-target-hold/xtra-hold-time
+//     EVT_OUTCOME_NOGO_ERR_ = 1578;
+
 
 declare PROC_TRL_OUTCOME();
 
@@ -37,7 +60,7 @@ process PROC_TRL_OUTCOME()
     // Target acquired, but not fixated yet or eye still in FixWin
     if (PROCESS_STATE)
     {
-        // 2020/02/10 --> always stop the tone timer 
+        // 2020/02/10 --> always stop the tone timer
         spawn STOP_TONE_TIMER();
         // Keep independent of previous state times if any.
         PROCESS_STATE  = 0;

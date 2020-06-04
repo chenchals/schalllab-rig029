@@ -34,7 +34,6 @@ process PROC_TARG_HOLD()
 
         STAT_ALLOWED_T = TRL_USE_MIN_THT_DURATION * TIME_DILATE_FACTOR;
 
-        // always send even if TRL_USE_XTRA_HOLD_DURATION = 0
         TRL_MIN_THT_START_TIME = time();
         spawn SEND_EVT(EVT_MIN_THT_START_);
 
