@@ -109,22 +109,6 @@ declare constant int STAT_TONE_CHK = 7;
 
 // Fixspot is OFF Target is ON:
 // Check:
-//   case 0: TRL_USE_XTRA_HOLD_DURATION <= RWRD_DELAY
-//         if gaze out of TARG_WIN before TRL_USE_XTRA_HOLD_DURATION expires: No Reward --> goto STAT_OUTCOME
-//         if gaze in TARG_WIN until TRL_USE_XTRA_HOLD_DURATION expires: Deliver reward at RWRD_DELAY time
-//         Check: Gaze in TARG_WIN until TRL_USE_XTRA_HOLD_DURATION expires
-//         If yes, Deliver reward at RWRD_DELAY time
-//         Else No reward, transition to: STAT_OUTCOME
-//   case 1: TRL_USE_XTRA_HOLD_DURATION <= RWRD_DELAY + RWRD_DURATION
-//                if gaze in TARG_WIN until RWRD_DURATION --> (reward alredey delivered) --> goto STAT_OUTCOME
-//                if gaze not in TARG_WIN during RWRD_DURATION --> (reward already delivered) --> goto STAT_TIM_OUT
-//         Check: gaze in TARG_WIN until RWRD_DURATION expires
-//         If yes, (reward alredey delivered), transition to: STAT_OUTCOME
-//         Else (reward already delivered) compute TIMEOUT_TIME, transition to: STAT_TIM_OUT
-//   case 2: TRL_USE_XTRA_HOLD_DURATION > RWRD_DELAY + RWRD_DURATION
-//         if gaze in TARG_WIN until TRL_USE_XTRA_HOLD_DURATION expires: (reward already delivered) --> goto STAT_OUTCOME
-//         if gaze out of TARG_WIN before TRL_USE_XTRA_HOLD_DURATION expires: (reward already delivered) --> goto STAT_TIM_OUT
-// Check:
 //   case 0: Check TRL_USE_XTRA_HOLD_DURATION <= RWRD_DELAY and
 //                 Gaze NOT in TARG_WIN until TRL_USE_XTRA_HOLD_DURATION expires
 //         If yes, broke fixation during reward delay, transition to: STAT_REFIX_CHK
@@ -186,22 +170,19 @@ declare constant int STAT_TIM_OUT = 11;
 //        Elase transition to: STAT_OUTCOME
 declare constant int STAT_REFIX_CHK = 12;
 
-
-
-
-
-
 /// Gaze Check:
 // Fixspot is OFF Target is ON:
 // Check: Gaze in FIX window until MIN_SACCADE_TIME expires, else it is early saccade
 //        Gaze left FIX_WIN before MAX_SACCADE_TIME, then correct saccade, else no saccade
 // Check:
-//   case 0: TRL_USE_SSD_VR_COUNT has not expired
+//   case 0: [Stop signal is OFF] TRL_USE_SSD_VR_COUNT has not expired
 //                   if gaze out of FIX-WIN before MIN_SACC_TIME --> EVT_NOGO_EARLY_SACCADE_, goto STAT_OUTCOME
 //                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoEVT_SACCADE_, goto STAT_TARG_ACQ
 //                   if gaze out of FIX-WIN after MAX_SACC_TIME --> EVT_NOGO_LATE_SACCADE_, goto STAT_OUTCOME
-//   case 1: TRL_USE_SSD_VR_COUNT has expired and TRL_USE_SSD_CANCEL_DURATION has not expired
-//   [Stop Signal ON] show PG_SIGNAL_PD (PD on RIGHT) for 1 screen refresh and switch to PG_SIGNAL(PD on LEFT)
+//   case 1: [Stop Signal ON] TRL_USE_SSD_VR_COUNT has expired and
+//             TRL_USE_SSD_CANCEL_DURATION has not expired then
+//             show PG_SIGNAL_PD (PD on RIGHT) for 1 screen refresh and
+//             switch to PG_SIGNAL(PD on LEFT)
 //                   if gaze out of FIX-WIN before MIN_SACC_TIME --> EVT_NOGO_EARLY_SACCADE_, goto STAT_OUTCOME
 //                   if gaze out of FIX-WIN after MIN_SACC_TIME and before MAX_SACC_TIME --> NoGoEVT_SACCADE_, goto STAT_TARG_ACQ
 //   [Stop Signal OFF] switch page from PG_SIGNAL to PG_TARGET_PD (do nto show stop signal)
